@@ -1,0 +1,26 @@
+---
+version: "2.1"
+services:
+  qbittorrentvpn:
+    image: markusmcnugen/qbittorrentvpn
+    container_name: qbittorrentvpn
+    privileged: true
+    environment:
+      - VPN_USERNAME=p2191908
+      - VPN_PASSWORD=7uu9U6mnPK
+      - PUID=998
+      - PGID=100
+      - TZ=America/Los_Angeles
+      - WEBUI_PORT_ENV=8080
+      - INCOMING_PORT_ENV=8999
+      - VPN_ENABLED=yes
+      - LAN_NETWORK=192.168.1.0/24
+      - NAME_SERVERS=10.0.0.242,10.0.0.243
+    volumes:
+      - /srv/dev-disk-by-uuid-33b397c4-2d50-44ab-8250-31810a5a160d/ladybug/media/media/Config/qbittorent:/config
+      - /srv/dev-disk-by-uuid-33b397c4-2d50-44ab-8250-31810a5a160d/ladybug/media/media/Downloads:/downloads
+    ports:
+      - 8080:8080
+      - 8999:8999
+      - 8999:8999/udp
+    restart: unless-stopped

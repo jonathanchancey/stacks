@@ -1,0 +1,29 @@
+version: '3.7'
+services:
+    machinaris:
+        image: ghcr.io/guydavis/machinaris:latest
+        container_name: machinaris
+        hostname: truenas
+        restart: always
+        volumes:
+            - "/srv/dev-disk-by-uuid-33b397c4-2d50-44ab-8250-31810a5a160d/ladybug/machinaris-compose/machinaris-compose/.machinaris:/root/.chia"
+            - "/srv/dev-disk-by-uuid-39658a66-25a6-4044-aca9-5841772adae4:/lobster"
+            - "/srv/dev-disk-by-uuid-31927325-2ba8-445a-9703-c9e312837495:/plotting"
+            - "/srv/dev-disk-by-uuid-f75517c0-72d6-4b60-8b4d-22a1ad427f21:/worm"
+            - "/srv/dev-disk-by-uuid-95a8e9f1-cc9b-48c2-8c8d-dc85117af9a7:/boar"
+            - "/srv/dev-disk-by-uuid-819837de-7b37-43f1-bb94-333e6622cd07:/cricket"
+            - "/srv/dev-disk-by-uuid-6e51c717-beda-42f4-a1e8-58317320a1e8:/ant"
+            - "/srv/dev-disk-by-uuid-5640f44c-7c9a-47da-b854-b018fa95621a:/beaver"
+            - "/srv/dev-disk-by-uuid-b15ba535-eee2-4d12-9e98-da97f282ddd2:/beetle"
+            - "/srv/dev-disk-by-uuid-eac05b2f-80c6-4a98-83cc-1a68547b3242:/bluebird"
+        environment:
+            - TZ=America/Los_Angeles
+            - mode=fullnode
+            - worker_address=192.168.1.89
+            - plots_dir=/lobster:/worm:/boar:/cricket:/ant:/beaver:/beetle:/bluebird
+            - blockchains=chia
+        ports:
+            - 8926:8926
+            - 8927:8927
+            - 8444:8444
+            - 8447:8447
