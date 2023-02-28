@@ -1,0 +1,56 @@
+---
+version: "2.1"
+services:
+  radarr:
+    image: lscr.io/linuxserver/radarr
+    container_name: radarr
+    environment:
+      - PUID=998
+      - PGID=100
+      - TZ=America/Los_Angeles
+    volumes:
+      - /srv/dev-disk-by-uuid-33b397c4-2d50-44ab-8250-31810a5a160d/ladybug/media/media/Config/radarr:/config
+      - /srv/dev-disk-by-uuid-33b397c4-2d50-44ab-8250-31810a5a160d/ladybug/media/media/Movies:/movies #optional
+      - /srv/dev-disk-by-uuid-33b397c4-2d50-44ab-8250-31810a5a160d/ladybug/media/media/Downloads:/downloads #optional
+    ports:
+      - 7878:7878
+    restart: unless-stopped
+  sonarr:
+    image: lscr.io/linuxserver/sonarr
+    container_name: sonarr
+    environment:
+      - PUID=998
+      - PGID=100
+      - TZ=America/Los_Angeles
+    volumes:
+      - /srv/dev-disk-by-uuid-33b397c4-2d50-44ab-8250-31810a5a160d/ladybug/media/media/Config/sonarr:/config
+      - /srv/dev-disk-by-uuid-33b397c4-2d50-44ab-8250-31810a5a160d/ladybug/media/media/Shows:/tv #optional
+      - /srv/dev-disk-by-uuid-33b397c4-2d50-44ab-8250-31810a5a160d/ladybug/media/media/Downloads:/downloads #optional
+    ports:
+      - 8989:8989
+    restart: unless-stopped
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:develop
+    container_name: prowlarr
+    environment:
+      - PUID=998
+      - PGID=100
+      - TZ=America/Los_Angeles
+    volumes:
+      - /srv/dev-disk-by-uuid-33b397c4-2d50-44ab-8250-31810a5a160d/ladybug/media/media/Config/prowlarr:/config
+      - /srv/dev-disk-by-uuid-33b397c4-2d50-44ab-8250-31810a5a160d/ladybug/media/media/Downloads:/downloads
+    ports:
+      - 9696:9696
+    restart: unless-stopped
+  flaresolverr:
+    # DockerHub mirror flaresolverr/flaresolverr:latest
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
+    environment:
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - LOG_HTML=${LOG_HTML:-false}
+      - CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none}
+      - TZ=America/Los_Angeles
+    ports:
+      - "${PORT:-8191}:8191"
+    restart: unless-stopped
