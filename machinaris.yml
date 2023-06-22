@@ -15,6 +15,7 @@ services:
             - "/srv/dev-disk-by-uuid-5640f44c-7c9a-47da-b854-b018fa95621a:/beaver"
             - "/srv/dev-disk-by-uuid-5865c3be-f6da-45ab-aa63-748649861b51:/eagle"
             - "/srv/dev-disk-by-uuid-eac05b2f-80c6-4a98-83cc-1a68547b3242:/bluebird"
+            - "/srv/dev-disk-by-uuid-b15ba535-eee2-4d12-9e98-da97f282ddd2:/beetle"
         environment:
             - TZ=America/Los_Angeles
             - mode=fullnode
