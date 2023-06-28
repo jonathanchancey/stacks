@@ -19,9 +19,6 @@ services:
       #- 7359:7359/udp #optional
       #- 1900:1900/udp #optional
     restart: unless-stopped
----
-version: "2.1"
-services:
   freshrss:
     image: lscr.io/linuxserver/freshrss:latest
     container_name: freshrss
