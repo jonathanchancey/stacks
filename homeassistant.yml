@@ -1,5 +1,5 @@
 ---
-version: "2.1"
+version: "3.9"
 services:
   homeassistant:
     image: lscr.io/linuxserver/homeassistant
@@ -14,3 +14,38 @@ services:
     ports:
       - 8123:8123 #optional
     restart: unless-stopped
+ mosquitto:
+    image: eclipse-mosquitto
+    container_name: mosquitto
+    volumes:
+      - /srv/dev-disk-by-uuid-33b397c4-2d50-44ab-8250-31810a5a160d/ladybug/mosquitto:/mosquitto
+      - /srv/dev-disk-by-uuid-33b397c4-2d50-44ab-8250-31810a5a160d/ladybug/mosquitto/data:/mosquitto/data
+      - /srv/dev-disk-by-uuid-33b397c4-2d50-44ab-8250-31810a5a160d/ladybug/mosquitto/log:/mosquitto/log
+    ports:
+      - 1883:1883
+      - 9001:9001
+  frigate:
+    container_name: frigate
+    privileged: true # this may not be necessary for all setups
+    restart: unless-stopped
+    image: ghcr.io/blakeblackshear/frigate:stable
+    shm_size: "64mb" # update for your cameras based on calculation above
+    devices:
+      # - /dev/bus/usb:/dev/bus/usb # passes the USB Coral, needs to be modified for other versions
+      # - /dev/apex_0:/dev/apex_0 # passes a PCIe Coral, follow driver instructions here https://coral.ai/docs/m2/get-started/#2a-on-linux
+      # - /dev/dri/renderD128 # for intel hwaccel, needs to be updated for your hardware
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /srv/dev-disk-by-uuid-33b397c4-2d50-44ab-8250-31810a5a160d/ladybug/frigate/config.yml:/config/config.yml
+      - /srv/dev-disk-by-uuid-33b397c4-2d50-44ab-8250-31810a5a160d/ladybug/media/media/frigate:/media/frigate
+      - type: tmpfs # Optional: 1GB of memory, reduces SSD/SD Card wear
+        target: /tmp/cache
+        tmpfs:
+          size: 1000000000
+    ports:
+      - "5000:5000"
+      - "8554:8554" # RTSP feeds
+      - "8555:8555/tcp" # WebRTC over tcp
+      - "8555:8555/udp" # WebRTC over udp
+    environment:
+      FRIGATE_RTSP_PASSWORD: "dinner"
