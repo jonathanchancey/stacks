@@ -10,7 +10,7 @@ services:
       - PGID=100
       - TZ=America/Los_Angeles
     volumes:
-      - /srv/dev-disk-by-uuid-33b397c4-2d50-44ab-8250-31810a5a160d/ladybug/media/media/Config/homeassistant:/config
+      - /media/Config/homeassistant:/config
     ports:
       - 8123:8123 #optional
     restart: unless-stopped

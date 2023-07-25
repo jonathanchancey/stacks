@@ -10,9 +10,9 @@ services:
       - TZ=America/Los_Angeles
       - JELLYFIN_PublishedServerUrl=192.168.1.5 #optional
     volumes:
-      - /srv/dev-disk-by-uuid-33b397c4-2d50-44ab-8250-31810a5a160d/ladybug/media/media/Config:/config
-      - /srv/dev-disk-by-uuid-33b397c4-2d50-44ab-8250-31810a5a160d/ladybug/media/media/Shows:/data/tvshows
-      - /srv/dev-disk-by-uuid-33b397c4-2d50-44ab-8250-31810a5a160d/ladybug/media/media/Movies:/data/movies
+      - /media/Config:/config
+      - /media/Shows:/data/tvshows
+      - /media/Movies:/data/movies
     ports:
       - 8096:8096
       #- 8920:8920 #optional
@@ -27,7 +27,7 @@ services:
       - PGID=1000
       - TZ=America/Los_Angeles
     volumes:
-      - /srv/dev-disk-by-uuid-33b397c4-2d50-44ab-8250-31810a5a160d/ladybug/media/media/Config/freshrss:/config
+      - /media/Config/freshrss:/config
     ports:
       - 6000:80
     restart: unless-stopped

@@ -17,8 +17,8 @@ services:
       - LAN_NETWORK=192.168.1.0/24
       - NAME_SERVERS=10.0.0.242,10.0.0.243
     volumes:
-      - /srv/dev-disk-by-uuid-33b397c4-2d50-44ab-8250-31810a5a160d/ladybug/media/media/Config/qbittorent:/config
-      - /srv/dev-disk-by-uuid-33b397c4-2d50-44ab-8250-31810a5a160d/ladybug/media/media/Downloads:/downloads
+      - /media/Config/qbittorent:/config
+      - /media/Downloads:/downloads
     ports:
       - 8080:8080
       - 8999:8999
