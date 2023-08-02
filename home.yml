@@ -1,6 +1,22 @@
 ---
 version: "2.1"
 services:
+  homeassistant:
+    image: lscr.io/linuxserver/homeassistant
+    container_name: homeassistant
+    network_mode: host
+    environment:
+      - PUID=998
+      - PGID=100
+      - TZ=America/Los_Angeles
+    volumes:
+      - /media/Config/homeassistant:/config
+    ports:
+      - 8123:8123 #optional
+    restart: unless-stopped
+---
+version: "2.1"
+services:
   jellyfin:
     image: lscr.io/linuxserver/jellyfin:10.8.8-1-ls196
     container_name: jellyfin
