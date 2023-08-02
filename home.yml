@@ -1,5 +1,5 @@
 ---
-version: "2.1"
+version: "3.7"
 services:
   homeassistant:
     image: lscr.io/linuxserver/homeassistant
@@ -14,9 +14,6 @@ services:
     ports:
       - 8123:8123 #optional
     restart: unless-stopped
----
-version: "2.1"
-services:
   jellyfin:
     image: lscr.io/linuxserver/jellyfin:10.8.8-1-ls196
     container_name: jellyfin

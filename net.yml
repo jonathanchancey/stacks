@@ -1,5 +1,5 @@
 ---
-version: "2.1"
+version: "3.7"
 services:
   radarr:
     image: lscr.io/linuxserver/radarr
@@ -54,9 +54,6 @@ services:
     ports:
       - "${PORT:-8191}:8191"
     restart: unless-stopped
----
-version: "2.1"
-services:
   qbittorrentvpn:
     image: markusmcnugen/qbittorrentvpn
     container_name: qbittorrentvpn
