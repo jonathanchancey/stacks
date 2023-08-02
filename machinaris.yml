@@ -19,7 +19,7 @@ services:
         environment:
             - TZ=America/Los_Angeles
             - mode=fullnode
-            - worker_address=192.168.1.89
+            - worker_address=192.168.0.89
             - plots_dir=/lobster:/worm:/boar:/cricket:/beaver:/eagle:/bluebird:/beetle
             - blockchains=chia
         ports:
