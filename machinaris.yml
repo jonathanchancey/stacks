@@ -1,10 +1,9 @@
-version: '3.7'
+version: '2'
 services:
     machinaris:
         image: ghcr.io/guydavis/machinaris:latest
         container_name: machinaris
-        hostname: truenas
-        restart: always
+        restart: unless-stopped
         volumes:
             - "/srv/dev-disk-by-uuid-33b397c4-2d50-44ab-8250-31810a5a160d/ladybug/machinaris-compose/machinaris-compose/.machinaris:/root/.chia"
             - "/srv/dev-disk-by-uuid-39658a66-25a6-4044-aca9-5841772adae4:/lobster"
@@ -19,7 +18,7 @@ services:
         environment:
             - TZ=America/Los_Angeles
             - mode=fullnode
-            - worker_address=192.168.0.89
+            - worker_address=192.168.0.5
             - plots_dir=/lobster:/worm:/boar:/cricket:/beaver:/eagle:/bluebird:/beetle
             - blockchains=chia
         ports:

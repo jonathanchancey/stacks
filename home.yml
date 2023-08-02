@@ -46,6 +46,7 @@ services:
     restart: unless-stopped
   fullfeedrss:
     image: "heussd/fivefilters-full-text-rss:latest"
+    container_name: fullfeedrss
     environment:
       # Leave empty to disable admin section
       - FTR_ADMIN_PASSWORD=
