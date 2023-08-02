@@ -54,26 +54,3 @@ services:
     ports:
       - "${PORT:-8191}:8191"
     restart: unless-stopped
-  qbittorrentvpn:
-    image: markusmcnugen/qbittorrentvpn
-    container_name: qbittorrentvpn
-    privileged: true
-    environment:
-      - VPN_USERNAME=***REMOVED***
-      - VPN_PASSWORD=***REMOVED***
-      - PUID=998
-      - PGID=100
-      - TZ=America/Los_Angeles
-      - WEBUI_PORT_ENV=8080
-      - INCOMING_PORT_ENV=8999
-      - VPN_ENABLED=yes
-      - LAN_NETWORK=192.168.0.0/24
-      - NAME_SERVERS=192.168.0.3,1.1.1.1
-    volumes:
-      - /media/Config/qbittorent:/config
-      - /media/Downloads:/downloads
-    ports:
-      - 8080:8080
-      - 8999:8999
-      - 8999:8999/udp
-    restart: unless-stopped
