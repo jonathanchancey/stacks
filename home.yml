@@ -54,17 +54,5 @@ services:
       - "rss-cache:/var/www/html/cache"
     ports:
       - "6001:80"
-  overseerr:
-    image: lscr.io/linuxserver/overseerr:latest
-    container_name: overseerr
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=America/Los_Angeles
-    volumes:
-      - /media/Config/overseerr:/config
-    ports:
-      - 5055:5055
-    restart: unless-stopped
 volumes:
   rss-cache:
