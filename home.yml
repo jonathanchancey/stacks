@@ -62,7 +62,7 @@ services:
       - PGID=1000
       - TZ=America/Los_Angeles
     volumes:
-      - /media/Config/freshrss:/config
+      - /media/Config/heimdall:/config
     ports:
       - 82:80
       - 445:443
