@@ -54,6 +54,19 @@ services:
       - "rss-cache:/var/www/html/cache"
     ports:
       - "6001:80"
+  heimdall:
+    image: lscr.io/linuxserver/heimdall:latest
+    container_name: heimdall
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - /media/Config/freshrss:/config
+    ports:
+      - 80:80
+      - 443:443
+    restart: unless-stopped
   nginxproxymanager:
     image: 'jc21/nginx-proxy-manager:latest'
     container_name: nginx-proxy-manager
