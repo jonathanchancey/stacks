@@ -65,7 +65,7 @@ services:
       - /media/Config/freshrss:/config
     ports:
       - 82:80
-      # - 443:443
+      - 445:443
     restart: unless-stopped
   nginxproxymanager:
     image: 'jc21/nginx-proxy-manager:latest'
