@@ -1,17 +1,18 @@
 terraform {
-    required_providers = ">= 0.13"
   required_providers {
     proxmox = {
       source  = "telmate/proxmox"
-      version = "v2.9.14"
+      version = "2.9.14"
     }
   }
 }
 
 provider "proxmox" {
-  api_url = var.proxmox_api_url
-  api_token_id = var.proxmox_api_token_id
-  api_token_secret = var.proxmox_api_token_secret
+  pm_api_url = var.proxmox_api_url
+  pm_api_token_id = var.proxmox_api_token_id
+  pm_api_token_secret = var.proxmox_api_token_secret
+
+#   pm_tls_insecure = true
 }
 
 variable "proxmox_api_url" {
