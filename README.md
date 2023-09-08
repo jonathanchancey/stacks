@@ -18,3 +18,6 @@ curl -sfL https://get.k3s.io | sh -s - agent \
 --server https://your-lb-ip-address:6443 \
 --token YOUR-SECRET
 ```
+
+
+WARN: iothread is only valid with virtio disk or virtio-scsi-single controller, ignoring

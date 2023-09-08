@@ -6,11 +6,11 @@ resource "proxmox_vm_qemu" "acolyte" {
 
     agent = 1
 
-    clone = "ubuntu-server-23.04"
-    cores = 1
+    clone = "ubuntu-server-23.04-virtio"
+    cores = 2
     sockets = 1 
     cpu = "host"
-    memory = 2048
+    memory = 3072
 
     network {
         bridge = "vmbr0"
@@ -20,7 +20,7 @@ resource "proxmox_vm_qemu" "acolyte" {
     disk {
         storage = "local-lvm"
         type = "virtio"
-        size = "8G"
+        size = "20G"
     }
 
     os_type = "cloud-init"
