@@ -24,7 +24,7 @@ resource "proxmox_vm_qemu" "acolyte" {
     }
 
     os_type = "cloud-init"
-    ipconfig0 = "ip=192.168.0.30,gw=192.168.0.1"
+    ipconfig0 = "ip=192.168.0.30/24,gw=192.168.0.1"
     nameserver = "192.168.0.3"
     ssh_user = "root"
     sshkeys = <<EOF
