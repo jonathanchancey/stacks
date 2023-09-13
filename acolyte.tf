@@ -1,12 +1,12 @@
 resource "proxmox_vm_qemu" "acolyte" {
     name = "acolyte-terraform-00"
-    desc = "ubuntu-server"
+    desc = "kubernetes"
     vmid = "200"
     target_node = "selune"
 
-    agent = 1
+    agent = 0
 
-    clone = "ubuntu-cloudinit"
+    clone = "debian-12-cloudinit"
     full_clone = true
     cores = 4
     sockets = 1 
@@ -26,10 +26,18 @@ resource "proxmox_vm_qemu" "acolyte" {
     # }
 
     os_type = "cloud-init"
-    # ipconfig0 = "ip=192.168.0.30/24,gw=192.168.0.1"
-    # nameserver = "192.168.0.3"
-    ssh_user = "ubuntu"
+    ipconfig0 = "ip=192.168.0.30/24,gw=192.168.0.1"
+    nameserver = "192.168.0.3"
+    ssh_user = "kube"
     sshkeys = <<EOF
+    ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDLV/+WnYhO2RNlMCFqbgajQGGNV/yPesECbO5L1bZBNGHD4p7HaqO0YCmrAV6KcM3hE/n3hUIJ51xBKJppcgqGAhwxnAzb/FqT1h4UjSMa/qeCtypJJMzEddTniCPJJ8khfSeDa/Axu3hli7N12P6svUIdSDBil2kRbAWIZ9jMEX37fD7vu6qC4XI+wpe4kh6+aSO8TrZfAkY32udRp9noPcLbtuEbU+p8lIkTDDrCju3UOCzv4uqVdf47q/UQ9LP1kUcYmx1umR5eP/bthqSEpGC9M8vv50jo+BYL1mR6SOya//jbeYBaES1iDcIZbsx6HXjBX4nvKV/T2Ik/q0M/a8OhEVN4daZGLbyBiChuGidKU9OtXYOud5IBPPECiqZcZ3mnIFQGxuoPziuIopxgwCevbZEcL7rv4fbz0bl5+Y5r05dJhzoSjANsIdoyYXqjRitj87xzH6wPZOdBnHvTIAMxI4quEyPpVtajxZuDr04G6UyuIrKhhyPtm9qlLPU= coal@stone
     ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDFr6EdUZiVh5LIAZgukLDp93gj/ktEyoNUjcE8QSG3Zovf9VABlxkPY9f7KnQaAB3AeMhEIWYpZbHkMgF2l3TMuhPwp7VABds9lLHdb0YuZYL4Y7peRRhNSF6oDOetOkFt46nTs123aChCfj8UrhIR04PqP//LCBQ/gsS+XEDH4jlYGXCtEfOHgwHNFZPwu9aRA+xTj/5OWxr8e8Qtas8RFxt26Q99iHJRiCQIIckR/mObkvy9+09r04fpcfxCPADA/AvvOBRvdmjD3Pd6WP8GnX8DcAGXsUNYDQPr4dAGh0qV/uHomH16c+bIzygUO1FVEFHfLZUhyvN+UjIVrX+iwlXCs+Juf18a/1mJ/DHK+XpckozGowfBXPD8lvhzU7KCG8BvinZ/UvMUbe5aUsFsCsb60yZ/7Nx9ptcsSN1n0jILm6B7mw3rzWQcmQmErMGq/z7xuqeAklHGc5GuVIVzJ+NzPyiDHjQblxYE0iiTpCv0xdIDnl51/+EDOJhJcjc= seki@yu
-    EOF 
+    EOF
+    # provisioner "local-exec" {
+    #     command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u napkin -i '192.168.0.30,' ./playbooks/qemu.yml"
+    # }
+
+    # provisioner "local-exec" {
+    #     command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u napkin -i '${self.ipv4_address},' --private-key ${var.pvt_key} -e 'pub_key=${var.pub_key}' qemu.yml"
+    # }
 }
