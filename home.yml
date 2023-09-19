@@ -69,6 +69,7 @@ services:
     restart: unless-stopped
   homepage:
     image: ghcr.io/benphelps/homepage:latest
+    restart: unless-stopped
     container_name: homepage
     ports:
       - 3000:3000
