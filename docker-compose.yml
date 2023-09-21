@@ -1,0 +1,196 @@
+---
+version: "3.7"
+services:
+  homeassistant:
+    image: lscr.io/linuxserver/homeassistant
+    container_name: homeassistant
+    network_mode: host
+    environment:
+      - PUID=998
+      - PGID=100
+      - TZ=America/Los_Angeles
+    volumes:
+      - /media/Config/homeassistant:/config
+    ports:
+      - 8123:8123 #optional
+    restart: unless-stopped
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin:10.8.8-1-ls196
+    container_name: jellyfin
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Los_Angeles
+      - JELLYFIN_PublishedServerUrl=192.168.0.5 #optional
+    volumes:
+      - /media/Config:/config
+      - /media/Shows:/data/tvshows
+      - /media/Movies:/data/movies
+    ports:
+      - 8096:8096
+      #- 8920:8920 #optional
+      #- 7359:7359/udp #optional
+      #- 1900:1900/udp #optional
+    restart: unless-stopped
+  freshrss:
+    image: lscr.io/linuxserver/freshrss:latest
+    container_name: freshrss
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Los_Angeles
+    volumes:
+      - /media/Config/freshrss:/config
+    ports:
+      - 6000:80
+    restart: unless-stopped
+  fullfeedrss:
+    image: "heussd/fivefilters-full-text-rss:latest"
+    container_name: fullfeedrss
+    environment:
+      # Leave empty to disable admin section
+      - FTR_ADMIN_PASSWORD=
+    volumes:
+      - "rss-cache:/var/www/html/cache"
+    ports:
+      - "6001:80"
+  heimdall:
+    image: lscr.io/linuxserver/heimdall:latest
+    container_name: heimdall
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Los_Angeles
+    volumes:
+      - /media/Config/heimdall:/config
+    ports:
+      - 82:80
+      - 445:443
+    restart: unless-stopped
+  homepage:
+    image: ghcr.io/benphelps/homepage:latest
+    restart: unless-stopped
+    container_name: homepage
+    ports:
+      - 3000:3000
+    volumes:
+      - /media/Config/homepage:/app/config # Make sure your local config directory exists
+      - /var/run/docker.sock:/var/run/docker.sock:ro # (optional) For docker integrations
+  rancher:
+    image: rancher/rancher:latest
+    restart: unless-stopped
+    container_name: rancher
+    ports:
+    - "84:80/tcp"
+    - "484:443/tcp"
+    volumes:
+    - "rancher-data:/var/lib/rancher"
+    privileged: true
+  machinaris:
+    image: ghcr.io/guydavis/machinaris:latest
+    container_name: machinaris
+    restart: unless-stopped
+    volumes:
+      - "/strawberry/ladybug/media/media/Config/machinaris-compose/.machinaris:/root/.chia"
+      - "/mnt/chia/621a:/621a"
+      - "/mnt/chia/22a5:/22a5"
+      - "/mnt/chia/ddd2:/ddd2"
+      - "/mnt/chia/3242:/3242"
+      - "/mnt/chia/a1e8:/a1e8"
+      - "/mnt/chia/7f21:/7f21"
+      - "/mnt/chia/cd07:/cd07"
+    environment:
+      - TZ=America/Los_Angeles
+      - mode=fullnode
+      - worker_address=192.168.0.5
+      - plots_dir=/621a:/22a5:/ddd2:/3242:/a1e8:/7f21:/cd07
+      - blockchains=chia
+    ports:
+      - 8926:8926
+      - 8927:8927
+      - 8444:8444
+      - 8447:8447
+  radarr:
+    image: lscr.io/linuxserver/radarr
+    container_name: radarr
+    environment:
+      - PUID=998
+      - PGID=100
+      - TZ=America/Los_Angeles
+    volumes:
+      - /media/Config/radarr:/config
+      - /media/Movies:/movies #optional
+      - /media/Downloads:/downloads #optional
+    ports:
+      - 7878:7878
+    restart: unless-stopped
+  sonarr:
+    image: lscr.io/linuxserver/sonarr
+    container_name: sonarr
+    environment:
+      - PUID=998
+      - PGID=100
+      - TZ=America/Los_Angeles
+    volumes:
+      - /media/Config/sonarr:/config
+      - /media/Shows:/tv #optional
+      - /media/Downloads:/downloads #optional
+    ports:
+      - 8989:8989
+    restart: unless-stopped
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:develop
+    container_name: prowlarr
+    environment:
+      - PUID=998
+      - PGID=100
+      - TZ=America/Los_Angeles
+    volumes:
+      - /media/Config/prowlarr:/config
+      - /media/Downloads:/downloads
+    ports:
+      - 9696:9696
+    restart: unless-stopped
+  flaresolverr:
+    # DockerHub mirror flaresolverr/flaresolverr:latest
+    image: ghcr.io/flaresolverr/flaresolverr
+    container_name: flaresolverr
+    environment:
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - LOG_HTML=${LOG_HTML:-false}
+      - CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none}
+      - TZ=America/Los_Angeles
+    ports:
+      - "${PORT:-8191}:8191"
+    restart: unless-stopped
+  qbittorrentvpn:
+    image: markusmcnugen/qbittorrentvpn
+    container_name: qbittorrentvpn
+    privileged: true
+    environment:
+      - VPN_USERNAME=***REMOVED***
+      - VPN_PASSWORD=***REMOVED***
+      - PUID=998
+      - PGID=100
+      - TZ=America/Los_Angeles
+      - WEBUI_PORT_ENV=8080
+      - INCOMING_PORT_ENV=8999
+      - VPN_ENABLED=yes
+      - LAN_NETWORK=192.168.0.0/24
+      - NAME_SERVERS=1.1.1.1
+    volumes:
+      - /media/Config/qbittorent:/config
+      - /media/Downloads:/downloads
+    ports:
+      - 8080:8080
+      - 8999:8999
+      - 8999:8999/udp
+    restart: unless-stopped
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+volumes:
+  rancher-data:
+  rss-cache:
