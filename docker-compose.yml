@@ -76,16 +76,16 @@ services:
     volumes:
       - /media/Config/homepage:/app/config # Make sure your local config directory exists
       - /var/run/docker.sock:/var/run/docker.sock:ro # (optional) For docker integrations
-  rancher:
-    image: rancher/rancher:latest
-    restart: unless-stopped
-    container_name: rancher
-    ports:
-    - "84:80/tcp"
-    - "484:443/tcp"
-    volumes:
-    - "rancher-data:/var/lib/rancher"
-    privileged: true
+  # rancher:
+  #   image: rancher/rancher:latest
+  #   restart: unless-stopped
+  #   container_name: rancher
+  #   ports:
+  #   - "84:80/tcp"
+  #   - "484:443/tcp"
+  #   volumes:
+  #   - "rancher-data:/var/lib/rancher"
+  #   privileged: true
   machinaris:
     image: ghcr.io/guydavis/machinaris:latest
     container_name: machinaris
@@ -192,5 +192,5 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
 volumes:
-  rancher-data:
+  # rancher-data:
   rss-cache:
