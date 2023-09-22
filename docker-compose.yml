@@ -191,30 +191,47 @@ services:
     container_name: watchtower
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-  # nginxproxymanager:
-  #   image: 'jc21/nginx-proxy-manager:latest'
-  #   container_name: nginx-proxy-manager
-  #   restart: unless-stopped
-  #   ports:
-  #     # These ports are in format <host-port>:<container-port>
-  #     - '80:80' # Public HTTP Port
-  #     - '443:443' # Public HTTPS Port
-  #     - '81:81' # Admin Web Port
-  #     # Add any other Stream port you want to expose
-  #     # - '21:21' # FTP
+  syncthing:
+    image: lscr.io/linuxserver/syncthing:latest
+    container_name: syncthing
+    hostname: syncthing
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Los_Angeles
+    volumes:
+      - /media/Config/syncthing:/config
+      - /leech:/leech
+    ports:
+      - 8384:8384
+      - 22000:22000/tcp
+      - 22000:22000/udp
+      - 21027:21027/udp
+    restart: unless-stopped
+  nginxproxymanager:
+    image: jc21/nginx-proxy-manager
+    container_name: nginx-proxy-manager
+    restart: unless-stopped
+    ports:
+      # These ports are in format <host-port>:<container-port>
+      - '80:80' # Public HTTP Port
+      - '443:443' # Public HTTPS Port
+      - '81:81' # Admin Web Port
+      # Add any other Stream port you want to expose
+      # - '21:21' # FTP
 
-  #   # Uncomment the next line if you uncomment anything in the section
-  #   # environment:
-  #     # Uncomment this if you want to change the location of
-  #     # the SQLite DB file within the container
-  #     # DB_SQLITE_FILE: "/data/database.sqlite"
+    # Uncomment the next line if you uncomment anything in the section
+    # environment:
+      # Uncomment this if you want to change the location of
+      # the SQLite DB file within the container
+      # DB_SQLITE_FILE: "/data/database.sqlite"
 
-  #     # Uncomment this if IPv6 is not enabled on your host
-  #     # DISABLE_IPV6: 'true'
+      # Uncomment this if IPv6 is not enabled on your host
+      # DISABLE_IPV6: 'true'
 
-  #   volumes:
-  #     - /media/Config/nginx/data:/data
-  #     - /media/Config/nginx/letsencrypt:/etc/letsencrypt
+    volumes:
+      - /media/Config/nginx/data:/data
+      - /media/Config/nginx/letsencrypt:/etc/letsencrypt
 volumes:
   # rancher-data:
   rss-cache:
