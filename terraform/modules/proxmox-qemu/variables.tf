@@ -88,6 +88,6 @@ variable "ssh_user" {
 }
 
 variable "sshkeys" {
-  type        = string
+  # type        = string
   description = "sshkeys"
 }
