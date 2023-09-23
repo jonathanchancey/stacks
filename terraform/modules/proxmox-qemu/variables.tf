@@ -25,6 +25,7 @@ variable "desc" {
 
 variable "vmid" {
   type        = number
+  default = 0
   description = "VM ID for Proxmox VM"
 }
 
@@ -72,7 +73,7 @@ variable "os_type" {
 variable "ipconfig0" {
   type        = string
   description = "ipconfig0"
-  default     = "dhcp"
+  default     = "ip=dhcp,gw=192.168.0.1"
 }
 
 variable "nameserver" {
