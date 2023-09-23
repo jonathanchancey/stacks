@@ -3,7 +3,7 @@
   become: yes
   tasks:
   - name: set timezone
-    shell: timedatectl set-timezone America/Los_Angelos
+    shell: timedatectl set-timezone America/Los_Angeles
 
   - name: Make sure timesyncd is stopped
     systemd:

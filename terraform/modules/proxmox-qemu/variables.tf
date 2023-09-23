@@ -43,7 +43,7 @@ variable "agent" {
 variable "clone_template_name" {
   type        = string
   description = "Name of the template VM to clone from (optional)"
-  default     = "debian-12-cloudinit"
+  default     = "debian-12-cloudinit-refined"
 }
 
 variable "cores" {

@@ -36,6 +36,7 @@ module "neophyte-00" {
   name                     = "neophyte-00"
   target_node              = "shar"
   vmid                     = 15100
+  memory                   = 5120
   sshkeys                  = var.sshkeys
   proxmox_api_url          = var.proxmox_api_url
   proxmox_api_token_id     = var.proxmox_api_token_id
@@ -47,6 +48,7 @@ module "neophyte-01" {
   name                     = "neophyte-01"
   target_node              = "selune"
   vmid                     = 15101
+  memory                   = 5120
   sshkeys                  = var.sshkeys
   proxmox_api_url          = var.proxmox_api_url
   proxmox_api_token_id     = var.proxmox_api_token_id
@@ -58,6 +60,7 @@ module "neophyte-02" {
   name                     = "neophyte-02"
   target_node              = "okapi"
   vmid                     = 15102
+  memory                   = 10240
   sshkeys                  = var.sshkeys
   proxmox_api_url          = var.proxmox_api_url
   proxmox_api_token_id     = var.proxmox_api_token_id
