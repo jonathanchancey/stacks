@@ -25,7 +25,7 @@ variable "desc" {
 
 variable "vmid" {
   type        = number
-  default = 0
+  default     = 0
   description = "VM ID for Proxmox VM"
 }
 
