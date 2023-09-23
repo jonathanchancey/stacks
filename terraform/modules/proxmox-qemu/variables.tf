@@ -73,7 +73,7 @@ variable "os_type" {
 variable "ipconfig0" {
   type        = string
   description = "ipconfig0"
-  default     = "ip=dhcp,gw=192.168.0.1"
+  default     = "ip=dhcp"
 }
 
 variable "nameserver" {

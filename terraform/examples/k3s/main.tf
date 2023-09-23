@@ -63,3 +63,25 @@ module "neophyte-02" {
   proxmox_api_token_id     = var.proxmox_api_token_id
   proxmox_api_token_secret = var.proxmox_api_token_secret
 }
+
+# module "test-00" {
+#   source                   = "../../modules/proxmox-qemu" # Adjust the path as needed
+#   name                     = "test-00"
+#   target_node              = "selune"
+#   vmid                     = 11000
+#   sshkeys                  = var.sshkeys
+#   proxmox_api_url          = var.proxmox_api_url
+#   proxmox_api_token_id     = var.proxmox_api_token_id
+#   proxmox_api_token_secret = var.proxmox_api_token_secret
+# }
+
+# module "test-01" {
+#   source                   = "../../modules/proxmox-qemu" # Adjust the path as needed
+#   name                     = "test-01"
+#   target_node              = "selune"
+#   vmid                     = 11001
+#   sshkeys                  = var.sshkeys
+#   proxmox_api_url          = var.proxmox_api_url
+#   proxmox_api_token_id     = var.proxmox_api_token_id
+#   proxmox_api_token_secret = var.proxmox_api_token_secret
+# }
