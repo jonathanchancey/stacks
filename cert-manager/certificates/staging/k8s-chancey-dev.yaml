@@ -1,0 +1,15 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: fkn-chancey-dev
+  namespace: default
+spec:
+  secretName: fkn-chancey-dev-staging-tls
+  issuerRef:
+    name: letsencrypt-staging
+    kind: ClusterIssuer
+  commonName: "*.fkn.chancey.dev"
+  dnsNames:
+  - "fkn.chancey.dev"
+  - "*.fkn.chancey.dev"
