@@ -9,7 +9,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`traefik.local`)
+    - match: Host(`traefik.fkn.chancey.dev`)
       kind: Rule
       middlewares:
         - name: traefik-dashboard-basicauth
@@ -17,5 +17,5 @@ spec:
       services:
         - name: api@internal
           kind: TraefikService
-#  tls:
-#    secretName: local-example-com-staging-tls
+  tls:
+    secretName: fkn-chancey-dev-tls
