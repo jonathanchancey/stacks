@@ -3,7 +3,7 @@ kind: Deployment
 apiVersion: apps/v1
 metadata:
   name: nginx
-  namespace: default
+  namespace: fkn
   labels:
     app: nginx
 spec:
