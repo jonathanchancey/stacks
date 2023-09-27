@@ -1,8 +1,20 @@
 # scaffold
 terraform repo for proxmox!
 
+## helm
 
 
+### nfs
+```bash
+helm repo add nfs-subdir-external-provisioner https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner/
+
+helm install nfs-subdir-external-provisioner nfs-subdir-external-provisioner/nfs-subdir-external-provisioner \
+    --set nfs.server=x.x.x.x \
+    --set nfs.path=/exported/path
+```
+
+
+## k3s something
 ```bash
 curl -sfL https://get.k3s.io | sh -s - server \
 --token=YOUR-SECRET \
