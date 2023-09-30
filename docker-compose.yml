@@ -76,34 +76,18 @@ services:
     volumes:
       - /media/Config/homepage:/app/config # Make sure your local config directory exists
       - /var/run/docker.sock:/var/run/docker.sock:ro # (optional) For docker integrations
-  # rancher:
-  #   image: rancher/rancher:latest
-  #   restart: unless-stopped
-  #   container_name: rancher
-  #   ports:
-  #   - "84:80/tcp"
-  #   - "484:443/tcp"
-  #   volumes:
-  #   - "rancher-data:/var/lib/rancher"
-  #   privileged: true
   machinaris:
     image: ghcr.io/guydavis/machinaris:latest
     container_name: machinaris
     restart: unless-stopped
     volumes:
-      - "/strawberry/ladybug/media/media/Config/machinaris-compose/.machinaris:/root/.chia"
-      - "/mnt/chia/621a:/621a"
-      - "/mnt/chia/22a5:/22a5"
-      - "/mnt/chia/ddd2:/ddd2"
-      - "/mnt/chia/3242:/3242"
-      - "/mnt/chia/a1e8:/a1e8"
+      - "/machinaris:/root/.chia"
       - "/mnt/chia/7f21:/7f21"
-      - "/mnt/chia/cd07:/cd07"
     environment:
       - TZ=America/Los_Angeles
       - mode=fullnode
       - worker_address=10.10.0.5
-      - plots_dir=/621a:/22a5:/ddd2:/3242:/a1e8:/7f21:/cd07
+      - plots_dir=/7f21
       - blockchains=chia
     ports:
       - 8926:8926
@@ -208,30 +192,6 @@ services:
       - 22000:22000/udp
       - 21027:21027/udp
     restart: unless-stopped
-  # nginxproxymanager:
-  #   image: jc21/nginx-proxy-manager
-  #   container_name: nginx-proxy-manager
-  #   restart: unless-stopped
-  #   ports:
-  #     # These ports are in format <host-port>:<container-port>
-  #     - '80:80' # Public HTTP Port
-  #     - '443:443' # Public HTTPS Port
-  #     - '81:81' # Admin Web Port
-  #     # Add any other Stream port you want to expose
-  #     # - '21:21' # FTP
-
-  #   # Uncomment the next line if you uncomment anything in the section
-  #   # environment:
-  #     # Uncomment this if you want to change the location of
-  #     # the SQLite DB file within the container
-  #     # DB_SQLITE_FILE: "/data/database.sqlite"
-
-  #     # Uncomment this if IPv6 is not enabled on your host
-  #     # DISABLE_IPV6: 'true'
-
-  #   volumes:
-  #     - /media/Config/nginx/data:/data
-  #     - /media/Config/nginx/letsencrypt:/etc/letsencrypt
 volumes:
   # rancher-data:
   rss-cache:
