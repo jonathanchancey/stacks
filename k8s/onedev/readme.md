@@ -21,3 +21,5 @@ git push --set-upstream origin master
 
 check this out later
 https://docs.onedev.io/tutorials/code/gitops#set-up-gitops-for-the-demo-project
+
+helm install onedev onedev/onedev -n onedev --create-namespace --set ingress.enabled=true --set ingress.className=traefik-external --set ingress.host=onedev.fkn.chancey.dev --reuse-values
