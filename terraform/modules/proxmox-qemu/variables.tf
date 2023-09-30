@@ -79,7 +79,7 @@ variable "ipconfig0" {
 variable "nameserver" {
   type        = string
   description = "nameserver"
-  default     = "192.168.0.3"
+  default     = "10.10.0.3"
 }
 
 variable "ssh_user" {
