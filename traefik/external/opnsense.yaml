@@ -7,9 +7,9 @@ spec:
   type: ExternalName
   ports:
     - name: https
-      port: 8443
-      targetPort: 8443
-  externalName: 192.168.0.1
+      port: 443
+      targetPort: 443
+  externalName: 10.10.0.1
   selector:
     app.kubernetes.io/instance: traefik
     app.kubernetes.io/name: traefik
@@ -31,6 +31,6 @@ spec:
       services:
         - name: opnsense
           kind: Service
-          port: 8443
+          port: 443
   tls:
     secretName: fkn-chancey-dev-tls

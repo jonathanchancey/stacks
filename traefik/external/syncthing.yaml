@@ -1,14 +1,14 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: jellyfin
+  name: syncthing
   namespace: fkn
 spec:
   type: ExternalName
   ports:
     - name: http
-      port: 8096
-      targetPort: 8096
+      port: 8384
+      targetPort: 8384
   externalName: 10.10.0.5
   selector:
     app.kubernetes.io/instance: traefik
@@ -17,7 +17,7 @@ spec:
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: jellyfin-ingress
+  name: syncthing-ingress
   namespace: fkn
   annotations: 
     kubernetes.io/ingress.class: traefik-external
@@ -25,12 +25,12 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`jellyfin.fkn.chancey.dev`)
+    - match: Host(`syncthing.fkn.chancey.dev`)
       kind: Rule
       priority: 1
       services:
-        - name: jellyfin
+        - name: syncthing
           kind: Service
-          port: 8096
+          port: 8384
   tls:
     secretName: fkn-chancey-dev-tls
