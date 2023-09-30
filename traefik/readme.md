@@ -13,3 +13,6 @@ Value of kubernetes.io/ingress.class annotation that identifies resource objects
 If the parameter is set, only resources containing an annotation with the same value are processed. Otherwise, resources missing the annotation, having an empty value, or the value traefik are processed.
 
 source: https://doc.traefik.io/traefik/providers/kubernetes-crd/
+
+
+helm install --namespace=traefik traefik traefik/traefik --values=values.yaml
