@@ -89,6 +89,7 @@ services:
       - worker_address=10.10.0.5
       - plots_dir=/7f21
       - blockchains=chia
+      - blockchain_db_download=true
     ports:
       - 8926:8926
       - 8927:8927
