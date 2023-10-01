@@ -1,0 +1,36 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: freshrss
+  namespace: fkn
+spec:
+  type: ExternalName
+  ports:
+    - name: http
+      port: 60001
+      targetPort: 60001
+  externalName: 10.10.0.5
+  selector:
+    app.kubernetes.io/instance: traefik
+    app.kubernetes.io/name: traefik
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: freshrss-ingress
+  namespace: fkn
+  annotations: 
+    kubernetes.io/ingress.class: traefik-external
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`freshrss.fkn.chancey.dev`)
+      kind: Rule
+      priority: 1
+      services:
+        - name: freshrss
+          kind: Service
+          port: 60001
+  tls:
+    secretName: fkn-chancey-dev-tls

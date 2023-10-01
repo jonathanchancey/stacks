@@ -1,0 +1,36 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: chicken
+  namespace: fkn
+spec:
+  type: ExternalName
+  ports:
+    - name: https
+      port: 9090
+      targetPort: 9090
+  externalName: 10.10.0.70
+  selector:
+    app.kubernetes.io/instance: traefik
+    app.kubernetes.io/name: traefik
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: chicken-ingress
+  namespace: fkn
+  annotations: 
+    kubernetes.io/ingress.class: traefik-external
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`chicken.fkn.chancey.dev`)
+      kind: Rule
+      priority: 1
+      services:
+        - name: chicken
+          kind: Service
+          port: 9090
+  tls:
+    secretName: fkn-chancey-dev-tls
