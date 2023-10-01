@@ -42,7 +42,7 @@ services:
     volumes:
       - /media/Config/freshrss:/config
     ports:
-      - 6000:80
+      - 60001:80
     restart: unless-stopped
   fullfeedrss:
     image: "heussd/fivefilters-full-text-rss:latest"
@@ -53,7 +53,7 @@ services:
     volumes:
       - "rss-cache:/var/www/html/cache"
     ports:
-      - "6001:80"
+      - "60002:80"
   heimdall:
     image: lscr.io/linuxserver/heimdall:latest
     container_name: heimdall
