@@ -36,8 +36,8 @@ services:
     image: lscr.io/linuxserver/freshrss:latest
     container_name: freshrss
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=1101
+      - PGID=1101
       - TZ=America/Los_Angeles
     volumes:
       - /media/Config/freshrss:/config
