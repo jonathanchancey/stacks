@@ -38,6 +38,7 @@ services:
     environment:
       - PUID=1101
       - PGID=1101
+      - UMASK=002
       - TZ=America/Los_Angeles
     volumes:
       - /media/Config/freshrss:/config
