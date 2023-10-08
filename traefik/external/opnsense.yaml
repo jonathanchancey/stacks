@@ -1,15 +1,15 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: jellyfin
+  name: opnsense
   namespace: fkn
 spec:
   type: ExternalName
   ports:
-    - name: http
-      port: 8096
-      targetPort: 8096
-  externalName: 10.10.0.5
+    - name: https
+      port: 443
+      targetPort: 443
+  externalName: 10.10.0.1
   selector:
     app.kubernetes.io/instance: traefik
     app.kubernetes.io/name: traefik
@@ -17,7 +17,7 @@ spec:
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: jellyfin-ingress
+  name: opnsense-ingress
   namespace: fkn
   annotations: 
     kubernetes.io/ingress.class: traefik-external
@@ -25,12 +25,12 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`jellyfin.fkn.chancey.dev`)
+    - match: Host(`opnsense.fkn.chancey.dev`)
       kind: Rule
       priority: 1
       services:
-        - name: jellyfin
+        - name: opnsense
           kind: Service
-          port: 8096
+          port: 443
   tls:
     secretName: fkn-chancey-dev-tls

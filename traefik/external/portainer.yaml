@@ -9,7 +9,7 @@ spec:
     - name: https
       port: 9443
       targetPort: 9443
-  externalName: 192.168.0.5
+  externalName: 10.10.0.5
   selector:
     app.kubernetes.io/instance: traefik
     app.kubernetes.io/name: traefik
