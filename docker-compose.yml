@@ -26,6 +26,7 @@ services:
       - /media/Config:/config
       - /media/Shows:/data/tvshows
       - /media/Movies:/data/movies
+      - /media/Music:/data/music
     ports:
       - 8096:8096
       #- 8920:8920 #optional
