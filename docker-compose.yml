@@ -33,6 +33,21 @@ services:
       #- 7359:7359/udp #optional
       #- 1900:1900/udp #optional
     restart: unless-stopped
+  navidrome:
+    image: deluan/navidrome:latest
+    user: 1012:5000 # should be owner of volumes
+    ports:
+      - "4533:4533"
+    restart: unless-stopped
+    environment:
+      # Optional: put your config options customization here. Examples:
+      ND_SCANSCHEDULE: 1h
+      ND_LOGLEVEL: info  
+      ND_SESSIONTIMEOUT: 24h
+      # ND_BASEURL: ""
+    volumes:
+      - "/media/Config/navidrome:/data"
+      - "/media/Music:/music:ro"
   freshrss:
     image: lscr.io/linuxserver/freshrss:latest
     container_name: freshrss
