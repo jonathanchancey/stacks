@@ -46,16 +46,16 @@ services:
     ports:
       - 60001:80
     restart: unless-stopped
-  fullfeedrss:
-    image: "heussd/fivefilters-full-text-rss:latest"
-    container_name: fullfeedrss
-    environment:
-      # Leave empty to disable admin section
-      - FTR_ADMIN_PASSWORD=
-    volumes:
-      - "rss-cache:/var/www/html/cache"
-    ports:
-      - "60002:80"
+  # fullfeedrss:
+  #   image: "heussd/fivefilters-full-text-rss:latest"
+  #   container_name: fullfeedrss
+  #   environment:
+  #     # Leave empty to disable admin section
+  #     - FTR_ADMIN_PASSWORD=
+  #   volumes:
+  #     - "rss-cache:/var/www/html/cache"
+  #   ports:
+  #     - "60002:80"
   heimdall:
     image: lscr.io/linuxserver/heimdall:latest
     container_name: heimdall
