@@ -88,3 +88,13 @@ config.php is read on every request. So it will be activated immediately after a
 
 
 │ e the server's fully qualified domain name, using 10.42.4.52. Set the 'ServerName' directive globally to suppress this messa │
+
+
+don't use extraENV or whatever, just overwrite the config here
+
+https://github.com/nextcloud/helm/blob/main/charts/nextcloud/values.yaml#L127
+
+also be mindful of 
+phpClientHttpsFix:
+  enabled: true
+  protocol: https

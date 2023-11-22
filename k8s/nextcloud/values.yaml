@@ -1,9 +1,13 @@
 namespace: fkn
 image:
     repository: nextcloud
-    tag: 23.0.2-apache
+    # tag: 23.0.2-apache
 # ingress:
 #   className: traefik
+phpClientHttpsFix:
+  enabled: true
+  protocol: https
+
 nextcloud:
   host: nextcloud.fkn.chancey.dev
   existingSecret:
@@ -11,18 +15,18 @@ nextcloud:
     secretName: nextcloud-creds
     usernameKey: username
     passwordKey: password
-    extraEnv:
-        - name: OVERWRITEPROTOCOL
-          value: https
-        - name: OVERWRITEHOST
-          value: nextcloud.fkn.chancey.dev
-        - name: overwrite.cli.url
-          value: https://nextcloud.fkn.chancey.dev
-        # This is the Cluster Ip of the loadbalancer
-        - name: TRUSTED_PROXIES
-          value: 10.10.0.40
-        - name: APACHE_DISABLE_REWRITE_IP
-          value: "1"
+    # extraEnv:
+    #     - name: OVERWRITEPROTOCOL
+    #       value: https
+    #     - name: OVERWRITEHOST
+    #       value: nextcloud.fkn.chancey.dev
+    #     - name: overwrite.cli.url
+    #       value: https://nextcloud.fkn.chancey.dev
+    #     # This is the Cluster Ip of the loadbalancer
+    #     - name: TRUSTED_PROXIES
+    #       value: 10.10.0.40
+    #     - name: APACHE_DISABLE_REWRITE_IP
+    #       value: "1"
     phpConfigs:
       opcache.interned_strings_buffer: "10"
   # persistence:
