@@ -1,0 +1,57 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: nextcloud
+  namespace: fkn
+spec:
+  type: ExternalName
+  ports:
+    - name: https
+      port: 80
+      targetPort: 80
+  externalName: 10.10.0.171
+  selector:
+    app.kubernetes.io/instance: traefik
+    app.kubernetes.io/name: traefik
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: nextcloud-ingress
+  namespace: fkn
+  annotations: 
+    kubernetes.io/ingress.class: traefik-external
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`nextcloud.fkn.chancey.dev`)
+      kind: Rule
+      priority: 1
+      services:
+        - name: nextcloud
+          kind: Service
+          port: 80
+  tls:
+    secretName: fkn-chancey-dev-tls
+--- # This need to be deployed in the same namespace as the running nextcloud instance
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: nextcloud-middleware-regex
+  namespace: nextcloud
+spec:
+  redirectRegex:
+    permanent: true
+    regex: "https://(.*)/.well-known/(card|cal)dav"
+    replacement: "https://${1}/remote.php/dav/"
+--- # This need to be deployed in the same namespace as the running nextcloud instance
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: nextcloud-middleware-https
+  namespace: nextcloud
+spec:
+  redirectScheme:
+    scheme: https
+    permanent: true
