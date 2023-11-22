@@ -4,8 +4,8 @@ https://github.com/nextcloud/helm/blob/main/charts/nextcloud/README.md
 
 
 ```zsh
-helm repo update
 helm repo add nextcloud https://nextcloud.github.io/helm/
+helm repo update
 helm install --namespace=nextcloud nextcloud nextcloud/nextcloud --values=values.yaml
 ```
 
@@ -77,3 +77,14 @@ https://www.turnkeylinux.org/nextcloud
 https://help.nextcloud.com/t/how-to-get-around-access-through-untrusted-domain-error/48179
 https://help.nextcloud.com/t/where-is-config-php/54100
 https://docs.nextcloud.com/server/27/admin_manual/installation/installation_wizard.html#trusted-domains
+
+
+https://github.com/nextcloud/all-in-one/blob/main/reverse-proxy.md#4-open-the-aio-interface
+
+/var/log/apache2/access.log
+https://docs.nextcloud.com/server/21/admin_manual/configuration_server/logging_configuration.html?highlight=audit
+config.php is read on every request. So it will be activated immediately after altering it when visiting your Nextcloud.
+
+
+
+│ e the server's fully qualified domain name, using 10.42.4.52. Set the 'ServerName' directive globally to suppress this messa │
