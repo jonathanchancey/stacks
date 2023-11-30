@@ -6,7 +6,7 @@ metadata:
 spec:
   type: ExternalName
   ports:
-    - name: https
+    - name: http
       port: 8123
       targetPort: 8123
   externalName: 10.10.0.5
@@ -25,7 +25,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`hass.fkn.chancey.dev`)
+    - match: Host(`ha.fkn.chancey.dev`)
       kind: Rule
       middlewares:
         - name: homeassistant-ssl-header
@@ -48,3 +48,13 @@ spec:
     customRequestHeaders:
       Connection: keep-alive, Upgrade
       Upgrade: WebSocket
+    customResponseHeaders:
+      X-Robots-Tag: "none,noarchive,nosnippet,notranslate,noimageindex"
+      X-Forwarded-Proto: "https"
+      server: ""
+    customRequestHeaders:
+      X-Forwarded-Proto: "https"
+    sslProxyHeaders:
+      X-Forwarded-Proto: "https"
+    hostsProxyHeaders:
+      - "X-Forwarded-Host"
