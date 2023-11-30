@@ -16,3 +16,8 @@ source: https://doc.traefik.io/traefik/providers/kubernetes-crd/
 
 
 helm install --namespace=traefik traefik traefik/traefik --values=values.yaml
+
+
+helm upgrade --namespace=traefik traefik traefik/traefik --values=values.yaml
+
+kubectl apply -f default-headers.yaml
