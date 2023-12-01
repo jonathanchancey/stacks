@@ -15,8 +15,8 @@ services:
       - 8123:8123 #optional
     restart: unless-stopped
     labels:
-      - homepage.group=Automation
-      - homepage.name=Management
+      - homepage.group=Management
+      - homepage.name=Home Assistant
       - homepage.icon=homeassistant.png
       - homepage.href=https://ha.fkn.chancey.dev/
       - homepage.description=Home Automation
@@ -139,7 +139,7 @@ services:
     labels:
       - homepage.group=Management
       - homepage.name=Machinaris
-      - homepage.icon=machinaris.png
+      - homepage.icon=diskstation.png
       - homepage.href=https://machinaris.fkn.chancey.dev/
       - homepage.description=Chia
   radarr:
@@ -233,7 +233,7 @@ services:
     labels:
       - homepage.group=Management
       - homepage.name=Qbittorent
-      - homepage.icon=qbittorent.png
+      - homepage.icon=transmission.png
       - homepage.href=https://qbit.fkn.chancey.dev/
       - homepage.description=Torrent Client
   watchtower:
