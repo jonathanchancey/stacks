@@ -17,7 +17,7 @@ services:
     labels:
       - homepage.group=Management
       - homepage.name=Home Assistant
-      - homepage.icon=homeassistant.png
+      - homepage.icon=home-assistant.png
       - homepage.href=https://ha.fkn.chancey.dev/
       - homepage.description=Home Automation
   jellyfin:
@@ -139,7 +139,7 @@ services:
     labels:
       - homepage.group=Management
       - homepage.name=Machinaris
-      - homepage.icon=diskstation.png
+      - homepage.abbr=Ma
       - homepage.href=https://machinaris.fkn.chancey.dev/
       - homepage.description=Chia
   radarr:
@@ -233,7 +233,7 @@ services:
     labels:
       - homepage.group=Management
       - homepage.name=Qbittorent
-      - homepage.icon=transmission.png
+      - homepage.abbr=QB
       - homepage.href=https://qbit.fkn.chancey.dev/
       - homepage.description=Torrent Client
   watchtower:
@@ -264,5 +264,23 @@ services:
       - homepage.icon=syncthing.png
       - homepage.href=https://syncthing.fkn.chancey.dev/
       - homepage.description=File Sync
+  uptime-kuma:
+    restart: unless-stopped
+    environment:
+    - PUID=3001
+    - PGID=3001
+    - TZ=America/Los_Angeles
+    ports:
+        - 3001:3001
+    volumes:
+    - /media/Config/uptime-kuma:/app/data
+    container_name: uptime-kuma
+    image: louislam/uptime-kuma:1
+    labels:
+    - homepage.group=Management
+    - homepage.name=Uptime Kuma
+    - homepage.icon=uptime-kuma.png
+    - homepage.href=https://uptime-kuma.fkn.chancey.dev/
+    - homepage.description=Status Page
 volumes:
   rss-cache:
