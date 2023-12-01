@@ -1,35 +1,39 @@
 mqtt:
-  host: mqtt.server.com
-cameras:
-  back:
-    ffmpeg:
-      inputs:
-        - path: rtsp://viewer:{FRIGATE_RTSP_PASSWORD}@10.0.10.10:554/cam/realmonitor?channel=1&subtype=2
-          roles:
-            - detect
-    detect:
-      width: 1280
-      height: 720
-
-
-mqtt:
   enabled: false
 ffmpeg:
   hwaccel_args: preset-vaapi
-#Global Object Settings
-# cameras:
-#   FrontCam:
-#     ffmpeg:
-#       inputs:
-#         # High Resolution Stream
-#         - path: rtsp://10.50.0.52:7447/
-#           roles:
-#             - record
-#         # Low Resolution Stream
-#         - path: rtsp://192.168.22.1:7447/
-#           roles:
-#             - detect
-#     detect:
-#       width: 480
-#       height: 360
-#       fps: 24
+detectors:
+  coral:
+    type: edgetpu
+    device: pci
+database:
+  path: /opt/frigate/frigate.db
+cameras:
+  RLC-510A:
+    ffmpeg:
+      inputs:
+        - path: rtsp://viewer@10.50.0.51:554
+          roles:
+            - detect
+    detect:
+      enabled: true
+  RLC-810A:
+    ffmpeg:
+      inputs:
+        - path: rtsp://viewer@10.50.0.52:554
+          roles:
+            - detect
+  Duo-0:
+    ffmpeg:
+      inputs:
+        - path: rtsp://viewer@10.50.0.53:554
+          roles:
+            - detect
+  Duo-1:
+    ffmpeg:
+      inputs:
+        - path: rtsp://viewer@10.50.0.54:554
+          roles:
+            - detect
+    detect:
+      enabled: true
