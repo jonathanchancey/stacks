@@ -26,3 +26,9 @@ services:
       - "8555:8555/udp" # WebRTC over udp
     # environment:
     #   FRIGATE_RTSP_PASSWORD: ***REMOVED***
+    labels:
+      - homepage.group=Media
+      - homepage.name=Frigate
+      - homepage.icon=frigate.png
+      - homepage.href=https://frigate.fkn.chancey.dev/
+      - homepage.description=Security Cameras

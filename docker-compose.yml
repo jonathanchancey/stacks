@@ -14,6 +14,12 @@ services:
     ports:
       - 8123:8123 #optional
     restart: unless-stopped
+    labels:
+      - homepage.group=Automation
+      - homepage.name=Management
+      - homepage.icon=homeassistant.png
+      - homepage.href=https://ha.fkn.chancey.dev/
+      - homepage.description=Home Automation
   jellyfin:
     image: lscr.io/linuxserver/jellyfin:10.8.8-1-ls196
     container_name: jellyfin
@@ -54,6 +60,12 @@ services:
     volumes:
       - "/media/Config/navidrome:/data"
       - "/media/Music:/music:ro"
+    labels:
+      - homepage.group=Media
+      - homepage.name=Navidrome
+      - homepage.icon=navidrome.png
+      - homepage.href=https://navidrome.fkn.chancey.dev/
+      - homepage.description=Music server
   freshrss:
     image: lscr.io/linuxserver/freshrss:latest
     container_name: freshrss
@@ -67,6 +79,12 @@ services:
     ports:
       - 60001:80
     restart: unless-stopped
+    labels:
+      - homepage.group=Media
+      - homepage.name=FreshRSS
+      - homepage.icon=freshrss.png
+      - homepage.href=https://freshrss.fkn.chancey.dev/
+      - homepage.description=RSS Reader
   # fullfeedrss:
   #   image: "heussd/fivefilters-full-text-rss:latest"
   #   container_name: fullfeedrss
@@ -77,19 +95,19 @@ services:
   #     - "rss-cache:/var/www/html/cache"
   #   ports:
   #     - "60002:80"
-  heimdall:
-    image: lscr.io/linuxserver/heimdall:latest
-    container_name: heimdall
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=America/Los_Angeles
-    volumes:
-      - /media/Config/heimdall:/config
-    ports:
-      - 82:80
-      - 445:443
-    restart: unless-stopped
+  # heimdall:
+  #   image: lscr.io/linuxserver/heimdall:latest
+  #   container_name: heimdall
+  #   environment:
+  #     - PUID=1000
+  #     - PGID=1000
+  #     - TZ=America/Los_Angeles
+  #   volumes:
+  #     - /media/Config/heimdall:/config
+  #   ports:
+  #     - 82:80
+  #     - 445:443
+  #   restart: unless-stopped
   homepage:
     image: ghcr.io/gethomepage/homepage:latest
     restart: unless-stopped
@@ -118,6 +136,12 @@ services:
       - 8927:8927
       - 8444:8444
       - 8447:8447
+    labels:
+      - homepage.group=Management
+      - homepage.name=Machinaris
+      - homepage.icon=machinaris.png
+      - homepage.href=https://machinaris.fkn.chancey.dev/
+      - homepage.description=Chia
   radarr:
     image: lscr.io/linuxserver/radarr
     container_name: radarr
@@ -132,6 +156,12 @@ services:
     ports:
       - 7878:7878
     restart: unless-stopped
+    labels:
+      - homepage.group=Media
+      - homepage.name=Radarr
+      - homepage.icon=radarr.png
+      - homepage.href=https://radarr.fkn.chancey.dev/
+      - homepage.description=TV Collection Manager
   sonarr:
     image: lscr.io/linuxserver/sonarr
     container_name: sonarr
@@ -146,6 +176,12 @@ services:
     ports:
       - 8989:8989
     restart: unless-stopped
+    labels:
+      - homepage.group=Media
+      - homepage.name=Sonarr
+      - homepage.icon=sonarr.png
+      - homepage.href=https://sonarr.fkn.chancey.dev/
+      - homepage.description=Movie Collection Manager
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:develop
     container_name: prowlarr
@@ -194,6 +230,12 @@ services:
       - 8999:8999
       - 8999:8999/udp
     restart: unless-stopped
+    labels:
+      - homepage.group=Management
+      - homepage.name=Qbittorent
+      - homepage.icon=qbittorent.png
+      - homepage.href=https://qbit.fkn.chancey.dev/
+      - homepage.description=Torrent Client
   watchtower:
     image: containrrr/watchtower
     container_name: watchtower
@@ -216,6 +258,11 @@ services:
       - 22000:22000/udp
       - 21027:21027/udp
     restart: unless-stopped
+    labels:
+      - homepage.group=Management
+      - homepage.name=Syncthing
+      - homepage.icon=syncthing.png
+      - homepage.href=https://syncthing.fkn.chancey.dev/
+      - homepage.description=File Sync
 volumes:
-  # rancher-data:
   rss-cache:
