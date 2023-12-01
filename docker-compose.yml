@@ -85,7 +85,7 @@ services:
       - 445:443
     restart: unless-stopped
   homepage:
-    image: ghcr.io/benphelps/homepage:latest
+    image: ghcr.io/gethomepage/homepage:latest
     restart: unless-stopped
     container_name: homepage
     ports:
@@ -99,7 +99,7 @@ services:
     restart: unless-stopped
     volumes:
       - "/machinaris:/root/.chia"
-      - "/mnt/chia/7f21:/7f21"
+      # - "/mnt/chia/7f21:/7f21"
     environment:
       - TZ=America/Los_Angeles
       - mode=fullnode
