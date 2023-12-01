@@ -45,7 +45,7 @@ services:
       - homepage.group=Media
       - homepage.name=Navidrome
       - homepage.icon=navidrome.png
-      - homepage.href=https://navidrome.fkn.chancey.dev/
+      - homepage.href=https://navi.fkn.chancey.dev/
       - homepage.description=Music server
   freshrss:
     image: lscr.io/linuxserver/freshrss:latest
@@ -160,3 +160,5 @@ services:
       - homepage.abbr=QB
       - homepage.href=https://qbit.fkn.chancey.dev/
       - homepage.description=Torrent Client
+volumes:
+  rss-cache:
