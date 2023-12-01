@@ -47,6 +47,7 @@ services:
     restart: unless-stopped
   navidrome:
     image: deluan/navidrome:latest
+    container_name: navidrome
     user: 1012:5000 # should be owner of volumes
     ports:
       - "4533:4533"
@@ -274,10 +275,11 @@ services:
         - 3001:3001
     volumes:
     - /media/Config/uptime-kuma:/app/data
+    - /var/run/docker.sock:/var/run/docker.sock:ro # (optional) For docker integrations
     container_name: uptime-kuma
     image: louislam/uptime-kuma:1
     labels:
-    - homepage.group=Management
+    - homepage.group=Metrics
     - homepage.name=Uptime Kuma
     - homepage.icon=uptime-kuma.png
     - homepage.href=https://uptime-kuma.fkn.chancey.dev/
