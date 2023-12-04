@@ -52,7 +52,7 @@ services:
       - homepage.group=Management
       - homepage.name=Machinaris
       - homepage.abbr=Ma
-      - homepage.href=https://machinaris.fkn.chancey.dev/
+      - homepage.href=http://10.10.0.5:8926/
       - homepage.description=Chia
   syncthing:
     image: lscr.io/linuxserver/syncthing:latest
@@ -101,3 +101,24 @@ services:
     container_name: watchtower
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+  freshrss:
+    image: lscr.io/linuxserver/freshrss:latest
+    container_name: freshrss
+    environment:
+      - PUID=1101
+      - PGID=1101
+      - UMASK=002
+      - TZ=America/Los_Angeles
+    volumes:
+      - /media/Config/freshrss:/config
+    ports:
+      - 60001:80
+    restart: unless-stopped
+    labels:
+      - homepage.group=Media
+      - homepage.name=FreshRSS
+      - homepage.icon=freshrss.png
+      - homepage.href=https://freshrss.fkn.chancey.dev/
+      - homepage.description=RSS Reader
+volumes:
+  rss-cache:

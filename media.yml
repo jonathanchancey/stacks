@@ -47,25 +47,6 @@ services:
       - homepage.icon=navidrome.png
       - homepage.href=https://navi.fkn.chancey.dev/
       - homepage.description=Music server
-  freshrss:
-    image: lscr.io/linuxserver/freshrss:latest
-    container_name: freshrss
-    environment:
-      - PUID=1101
-      - PGID=1101
-      - UMASK=002
-      - TZ=America/Los_Angeles
-    volumes:
-      - /media/Config/freshrss:/config
-    ports:
-      - 60001:80
-    restart: unless-stopped
-    labels:
-      - homepage.group=Media
-      - homepage.name=FreshRSS
-      - homepage.icon=freshrss.png
-      - homepage.href=https://freshrss.fkn.chancey.dev/
-      - homepage.description=RSS Reader
   radarr:
     image: lscr.io/linuxserver/radarr
     container_name: radarr
@@ -160,5 +141,3 @@ services:
       - homepage.abbr=QB
       - homepage.href=https://qbit.fkn.chancey.dev/
       - homepage.description=Torrent Client
-volumes:
-  rss-cache:
