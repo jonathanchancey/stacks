@@ -87,7 +87,6 @@ services:
         - 3001:3001
     volumes:
     - /media/Config/uptime-kuma:/app/data
-    - /var/run/docker.sock:/var/run/docker.sock:ro # (optional) For docker integrations
     container_name: uptime-kuma
     image: louislam/uptime-kuma:1
     labels:
