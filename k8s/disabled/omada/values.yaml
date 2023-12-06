@@ -1,0 +1,16 @@
+service:
+  main:
+    ports:
+      main:
+        protocol: https
+        port: 443
+ingress:
+  main: 
+    autolink: true
+# persistence:
+#   data:
+#     enabled: true
+#     mountPath: /opt/tplink/EAPController/data
+#   work:
+#     enabled: true
+#     mountPath: /opt/tplink/EAPController/work
