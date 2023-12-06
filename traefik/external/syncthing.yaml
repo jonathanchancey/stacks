@@ -6,7 +6,7 @@ metadata:
 spec:
   type: ExternalName
   ports:
-    - name: http
+    - name: https
       port: 8384
       targetPort: 8384
   externalName: 10.10.0.5

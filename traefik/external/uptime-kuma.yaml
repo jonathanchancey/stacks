@@ -1,15 +1,15 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: pihole
+  name: uptime-kuma
   namespace: fkn
 spec:
   type: ExternalName
   ports:
     - name: http
-      port: 80
-      targetPort: 80
-  externalName: 10.10.0.3
+      port: 3001
+      targetPort: 3001
+  externalName: 10.10.0.5
   selector:
     app.kubernetes.io/instance: traefik
     app.kubernetes.io/name: traefik
@@ -17,7 +17,7 @@ spec:
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: pihole-ingress
+  name: uptime-kuma-ingress
   namespace: fkn
   annotations: 
     kubernetes.io/ingress.class: traefik-external
@@ -25,12 +25,12 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`pit.fkn.chancey.dev`)
+    - match: Host(`uptime-kuma.fkn.chancey.dev`)
       kind: Rule
       priority: 1
       services:
-        - name: pihole
+        - name: uptime-kuma
           kind: Service
-          port: 80
+          port: 3001
   tls:
     secretName: fkn-chancey-dev-tls
