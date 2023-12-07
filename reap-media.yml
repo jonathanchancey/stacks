@@ -10,10 +10,10 @@ services:
       - TZ=America/Los_Angeles
     #   - JELLYFIN_PublishedServerUrl=10.10.0.5 #optional
     volumes:
-      - /media/Config:/config
-      - /media/Shows:/data/tvshows
-      - /media/Movies:/data/movies
-      - /media/Music:/data/music
+      - /opt/jellyfin/config:/config
+      - /mnt/media/Shows:/data/tvshows
+      - /mnt/media/Movies:/data/movies
+    #   - /mnt/media/Music:/data/music
     ports:
       - 8096:8096
       #- 8920:8920 #optional
