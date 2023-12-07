@@ -9,6 +9,8 @@ services:
       - PGID=8096
       - TZ=America/Los_Angeles
     #   - JELLYFIN_PublishedServerUrl=10.10.0.5 #optional
+    devices:
+      - /dev/dri:/dev/dri
     volumes:
       - /opt/jellyfin/config:/config
       - /mnt/media/Shows:/data/tvshows

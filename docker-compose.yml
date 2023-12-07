@@ -108,8 +108,12 @@ services:
       - PGID=1101
       - UMASK=002
       - TZ=America/Los_Angeles
+      - 'CRON_MIN=1,31'
+      - TRUSTED_PROXY='172.16.0.1/12 10.10.0.1/16'
     volumes:
       - /media/Config/freshrss:/config
+      - /media/Config/freshrss/data:/var/www/FreshRSS/data
+      - /media/Config/freshrss/extensions:/var/www/FreshRSS/extensions
     ports:
       - 60001:80
     restart: unless-stopped
