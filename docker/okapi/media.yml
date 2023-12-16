@@ -7,6 +7,7 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
+      - UMASK=002
       - TZ=America/Los_Angeles
       - JELLYFIN_PublishedServerUrl=10.10.0.5 #optional
     volumes:
@@ -53,6 +54,7 @@ services:
     environment:
       - PUID=998
       - PGID=100
+      - UMASK=002
       - TZ=America/Los_Angeles
     volumes:
       - /media/Config/radarr:/config
@@ -73,6 +75,7 @@ services:
     environment:
       - PUID=998
       - PGID=100
+      - UMASK=002
       - TZ=America/Los_Angeles
     volumes:
       - /media/Config/sonarr:/config
@@ -93,6 +96,7 @@ services:
     environment:
       - PUID=998
       - PGID=100
+      - UMASK=002
       - TZ=America/Los_Angeles
     volumes:
       - /media/Config/prowlarr:/config
@@ -121,6 +125,7 @@ services:
       - VPN_PASSWORD=$PIA_PASSWORD
       - PUID=998
       - PGID=100
+      - UMASK=002
       - TZ=America/Los_Angeles
       - WEBUI_PORT_ENV=8080
       - INCOMING_PORT_ENV=8999

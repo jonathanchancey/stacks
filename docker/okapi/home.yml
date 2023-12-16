@@ -8,6 +8,7 @@ services:
     environment:
       - PUID=998
       - PGID=100
+      - UMASK=002
       - TZ=America/Los_Angeles
     volumes:
       - /media/Config/homeassistant:/config
@@ -27,22 +28,20 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - /media/Config/homepage:/app/config # Make sure your local config directory exists
-      - /var/run/docker.sock:/var/run/docker.sock:ro # (optional) For docker integrations
+      - /media/Config/homepage:/app/config
+      - /var/run/docker.sock:/var/run/docker.sock:ro # optional
   machinaris:
     image: ghcr.io/guydavis/machinaris:latest
     container_name: machinaris
     restart: unless-stopped
     volumes:
       - "/machinaris:/root/.chia"
-      # - "/mnt/chia/7f21:/7f21"
     environment:
       - TZ=America/Los_Angeles
       - mode=fullnode
       - worker_address=10.10.0.5
       - plots_dir=/7f21
       - blockchains=chia
-      - blockchain_db_download=true
     ports:
       - 8926:8926
       - 8927:8927
@@ -61,6 +60,7 @@ services:
     environment:
       - PUID=1000
       - PGID=1012
+      - UMASK=002
       - TZ=America/Los_Angeles
     volumes:
       - /media/Config/syncthing:/config
@@ -77,24 +77,6 @@ services:
       - homepage.icon=syncthing.png
       - homepage.href=https://syncthing.fkn.chancey.dev/
       - homepage.description=File Sync
-  uptime-kuma:
-    restart: unless-stopped
-    environment:
-    - PUID=3001
-    - PGID=3001
-    - TZ=America/Los_Angeles
-    ports:
-        - 3001:3001
-    volumes:
-    - /media/Config/uptime-kuma:/app/data
-    container_name: uptime-kuma
-    image: louislam/uptime-kuma:1
-    labels:
-    - homepage.group=Metrics
-    - homepage.name=Uptime Kuma
-    - homepage.icon=uptime-kuma.png
-    - homepage.href=https://uptime-kuma.fkn.chancey.dev/
-    - homepage.description=Status Page
   watchtower:
     image: containrrr/watchtower
     container_name: watchtower

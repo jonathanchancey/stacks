@@ -1,0 +1,21 @@
+---
+version: "3.7"
+services:
+  uptime-kuma:
+    restart: unless-stopped
+    environment:
+    - PUID=3001
+    - PGID=3001
+    - TZ=America/Los_Angeles
+    ports:
+        - 3001:3001
+    volumes:
+    - /media/Config/uptime-kuma:/app/data
+    container_name: uptime-kuma
+    image: louislam/uptime-kuma:1
+    labels:
+    - homepage.group=Metrics
+    - homepage.name=Uptime Kuma
+    - homepage.icon=uptime-kuma.png
+    - homepage.href=https://uptime-kuma.fkn.chancey.dev/
+    - homepage.description=Status Page
