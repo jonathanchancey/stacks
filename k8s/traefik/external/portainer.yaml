@@ -1,0 +1,50 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: portainer
+  namespace: fkn
+spec:
+  type: ExternalName
+  ports:
+    - name: https
+      port: 9443
+      targetPort: 9443
+  externalName: 10.10.0.5
+  selector:
+    app.kubernetes.io/instance: traefik
+    app.kubernetes.io/name: traefik
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: portainer-ingress
+  namespace: fkn
+  annotations: 
+    kubernetes.io/ingress.class: traefik-external
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`portainer.fkn.chancey.dev`)
+      kind: Rule
+      # middlewares:
+      #   - name: portainer-ssl-header
+      #     namespace: fkn
+      priority: 1
+      services:
+        - name: portainer
+          kind: Service
+          port: 9443
+  tls:
+    secretName: fkn-chancey-dev-tls
+# ---
+# apiVersion: traefik.containo.us/v1alpha1
+# kind: Middleware
+# metadata:
+#   name: portainer-ssl-header
+#   namespace: fkn
+# spec:
+#   headers:
+#     customRequestHeaders:
+#       Connection: keep-alive, Upgrade
+#       Upgrade: WebSocket

@@ -1,0 +1,64 @@
+namespace: fkn
+image:
+    repository: nextcloud
+    # tag: 23.0.2-apache
+# ingress:
+#   className: traefik
+phpClientHttpsFix:
+  enabled: true
+  protocol: https
+
+nextcloud:
+  host: nextcloud.fkn.chancey.dev
+  existingSecret:
+    enabled: true
+    secretName: nextcloud-creds
+    usernameKey: username
+    passwordKey: password
+    # extraEnv:
+    #     - name: OVERWRITEPROTOCOL
+    #       value: https
+    #     - name: OVERWRITEHOST
+    #       value: nextcloud.fkn.chancey.dev
+    #     - name: overwrite.cli.url
+    #       value: https://nextcloud.fkn.chancey.dev
+    #     # This is the Cluster Ip of the loadbalancer
+    #     - name: TRUSTED_PROXIES
+    #       value: 10.10.0.40
+    #     - name: APACHE_DISABLE_REWRITE_IP
+    #       value: "1"
+    phpConfigs:
+      opcache.interned_strings_buffer: "10"
+  # persistence:
+  #   subPath: "nextcloud"
+  #   # persistence.enabled -- If **true**, create and use PersistentVolumeClaims.
+  #   enabled: true
+  #   # persistence.storageClassName -- (string) Specify the storageClassName for PersistentVolumeClaims.
+  #   storageClassName: "smb"
+  #   # persistence.accessModes -- Specify the accessModes for PersistentVolumeClaims.
+  #   accessModes: "ReadWriteOnce"
+  #   # persistence.size -- Specify the size of PersistentVolumeClaims.
+  #   size: 100Gi
+# internalDatabase:
+#   enabled: false
+
+# externalDatabase:
+#   enabled: true
+
+#   ## Supported database engines: mysql or postgresql
+#   type: postgresql
+
+#   ## Database host
+#   host: 10.10.0.148
+
+#   ## Database name
+#   database: nextcloud
+
+#   ## Use a existing secret
+#   existingSecret:
+#     enabled: true
+#     secretName: nextcloud-postgres-creds
+#     usernameKey: username
+#     passwordKey: password
+    # hostKey: db-hostname-or-ip
+    # databaseKey: db-name

@@ -1,0 +1,36 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: radarr
+  namespace: fkn
+spec:
+  type: ExternalName
+  ports:
+    - name: http
+      port: 7878
+      targetPort: 7878
+  externalName: 10.10.0.5
+  selector:
+    app.kubernetes.io/instance: traefik
+    app.kubernetes.io/name: traefik
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: radarr-ingress
+  namespace: fkn
+  annotations: 
+    kubernetes.io/ingress.class: traefik-external
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`radarr.fkn.chancey.dev`)
+      kind: Rule
+      priority: 1
+      services:
+        - name: radarr
+          kind: Service
+          port: 7878
+  tls:
+    secretName: fkn-chancey-dev-tls

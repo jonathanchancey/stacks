@@ -1,0 +1,21 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: onedev-ingress
+  namespace: onedev
+  annotations: 
+    kubernetes.io/ingress.class: traefik-external
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`onedev.fkn.chancey.dev`)
+      kind: Rule
+      priority: 1
+      services:
+        - name: onedev
+          kind: Service
+          port: 80
+  tls:
+    secretName: fkn-chancey-dev-tls

@@ -1,0 +1,3 @@
+windows:
+  dsName: csi-smb-node-win
+  enabled: true

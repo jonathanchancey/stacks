@@ -1,0 +1,36 @@
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: pvc-smb
+  namespace: testing
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: smb
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: task-pv-pod
+  namespace: testing
+spec:
+  volumes:
+    - name: task-pv-storage
+      persistentVolumeClaim:
+        claimName: pvc-smb
+  containers:
+    - name: task-pv-container
+      image: ghcr.io/void-linux/void-musl-full
+      command: ["sleep"]
+      args: ["360000"]
+      ports:
+        - containerPort: 80
+          name: "http-server"
+      volumeMounts:
+        - mountPath: "/usr/share/nginx/html"
+          name: task-pv-storage
+
