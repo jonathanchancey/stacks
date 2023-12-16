@@ -9,7 +9,7 @@ spec:
   issuerRef:
     name: letsencrypt-production
     kind: ClusterIssuer
-  commonName: "*.fkn.chancey.dev"
+  commonName: "*.fkn.chancey.dev" # friendly kubernetes network
   dnsNames:
   - "fkn.chancey.dev"
   - "*.fkn.chancey.dev"

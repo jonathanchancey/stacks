@@ -14,10 +14,10 @@ If the parameter is set, only resources containing an annotation with the same v
 
 source: https://doc.traefik.io/traefik/providers/kubernetes-crd/
 
-
+```bash
 helm install --namespace=traefik traefik traefik/traefik --values=values.yaml
-
 
 helm upgrade --namespace=traefik traefik traefik/traefik --values=values.yaml
 
 kubectl apply -f default-headers.yaml
+```
