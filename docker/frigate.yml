@@ -25,7 +25,7 @@ services:
       - "8555:8555/tcp" # WebRTC over tcp
       - "8555:8555/udp" # WebRTC over udp
     # environment:
-    #   FRIGATE_RTSP_PASSWORD: ***REMOVED***
+    #   FRIGATE_RTSP_PASSWORD: ""
     labels:
       - homepage.group=Media
       - homepage.name=Frigate

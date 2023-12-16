@@ -117,8 +117,8 @@ services:
     container_name: qbittorrentvpn
     privileged: true
     environment:
-      - VPN_USERNAME=***REMOVED***
-      - VPN_PASSWORD=***REMOVED***
+      - VPN_USERNAME=$PIA_USERNAME
+      - VPN_PASSWORD=$PIA_PASSWORD
       - PUID=998
       - PGID=100
       - TZ=America/Los_Angeles
