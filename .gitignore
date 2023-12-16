@@ -35,3 +35,5 @@ terraform.rc
 terraform-plugin-proxmox.log
 k8s/monitoring/prometheus/admin-password
 k8s/monitoring/prometheus/admin-user
+
+.env

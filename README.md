@@ -1,2 +1,1 @@
-# scaffold
-terraform repo for proxmox
+# Stacks - Central repo for everything GitOps
