@@ -36,7 +36,7 @@ services:
     environment:
       # Optional: put your config options customization here. Examples:
       ND_SCANSCHEDULE: 1h
-      ND_LOGLEVEL: info  
+      ND_LOGLEVEL: info
       ND_SESSIONTIMEOUT: 24h
       # ND_BASEURL: ""
     volumes:
@@ -58,8 +58,8 @@ services:
       - TZ=America/Los_Angeles
     volumes:
       - /media/Config/radarr:/config
-      - /media/Movies:/movies #optional
-      - /media/Downloads:/downloads #optional
+      - /media/Movies:/movies
+      - /media/Downloads:/downloads
     ports:
       - 7878:7878
     restart: unless-stopped
@@ -79,8 +79,8 @@ services:
       - TZ=America/Los_Angeles
     volumes:
       - /media/Config/sonarr:/config
-      - /media/Shows:/tv #optional
-      - /media/Downloads:/downloads #optional
+      - /media/Shows:/tv
+      - /media/Downloads:/downloads
     ports:
       - 8989:8989
     restart: unless-stopped
@@ -130,7 +130,7 @@ services:
       - WEBUI_PORT_ENV=8080
       - INCOMING_PORT_ENV=8999
       - VPN_ENABLED=yes
-      - LAN_NETWORK=10.10.0.0/24
+      - LAN_NETWORK=10.10.0.1/24
       - NAME_SERVERS=1.1.1.1
     volumes:
       - /media/Config/qbittorent:/config
@@ -142,7 +142,7 @@ services:
     restart: unless-stopped
     labels:
       - homepage.group=Management
-      - homepage.name=Qbittorent
-      - homepage.abbr=QB
+      - homepage.name=qBittorent
+      - homepage.abbr=qB
       - homepage.href=https://qbit.fkn.chancey.dev/
       - homepage.description=Torrent Client

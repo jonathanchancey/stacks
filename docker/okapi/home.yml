@@ -40,7 +40,6 @@ services:
       - TZ=America/Los_Angeles
       - mode=fullnode
       - worker_address=10.10.0.5
-      - plots_dir=/7f21
       - blockchains=chia
     ports:
       - 8926:8926
@@ -50,7 +49,7 @@ services:
     labels:
       - homepage.group=Management
       - homepage.name=Machinaris
-      - homepage.abbr=Ma
+      - homepage.icon=https://lh5.googleusercontent.com/h89WYbTDxY6g3cJeb5FI2aAXwe5kRhX2hmbk4wKn55O5lB6LP0l5P5vOx5h-8KQhZmsLJVZQrMpTc-AUzUmJLfw=w16383
       - homepage.href=http://10.10.0.5:8926/
       - homepage.description=Chia
   syncthing:
@@ -90,7 +89,7 @@ services:
       - PGID=1101
       - UMASK=002
       - TZ=America/Los_Angeles
-      - 'CRON_MIN=1,31'
+      - "CRON_MIN=1,31"
       - TRUSTED_PROXY='172.16.0.1/12 10.10.0.1/16'
     volumes:
       - /media/Config/freshrss:/config
