@@ -1,10 +1,10 @@
 # Stacks - Central repo for everything GitOps
 
-Hello and welcome to my homelab. I use this place to pratice DevOps concepts and for hosting simple functional services at home. 
+Hello and welcome to my homelab. I use this place to practice DevOps concepts and for hosting simple functional services at home. 
 
 Here you'll find:
 - Terraform and Ansible provisioning for a k3s cluster on Proxmox
-- Kubernetes deployments for essential servies like MetalLB and Mosquitto
+- Kubernetes deployments for essential services like MetalLB and Mosquitto
 - Docker for non-critical applications
 
 ## General Flow
@@ -88,3 +88,5 @@ Proxmox - Clustered Hypervisor for LXCs, VMs, and Kubernetes Management and Work
     - 120GB Kingston # boot
     - strawberry # ZFS 24TB RAIDZ1 3x12TB
 ```
+
+![proxmox-small](https://github.com/jonathanchancey/assets/blob/main/images/proxmox-small.png?raw=true)
