@@ -13,7 +13,7 @@ services:
     volumes:
       - /media/Config/homeassistant:/config
     ports:
-      - 8123:8123 #optional
+      - 8123:8123
     restart: unless-stopped
     labels:
       - homepage.group=Management
@@ -29,7 +29,7 @@ services:
       - 3000:3000
     volumes:
       - /media/Config/homepage:/app/config
-      - /var/run/docker.sock:/var/run/docker.sock:ro # optional
+      - /var/run/docker.sock:/var/run/docker.sock:ro
   machinaris:
     image: ghcr.io/guydavis/machinaris:latest
     container_name: machinaris

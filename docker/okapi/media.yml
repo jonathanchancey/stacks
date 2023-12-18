@@ -9,7 +9,7 @@ services:
       - PGID=1000
       - UMASK=002
       - TZ=America/Los_Angeles
-      - JELLYFIN_PublishedServerUrl=10.10.0.5 #optional
+      - JELLYFIN_PublishedServerUrl=10.10.0.5
     volumes:
       - /media/Config:/config
       - /media/Shows:/data/tvshows
@@ -29,16 +29,14 @@ services:
   navidrome:
     image: deluan/navidrome:latest
     container_name: navidrome
-    user: 1012:5000 # should be owner of volumes
+    user: 1012:5000
     ports:
       - "4533:4533"
     restart: unless-stopped
     environment:
-      # Optional: put your config options customization here. Examples:
       ND_SCANSCHEDULE: 1h
       ND_LOGLEVEL: info
       ND_SESSIONTIMEOUT: 24h
-      # ND_BASEURL: ""
     volumes:
       - "/media/Config/navidrome:/data"
       - "/media/Music:/music:ro"
@@ -105,7 +103,6 @@ services:
       - 9696:9696
     restart: unless-stopped
   flaresolverr:
-    # DockerHub mirror flaresolverr/flaresolverr:latest
     image: ghcr.io/flaresolverr/flaresolverr
     container_name: flaresolverr
     environment:
