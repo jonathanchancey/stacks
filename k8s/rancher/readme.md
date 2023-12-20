@@ -5,7 +5,7 @@ https://ranchermanager.docs.rancher.com/pages-for-subheaders/install-upgrade-on-
 ```fish
 helm repo add rancher-latest https://releases.rancher.com/server-charts/latest
 kubectl create namespace cattle-system
-helm install rancher rancher-alpha/rancher --devel
+helm install rancher rancher-latest/rancher 
 ```
 
 
