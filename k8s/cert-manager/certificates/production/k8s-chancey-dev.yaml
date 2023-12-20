@@ -2,14 +2,14 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: fkn-chancey-dev
-  namespace: fkn
+  name: k8s-chancey-dev
+  namespace: k8s-chancey-dev
 spec:
-  secretName: fkn-chancey-dev-tls
+  secretName: k8s-chancey-dev-tls
   issuerRef:
     name: letsencrypt-production
     kind: ClusterIssuer
-  commonName: "*.fkn.chancey.dev"
+  commonName: "*.k8s.chancey.dev"
   dnsNames:
-  - "fkn.chancey.dev"
-  - "*.fkn.chancey.dev"
+  - "k8s.chancey.dev"
+  - "*.k8s.chancey.dev"
