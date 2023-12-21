@@ -18,6 +18,11 @@ helm install rancher rancher-latest/rancher \
   --set letsEncrypt.ingress.class=traefik
 ```
 
+## Certs
+Updating the Rancher Certificate
+
+<https://ranchermanager.docs.rancher.com/getting-started/installation-and-upgrade/resources/update-rancher-certificate>
+
 ## Cleanup
 
 https://github.com/rancher/rancher-cleanup
