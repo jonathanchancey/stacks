@@ -1,0 +1,14 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: rancher-staging
+  namespace: default
+spec:
+  secretName: tls-rancher-ingress-staging
+  issuerRef:
+    name: letsencrypt-staging
+    kind: ClusterIssuer
+  commonName: "rancher.k8s.chancey.dev"
+  dnsNames:
+  - "rancher.k8s.chancey.dev"
