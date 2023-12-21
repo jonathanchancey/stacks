@@ -2,29 +2,22 @@
 
 https://ranchermanager.docs.rancher.com/pages-for-subheaders/install-upgrade-on-a-kubernetes-cluster#install-the-rancher-helm-chart
 
-```fish
+```zsh
 helm repo add rancher-latest https://releases.rancher.com/server-charts/latest
 kubectl create namespace cattle-system
-helm install rancher rancher-latest/rancher 
 ```
 
-
 ```zsh
+# correct
 helm install rancher rancher-latest/rancher \
   --namespace cattle-system \
   --set hostname=rancher.k8s.chancey.dev \
   --set bootstrapPassword=admin \
+  --set ingress.tls.source=letsEncrypt \
+  --set letsEncrypt.email=jonathan22711@gmail.com \
   --set letsEncrypt.ingress.class=traefik
-
-helm upgrade rancher rancher-latest/rancher \
-  --namespace cattle-system \
-  --set hostname=rancher.k8s.chancey.dev \
-  --set bootstrapPassword=admin \
-  --set letsEncrypt.ingress.class=traefik
-
-# correct
-helm upgrade rancher rancher-latest/rancher \
-          --namespace cattle-system \
-          --set hostname=rancher.k8s.chancey.dev \
-          --set bootstrapPassword=admin
 ```
+
+## Cleanup
+
+https://github.com/rancher/rancher-cleanup
