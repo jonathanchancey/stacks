@@ -1,1 +1,5 @@
 namespace: k8s-chancey-dev
+targetCustomizations:
+  clusterSelector:
+    matchLabels:
+      env: local
