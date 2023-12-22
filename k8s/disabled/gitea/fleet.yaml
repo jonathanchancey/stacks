@@ -27,17 +27,27 @@ helm:
   values:
     replicas: 2
 
-    gitea:
+  gitea:
+    database:
+      builtIn:
+        postgresql:
+          enabled: false
+    config:
+      database:
+        DB_TYPE: postgres
+        HOST: postgresql.gitea.svc.cluster.local
+        NAME: postgres
+        USER: postgres
       config:
         queue:
-          CONN_STR: <your redis connection string>
+          CONN_STR: redis-master.gitea.svc.cluster.local
         session:
           PROVIDER: redis
-          PROVIDER_CONFIG: <your redis connection string>
+          PROVIDER_CONFIG: redis-master.gitea.svc.cluster.local
         cache:
           ENABLED: true
           ADAPTER: redis
-          HOST: <your redis connection string>
+          HOST: redis-master.gitea.svc.cluster.local
         indexer:
           ISSUE_INDEXER_CONN_STR: <http://meilisearch.gitea.svc.cluster.local:7700>
           ISSUE_INDEXER_ENABLED: true
