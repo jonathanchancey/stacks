@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "meilisearch.fullname" . }}-environment
+  labels:
+    {{- include "meilisearch.labels" . | nindent 4 }}
+data:
+  {{- range $key, $value := .Values.environment }}
+  {{ $key }}: {{ $value | quote }}
+  {{- end }}
+  {{- if $.Values.serviceMonitor.enabled }}
+  MEILI_EXPERIMENTAL_ENABLE_METRICS: "true"
+  {{- end }}
