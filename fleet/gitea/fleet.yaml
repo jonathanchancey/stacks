@@ -30,5 +30,5 @@ helm:
     ingress:
       enabled: true
       className: traefik
-      hosts:
+      hosts[0]:
         host: gitea.k8s.chancey.dev
