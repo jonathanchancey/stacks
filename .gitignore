@@ -37,3 +37,5 @@ k8s/monitoring/prometheus/admin-password
 k8s/monitoring/prometheus/admin-user
 
 .env
+MEILI_MASTER_KEY
+secret-secret.yaml
