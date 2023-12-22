@@ -2,11 +2,11 @@ persistence:
   # persistence.enabled -- If **true**, create and use PersistentVolumeClaims.
   enabled: true
   # persistence.storageClassName -- (string) Specify the storageClassName for PersistentVolumeClaims.
-  storageClassName: "smb"
+  storageClassName: "cephrbd"
   # persistence.accessModes -- Specify the accessModes for PersistentVolumeClaims.
   accessModes: "ReadWriteOnce"
   # persistence.size -- Specify the size of PersistentVolumeClaims.
-  size: 100Gi
+  size: 40Gi
 
 resources:
   requests:
