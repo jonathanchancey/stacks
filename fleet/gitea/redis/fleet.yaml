@@ -1,0 +1,21 @@
+namespace: gitea
+
+# Custom helm options
+helm:
+  # The release name to use. If empty a generated release name will be used
+  releaseName: redis-gitea
+
+  # The directory of the chart in the repo.  Also any valid go-getter supported
+  # URL can be used there is specify where to download the chart from.
+  # If repo below is set this value if the chart name in the repo
+  chart: "oci://registry-1.docker.io/bitnamicharts/redis-cluster"
+
+  # # An https to a valid Helm repository to download the chart from
+  # repo: "oci://registry-1.docker.io/bitnamicharts"
+
+  # Used if repo is set to look up the version of the chart
+  # version: "13.2.25"
+
+  values:
+    global:
+      storageClass: ceph-rbd

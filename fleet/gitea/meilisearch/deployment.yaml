@@ -175,4 +175,3 @@ spec:
           memory: 128Mi
           cpu: 1
   restartPolicy: Never
-      
