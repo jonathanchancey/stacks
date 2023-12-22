@@ -8,22 +8,14 @@ helm:
   # The directory of the chart in the repo.  Also any valid go-getter supported
   # URL can be used there is specify where to download the chart from.
   # If repo below is set this value if the chart name in the repo
-  chart: "gitea-charts/gitea"
+  chart: "postgresql"
 
   # An https to a valid Helm repository to download the chart from
-  repo: "https://dl.gitea.com/charts/"
+  repo: "oci://registry-1.docker.io/bitnamicharts/postgresql"
 
   # Used if repo is set to look up the version of the chart
-  version: "10.0.1"
-
-  # Force recreate resource that can not be updated
-  force: false
-
-  # How long for helm to wait for the release to be active. If the value
-  # is less that or equal to zero, we will not wait in Helm
-  timeoutSeconds: 0
-
-  # Custom values that will be passed as values.yaml to the installation
+  version: "13.2.25"
+  
   values:
     global:
       storageClass: ceph-rbd
