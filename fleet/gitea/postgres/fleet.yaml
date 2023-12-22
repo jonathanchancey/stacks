@@ -8,13 +8,13 @@ helm:
   # The directory of the chart in the repo.  Also any valid go-getter supported
   # URL can be used there is specify where to download the chart from.
   # If repo below is set this value if the chart name in the repo
-  chart: "postgresql"
+  chart: "oci://registry-1.docker.io/bitnamichart/postgresql"
 
-  # An https to a valid Helm repository to download the chart from
-  repo: "oci://registry-1.docker.io/bitnamicharts"
+  # # An https to a valid Helm repository to download the chart from
+  # repo: "oci://registry-1.docker.io/bitnamicharts"
 
   # Used if repo is set to look up the version of the chart
-  version: "13.2.25"
+  # version: "13.2.25"
 
   values:
     global:
