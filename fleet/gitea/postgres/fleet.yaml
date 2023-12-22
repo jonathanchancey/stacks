@@ -11,11 +11,11 @@ helm:
   chart: "postgresql"
 
   # An https to a valid Helm repository to download the chart from
-  repo: "oci://registry-1.docker.io/bitnamicharts/postgresql"
+  repo: "oci://registry-1.docker.io/bitnamicharts"
 
   # Used if repo is set to look up the version of the chart
   version: "13.2.25"
-  
+
   values:
     global:
       storageClass: ceph-rbd
