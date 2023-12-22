@@ -43,7 +43,7 @@ environment:
   # MEILI_MASTER_KEY: ""
 auth:
   # -- Use an existing Kubernetes secret for the MEILI_MASTER_KEY
-  existingMasterKeySecret: ""
+  existingMasterKeySecret: "meilisearch-master-key"
 
 # -- Additional environment variables from ConfigMap or secrets
 envFrom: []
