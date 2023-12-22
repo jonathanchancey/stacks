@@ -27,3 +27,8 @@ helm:
   values:
     global:
       storageClass: ceph-rbd
+    ingress:
+      enabled: true
+      className: traefik
+      hosts:
+        host: gitea.k8s.chancey.dev
