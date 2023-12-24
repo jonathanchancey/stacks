@@ -8,10 +8,10 @@ helm:
   # The directory of the chart in the repo.  Also any valid go-getter supported
   # URL can be used there is specify where to download the chart from.
   # If repo below is set this value if the chart name in the repo
-  chart: "https://gissilabs.github.io/charts/leantime"
+  chart: "gissilabs/leantime"
 
   # An https to a valid Helm repository to download the chart from
-  # repo: "https://dl.gitea.com/charts/gitea-charts"
+  repo: "https://gissilabs.github.io/charts/"
 
   # Used if repo is set to look up the version of the chart
   # version: "10.0.1"
