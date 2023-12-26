@@ -1,12 +1,16 @@
 ingressRoute:
-  enabled: true
+  enabled: false
   host: leantime.k8s.chancey.dev
-  # tls:
-  # - secretName: fkn-chancey-dev
-  #   hosts:
-  #     - leantime.k8s.chancey.dev
-  # annotations:
-  #  - kubernetes.io/ingress.class: traefik
+
+ingress:
+  enabled: false
+  host: leantime.k8s.chancey.dev
+  tls:
+  - secretName: fkn-chancey-dev
+    hosts:
+      - leantime.k8s.chancey.dev
+  annotations:
+   - kubernetes.io/ingress.class: traefik
 persistence:
   enabled: true
   size: 5Gi
