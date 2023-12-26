@@ -1,0 +1,20 @@
+ingressRoute:
+  enabled: true
+  host: leantime.k8s.chancey.dev
+  # tls:
+  # - secretName: fkn-chancey-dev
+  #   hosts:
+  #     - leantime.k8s.chancey.dev
+  # annotations:
+  #  - kubernetes.io/ingress.class: traefik
+persistence:
+  enabled: true
+  size: 5Gi
+  storageClass: ceph-rbd
+sessionstorage:
+  enabled: true
+  storageClass: ceph-rbd
+internalDatabase:
+  persistence:
+    enabled: true
+    storageClass: ceph-rbd

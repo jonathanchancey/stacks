@@ -1,0 +1,21 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: leantime-ingress
+  namespace: leantime
+  annotations:
+    kubernetes.io/ingress.class: traefik-external
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`leantime.fkn.chancey.dev`)
+      kind: Rule
+      priority: 1
+      services:
+        - name: leantime
+          kind: Service
+          port: 80
+  tls:
+    secretName: fkn-chancey-dev-tls
