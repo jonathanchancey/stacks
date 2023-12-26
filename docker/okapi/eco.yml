@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  eco-game-server:
+    container_name: eco-game-server
+    image: strangeloopgames/eco-game-server:latest
+    restart: always
+    volumes:
+      - type: bind
+        source:  /media/Games/eco
+        target: /app/Storage/
+      - type: bind
+        source: /media/Games/eco/configs
+        target: /app/Configs/
+    ports:
+      - "23000:3000/udp"
+      - "23001:3001/tcp"
