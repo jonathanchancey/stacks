@@ -13,5 +13,5 @@ services:
         source: /media/Games/eco/configs
         target: /app/Configs/
     ports:
-      - "23000:3000/udp"
-      - "23001:3001/tcp"
+      - "3000:3000/udp"
+      - "3001:3001/tcp"

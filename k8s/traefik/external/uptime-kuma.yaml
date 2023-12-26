@@ -7,8 +7,8 @@ spec:
   type: ExternalName
   ports:
     - name: http
-      port: 3001
-      targetPort: 3001
+      port: 23001
+      targetPort: 23001
   externalName: 10.10.0.5
   selector:
     app.kubernetes.io/instance: traefik
@@ -31,7 +31,7 @@ spec:
       services:
         - name: uptime-kuma
           kind: Service
-          port: 3001
+          port: 23001
   tls:
     secretName: fkn-chancey-dev-tls
 ---
@@ -44,8 +44,8 @@ spec:
   type: ExternalName
   ports:
     - name: http
-      port: 3001
-      targetPort: 3001
+      port: 23001
+      targetPort: 23001
   externalName: 10.10.0.5
   selector:
     app.kubernetes.io/instance: traefik
@@ -68,6 +68,6 @@ spec:
       services:
         - name: uptime-kuma
           kind: Service
-          port: 3001
+          port: 23001
   tls:
     secretName: k8s-chancey-dev-tls
