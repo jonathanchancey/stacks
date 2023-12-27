@@ -22,3 +22,89 @@ helm:
   # How long for helm to wait for the release to be active. If the value
   # is less that or equal to zero, we will not wait in Helm
   timeoutSeconds: 0
+
+  values:
+    affinity: {}
+    authentication:
+      passwordEntries: ''
+      passwordFilePath: /etc/mosquitto/passwordfile
+    authorization:
+      aclfilePath: /etc/mosquitto/aclfile
+      acls: ''
+    config: |
+      persistence true
+      persistence_location /mosquitto/data/
+      log_dest stdout
+      listener 1883
+      listener 9090
+      protocol websockets
+    existingConfigMap: ''
+    extraVolumeMounts: null
+    extraVolumes: null
+    fullnameOverride: ''
+    image:
+      pullPolicy: IfNotPresent
+      repository: eclipse-mosquitto
+      tag: 1.6.12
+    imagePullSecrets: null
+    monitoring:
+      podMonitor:
+        enabled: false
+      sidecar:
+        enabled: false
+        image:
+          pullPolicy: IfNotPresent
+          repository: nolte/mosquitto-exporter
+          tag: v0.6.3
+        port: 9234
+        resources:
+          limits:
+            cpu: 300m
+            memory: 128Mi
+          requests:
+            cpu: 100m
+            memory: 64Mi
+    nameOverride: ''
+    nodeSelector: {}
+    persistence:
+      accessMode: ReadWriteOnce
+      enabled: true
+      existingClaim: ''
+      mountPath: /mosquitto/data
+      size: 1Gi
+      subPath: ''
+      storageClass: ceph-rbd
+    podSecurityContext: {}
+    ports:
+      mqtt:
+        port: 1883
+        protocol: TCP
+      websocket:
+        port: 9090
+        protocol: TCP
+    replicaCount: 1
+    resources:
+      limits:
+        cpu: 200m
+        memory: 512Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi
+    securityContext: {}
+    service:
+      annotations: {}
+      externalTrafficPolicy: Cluster
+      type: LoadBalancer
+    serviceAccount:
+      create: true
+      name: null
+    strategyType: Recreate
+    tolerations: null
+    global:
+      cattle:
+        clusterId: local
+        clusterName: local
+        rkePathPrefix: ''
+        rkeWindowsPathPrefix: ''
+        systemProjectId: p-7vq66
+        url: https://rancher.k8s.chancey.dev
