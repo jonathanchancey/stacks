@@ -8,7 +8,7 @@ helm:
   # The directory of the chart in the repo.  Also any valid go-getter supported
   # URL can be used there is specify where to download the chart from.
   # If repo below is set this value if the chart name in the repo
-  chart: "t3n/mosquitto"
+  chart: "mosquitto"
 
   # An https to a valid Helm repository to download the chart from
   repo: "https://storage.googleapis.com/t3n-helm-charts"
