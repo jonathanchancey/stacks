@@ -8,13 +8,13 @@ helm:
   # The directory of the chart in the repo.  Also any valid go-getter supported
   # URL can be used there is specify where to download the chart from.
   # If repo below is set this value if the chart name in the repo
-  chart: "mosquitto"
+  chart: "mosquitto-2.4.1.tgz"
 
   # An https to a valid Helm repository to download the chart from
   repo: "https://storage.googleapis.com/t3n-helm-charts"
 
   # Used if repo is set to look up the version of the chart
-  version: "2.4.1"
+  # version: "2.4.1"
 
   # Force recreate resource that can not be updated
   force: false
