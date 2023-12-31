@@ -1,6 +1,6 @@
 - name: Set timezone and configure timesyncd
   hosts: "*"
-  become: yes
+  become: true
   tasks:
   - name: set timezone
     shell: timedatectl set-timezone America/Los_Angeles
