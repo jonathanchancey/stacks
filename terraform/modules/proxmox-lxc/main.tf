@@ -53,10 +53,4 @@ resource "proxmox_lxc" "template_lxc" {
     ip     = var.network_ip
   }
 
-  mountpoint {
-    slot    = var.bind_mountpoint_slot
-    storage = var.bind_mountpoint_storage
-    mp      = var.bind_mountpoint_mp
-    size    = var.bind_mountpoint_size
-  }
 }
