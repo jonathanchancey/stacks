@@ -53,14 +53,4 @@ resource "proxmox_lxc" "template_lxc" {
     ip     = var.network_ip
   }
 
-  provisioner "remote-exec" {
-    inline = ["sudo apt update", "echo Done!"]
-
-    connection {
-      host        = var.hostname
-      type        = "ssh"
-      user        = "root"
-      password = var.password
-    }
-  }
 }
