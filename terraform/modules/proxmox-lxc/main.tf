@@ -33,8 +33,8 @@ resource "proxmox_lxc" "template_lxc" {
   unpriviledged   = var.unprivileged
   cores           = var.cores
   memory          = var.memory
-  onboot          = true
-  ssh_public_keys = var.sshkeys
+  onboot          = var.onboot
+  ssh_public_keys = var.ssh_public_keys
 
   features {
     fuse    = var.features_fuse
@@ -54,9 +54,9 @@ resource "proxmox_lxc" "template_lxc" {
   }
 
   mountpoint {
-    slot    = var.mountpoint_slot
-    storage = var.mountpoint_storage
-    mp      = var.mountpoint_mp
-    size    = var.mountpoint_size
+    slot    = var.bind_mountpoint_slot
+    storage = var.bind_mountpoint_storage
+    mp      = var.bind_mountpoint_mp
+    size    = var.bind_mountpoint_size
   }
 }
