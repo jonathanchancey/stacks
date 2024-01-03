@@ -112,5 +112,5 @@ variable "network_ip" {
 variable "ssh_public_keys" {
   # type        = string
   description = "Multi-line string of SSH public keys that will be added to the container. Can be defined using heredoc syntax."
-  default = ""
+  default     = ""
 }

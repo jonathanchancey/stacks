@@ -30,7 +30,7 @@ resource "proxmox_lxc" "template_lxc" {
   description     = var.description
   ostemplate      = var.ostemplate
   password        = var.password
-  unprivileged   = var.unprivileged
+  unprivileged    = var.unprivileged
   cores           = var.cores
   memory          = var.memory
   onboot          = var.onboot
