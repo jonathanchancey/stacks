@@ -85,7 +85,7 @@ variable "rootfs_storage" {
   description = "Name of rootfs storage"
 }
 
-variable "rootfs_storage" {
+variable "rootfs_size" {
   type        = string
   description = "Size of volume to create"
   default     = "32G"
@@ -106,30 +106,6 @@ variable "network_bridge" {
 variable "network_ip" {
   type        = string
   description = "The IPv4 address of the network interface. Can be a static IPv4 address (in CIDR notation), dhcp, or manual."
-  default     = "dhcp"
-}
-
-variable "bind_mountpoint_slot" {
-  type        = string
-  description = "Mountpoint slot"
-  default     = "0"
-}
-
-variable "bind_mountpoint_storage" {
-  type        = string
-  description = "Host storage path"
-  default     = "dhcp"
-}
-
-variable "bind_mountpoint_mp" {
-  type        = string
-  description = "Conatiner storage path"
-  default     = "dhcp"
-}
-
-variable "bind_mountpoint_size" {
-  type        = string
-  description = ""
   default     = "dhcp"
 }
 

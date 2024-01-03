@@ -26,11 +26,11 @@ provider "proxmox" {
 
 resource "proxmox_lxc" "template_lxc" {
   target_node     = var.target_node
-  hostname        = var.name
+  hostname        = var.hostname
   description     = var.description
   ostemplate      = var.ostemplate
   password        = var.password
-  unpriviledged   = var.unprivileged
+  unprivileged   = var.unprivileged
   cores           = var.cores
   memory          = var.memory
   onboot          = var.onboot
