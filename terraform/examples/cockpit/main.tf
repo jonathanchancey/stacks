@@ -13,6 +13,7 @@ module "oak" {
   cores            = 2
   memory           = 2048
   onboot           = true
+  features_nesting = true
   features_fuse    = true
   features_mount   = "nfs;cifs"
   rootfs_storage   = "foxes"
