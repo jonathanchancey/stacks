@@ -23,3 +23,7 @@ variable "vm_password" {
   description = "The username and realm for the Proxmox Virtual Environment API (example: root@pam)"
   sensitive   = true
 }
+
+variable "sshkeys" {
+  description = "sshkeys"
+}

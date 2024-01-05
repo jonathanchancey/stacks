@@ -6,12 +6,13 @@ resource "proxmox_virtual_environment_vm" "microos_template" {
   initialization {
     datastore_id = "hydra"
     user_account {
-      keys     = [trimspace(tls_private_key.microos_key.microos_ssh_public_key)]
+      keys     = [trimspace(var.sshkeys)]
       username = var.vm_username
       password = var.vm_password
     }
     dns {
-      servers = ["1.1.1.1"]
+      domain  = "local"
+      servers = ["10.30.0.1", "1.1.1.1"]
     }
     ip_config {
       ipv4 {
@@ -38,12 +39,14 @@ resource "proxmox_virtual_environment_vm" "microos_template" {
   }
 
   template = true
+  reboot   = true
 }
 
 resource "proxmox_virtual_environment_vm" "sentinel-01" {
-  name        = "sentinel-01"
-  node_name   = "lich"
-  description = "Managed by Terraform"
+  name                = "sentinel-01"
+  node_name           = "lich"
+  description         = "Managed by Terraform"
+  hook_script_file_id = proxmox_virtual_environment_file.hook_script_server.id
 
   clone {
     vm_id = proxmox_virtual_environment_vm.microos_template.id
@@ -93,11 +96,22 @@ resource "proxmox_virtual_environment_file" "microos_cloud_image" {
   }
 }
 
-output "microos_ssh_private_key" {
-  value     = tls_private_key.microos_key.microos_ssh_private_key
-  sensitive = true
-}
+resource "proxmox_virtual_environment_file" "hook_script_server" {
+  content_type = "snippets"
+  datastore_id = "chimera"
+  node_name    = "lich"
 
-output "microos_ssh_public_key" {
-  value = tls_private_key.microos_key.microos_ssh_public_key
+  # file properties not currently implemented 
+  # https://github.com/bpg/terraform-provider-proxmox/pull/733
+  
+  # make sure file is executable
+  # chmod +x /mnt/pve/chimera/snippets/hook_script_server.sh
+
+  source_raw {
+    file_name = "hook_script_server.sh"
+    data      = <<EOF
+#!/bin/bash
+echo first-run-test >> /root/complete.txt
+EOF
+  }
 }
