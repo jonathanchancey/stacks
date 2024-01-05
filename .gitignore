@@ -40,3 +40,4 @@ k8s/monitoring/prometheus/admin-user
 MEILI_MASTER_KEY
 secret-secret.yaml
 k8s/authentik/values.yaml
+id_ed25519*
