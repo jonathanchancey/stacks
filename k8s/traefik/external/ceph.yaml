@@ -1,0 +1,36 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: ceph
+  namespace: k8s-chancey-dev
+spec:
+  type: ExternalName
+  ports:
+    - name: https
+      port: 8443
+      targetPort: 8443
+  externalName: 10.10.0.21
+  selector:
+    app.kubernetes.io/instance: traefik
+    app.kubernetes.io/name: traefik
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: ceph-ingress
+  namespace: k8s-chancey-dev
+  annotations: 
+    kubernetes.io/ingress.class: traefik-external
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`ceph.k8s.chancey.dev`)
+      kind: Rule
+      priority: 1
+      services:
+        - name: ceph
+          kind: Service
+          port: 8443
+  tls:
+    secretName: chancey-dev-tls
