@@ -1,12 +1,12 @@
-resource "proxmox_virtual_environment_vm" "microos_vm" {
-  name      = "sentinel-01"
-  node_name = "lich"
+resource "proxmox_virtual_environment_vm" "microos_template" {
+  name        = "MicroOS-template"
+  node_name   = "lich"
   description = "Managed by Terraform"
 
   initialization {
     datastore_id = "hydra"
     user_account {
-      # do not use this in production, configure your own ssh key instead!
+      keys     = [trimspace(tls_private_key.microos_key.microos_ssh_public_key)]
       username = var.vm_username
       password = var.vm_password
     }
@@ -26,26 +26,56 @@ resource "proxmox_virtual_environment_vm" "microos_vm" {
     interface    = "virtio0"
     iothread     = true
     discard      = "on"
-    size         = 10
+    size         = 24
   }
 
   network_device {
     vlan_id = 30
   }
 
-  # connection {
-  #   type        = "ssh"
-  #   agent       = false
-  #   host        = element(element(self.ipv4_addresses, index(self.network_interface_names, "eth0")), 0)
-  #   private_key = tls_private_key.example.private_key_pem
-  #   user        = "root"
-  # }
+  tpm_state {
+    version = "v2.0"
+  }
 
-  # provisioner "remote-exec" {
-  #   inline = [
-  #     "echo Welcome to $(hostname)!",
-  #   ]
-  # }
+  template = true
+}
+
+resource "proxmox_virtual_environment_vm" "sentinel-01" {
+  name        = "sentinel-01"
+  node_name   = "lich"
+  description = "Managed by Terraform"
+
+  clone {
+    vm_id = proxmox_virtual_environment_vm.microos_template.id
+  }
+
+  memory {
+    dedicated = 2048
+  }
+
+  cpu {
+    cores = 2
+  }
+
+}
+
+resource "proxmox_virtual_environment_vm" "cavalier-01" {
+  name        = "cavalier-01"
+  node_name   = "lich"
+  description = "Managed by Terraform"
+
+  clone {
+    vm_id = proxmox_virtual_environment_vm.microos_template.id
+  }
+
+  memory {
+    dedicated = 8192
+  }
+
+  cpu {
+    cores = 2
+  }
+
 }
 
 resource "proxmox_virtual_environment_file" "microos_cloud_image" {
@@ -61,4 +91,13 @@ resource "proxmox_virtual_environment_file" "microos_cloud_image" {
     # you may also use the SHA256 checksum of the image to verify its integrity
     checksum = "a370d8e6141e5359ca865c29cc8b6d95926b0c162e906453e388ccf24d353b6b"
   }
+}
+
+output "microos_ssh_private_key" {
+  value     = tls_private_key.microos_key.microos_ssh_private_key
+  sensitive = true
+}
+
+output "microos_ssh_public_key" {
+  value = tls_private_key.microos_key.microos_ssh_public_key
 }

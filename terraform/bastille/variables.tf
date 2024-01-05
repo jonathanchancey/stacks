@@ -21,5 +21,5 @@ variable "vm_username" {
 variable "vm_password" {
   type        = string
   description = "The username and realm for the Proxmox Virtual Environment API (example: root@pam)"
-  sensitive = true
+  sensitive   = true
 }
