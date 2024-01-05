@@ -44,4 +44,9 @@ resource "proxmox_vm_qemu" "template_vm" {
   nameserver  = var.nameserver
   ssh_user    = var.ssh_user
   sshkeys     = var.sshkeys
+  network {
+    model = var.network_model
+    bridge = var.network_bridge
+    tag = var.network_tag
+  }
 }

@@ -92,3 +92,21 @@ variable "sshkeys" {
   # type        = string
   description = "sshkeys"
 }
+
+variable "network_model" {
+  type        = string
+  description = "network card"
+  default     = "virtio"
+}
+
+variable "network_bridge" {
+  type        = string
+  description = "underlying bridge"
+  default     = "vmbr0"
+}
+
+variable "network_tag" {
+  type        = string
+  description = "vlan tag"
+  default     = "-1"
+}
