@@ -6,7 +6,7 @@ resource "proxmox_virtual_environment_vm" "microos_template" {
   initialization {
     datastore_id = "hydra"
     user_account {
-      keys     = [trimspace(var.sshkeys)]
+      keys     = var.sshkeys
       username = var.vm_username
       password = var.vm_password
     }
@@ -66,6 +66,7 @@ resource "proxmox_virtual_environment_vm" "cavalier-01" {
   name        = "cavalier-01"
   node_name   = "lich"
   description = "Managed by Terraform"
+  hook_script_file_id = proxmox_virtual_environment_file.hook_script_server.id
 
   clone {
     vm_id = proxmox_virtual_environment_vm.microos_template.id
@@ -88,11 +89,11 @@ resource "proxmox_virtual_environment_file" "microos_cloud_image" {
 
   source_file {
     # you may download this image locally on your workstation and then use the local path instead of the remote URL
-    path      = "https://download.opensuse.org/tumbleweed/appliances/openSUSE-MicroOS.x86_64-16.0.0-ContainerHost-OpenStack-Cloud-Snapshot20240103.qcow2"
+    path      = "https://download.opensuse.org/tumbleweed/appliances/openSUSE-MicroOS.x86_64-16.0.0-ContainerHost-OpenStack-Cloud-Snapshot20240104.qcow2"
     file_name = "openSUSE-MicroOS-cloudstack.img"
 
     # you may also use the SHA256 checksum of the image to verify its integrity
-    checksum = "a370d8e6141e5359ca865c29cc8b6d95926b0c162e906453e388ccf24d353b6b"
+    # checksum = "a370d8e6141e5359ca865c29cc8b6d95926b0c162e906453e388ccf24d353b6b"
   }
 }
 
@@ -103,14 +104,17 @@ resource "proxmox_virtual_environment_file" "hook_script_server" {
 
   # file properties not currently implemented 
   # https://github.com/bpg/terraform-provider-proxmox/pull/733
-  
+
   # make sure file is executable
   # chmod +x /mnt/pve/chimera/snippets/hook_script_server.sh
 
+  # make sure line endings are LF and not CRLF
+  # proxmox will throw a pre-start failed: No such file or directory
   source_raw {
     file_name = "hook_script_server.sh"
     data      = <<EOF
 #!/bin/bash
+cloud-init status --wait
 echo first-run-test >> /root/complete.txt
 EOF
   }
