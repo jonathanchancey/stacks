@@ -1,0 +1,17 @@
+- name: install rke2
+  hosts: "server"
+  tasks:
+    - name: install install rke2 server
+      become: true
+      command: transactional-update --continue run bash -c 'curl -sfL https://get.rke2.io | sh -'
+    - name: Reboot the nodes
+      become: true
+      reboot:
+        reboot_timeout: 300
+    - name: enable rke2-server service
+      become: true
+      command: transactional-update --continue run bash -c 'systemctl enable rke2-server.service'
+    - name: Reboot the nodes
+      become: true
+      reboot:
+        reboot_timeout: 300

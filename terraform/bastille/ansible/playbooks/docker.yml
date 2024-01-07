@@ -1,6 +1,0 @@
-- name: install docker
-  hosts: "*"
-  tasks:
-    - name: install docker
-      become: true
-      command: transactional-update --non-interactive pkg in docker docker-compose

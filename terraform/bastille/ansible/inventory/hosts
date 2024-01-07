@@ -1,3 +1,5 @@
-[kube]
+[server]
 sentinel-01
+
+[agent]
 cavalier-01
