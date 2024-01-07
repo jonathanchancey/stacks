@@ -1,0 +1,6 @@
+- name: install docker
+  hosts: "*"
+  tasks:
+    - name: install docker
+      become: true
+      cmd: transactional-update pkg in docker docker-compose
