@@ -1,5 +1,5 @@
 [server]
-sentinel-01
+10.30.0.11
 
 [agent]
-cavalier-01
+10.30.0.101
