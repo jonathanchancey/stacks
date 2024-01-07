@@ -3,4 +3,4 @@
   tasks:
     - name: install docker
       become: true
-      cmd: transactional-update pkg in docker docker-compose
+      command: transactional-update --non-interactive pkg in docker docker-compose
