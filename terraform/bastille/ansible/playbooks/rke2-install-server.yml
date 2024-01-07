@@ -20,7 +20,7 @@
     - name: start rke2-server service in current session
       become: true
       command: systemctl start rke2-server.service
-    - name: Reboot the nodes
+    - name: reboot the nodes
       become: true
       reboot:
         reboot_timeout: 300

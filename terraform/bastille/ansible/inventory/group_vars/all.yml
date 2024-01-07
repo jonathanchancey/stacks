@@ -1,0 +1,19 @@
+---
+# Set your timezone
+system_timezone: "America/Los_Angeles"
+
+# interface which will be used for flannel
+flannel_iface: "eth0"
+
+# apiserver_endpoint is virtual ip-address which will be configured on each master
+apiserver_endpoint: "10.30.0.30"
+
+# k3s_token is required  masters can talk together securely
+# this token should be alpha numeric only
+rke2_token: "REDACTED"
+
+# image tag for kube-vip
+kube_vip_tag_version: "v0.6.3"
+
+# metallb ip range for load balancer
+metal_lb_ip_range: "10.30.0.31-10.30.0.49"
