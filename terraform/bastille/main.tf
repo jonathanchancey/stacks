@@ -62,13 +62,14 @@ resource "proxmox_virtual_environment_vm" "sentinel-01" {
     cores = 2
   }
 
-  ip_config {
-    ipv4 {
-      address = "10.30.0.11/24"
-      gateway = "10.30.0.1"
+  initialization {
+    ip_config {
+      ipv4 {
+        address = "10.30.0.11/24"
+        gateway = "10.30.0.1"
+      }
     }
   }
-
 }
 
 resource "proxmox_virtual_environment_vm" "cavalier-01" {
@@ -88,14 +89,14 @@ resource "proxmox_virtual_environment_vm" "cavalier-01" {
   cpu {
     cores = 2
   }
-
-  ip_config {
-    ipv4 {
-      address = "10.30.0.101/24"
-      gateway = "10.30.0.1"
+  initialization {
+    ip_config {
+      ipv4 {
+        address = "10.30.0.101/24"
+        gateway = "10.30.0.1"
+      }
     }
   }
-
 }
 
 resource "proxmox_virtual_environment_file" "microos_cloud_image" {
