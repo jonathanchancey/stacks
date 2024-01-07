@@ -97,7 +97,7 @@ resource "proxmox_virtual_environment_file" "microos_cloud_image" {
   }
 }
 
-resource "proxmox_virtual_environment_file" "hook_script_server" {
+resource "proxmox_virtual_environment_file" "bash_script_server" {
   content_type = "snippets"
   datastore_id = "chimera"
   node_name    = "lich"
@@ -116,6 +116,55 @@ resource "proxmox_virtual_environment_file" "hook_script_server" {
 #!/bin/bash
 cloud-init status --wait
 echo first-run-test >> /root/complete.txt
+EOF
+  }
+}
+
+resource "proxmox_virtual_environment_file" "hook_script_server" {
+  content_type = "snippets"
+  datastore_id = "chimera"
+  node_name    = "lich"
+
+  # file properties not currently implemented 
+  # https://github.com/bpg/terraform-provider-proxmox/pull/733
+
+  # make sure file is executable
+  # chmod +x /mnt/pve/chimera/snippets/hook_script_server.sh
+
+  # make sure line endings are LF and not CRLF
+  # proxmox will throw a pre-start failed: No such file or directory
+  source_raw {
+    file_name = "hookscript.pl"
+    data      = <<EOF
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+print "GUEST HOOK: " . join(' ', @ARGV). "\n";
+
+# First argument is the vmid
+my $vmid = shift;
+
+# Second argument is the phase
+my $phase = shift;
+
+if ($phase eq 'post-start') {
+
+    # Second phase 'post-start' will be executed after the guest
+    # successfully started.
+
+    print "$vmid started successfully.\n";
+
+    my $bash_script = '/mnt/pve/chimera/snippets/hook_script_server.sh';
+
+    system("bash $bash_script");
+
+} else {
+    die "got unknown phase '$phase'\n";
+}
+
+exit(0);
 EOF
   }
 }
