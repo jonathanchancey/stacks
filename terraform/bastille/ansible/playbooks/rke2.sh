@@ -61,32 +61,14 @@ certName=id_rsa
 #############################################
 #            DO NOT EDIT BELOW              #
 #############################################
-# For testing purposes - in case time is wrong due to VM snapshots
-sudo timedatectl set-ntp off
-sudo timedatectl set-ntp on
-
-# Move SSH certs to ~/.ssh and change permissions
-cp /home/$user/{$certName,$certName.pub} /home/$user/.ssh
-chmod 600 /home/$user/.ssh/$certName
-chmod 644 /home/$user/.ssh/$certName.pub
-
-# Install Kubectl if not already present
-if ! command -v kubectl version &> /dev/null
-then
-    echo -e " \033[31;5mKubectl not found, installing\033[0m"
-    curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-    sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-else
-    echo -e " \033[32;5mKubectl already installed\033[0m"
-fi
 
 # Create SSH Config file to ignore checking (don't use in production!)
-echo "StrictHostKeyChecking no" > ~/.ssh/config
+# echo "StrictHostKeyChecking no" > ~/.ssh/config
 
 #add ssh keys for all nodes
-for node in "${all[@]}"; do
-  ssh-copy-id $user@$node
-done
+# for node in "${all[@]}"; do
+#   ssh-copy-id $user@$node
+# done
 
 # Step 1: Create Kube VIP
 # create RKE2's self-installing manifest dir
