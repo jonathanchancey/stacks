@@ -1,26 +1,22 @@
 - name: install rke2
   hosts: "server"
   tasks:
-    - name: install qemu-guest-agent
-      become: true
-      command: transactional-update --non-interactive pkg in qemu-guest-agent
+    - name: Update repositories cache and install "qemu-guest-agent" package
+      ansible.builtin.apt:
+        name: qemu-guest-agent
+        update_cache: yes
     - name: install rke2 server
       become: true
-      command: transactional-update --continue run bash -c 'curl -sfL https://get.rke2.io | sh -'
+      command: bash -c 'curl -sfL https://get.rke2.io | sh -'
     - name: add rke2 to path
       become: true
-      command: transactional-update --continue run bash -c 'export PATH=$PATH:/opt/rke2/bin'
-    - name: Reboot the nodes
-      become: true
-      reboot:
-        reboot_timeout: 300
+      command: bash -c 'export PATH=$PATH:/opt/rke2/bin'
     - name: enable rke2-server service
       become: true
-      command: transactional-update run bash -c 'systemctl enable rke2-server.service'
-    - name: reboot the nodes
+      command: bash -c 'systemctl enable rke2-server.service'
+    - name: start rke2-server service
       become: true
-      reboot:
-        reboot_timeout: 300
+      command: bash -c 'systemctl start rke2-server.service'
     - name: obtain node-token
       ansible.builtin.fetch:
         src: /var/lib/rancher/rke2/server/node-token
