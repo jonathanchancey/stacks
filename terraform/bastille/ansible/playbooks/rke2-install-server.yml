@@ -2,6 +2,7 @@
   hosts: initial_server
   vars_files:
   - ../inventory/group_vars/env.yml
+  - ../inventory/group_vars/secret.yml
 
   tasks:
     - name: update repositories cache and install qemu-guest-agent and containerd package
@@ -45,8 +46,6 @@
             - "{{ SERVER_ADDRESS_FQDN }}"
             - "{{ SERVER_FAILOVER_IP }}"
           write-kubeconfig-mode: 0644
-          disable:
-            - rke2-ingress-nginx
       notify: "rke2-server service restart"
     - name: install rke2 server
       become: true
