@@ -44,6 +44,34 @@ resource "proxmox_virtual_environment_vm" "ubuntu_template" {
   reboot   = true
 }
 
+resource "proxmox_virtual_environment_vm" "sentinel-00" {
+  name                = "sentinel-00"
+  node_name           = "forest"
+  description         = "Managed by Terraform"
+  vm_id               = 20000
+
+  clone {
+    vm_id = proxmox_virtual_environment_vm.ubuntu_template.id
+  }
+
+  memory {
+    dedicated = 4096
+  }
+
+  cpu {
+    cores = 2
+  }
+
+  initialization {
+    ip_config {
+      ipv4 {
+        address = "10.30.0.10/24"
+        gateway = "10.30.0.1"
+      }
+    }
+  }
+}
+
 resource "proxmox_virtual_environment_vm" "sentinel-01" {
   name                = "sentinel-01"
   node_name           = "lich"
@@ -72,6 +100,62 @@ resource "proxmox_virtual_environment_vm" "sentinel-01" {
   }
 }
 
+resource "proxmox_virtual_environment_vm" "sentinel-02" {
+  name                = "sentinel-02"
+  node_name           = "okapi"
+  description         = "Managed by Terraform"
+  vm_id               = 20002
+
+  clone {
+    vm_id = proxmox_virtual_environment_vm.ubuntu_template.id
+  }
+
+  memory {
+    dedicated = 4096
+  }
+
+  cpu {
+    cores = 2
+  }
+
+  initialization {
+    ip_config {
+      ipv4 {
+        address = "10.30.0.12/24"
+        gateway = "10.30.0.1"
+      }
+    }
+  }
+}
+
+resource "proxmox_virtual_environment_vm" "cavalier-00" {
+  name        = "cavalier-00"
+  node_name   = "forest"
+  description = "Managed by Terraform"
+  vm_id       = 20100
+
+  clone {
+    vm_id = proxmox_virtual_environment_vm.ubuntu_template.id
+  }
+
+  memory {
+    dedicated = 8192
+  }
+
+  cpu {
+    cores = 2
+  }
+
+  initialization {
+    ip_config {
+      ipv4 {
+        address = "10.30.0.100/24"
+        gateway = "10.30.0.1"
+      }
+    }
+  }
+}
+
 resource "proxmox_virtual_environment_vm" "cavalier-01" {
   name        = "cavalier-01"
   node_name   = "lich"
@@ -94,6 +178,34 @@ resource "proxmox_virtual_environment_vm" "cavalier-01" {
     ip_config {
       ipv4 {
         address = "10.30.0.101/24"
+        gateway = "10.30.0.1"
+      }
+    }
+  }
+}
+
+resource "proxmox_virtual_environment_vm" "cavalier-02" {
+  name        = "cavalier-01"
+  node_name   = "okapi"
+  description = "Managed by Terraform"
+  vm_id       = 20102
+
+  clone {
+    vm_id = proxmox_virtual_environment_vm.ubuntu_template.id
+  }
+
+  memory {
+    dedicated = 8192
+  }
+
+  cpu {
+    cores = 2
+  }
+
+  initialization {
+    ip_config {
+      ipv4 {
+        address = "10.30.0.102/24"
         gateway = "10.30.0.1"
       }
     }
