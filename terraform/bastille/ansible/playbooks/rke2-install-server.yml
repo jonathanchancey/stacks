@@ -48,7 +48,8 @@
       notify: "rke2-server service restart"
     - name: install rke2 server
       become: true
-      command: curl -sfL https://get.rke2.io | INSTALL_RKE2_VERSION="{{ INSTALL_RKE2_VERSION }}" sh -
+      shell: |
+      curl -sfL https://get.rke2.io | INSTALL_RKE2_VERSION="{{ INSTALL_RKE2_VERSION }}" sh -
       notify: "rke2-server service start"
   handlers:
     - name: Make sure a service unit is running
