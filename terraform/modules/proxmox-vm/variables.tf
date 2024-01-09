@@ -13,108 +13,112 @@ variable "virtual_environment_username" {
   description = "The username and realm for the Proxmox Virtual Environment API (example: root@pam)"
 }
 
-variable "vm_template_username" {
-  type = string
-}
-
-variable "vm_template_password" {
-  type      = string
-  sensitive = true
-}
-
-variable "vm_template_sshkeys" {
-  description = "sshkeys"
-}
-
-variable "vm_template_name" {
+variable "name" {
   type    = string
-  default = "vm-template"
+  default = "vm name"
 }
 
-variable "vm_template_node_name" {
+variable "node_name" {
   type = string
 }
 
-variable "vm_template_description" {
+variable "description" {
   type    = string
   default = "Managed by Terraform"
 }
 
-variable "vm_template_datastore_id" {
+variable "vm_id" {
+  type = number
+  default = null
+}
+
+variable "datastore_id" {
   type      = string
   default   = "hydra"
   sensitive = true
 }
 
-variable "vm_template_dns_domain" {
+variable "username" {
+  type = string
+}
+
+variable "password" {
+  type      = string
+  sensitive = true
+}
+
+variable "sshkeys" {
+  description = "sshkeys"
+}
+
+variable "dns_domain" {
   type    = string
   default = "local"
 }
 
-variable "vm_template_dns_servers" {
-  type    = list(any)
+variable "dns_servers" {
+  type    = list(string)
   default = ["10.30.0.1", "1.1.1.1"]
 }
 
-variable "vm_template_ip_config_ipv4" {
+variable "ip_config_ipv4" {
   type    = string
   default = "dhcp"
 }
 
-variable "vm_template_disk_datastore_id" {
-  type    = string
-  default = "hydra"
-}
-
-variable "vm_template_ip_config_ipv4" {
-  type    = string
-  default = "dhcp"
-}
-
-variable "vm_template_network_device_vlan_id" {
-  type    = number
-  default = 30
-}
-
-variable "vm_instance_name" {
-  type = string
-}
-
-variable "vm_instance_node_name" {
-  type = string
-}
-
-variable "vm_instance_description" {
-  type    = string
-  default = "Managed by Terraform"
-}
-
-variable "vm_instance_vm_id" {
-  type = string
-}
-
-variable "vm_instance_memory_dedicated" {
-  type    = number
-  default = 4096
-}
-
-variable "vm_instance_cpu_cores" {
-  type    = number
-  default = 2
-}
-
-variable "vm_instance_ip_config_ipv4" {
-  type = string
-}
-
-variable "vm_instance_ip_config_gateway" {
+variable "ip_config_gateway" {
   type    = string
   default = "10.30.0.1"
 }
 
-variable "vm_instance_vm_id" {
+variable "network_device_vlan_id" {
+  type    = number
+  default = 30
+}
+
+variable "disk_datastore_id" {
   type    = string
-  default = "dhcp"
+  default = "hydra"
+}
+
+variable "disk_size" {
+  type    = number
+  default = 20
+}
+
+variable "tpm_state" {
+  type    = string
+  default = "v2.0"
+}
+
+variable "clone" {
+  type = set(map(bool))
+  default = []
+}
+
+variable "clone_vm_id" {
+  type    = number
+  default = null
+}
+
+variable "memory_dedicated" {
+  type    = number
+  default = 4096
+}
+
+variable "cpu_cores" {
+  type    = number
+  default = 2
+}
+
+variable "template" {
+  type    = bool
+  default = false
+}
+
+variable "reboot" {
+  type    = bool
+  default = true
 }
 
 variable "cloud_image_content_type" {
