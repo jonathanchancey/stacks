@@ -25,8 +25,12 @@ KVVERSION="v0.6.3"
 
 # Set the IP addresses of the admin, masters, and workers nodes
 admin=10.30.0.50
+master1=10.30.0.10
 master1=10.30.0.11
+master1=10.30.0.12
+worker1=10.30.0.100
 worker1=10.30.0.101
+worker1=10.30.0.102
 
 # User of remote machines
 user=root
@@ -38,19 +42,19 @@ interface=eth0
 vip=10.30.0.30
 
 # Array of all master nodes
-allmasters=($master1)
+allmasters=($master1 $master2 $master3)
 
 # Array of master nodes
-masters=()
+masters=($master2 $master3)
 
 # Array of worker nodes
-workers=($worker1)
+workers=($worker1 $worker2 $worker3)
 
 # Array of all
-all=($master1 $worker1)
+all=($master1 $master2 $master3 $worker1 $worker2 $worker3)
 
 # Array of all minus master1
-allnomaster1=($worker1)
+allnomaster1=($master2 $master3 $worker1 $worker2 $worker3)
 
 #Loadbalancer IP range
 lbrange=10.30.0.31-10.30.0.49
