@@ -12,8 +12,6 @@ ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook ./playbooks/kube-vip.yml --user
 ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook ./playbooks/rke2-add-server.yml --user root -i ./inventory/hosts -l 10.30.0.11
 ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook ./playbooks/rke2-add-server.yml --user root -i ./inventory/hosts -l 10.30.0.12
 
-
-kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.13.12/config/manifests/metallb-native.yaml
-
-
+ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook ./playbooks/metallb.yml --user root -i ./inventory/hosts
+ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook ./playbooks/cert-manager.yml --user root -i ./inventory/hosts
 ```
