@@ -7,8 +7,8 @@ resource "proxmox_virtual_environment_vm" "ubuntu_template-00" {
     datastore_id = "foxes-dir"
     user_account {
       keys     = var.sshkeys
-      username = var.vm_username
-      password = var.vm_password
+      username = var.vm_agent_username
+      password = var.vm_agent_password
     }
 
     dns {
@@ -53,8 +53,8 @@ resource "proxmox_virtual_environment_vm" "ubuntu_template-01" {
     datastore_id = "local-lvm"
     user_account {
       keys     = var.sshkeys
-      username = var.vm_username
-      password = var.vm_password
+      username = var.vm_agent_username
+      password = var.vm_agent_password
     }
 
     dns {
@@ -99,8 +99,8 @@ resource "proxmox_virtual_environment_vm" "ubuntu_template-02" {
     datastore_id = "vm"
     user_account {
       keys     = var.sshkeys
-      username = var.vm_username
-      password = var.vm_password
+      username = var.vm_agent_username
+      password = var.vm_agent_password
     }
 
     dns {
@@ -137,10 +137,10 @@ resource "proxmox_virtual_environment_vm" "ubuntu_template-02" {
 }
 
 resource "proxmox_virtual_environment_vm" "sentinel-00" {
-  name                = "sentinel-00"
-  node_name           = "forest"
-  description         = "Managed by Terraform"
-  vm_id               = 20000
+  name        = "sentinel-00"
+  node_name   = "forest"
+  description = "Managed by Terraform"
+  vm_id       = 20000
 
   clone {
     vm_id = proxmox_virtual_environment_vm.ubuntu_template-00.id
@@ -155,6 +155,15 @@ resource "proxmox_virtual_environment_vm" "sentinel-00" {
   }
 
   initialization {
+    user_account {
+      keys     = var.sshkeys
+      username = var.vm_server_username
+      password = var.vm_server_password
+    }
+    dns {
+      domain  = "local"
+      servers = ["10.30.0.1", "1.1.1.1"]
+    }
     ip_config {
       ipv4 {
         address = "10.30.0.10/24"
@@ -165,10 +174,10 @@ resource "proxmox_virtual_environment_vm" "sentinel-00" {
 }
 
 resource "proxmox_virtual_environment_vm" "sentinel-01" {
-  name                = "sentinel-01"
-  node_name           = "lich"
-  description         = "Managed by Terraform"
-  vm_id               = 20001
+  name        = "sentinel-01"
+  node_name   = "lich"
+  description = "Managed by Terraform"
+  vm_id       = 20001
 
   clone {
     vm_id = proxmox_virtual_environment_vm.ubuntu_template-01.id
@@ -183,6 +192,15 @@ resource "proxmox_virtual_environment_vm" "sentinel-01" {
   }
 
   initialization {
+    user_account {
+      keys     = var.sshkeys
+      username = var.vm_server_username
+      password = var.vm_server_password
+    }
+    dns {
+      domain  = "local"
+      servers = ["10.30.0.1", "1.1.1.1"]
+    }
     ip_config {
       ipv4 {
         address = "10.30.0.11/24"
@@ -193,10 +211,10 @@ resource "proxmox_virtual_environment_vm" "sentinel-01" {
 }
 
 resource "proxmox_virtual_environment_vm" "sentinel-02" {
-  name                = "sentinel-02"
-  node_name           = "okapi"
-  description         = "Managed by Terraform"
-  vm_id               = 20002
+  name        = "sentinel-02"
+  node_name   = "okapi"
+  description = "Managed by Terraform"
+  vm_id       = 20002
 
   clone {
     vm_id = proxmox_virtual_environment_vm.ubuntu_template-02.id
@@ -211,6 +229,15 @@ resource "proxmox_virtual_environment_vm" "sentinel-02" {
   }
 
   initialization {
+    user_account {
+      keys     = var.sshkeys
+      username = var.vm_server_username
+      password = var.vm_server_password
+    }
+    dns {
+      domain  = "local"
+      servers = ["10.30.0.1", "1.1.1.1"]
+    }
     ip_config {
       ipv4 {
         address = "10.30.0.12/24"
@@ -239,6 +266,15 @@ resource "proxmox_virtual_environment_vm" "cavalier-00" {
   }
 
   initialization {
+    user_account {
+      keys     = var.sshkeys
+      username = var.vm_agent_username
+      password = var.vm_agent_password
+    }
+    dns {
+      domain  = "local"
+      servers = ["10.30.0.1", "1.1.1.1"]
+    }
     ip_config {
       ipv4 {
         address = "10.30.0.100/24"
@@ -267,6 +303,15 @@ resource "proxmox_virtual_environment_vm" "cavalier-01" {
   }
 
   initialization {
+    user_account {
+      keys     = var.sshkeys
+      username = var.vm_agent_username
+      password = var.vm_agent_password
+    }
+    dns {
+      domain  = "local"
+      servers = ["10.30.0.1", "1.1.1.1"]
+    }
     ip_config {
       ipv4 {
         address = "10.30.0.101/24"
@@ -295,6 +340,15 @@ resource "proxmox_virtual_environment_vm" "cavalier-02" {
   }
 
   initialization {
+    user_account {
+      keys     = var.sshkeys
+      username = var.vm_agent_username
+      password = var.vm_agent_password
+    }
+    dns {
+      domain  = "local"
+      servers = ["10.30.0.1", "1.1.1.1"]
+    }
     ip_config {
       ipv4 {
         address = "10.30.0.102/24"

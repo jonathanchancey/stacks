@@ -10,20 +10,31 @@ variable "virtual_environment_password" {
 
 variable "virtual_environment_username" {
   type        = string
-  description = "The username and realm for the Proxmox Virtual Environment API (example: root@pam)"
+  description = "The username for Proxmox Virtual Environment API (example: root@pam)"
 }
 
-variable "vm_username" {
+variable "vm_server_username" {
   type        = string
-  description = "The username and realm for the Proxmox Virtual Environment API (example: root@pam)"
+  description = "The username for the server node(s)"
 }
 
-variable "vm_password" {
+variable "vm_server_password" {
   type        = string
-  description = "The username and realm for the Proxmox Virtual Environment API (example: root@pam)"
+  description = "The password for the server node(s)"
+  sensitive   = true
+}
+
+variable "vm_agent_username" {
+  type        = string
+  description = "The username for the agent node(s)"
+}
+
+variable "vm_agent_password" {
+  type        = string
+  description = "The password for the agent node(s)"
   sensitive   = true
 }
 
 variable "sshkeys" {
-  description = "sshkeys"
+  description = "The Public SSH key(s) to add to authorized_hosts on all vms"
 }
