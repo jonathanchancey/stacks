@@ -67,7 +67,7 @@ certName=id_rsa
 #############################################
 
 # Create SSH Config file to ignore checking (don't use in production!)
-# echo "StrictHostKeyChecking no" > ~/.ssh/config
+echo "StrictHostKeyChecking no" > ~/.ssh/config
 
 #add ssh keys for all nodes
 # for node in "${all[@]}"; do
