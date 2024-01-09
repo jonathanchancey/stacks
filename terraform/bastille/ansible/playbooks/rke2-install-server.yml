@@ -1,7 +1,7 @@
 - name: install rke2 on first server
   hosts: initial_server
   vars_files:
-  - ../inventory/group_vars/env.yml 
+  - ../inventory/group_vars/env.yml
 
   tasks:
     - name: Update repositories cache and install "qemu-guest-agent" package
@@ -51,6 +51,10 @@
       shell: |
         curl -sfL https://get.rke2.io | INSTALL_RKE2_VERSION="{{INSTALL_RKE2_VERSION }}" sh -
       notify: "rke2-server service start"
+    - name: Add rke2 dir to PATH.
+      copy:
+        dest: /etc/profile.d/custom-path.sh
+        content: 'PATH=$PATH:/opt/rke2/bin'
   handlers:
     - name: Make sure rke2-server is running
       systemd:
