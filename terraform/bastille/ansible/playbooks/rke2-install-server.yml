@@ -4,9 +4,11 @@
   - ../inventory/group_vars/env.yml
 
   tasks:
-    - name: Update repositories cache and install "qemu-guest-agent" package
+    - name: Update repositories cache and install qemu-guest-agent and containerd package
       ansible.builtin.apt:
-        name: qemu-guest-agent containerd
+        pkg:
+          - qemu-guest-agent
+          - containerd
         update_cache: yes
     - name: create directories if they don't exist
       file:

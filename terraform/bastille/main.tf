@@ -277,7 +277,7 @@ resource "proxmox_virtual_environment_vm" "cavalier-01" {
 }
 
 resource "proxmox_virtual_environment_vm" "cavalier-02" {
-  name        = "cavalier-01"
+  name        = "cavalier-02"
   node_name   = "okapi"
   description = "Managed by Terraform"
   vm_id       = 20102
