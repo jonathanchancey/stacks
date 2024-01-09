@@ -26,11 +26,11 @@ KVVERSION="v0.6.3"
 # Set the IP addresses of the admin, masters, and workers nodes
 admin=10.30.0.50
 master1=10.30.0.10
-master1=10.30.0.11
-master1=10.30.0.12
+master2=10.30.0.11
+master3=10.30.0.12
 worker1=10.30.0.100
-worker1=10.30.0.101
-worker1=10.30.0.102
+worker2=10.30.0.101
+worker3=10.30.0.102
 
 # User of remote machines
 user=root
