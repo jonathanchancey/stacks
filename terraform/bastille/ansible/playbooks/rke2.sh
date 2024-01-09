@@ -60,7 +60,7 @@ allnomaster1=($master2 $master3 $worker1 $worker2 $worker3)
 lbrange=10.30.0.31-10.30.0.49
 
 #ssh certificate name variable
-certName=id_rsa
+certName=id_ed25519
 
 #############################################
 #            DO NOT EDIT BELOW              #
@@ -69,10 +69,10 @@ certName=id_rsa
 # Create SSH Config file to ignore checking (don't use in production!)
 echo "StrictHostKeyChecking no" > ~/.ssh/config
 
-#add ssh keys for all nodes
-# for node in "${all[@]}"; do
-#   ssh-copy-id $user@$node
-# done
+# add ssh keys for all nodes
+for node in "${all[@]}"; do
+  ssh-copy-id $user@$node
+done
 
 # Step 1: Create Kube VIP
 # create RKE2's self-installing manifest dir
