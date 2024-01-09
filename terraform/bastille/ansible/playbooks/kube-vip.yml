@@ -2,7 +2,7 @@
   hosts: initial_server
   become: true
   vars_files:
-    - env_vars.yaml  
+    - ../inventory/group_vars/env.yml
 
   tasks:
   - name: Download kube-vip RBAC file
