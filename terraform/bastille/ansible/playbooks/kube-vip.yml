@@ -1,0 +1,28 @@
+- name: Install kube-vip
+  hosts: initial_server
+  become: true
+  vars_files:
+    - env_vars.yaml  
+
+  tasks:
+  - name: Download kube-vip RBAC file
+    get_url:
+      url: https://kube-vip.io/manifests/rbac.yaml
+      dest: "{{ WATCHDIR }}/kube-vip-rbac.yaml"
+      owner: root
+      group: root
+      mode: 0644
+
+  - name: Deploying kube-vip
+    shell: |
+      ctr --namespace k8s.io image pull "{{ KUBE_VIP_IMAGE }}":"{{ KUBE_VIP_IMAGE_TAG }}"
+      ctr --namespace k8s.io run --rm --net-host "{{ KUBE_VIP_IMAGE }}":"{{ KUBE_VIP_IMAGE_TAG }}" vip /kube-vip \
+      manifest daemonset \
+      --arp \
+      --interface "{{ INTERFACE }}" \
+      --address "{{ VIP }}" \
+      --controlplane \
+      --leaderElection \
+      --taint \
+      --services \
+      --inCluster | tee "{{ WATCHDIR }}/kube-vip.yaml"
