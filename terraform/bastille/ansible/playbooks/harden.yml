@@ -1,5 +1,5 @@
 - name: harden rke2 install
-  hosts: "*"
+  hosts: server
   tasks:
     - name: ensure that the API server pod specification file permissions are set to 600 or more restrictive (Automated)
       become: true
