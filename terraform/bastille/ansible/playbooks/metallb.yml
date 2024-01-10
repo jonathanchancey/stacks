@@ -18,19 +18,19 @@
       dest: "{{ WATCHDIR }}/ipaddresspool.yaml"
       content: |
         apiVersion: metallb.io/v1beta1
-          kind: IPAddressPool
-          metadata:
-            name: metallb-address-pool
-            namespace: metallb-system
-          spec:
-            addresses:
-            - {{ METALLB_IP_RANGE }}
-          ---
-          apiVersion: metallb.io/v1beta1
-          kind: L2Advertisement
-          metadata:
-            name: metallb-advertisement
-            namespace: metallb-system
-          spec:
-            ipAddressPools:
-            - metallb-address-pool
+        kind: IPAddressPool
+        metadata:
+          name: metallb-address-pool
+          namespace: metallb-system
+        spec:
+          addresses:
+          - {{ METALLB_IP_RANGE }}
+        ---
+        apiVersion: metallb.io/v1beta1
+        kind: L2Advertisement
+        metadata:
+          name: metallb-advertisement
+          namespace: metallb-system
+        spec:
+          ipAddressPools:
+          - metallb-address-pool
