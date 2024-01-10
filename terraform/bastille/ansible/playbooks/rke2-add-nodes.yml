@@ -54,6 +54,7 @@
     - name: ensure rke2-agent is running
       systemd:
         state: started
+        enabled: true
         name: rke2-agent
       listen: "rke2-agent service start"
     - name: ensure rke2-agent is restarted

@@ -63,6 +63,7 @@
     - name: ensure rke2-server is running
       systemd:
         state: started
+        enabled: true
         name: rke2-server
       listen: "rke2-server service start"
     - name: ensure rke2-server is restarted

@@ -57,12 +57,13 @@
         dest: /etc/profile.d/custom-path.sh
         content: 'PATH=$PATH:/opt/rke2/bin'
   handlers:
-    - name: make sure rke2-server is running
+    - name: ensure rke2-server is running
       systemd:
         state: started
+        enabled: true
         name: rke2-server
       listen: "rke2-server service start"
-    - name: make sure rke2-server is restarted
+    - name: ensure rke2-server is restarted
       systemd:
         state: restarted
         name: rke2-server
