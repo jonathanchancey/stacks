@@ -1,1 +1,1 @@
-namespace: rook-ceph
+defaultNamespace: rook-ceph
