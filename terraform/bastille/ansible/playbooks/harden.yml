@@ -1,0 +1,15 @@
+- name: harden rke2 install
+  hosts: "*"
+  tasks:
+    - name: ensure that the API server pod specification file permissions are set to 600 or more restrictive (Automated)
+      become: true
+      command: chmod 600 /var/lib/rancher/rke2/agent/pod-manifests/kube-apiserver.yaml
+    - name: ensure that the controller manager pod specification file permissions are set to 600 or more restrictive (Automated)
+      become: true
+      command: chmod 600 /var/lib/rancher/rke2/agent/pod-manifests/kube-controller-manager.yaml
+    - name: ensure that the scheduler pod specification file permissions are set to 600 or more restrictive (Automated)
+      become: true
+      command: chmod 600 /var/lib/rancher/rke2/agent/pod-manifests/kube-scheduler.yaml
+    - name: ensure that the etcd pod specification file permissions are set to 600 or more restrictive (Automated)
+      become: true
+      command: chmod 600 /var/lib/rancher/rke2/agent/pod-manifests/etcd.yaml
