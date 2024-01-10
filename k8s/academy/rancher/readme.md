@@ -16,7 +16,12 @@ helm install rancher rancher-latest/rancher \
   --set ingress.tls.source=letsEncrypt \
   --set letsEncrypt.email=jonathan22711@gmail.com \
   --set letsEncrypt.ingress.class=traefik
+
+
+kubectl --kubeconfig $KUBECONFIG -n cattle-system exec $(kubectl --kubeconfig $KUBECONFIG -n cattle-system get pods -l app=rancher --no-headers | head -1 | awk '{ print $1 }') -c rancher -- reset-password
+
 ```
+
 
 ## Certs
 Updating the Rancher Certificate
