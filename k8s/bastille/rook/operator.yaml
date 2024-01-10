@@ -30,7 +30,7 @@ data:
 
   # Enable the CSI driver.
   # To run the non-default version of the CSI driver, see the override-able image properties in operator.yaml
-  ROOK_CSI_ENABLE_CEPHFS: "true"
+  ROOK_CSI_ENABLE_CEPHFS: "false"
   # Enable the default version of the CSI RBD driver. To start another version of the CSI driver, see image properties below.
   ROOK_CSI_ENABLE_RBD: "true"
   # Enable the CSI NFS driver. To start another version of the CSI driver, see image properties below.
