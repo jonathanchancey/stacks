@@ -13,9 +13,9 @@
       group: root
       mode: 0644
 
-  - name: create ipAddressPool.yaml
+  - name: create ipaddresspool.yaml
     copy:
-      dest: "{{ WATCHDIR }}/ipAddressPool.yaml"
+      dest: "{{ WATCHDIR }}/ipaddresspool.yaml"
       content: |
         apiVersion: metallb.io/v1beta1
           kind: IPAddressPool
