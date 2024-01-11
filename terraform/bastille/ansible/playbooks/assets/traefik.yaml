@@ -80,3 +80,8 @@ spec:
     customRequestHeaders:
       X-Forwarded-Proto: https
       X-Forwarded-For: https
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: traefik
