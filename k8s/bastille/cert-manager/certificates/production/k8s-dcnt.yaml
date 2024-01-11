@@ -7,7 +7,7 @@ metadata:
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: dcnt
+  name: k8s-dcnt
   namespace: dcnt
 spec:
   secretName: k8s-dcnt-company-tls

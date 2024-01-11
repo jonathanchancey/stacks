@@ -2,7 +2,7 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: dcnt
+  name: hello-dcnt
   namespace: dcnt
 spec:
   secretName: hello-dcnt-tls
