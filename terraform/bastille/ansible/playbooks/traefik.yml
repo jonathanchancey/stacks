@@ -5,6 +5,10 @@
     - ../inventory/group_vars/env.yml
 
   tasks:
+  - name: Install helm
+    community.general.snap:
+      name:
+        - helm
   - name: add traefik repo
     kubernetes.core.helm_repository:
       name: traefik

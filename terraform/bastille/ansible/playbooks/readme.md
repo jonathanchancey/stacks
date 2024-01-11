@@ -53,4 +53,8 @@ helm install rancher rancher-latest/rancher \
 kubectl -n cattle-system rollout status deploy/rancher
 kubectl -n cattle-system get deploy rancher
 
+
+ansible-galaxy collection install kubernetes.core
+ansible-playbook ./playbooks/traefik.yml --user root -i ./inventory/hosts
+
 ```
