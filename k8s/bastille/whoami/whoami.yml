@@ -54,10 +54,29 @@ spec:
   entryPoints:
     - websecure
   routes:
-  - match: Host(`your.example.com`) && PathPrefix(`/tls`)
+  - match: Host(`hello.dcnt.company`) && PathPrefix(`/tls`)
     kind: Rule
     services:
     - name: whoami
       port: 80
   tls:
-    certResolver: myresolver
+    secretName: hello-dcnt-tls
+# ---
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: whoami-ingress
+#   namespace: dcnt
+
+# spec:
+#   rules:
+#     - host: hello.dcnt.company
+#       http:
+#         paths:
+#           - path: /
+#             pathType: Exact
+#             backend:
+#               service:
+#                 name:  whoami
+#                 port:
+#                   number: 80

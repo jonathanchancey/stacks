@@ -4,7 +4,7 @@ kind: IngressRoute
 metadata:
   name: nginx
   namespace: dcnt
-  annotations: 
+  annotations:
     kubernetes.io/ingress.class: traefik-external
 spec:
   entryPoints:
