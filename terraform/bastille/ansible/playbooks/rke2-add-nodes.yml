@@ -71,8 +71,3 @@
         state: restarted
         name: rke2-agent
       listen: "rke2-agent service restart"
-    - name: ensure networkmanager is reloaded
-      systemd:
-        state: reloaded
-        name: NetworkManager
-      listen: "networkmanager reload"

@@ -80,8 +80,3 @@
         state: restarted
         name: rke2-server
       listen: "rke2-server service restart"
-    - name: ensure networkmanager is reloaded
-      systemd:
-        state: reloaded
-        name: NetworkManager
-      listen: "networkmanager reload"
