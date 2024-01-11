@@ -1,0 +1,14 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: dcnt
+  namespace: dcnt-staging
+spec:
+  secretName: hello-dcnt-staging-tls
+  issuerRef:
+    name: letsencrypt-staging
+    kind: ClusterIssuer
+  commonName: "hello.dcnt.company"
+  dnsNames:
+  - "hello.dcnt.company"
