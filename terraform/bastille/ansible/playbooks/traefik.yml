@@ -9,6 +9,7 @@
     community.general.snap:
       name:
         - helm
+      classic: true
   - name: add traefik repo
     kubernetes.core.helm_repository:
       name: traefik
