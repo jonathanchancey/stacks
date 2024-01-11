@@ -15,6 +15,19 @@ module "template-00" {
   virtual_environment_username = var.virtual_environment_username
 }
 
+module "server-00" {
+  source                       = "../../modules/proxmox-vm"
+  name                         = "server-00"
+  node_name                    = "forest"
+  cloud_image_node_name        = "forest"
+  template                     = true
+  sshkeys                      = var.sshkeys
+  username                     = var.username
+  password                     = var.password
+  virtual_environment_endpoint = var.virtual_environment_endpoint
+  virtual_environment_password = var.virtual_environment_password
+  virtual_environment_username = var.virtual_environment_username
+}
 
 # module "sentinel-00" {
 #   source                   = "../../modules/proxmox-vm" # Adjust the path as needed
