@@ -5,42 +5,10 @@
     - ../inventory/group_vars/env.yml
 
   tasks:
-  - name: install helm
-    community.general.snap:
-      name:
-        - helm
-      classic: true
-  - name: add traefik repo
-    kubernetes.core.helm_repository:
-      name: traefik
-      repo_url: "https://traefik.github.io/charts"
-  - name: deploy traefik chart using values files on target
-    kubernetes.core.helm:
-      name: traefik
-      chart_ref: traefik/traefik
-      release_namespace: traefik
-      create_namespace: true
-      kubeconfig: /etc/rancher/rke2/rke2.yaml
-      values_files:
-        - ./assets/traefik-values.yaml
-  - name: deploy default-headers.yaml
-    copy:
-      dest: "{{ WATCHDIR }}/default-headers.yaml"
-      content: |
-        apiVersion: traefik.containo.us/v1alpha1
-        kind: Middleware
-        metadata:
-          name: default-headers
-          namespace: default
-        spec:
-          headers:
-            browserXssFilter: true
-            contentTypeNosniff: true
-            forceSTSHeader: true
-            stsIncludeSubdomains: true
-            stsPreload: true
-            stsSeconds: 15552000
-            customFrameOptionsValue: SAMEORIGIN
-            customRequestHeaders:
-              X-Forwarded-Proto: https
-              X-Forwarded-For: https
+    - name: create traefik
+      copy:
+        src: ./assets/traefik.yaml
+        dest: "{{ WATCHDIR }}/traefik.yaml"
+      owner: root
+      group: root
+      mode: '0644'
