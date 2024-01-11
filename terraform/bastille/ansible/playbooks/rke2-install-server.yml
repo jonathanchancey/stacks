@@ -54,7 +54,6 @@
         content: |
           [keyfile]
           unmanaged-devices=interface-name:cali*;interface-name:flannel*
-      notify: "networkmanager reload"
     - name: install rke2 server
       become: true
       warn: false
