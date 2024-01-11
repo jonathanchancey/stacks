@@ -7,6 +7,7 @@ spec:
   chart: traefik/traefik
   repo: https://traefik.github.io/charts
   targetNamespace: traefik
+  createNamespace: true
   valuesContent: |-
     globalArguments:
       - "--global.sendanonymoususage=false"
