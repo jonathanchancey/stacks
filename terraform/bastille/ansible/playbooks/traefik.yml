@@ -9,6 +9,6 @@
       copy:
         src: ./assets/traefik.yaml
         dest: "{{ WATCHDIR }}/traefik.yaml"
-      owner: root
-      group: root
-      mode: '0644'
+        owner: root
+        group: root
+        mode: '0644'
