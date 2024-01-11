@@ -50,6 +50,13 @@
             - "{{ SERVER_FAILOVER_IP }}"
           write-kubeconfig-mode: 0644
       notify: "rke2-server service restart"
+    - name: configure NetworkManager to ignore calico/flannel related network interfaces
+      copy:
+        dest: "/etc/NetworkManager/conf.d/rke2-canal.conf"
+        content: |
+          [keyfile]
+          unmanaged-devices=interface-name:cali*;interface-name:flannel*
+      notify: "networkmanager reload"
     - name: install rke2 server
       become: true
       shell: |
@@ -71,3 +78,8 @@
         state: restarted
         name: rke2-server
       listen: "rke2-server service restart"
+    - name: ensure networkmanager is reloaded
+      systemd:
+        state: reloaded
+        name: NetworkManager
+      listen: "networkmanager reload"

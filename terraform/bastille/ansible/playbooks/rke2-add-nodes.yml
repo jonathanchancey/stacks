@@ -41,6 +41,13 @@
         content: |
           token: {{ TOKEN }}
           server: https://{{ SERVER_ADDRESS_FQDN }}:9345
+    - name: configure NetworkManager to ignore calico/flannel related network interfaces
+      copy:
+        dest: "/etc/NetworkManager/conf.d/rke2-canal.conf"
+        content: |
+          [keyfile]
+          unmanaged-devices=interface-name:cali*;interface-name:flannel*
+      notify: "networkmanager reload"
     - name: install rke2 agent
       become: true
       shell: |
@@ -62,3 +69,8 @@
         state: restarted
         name: rke2-agent
       listen: "rke2-agent service restart"
+    - name: ensure networkmanager is reloaded
+      systemd:
+        state: reloaded
+        name: NetworkManager
+      listen: "networkmanager reload"
