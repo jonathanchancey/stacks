@@ -11,10 +11,7 @@ spec:
   set:
     hostname: "rancher.k8s.dcnt.company"
     bootstrapPassword: "admin"
-    ingress.tls.source: "letsEncrypt"
-    letsEncrypt.email: "jonathan22711@gmail.com"
-    letsEncrypt.ingress.class: "traefik"
-    letsEncrypt.environment: "staging"
+    ingress.tls.source: "secret"
 ---
 apiVersion: v1
 kind: Namespace
