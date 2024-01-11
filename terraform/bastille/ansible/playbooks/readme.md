@@ -57,4 +57,8 @@ ansible-galaxy collection install community.general
 ansible-galaxy collection install kubernetes.core
 ansible-playbook ./playbooks/traefik.yml --user root -i ./inventory/hosts
 
+kubectl taint nodes sentinel-00 node-role.kubernetes.io/master=true:NoSchedule
+kubectl taint nodes sentinel-01 node-role.kubernetes.io/master=true:NoSchedule
+kubectl taint nodes sentinel-02 node-role.kubernetes.io/master=true:NoSchedule
+
 ```
