@@ -18,8 +18,6 @@ spec:
       - "--log.level=INFO"
       - "--providers.kubernetesingress.allowexternalnameservices"
       - "--providers.kubernetescrd.allowexternalnameservices"
-      - "--providers.kubernetesingress.ingressclass=traefik"
-      - "--providers.kubernetesingress.ingressendpoint.publishedservice=traefik/traefik"
 
     deployment:
       enabled: true
@@ -31,12 +29,16 @@ spec:
 
     ports:
       web:
-        redirectTo: 
+        redirectTo:
           port: websecure
       websecure:
         tls:
           enabled: true
-          
+          - main: dcnt.company
+          sans:
+            - k8s.dcnt.company
+            - hello.dcnt.company
+
     ingressRoute:
       dashboard:
         enabled: false
