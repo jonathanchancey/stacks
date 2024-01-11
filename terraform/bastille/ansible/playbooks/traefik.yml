@@ -4,9 +4,6 @@
   vars_files:
     - ../inventory/group_vars/env.yml
 
-  environment:
-    KUBECONFIG: /etc/rancher/rke2/rke2.yaml
-
   tasks:
   - name: install helm
     community.general.snap:
@@ -23,6 +20,7 @@
       chart_ref: traefik/traefik
       release_namespace: traefik
       create_namespace: true
+      kubeconfig: /etc/rancher/rke2/rke2.yaml
       values_files:
         - ./assets/traefik-values.yaml
   - name: deploy default-headers.yaml
