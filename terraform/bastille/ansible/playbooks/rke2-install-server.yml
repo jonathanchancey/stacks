@@ -56,7 +56,6 @@
           unmanaged-devices=interface-name:cali*;interface-name:flannel*
     - name: install rke2 server
       become: true
-      warn: false
       shell: |
         curl -sfL https://get.rke2.io | INSTALL_RKE2_VERSION="{{INSTALL_RKE2_VERSION }}" sh -
       notify: "rke2-server service start"
