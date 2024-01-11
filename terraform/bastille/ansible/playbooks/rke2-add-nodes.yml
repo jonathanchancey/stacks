@@ -22,6 +22,7 @@
         recurse: yes
       loop:
         - "{{ CONFDIR }}"
+        - "{{ NETWORKDIR }}"
     - name: get hostname short
       shell: |
         hostname -s
@@ -43,7 +44,7 @@
           server: https://{{ SERVER_ADDRESS_FQDN }}:9345
     - name: configure NetworkManager to ignore calico/flannel related network interfaces
       copy:
-        dest: "/etc/NetworkManager/conf.d/rke2-canal.conf"
+        dest: "{{ NETWORKFILE }}"
         content: |
           [keyfile]
           unmanaged-devices=interface-name:cali*;interface-name:flannel*

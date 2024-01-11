@@ -271,51 +271,6 @@ resource "proxmox_virtual_environment_vm" "sentinel-02" {
   }
 }
 
-# resource "proxmox_virtual_environment_vm" "cavalier-00" {
-#   name        = "cavalier-00"
-#   node_name   = "forest"
-#   description = "Managed by Terraform"
-#   vm_id       = 20100
-
-#   clone {
-#     vm_id = proxmox_virtual_environment_vm.ubuntu_template-00.id
-#   }
-
-#   memory {
-#     dedicated = 8192
-#   }
-
-#   cpu {
-#     cores = 2
-#   }
-
-#   disk {
-#     datastore_id = "foxes-dir"
-#     interface    = "virtio0"
-#     iothread     = true
-#     discard      = "on"
-#     size         = 40
-#   }
-
-#   initialization {
-#     user_account {
-#       keys     = var.sshkeys
-#       username = var.vm_agent_username
-#       password = var.vm_agent_password
-#     }
-#     dns {
-#       domain  = "local"
-#       servers = ["10.30.0.1", "1.1.1.1"]
-#     }
-#     ip_config {
-#       ipv4 {
-#         address = "10.30.0.100/24"
-#         gateway = "10.30.0.1"
-#       }
-#     }
-#   }
-# }
-
 resource "proxmox_virtual_environment_vm" "cavalier-01" {
   name        = "cavalier-01"
   node_name   = "lich"
