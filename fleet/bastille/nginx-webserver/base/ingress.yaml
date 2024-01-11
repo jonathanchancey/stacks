@@ -10,7 +10,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`nginx.k8s.dcnt.company`)
+    - match: Host(`hello.dcnt.company`)
       kind: Rule
       services:
         - name: nginx
