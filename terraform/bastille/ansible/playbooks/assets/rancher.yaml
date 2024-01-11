@@ -14,6 +14,7 @@ spec:
     ingress.tls.source: "letsEncrypt"
     letsEncrypt.email: "jonathan22711@gmail.com"
     letsEncrypt.ingress.class: "traefik"
+    letsEncrypt.environment: "staging"
 ---
 apiVersion: v1
 kind: Namespace
