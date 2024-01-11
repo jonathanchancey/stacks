@@ -34,10 +34,6 @@ spec:
       websecure:
         tls:
           enabled: true
-          - main: dcnt.company
-          sans:
-            - k8s.dcnt.company
-            - hello.dcnt.company
 
     ingressRoute:
       dashboard:
