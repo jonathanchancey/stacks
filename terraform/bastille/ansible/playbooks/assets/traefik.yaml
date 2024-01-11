@@ -18,6 +18,8 @@ spec:
       - "--log.level=INFO"
       - "--providers.kubernetesingress.allowexternalnameservices"
       - "--providers.kubernetescrd.allowexternalnameservices"
+      - "--providers.kubernetesingress.ingressclass=traefik"
+      - "--providers.kubernetesingress.ingressendpoint.publishedservice=traefik/traefik"
 
     deployment:
       enabled: true
