@@ -4,8 +4,11 @@
   vars_files:
     - ../inventory/group_vars/env.yml
 
+  environment:
+    KUBECONFIG: /etc/rancher/rke2/rke2.yaml
+
   tasks:
-  - name: Install helm
+  - name: install helm
     community.general.snap:
       name:
         - helm
