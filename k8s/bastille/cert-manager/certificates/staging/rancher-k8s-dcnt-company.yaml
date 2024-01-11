@@ -1,0 +1,14 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: rancher-staging
+  namespace: cattle-system
+spec:
+  secretName: tls-rancher-ingress-staging
+  issuerRef:
+    name: letsencrypt-staging
+    kind: ClusterIssuer
+  commonName: "rancher.k8s.dcnt.company"
+  dnsNames:
+  - "rancher.k8s.dcnt.company"

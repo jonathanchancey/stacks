@@ -1,0 +1,20 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dcnt
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: dcnt
+  namespace: dcnt
+spec:
+  secretName: k8s-dcnt-company-tls
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  commonName: "*.k8s.dcnt.company"
+  dnsNames:
+  - "k8s.dcnt.company"
+  - "*.k8s.dcnt.company"
