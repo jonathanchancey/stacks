@@ -8,13 +8,13 @@ metadata:
     kubernetes.io/ingress.class: traefik-external
 spec:
   entryPoints:
-    - websecure
+    - web
   routes:
     - match: Host(`hello.dcnt.company`)
       kind: Rule
       services:
         - name: nginx
-          port: 443
+          port: 80
       middlewares:
         - name: default-headers
   tls:
