@@ -10,14 +10,15 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`hello.dcnt.company`)
+    # - match: Host(`hello.dcnt.company`)
+    - match: Host(`hello.k8s.dcnt.company`)
       kind: Rule
       services:
         - name: nginx
           port: 80
       middlewares:
         - name: default-headers
-  # tls:
-  #   secretName: k8s-dcnt-company-tls
   tls:
-    secretName: hello-dcnt-tls
+    secretName: k8s-dcnt-company-tls
+  # tls:
+  #   secretName: hello-dcnt-tls

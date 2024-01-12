@@ -36,8 +36,10 @@ spec:
           enabled: true
           - main: dcnt.company
           sans:
-            - k8s.dcnt.company
             - hello.dcnt.company
+            - *.dcnt.company
+            - k8s.dcnt.company
+            - *.k8s.dcnt.company
 
     ingressRoute:
       dashboard:
