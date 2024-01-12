@@ -1,0 +1,32 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: nginx-fleet
+  namespace: dcnt
+  labels:
+    app: nginx-fleet
+spec:
+  replicas: 1
+  progressDeadlineSeconds: 600
+  revisionHistoryLimit: 2
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: nginx-fleet
+  template:
+    metadata:
+      labels:
+        app: nginx-fleet
+    spec:
+      containers:
+      - name: nginx-fleet
+        image: nginx:latest
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "100m"
+          limits:
+            memory: "128Mi"
+            cpu: "100m"
