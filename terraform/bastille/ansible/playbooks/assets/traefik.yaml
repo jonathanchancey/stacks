@@ -39,6 +39,7 @@ spec:
             - dcnt.company
             - k8s.dcnt.company
             - hello.dcnt.company
+            - auth.dcnt.company
 
     ingressRoute:
       dashboard:
