@@ -34,7 +34,7 @@ spec:
       websecure:
         tls:
           enabled: true
-          - main: dcnt.company
+          main: dcnt.company
           sans:
             - hello.dcnt.company
             - *.dcnt.company
