@@ -3,7 +3,6 @@ apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
   name: nginx
-  namespace: dcnt
   annotations:
     kubernetes.io/ingress.class: traefik-external
 spec:
@@ -11,14 +10,22 @@ spec:
     - websecure
   routes:
     - match: Host(`hello.dcnt.company`)
-    # - match: Host(`hello.k8s.dcnt.company`)
       kind: Rule
+      priority: 0
       services:
         - name: nginx
           port: 80
       middlewares:
         - name: default-headers
-  # tls:
-  #   secretName: k8s-dcnt-company-tls
+        - name: authentik
+          namespace: authentik
+    - match: "Host(`hello.dcnt.company`) && PathPrefix(`/outpost.goauthentik.io/`)"
+      kind: Rule
+      priority: 15
+      services:
+          - kind: Service
+            name: ak-outpost-authentik-embedded-outpost
+            namespace: authentik
+            port: 9000
   tls:
-    secretName: hello-dcnt-tls
+    secretName: dcnt-company-tls

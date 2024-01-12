@@ -1,0 +1,43 @@
+authentik:
+  secret_key: "REDACTED"
+  # This sends anonymous usage-data, stack traces on errors and
+  # performance data to sentry.beryju.org, and is fully opt-in
+  error_reporting:
+    enabled: false
+  postgresql:
+    password: "REDACTED"
+
+ingress:
+  ingressClassName: traefik
+  enabled: true
+  tls:
+    - hosts:
+        - auth.dcnt.company
+      secretName: auth-dcnt-tls
+  hosts:
+    - host: auth.dcnt.company
+      paths:
+        - path: "/"
+          pathType: Prefix
+resources:
+  server:
+    requests:
+      memory: "512Mi"
+      cpu: "500m"
+    limits:
+      memory: "1024Mi"
+      cpu: "1000m"
+  worker:
+    requests:
+      memory: "512Mi"
+      cpu: "250m"
+    limits:
+      memory: "1024Mi"
+      cpu: "500m"
+
+postgresql:
+  enabled: true
+  postgresqlPassword: "REDACTED"
+
+redis:
+  enabled: true
