@@ -1,4 +1,12 @@
 authentik:
+  email:
+    from: alerts@dcnt.company
+    host: smtp.protonmail.ch
+    port: 587
+    password: REDACTED
+    use_tls: true
+    username: alerts@dcnt.company
+
   secret_key: "REDACTED"
   # This sends anonymous usage-data, stack traces on errors and
   # performance data to sentry.beryju.org, and is fully opt-in
