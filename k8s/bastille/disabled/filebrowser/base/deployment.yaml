@@ -3,6 +3,7 @@ kind: Deployment
 apiVersion: apps/v1
 metadata:
   name: filebrowser
+  namespace: filebrowser
   labels:
     app: filebrowser
 spec:
@@ -19,18 +20,18 @@ spec:
       labels:
         app: filebrowser
     spec:
-      securityContext:
-        runAsUser: 4888
-        runAsGroup: 4888
-        fsGroup: 4888
-        fsGroupChangePolicy: "OnRootMismatch"
-        runAsNonRoot: true
-        seccompProfile:
-          type: RuntimeDefault
+      # securityContext:
+      #   runAsUser: 4888
+      #   runAsGroup: 4888
+      #   fsGroup: 4888
+      #   fsGroupChangePolicy: "OnRootMismatch"
+      #   runAsNonRoot: true
+      #   seccompProfile:
+      #     type: RuntimeDefault
       containers:
       - name: filebrowser
         image: filebrowser/filebrowser:latest
-        command: ["/filebrowser", "--config", "/config/settings.json"]
+        command: ["/filebrowser", "--noauth"]
         # command: ["/filebrowser", "--database", "/database/filebrowser.db", "--config", "/config/settings.json"]
         # command: ["sleep", "360000"]
         resources:
@@ -56,10 +57,10 @@ spec:
             name: db
           - mountPath: "/config/"
             name: config
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop: ["ALL"]
+        # securityContext:
+        #   allowPrivilegeEscalation: false
+        #   capabilities:
+        #     drop: ["ALL"]
       volumes:
         - name: srv
           persistentVolumeClaim:

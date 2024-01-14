@@ -3,13 +3,14 @@ apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
   name: filebrowser
+  namespace: filebrowser
   annotations:
     kubernetes.io/ingress.class: traefik-external
 spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`file.dcnt.company`)
+    - match: Host(`filebrowser.dcnt.company`)
       kind: Rule
       priority: 0
       services:
@@ -19,7 +20,7 @@ spec:
         - name: default-headers
         - name: authentik
           namespace: authentik
-    - match: "Host(`file.dcnt.company`) && PathPrefix(`/outpost.goauthentik.io/`)"
+    - match: "Host(`filebrowser.dcnt.company`) && PathPrefix(`/outpost.goauthentik.io/`)"
       kind: Rule
       priority: 15
       services:
