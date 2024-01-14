@@ -46,3 +46,8 @@ id_rsa*
 *.secret
 secret.yml
 settings.json
+secret
+nextcloud-creds
+password
+username
+smtp*

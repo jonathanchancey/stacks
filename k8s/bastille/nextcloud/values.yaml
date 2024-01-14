@@ -1,0 +1,110 @@
+namespace: fkn
+image:
+    repository: nextcloud
+    # tag: 23.0.2-apache
+# ingress:
+#   className: traefik
+phpClientHttpsFix:
+  enabled: true
+  protocol: https
+
+persistence:
+  enabled: true
+  storageClassName: "ceph-rbd"
+  accessModes: "ReadWriteOnce"
+  size: 1000Gi
+
+nextcloud:
+  host: file.dcnt.company
+  existingSecret:
+    enabled: true
+    secretName: nextcloud-creds
+    usernameKey: username
+    passwordKey: password
+    extraEnv:
+      - name: TRUSTED_PROXIES
+        value: 10.30.0.31
+      - name: overwrite.cli.url
+        value: https://file.dcnt.company
+      - name: OVERWRITEHOST
+        value: file.dcnt.company
+    phpConfigs:
+      opcache.interned_strings_buffer: "10"
+  mail:
+    enabled: true
+    fromAddress: alerts
+    domain: dcnt.company
+    smtp:
+      host: smtp.protonmail.ch
+      secure: tls
+      port: 587
+      authtype: LOGIN
+      name:  alerts@dcnt.company
+  configs: 
+    trusted.config.php: |-
+      <?php
+      $CONFIG = array (
+          'trusted_proxies' => 
+          array (
+            0 => '10.42.0.0/16',
+            1 => '103.21.244.0/22',
+            2 => '103.22.200.0/22',
+            3 => '103.31.4.0/22',
+            4 => '104.16.0.0/12',
+            5 => '108.162.192.0/18',
+            6 => '131.0.72.0/22',
+            7 => '141.101.64.0/18',
+            8 => '162.158.0.0/15',
+            9 => '172.64.0.0/13',
+            10 => '173.245.48.0/20',
+            11 => '188.114.96.0/20',
+            12 => '190.93.240.0/20',
+            13 => '197.234.240.0/22',
+            14 => '198.41.128.0/17',
+            15 => '2400:cb00::/32',
+            16 => '2606:4700::/32',
+            17 => '2803:f800::/32',
+            18 => '2405:b500::/32',
+            19 => '2405:8100::/32',
+            20 => '2c0f:f248::/32',
+          ),
+      );
+
+internalDatabase:
+  enabled: false
+
+postgresql:
+  enabled: true
+  global:
+    postgresql:
+      auth:
+        existingSecret: nextcloud-postgres-creds
+        secretKeys:
+          adminPasswordKey: password
+          userPasswordKey: password
+  primary:
+    persistence:
+      enabled: true
+
+redis:
+  enabled: true
+  replicas: 
+    replicaCount: 1
+  auth:
+    enabled: true
+    # name of an existing secret with Redis® credentials (instead of auth.password), must be created ahead of time
+    existingSecret: "nextcloud-redis-creds"
+    # Password key to be retrieved from existing secret
+    existingSecretPasswordKey: "password"
+
+externalDatabase:
+  enabled: true
+
+  ## Supported database engines: mysql or postgresql
+  type: postgresql
+  host: nextcloud-postgresql
+  existingSecret:
+    enabled: true
+    secretName: nextcloud-postgres-creds
+    usernameKey: username
+    passwordKey: password
