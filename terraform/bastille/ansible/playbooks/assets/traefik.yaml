@@ -21,7 +21,7 @@ spec:
 
     deployment:
       enabled: true
-      replicas: 3
+      replicas: 2
       annotations: {}
       podAnnotations: {}
       additionalContainers: []
@@ -73,11 +73,11 @@ spec:
     
     resources:
       requests:
-        cpu: "100m"
-        memory: "50Mi"
-      limits:
         cpu: "300m"
-        memory: "150Mi"
+        memory: "100Mi"
+      limits:
+        cpu: "500m"
+        memory: "200Mi"
 
 ---
 apiVersion: traefik.containo.us/v1alpha1
