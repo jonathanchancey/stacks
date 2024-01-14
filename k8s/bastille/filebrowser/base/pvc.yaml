@@ -1,0 +1,26 @@
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: filebrowser-srv
+  namespace: filebrowser
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Gi
+  storageClassName: ceph-rbd
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: filebrowser-db
+  namespace: filebrowser
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: ceph-rbd
