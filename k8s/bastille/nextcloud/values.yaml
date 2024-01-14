@@ -30,6 +30,13 @@ nextcloud:
         value: file.dcnt.company
     phpConfigs:
       opcache.interned_strings_buffer: "10"
+  extraVolumeMounts:
+    - name: cache-volume
+      mountPath: "/cache"
+  extraVolumes:
+    - name: cache-volume
+      emptyDir:
+        sizeLimit: 16Gi
   mail:
     enabled: true
     fromAddress: alerts
@@ -44,6 +51,8 @@ nextcloud:
     trusted.config.php: |-
       <?php
       $CONFIG = array (
+          'default_phone_region' => 'US',
+          'default_locale' => 'en_US',
           'trusted_proxies' => 
           array (
             0 => '10.42.0.0/16',
@@ -67,6 +76,11 @@ nextcloud:
             18 => '2405:b500::/32',
             19 => '2405:8100::/32',
             20 => '2c0f:f248::/32',
+          ),
+          'trusted_domains' =>
+          array (
+            0 => 'file.dcnt.company',
+            1 => 'file.k8s.dcnt.company',
           ),
       );
 
