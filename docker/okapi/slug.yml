@@ -13,7 +13,7 @@ services:
     ports:
       - 5055:5055
     volumes:
-      - /slug/config/jellyseerr:/config
+      - /slug/config/jellyseerr:/app/config
     restart: unless-stopped
     labels:
       - homepage.group=Media
@@ -22,7 +22,7 @@ services:
       - homepage.href=https://jellyseerr.fkn.chancey.dev/
       - homepage.description=Media Manager
   arch-delugevpn:
-    image: binhex/arch-qbittorrentvpn
+    image: binhex/arch-qbittorrentvpn:4.6.2-2-01
     container_name: qbittorentvpn
     privileged: true
     restart: unless-stopped
@@ -40,8 +40,6 @@ services:
       - DELUGE_DAEMON_LOG_LEVEL=info
       - DELUGE_WEB_LOG_LEVEL=info
       - DELUGE_ENABLE_WEBUI_PASSWORD=yes
-      # - VPN_INPUT_PORTS=1234
-      # - VPN_OUTPUT_PORTS=5678
       - DEBUG=true
       - UMASK=002
       - PUID=8112
@@ -63,3 +61,29 @@ services:
       - homepage.icon=qBittorent.png
       - homepage.href=https://qbit.fkn.chancey.dev/
       - homepage.description=Torrent Client
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin:10.8.8-1-ls196
+    container_name: jellyfin
+    environment:
+      - PUID=8096
+      - PGID=8096
+      - UMASK=002
+      - TZ=America/Los_Angeles
+      - JELLYFIN_PublishedServerUrl=10.10.0.5
+    volumes:
+      - /slug/config/jellyfin:/config
+      - /media/Shows:/data/tvshows
+      - /media/Movies:/data/movies
+      # - /slug/media/shows:/data/tvshows
+      # - /slug/media/movies:/data/movies
+    ports:
+      - 8096:8096
+      #- 8920:8920 # https 
+      - 7359:7359/udp # discoverability on local network
+      - 1900:1900/udp # dlna
+    labels:
+      - homepage.group=Media
+      - homepage.name=Jellyfin
+      - homepage.icon=jellyfin.png
+      - homepage.href=https://jellyfin.fkn.chancey.dev/
+      - homepage.description=Media server

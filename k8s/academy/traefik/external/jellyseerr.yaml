@@ -1,14 +1,14 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: qbit
+  name: jellyseerr
   namespace: fkn
 spec:
   type: ExternalName
   ports:
     - name: http
-      port: 8112
-      targetPort: 8112
+      port: 5055
+      targetPort: 5055
   externalName: 10.10.0.5
   selector:
     app.kubernetes.io/instance: traefik
@@ -17,7 +17,7 @@ spec:
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: qbit-ingress
+  name: jellyseerr-ingress
   namespace: fkn
   annotations: 
     kubernetes.io/ingress.class: traefik-external
@@ -25,12 +25,12 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`deluge.fkn.chancey.dev`)
+    - match: Host(`jellyseerr.fkn.chancey.dev`)
       kind: Rule
       priority: 1
       services:
-        - name: qbit
+        - name: jellyseerr
           kind: Service
-          port: 8112
+          port: 5055
   tls:
     secretName: fkn-chancey-dev-tls
