@@ -1,92 +1,124 @@
-# Stacks - Central repo for everything GitOps
+# Stacks - IaC for hosting simple functional services at home.
 
 Hello and welcome to my homelab. I use this place to practice DevOps concepts and for hosting simple functional services at home. 
 
-Here you'll find:
-- Terraform and Ansible provisioning for a k3s cluster on Proxmox
-- Kubernetes deployments for essential services like MetalLB and Mosquitto
-- Docker for non-critical applications
-
 ## General Flow
 
-### Core
+### Platforms
 
-The core components of the cluster
+Proxmox - Clustered Hypervisor for Kubernetes, Docker, Ceph, LXCs, and VMs
 
-K3S - Lightweight Kubernetes
+K3S - Lightweight Kubernetes for Internal Services
 
-Traefik - Kubernetes Ingress Controller
+RKE2 - Secure Kubernetes for External Services
 
-Helm - Kubernetes Package Manager
+### Automation
 
-Terraform - VM Provisioning
+Terraform - Proxmox Provisioning
 
-Ansible - Configuration management and updates
+Ansible - Configuration management
+
+### Services
+
+Rancher - Enterprise Kubernetes management
 
 Portainer - GitOps workflow for Docker IaC
 
-Proxmox - Clustered Hypervisor for LXCs, VMs, and Kubernetes Management and Worker Nodes
+Many more!
 
 ## Proxmox Cluster
+
+<table align="center">
+  <tr>
+  <td>12u Rack</td>
+  <td>Explanation</td>
+  </tr>
+  <tr>
+    <td><img src="https://github.com/jonathanchancey/assets/blob/main/images/rack2.jpg?raw=true" width=330></td>
+    <td>
+    <table align="center">
+  <tr>
+    <td>24p patch panel</td>
+  </tr>
+  <tr>
+    <td>Mikrotik 24p switch</td>
+  </tr>
+  <tr>
+    <td>Shelf w/ 2.5g switch & EQ12</td>
+  </tr>
+  <tr>
+    <td>Cable Brush</td>
+  </tr>
+  <tr>
+    <td>PDU 6+6 outlet</td>
+  </tr>
+  <tr>
+    <td>3u shelf w/</td>
+  </tr>
+  <tr>
+    <td>6x8TB external HDDs</td>
+  </tr>
+  <tr>
+    <td>EQ12 and NA7B</td>
+  </tr>
+  <tr>
+    <td>Sliger CX3701 NAS w/</td>
+  </tr>
+  <tr>
+    <td>2x8TB, 12TB, and 14TB HDDs</td>
+  </tr>
+  <tr>
+    <td>1TB NVME ZFS mirror</td>
+  </tr>
+  <tr>
+    <td>1u 2xE5645 Supermicro </td>
+  </tr>
+</table>
+    </td>
+  </tr>
+ </table>
+
 
 ### Topology
 
 ```yaml
-- shar
-  - LXC/VMs
-    - loss # pihole DNS, DHCP for 10.10.0.1/24
-    - dread # OPNsense VM
-  - storage
-    - 512GB nvme # boot
-- selune
-  - LXC/VMs
-    - unused # OPNsense failover
-  - storage
-    - 512GB nvme # boot
-- forest
+- forest # nas
   - LXC/VMs
     - reap # machinaris harvestor
-    - acolyte-00 # k8s control VM
-    - neophyte-00 # k8s agent VM
+    - acolyte-00 # k3s server VM
+    - sentinel-00 # RKE2 server VM
   - storage
-    - 120GB Kingston # boot
     - foxes # 1TB NVME ZFS mirror
     - 6x8TB ext4 external drives # Chia
-    - cow # WGG 8WG degraded ZFS
-- lich
+    - hydra # 8TB ceph OSD
+- lich # compute
   - LXC/VMs
-    - sever # docker node
-    - beholder # frigate VLAD 50 
-    - acolyte-01 # k8s control VM
-    - neophyte-01 # k8s agent VM
+    - beholder # frigate VLAN 50 and iGPU docker host
+    - acolyte-01 # k3s server VM
+    - neophyte-01 # k3s agent VM
+    - sentinel-01 # RKE2 server VM
+    - cavalier-01 # RKE2 agent VM
   - storage
-    - 512GB nvme # boot
-- okapi
+    - hydra # 8TB ceph OSD
+- okapi # compute and nas
   - LXC/VMs
     - chicken # NAS
-      - Samba shares
-      - Identities
     - salamander # discord bot
-    - fish # main docker node
-      - media
-        - jellyfin
-        - navidrome
-      - home
-        - syncthing
-        - homeassistant
-        - homepage
-      - services
-        - uptime kuma
-        - syncthing
-        - freshrss
-        - machinaris
-        - watchtower
-    - lion # okapi vlan testing 
-    - acolyte-02 # k8s control VM
-    - neophyte-02 # k8s agent VM
+    - fish # primary docker node
+    - acolyte-02 # k3s server VM
+    - neophyte-02 # k3s agent VM
+    - cavalier-02 # RKE2 agent VM
   - storage
-    - 120GB Kingston # boot
     - strawberry # ZFS 24TB RAIDZ1 3x12TB
+    - hydra # 8TB ceph OSD
+- shar # router
+  - LXC/VMs
+    - loss # DNS, DHCP for 10.10.0.1/24
+    - dread # OPNsense VM
+- selune # computer
+  - LXC/VMs
+    - sentinel-02 # RKE2 server VM
+    - unused # OPNsense failover
 ```
 
 ![proxmox-small](https://github.com/jonathanchancey/assets/blob/main/images/proxmox-small.png?raw=true)
