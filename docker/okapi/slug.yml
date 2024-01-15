@@ -47,9 +47,10 @@ services:
     cap_add:
         - NET_ADMIN
     volumes:
-      - /slug/downloads:/data
+      # - /slug/downloads:/data
       - /slug/config/qbittorent:/config
       - /etc/localtime:/etc/localtime:ro
+      - /media/Downloads:/data
     ports:
       - 8080:8080
       - 8118:8118
@@ -62,7 +63,7 @@ services:
       - homepage.href=https://qbit.fkn.chancey.dev/
       - homepage.description=Torrent Client
   jellyfin:
-    image: lscr.io/linuxserver/jellyfin:10.8.8-1-ls196
+    image: lscr.io/linuxserver/jellyfin:10.8.13
     container_name: jellyfin
     environment:
       - PUID=8096
@@ -80,10 +81,79 @@ services:
       - 8096:8096
       #- 8920:8920 # https 
       - 7359:7359/udp # discoverability on local network
-      - 1900:1900/udp # dlna
+      # - 1900:1900/udp # dlna
     labels:
       - homepage.group=Media
       - homepage.name=Jellyfin
       - homepage.icon=jellyfin.png
       - homepage.href=https://jellyfin.fkn.chancey.dev/
       - homepage.description=Media server
+  radarr:
+    image: lscr.io/linuxserver/radarr:5.2.6
+    container_name: radarr
+    environment:
+      - PUID=7878
+      - PGID=7878
+      - UMASK=002
+      - TZ=America/Los_Angeles
+    volumes:
+      - /slug/config/radarr:/config
+      - /media/Movies:/movies
+      - /media/Downloads:/downloads
+    ports:
+      - 7878:7878
+    restart: unless-stopped
+    labels:
+      - homepage.group=Media
+      - homepage.name=Radarr
+      - homepage.icon=radarr.png
+      - homepage.href=https://radarr.fkn.chancey.dev/
+      - homepage.description=TV Collection Manager
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:4.0.0
+    container_name: sonarr
+    environment:
+      - PUID=8989
+      - PGID=8989
+      - UMASK=002
+      - TZ=America/Los_Angeles
+    volumes:
+      - /slug/config/sonarr:/config
+      - /media/Shows:/tv
+      - /media/Downloads:/downloads
+    ports:
+      - 8989:8989
+    restart: unless-stopped
+    labels:
+      - homepage.group=Media
+      - homepage.name=Sonarr
+      - homepage.icon=sonarr.png
+      - homepage.href=https://sonarr.fkn.chancey.dev/
+      - homepage.description=Movie Collection Manager
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:1.12.1-develop
+    container_name: prowlarr
+    environment:
+      - PUID=9696
+      - PGID=9696
+      - UMASK=002
+      - TZ=America/Los_Angeles
+    volumes:
+      - /slug/config/prowlarr:/config
+      - /media/Downloads:/downloads
+    ports:
+      - 9696:9696
+    restart: unless-stopped
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:v3.3.13
+    container_name: flaresolverr
+    environment:
+      - PUID=8191
+      - PGID=8191
+      - LOG_LEVEL=info
+      - LOG_HTML=false
+      - CAPTCHA_SOLVER=none
+      - TZ=America/Los_Angeles
+    ports:
+      - "8191:8191"
+    restart: unless-stopped
