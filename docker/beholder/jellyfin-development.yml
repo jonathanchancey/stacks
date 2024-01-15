@@ -20,9 +20,9 @@ services:
       #- 8920:8920 # https
       - 7359:7359/udp # discoverability on local network
       # - 1900:1900/udp # dlna
-    # labels:
-    #   - homepage.group=Media
-    #   - homepage.name=Jellyfin
-    #   - homepage.icon=jellyfin.png
-    #   - homepage.href=https://jellyfin.fkn.chancey.dev/
-    #   - homepage.description=Media server
+    labels:
+      - homepage.group=Media
+      - homepage.name=Jellyfin
+      - homepage.icon=jellyfin.png
+      - homepage.href=https://jellyfin.fkn.chancey.dev/
+      - homepage.description=Media server
