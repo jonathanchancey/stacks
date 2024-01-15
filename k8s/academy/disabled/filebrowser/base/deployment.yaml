@@ -1,0 +1,76 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: filebrowser
+  namespace: filebrowser
+  labels:
+    app: filebrowser
+spec:
+  replicas: 1
+  progressDeadlineSeconds: 600
+  revisionHistoryLimit: 2
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: filebrowser
+  template:
+    metadata:
+      labels:
+        app: filebrowser
+    spec:
+      # securityContext:
+      #   runAsUser: 4888
+      #   runAsGroup: 4888
+      #   fsGroup: 4888
+      #   fsGroupChangePolicy: "OnRootMismatch"
+      #   runAsNonRoot: true
+      #   seccompProfile:
+      #     type: RuntimeDefault
+      containers:
+      - name: filebrowser
+        image: filebrowser/filebrowser:latest
+        command: ["/filebrowser", "--noauth"]
+        # command: ["/filebrowser", "--database", "/database/filebrowser.db", "--config", "/config/settings.json"]
+        # command: ["sleep", "360000"]
+        resources:
+          requests:
+            memory: "1024Mi"
+            cpu: "1000m"
+          limits:
+            memory: "2048Mi"
+            cpu: "1000m"
+        env:
+          - name: TZ
+            value: America/Los_Angeles
+          - name: PUID
+            value: "4888"
+          - name: PGID
+            value: "4888"
+        ports: 
+        - containerPort: 80
+        volumeMounts:
+          - mountPath: "/srv"
+            name: srv
+          - mountPath: "/database/"
+            name: db
+          - mountPath: "/config/"
+            name: config
+        # securityContext:
+        #   allowPrivilegeEscalation: false
+        #   capabilities:
+        #     drop: ["ALL"]
+      volumes:
+        - name: srv
+          persistentVolumeClaim:
+            claimName: filebrowser-srv
+        - name: db
+          persistentVolumeClaim:
+            claimName: filebrowser-db
+        - name: config
+          persistentVolumeClaim:
+            claimName: filebrowser-config
+        # - name: settings
+        #   configMap: 
+        #     name: filebrowser
