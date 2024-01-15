@@ -1,6 +1,26 @@
 version: "3.7"
 name: slug
 services:
+  jellyseerr:
+    image: fallenbagel/jellyseerr:1.7.0
+    container_name: jellyseerr
+    environment:
+      - LOG_LEVEL=debug
+      - TZ=America/Los_Angeles
+      - PUID=5055
+      - PGID=5055
+      - UMASK=002
+    ports:
+      - 5055:5055
+    volumes:
+      - /slug/config/jellyseerr:/config
+    restart: unless-stopped
+    labels:
+      - homepage.group=Media
+      - homepage.name=Jellyseerr
+      - homepage.icon=jellyseerr.png
+      - homepage.href=https://jellyseerr.fkn.chancey.dev/
+      - homepage.description=Media Manager
   arch-delugevpn:
     image: binhex/arch-delugevpn
     container_name: delugevpn
