@@ -50,7 +50,7 @@ services:
       # - /slug/downloads:/data
       - /slug/config/qbittorent:/config
       - /etc/localtime:/etc/localtime:ro
-      - /media/Downloads:/data
+      - /media/Downloads:/downloads
     ports:
       - 8080:8080
       - 8118:8118
@@ -79,7 +79,7 @@ services:
       # - /slug/media/movies:/data/movies
     ports:
       - 8096:8096
-      #- 8920:8920 # https 
+      #- 8920:8920 # https
       - 7359:7359/udp # discoverability on local network
       # - 1900:1900/udp # dlna
     labels:
