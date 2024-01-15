@@ -10,7 +10,7 @@ additionalArguments:
 
 deployment:
   enabled: true
-  replicas: 3
+  replicas: 2
   annotations: {}
   podAnnotations: {}
   additionalContainers: []
