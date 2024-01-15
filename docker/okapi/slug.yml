@@ -22,8 +22,8 @@ services:
       - homepage.href=https://jellyseerr.fkn.chancey.dev/
       - homepage.description=Media Manager
   arch-delugevpn:
-    image: binhex/arch-delugevpn
-    container_name: delugevpn
+    image: binhex/arch-qbittorrentvpn
+    container_name: qbittorentvpn
     privileged: true
     restart: unless-stopped
     environment:
@@ -33,12 +33,15 @@ services:
       - VPN_PROV=pia
       - VPN_CLIENT=openvpn
       - STRICT_PORT_FORWARD=yes
-      - ENABLE_PRIVOXY=no
+      - ENABLE_PRIVOXY=yes
+      - WEBUI_PORT=8080
       - LAN_NETWORK=10.10.0.0/24
       - NAME_SERVERS=1.1.1.1,1.0.0.1
       - DELUGE_DAEMON_LOG_LEVEL=info
       - DELUGE_WEB_LOG_LEVEL=info
       - DELUGE_ENABLE_WEBUI_PASSWORD=yes
+      # - VPN_INPUT_PORTS=1234
+      # - VPN_OUTPUT_PORTS=5678
       - DEBUG=true
       - UMASK=002
       - PUID=8112
@@ -47,16 +50,16 @@ services:
         - NET_ADMIN
     volumes:
       - /slug/downloads:/data
-      - /slug/config/deluge:/config
+      - /slug/config/qbittorent:/config
       - /etc/localtime:/etc/localtime:ro
     ports:
-      - 8112:8112
+      - 8080:8080
       - 8118:8118
-      - 58846:58846
-      - 58946:58946
+      - 6881:6881
+      - 6881:6881/udp
     labels:
       - homepage.group=Management
-      - homepage.name=Deluge
-      - homepage.icon=deluge.png
-      - homepage.href=https://deluge.fkn.chancey.dev/
+      - homepage.name=qBittorent
+      - homepage.icon=qBittorent.png
+      - homepage.href=https://qbit.fkn.chancey.dev/
       - homepage.description=Torrent Client
