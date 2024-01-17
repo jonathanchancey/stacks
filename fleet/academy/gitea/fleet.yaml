@@ -5,6 +5,7 @@ helm:
   chart: "https://dl.gitea.com/charts/gitea-10.0.1.tgz"
   force: false
   timeoutSeconds: 0
+  replicaCount: 1
 
   values:
     global:
