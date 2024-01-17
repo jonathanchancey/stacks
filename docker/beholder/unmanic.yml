@@ -14,4 +14,4 @@ services:
       - /opt/unmainic/config:/config
       - /media/Shows:/library/Shows
       - /media/Movies:/library/Movies
-      - /tmp/unmanic:/tmp/unmanic
+      - /tmp/unmanic:/tmp/
