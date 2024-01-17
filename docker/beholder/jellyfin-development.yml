@@ -2,6 +2,7 @@ version: "3.7"
 services:
   jellyfin:
     image: lscr.io/linuxserver/jellyfin:10.8.13
+    restart: unless-stopped
     container_name: jellyfin
     devices:
       - /dev/dri:/dev/dri
