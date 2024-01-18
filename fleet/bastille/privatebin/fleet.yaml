@@ -9,7 +9,7 @@ helm:
   chart: "privatebin/privatebin"
 
   # An https to a valid Helm repository to download the chart from
-  repo: "https://github.com/PrivateBin/helm-chart/tree/master/charts/privatebin"
+  repo: "https://privatebin.github.io/helm-chart"
 
   # Used if repo is set to look up the version of the chart
   # version: "2.4.1"
