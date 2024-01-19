@@ -1,16 +1,37 @@
+internalDatabase:
+  persistence:
+    enabled: true
+    storageClass: ceph-rbd
+  existingSecret: leantime-database
+
+leantime:
+  defaultTimezone: "America/Los_Angeles"
+  debug: true
+  url: "https://leantime.k8s.chancey.dev/"
+  smtp:
+    enabled: true
+    ## SMTP sender - required.
+    from: alerts@dcnt.company"
+    ## SMTP host - required.
+    host: "smtp.protonmail.ch"
+    ## SMTP username - required unless existing secret is used.
+    # user: "alerts@dcnt.company"
+    ## SMTP password - required unless existing secret is used.
+    # password: ""
+    ## SMTP port
+    port: 587
+    ## Force specific security protocol (tls, ssl or starttls).
+    secureProtocol: tls
+    ## Enable TLS automatically if supported by server. Enabled by default.
+    #autoTLS: false
+    ## Use existing secret for SMTP username and password. Keys are 'smtp-user' and 'smtp-password'
+    existingSecret: leantime-smtp
+
 ingressRoute:
   enabled: false
-  host: leantime.k8s.chancey.dev
-
 ingress:
   enabled: false
-  host: leantime.k8s.chancey.dev
-  tls:
-  - secretName: fkn-chancey-dev
-    hosts:
-      - leantime.k8s.chancey.dev
-  annotations:
-   - kubernetes.io/ingress.class: traefik
+
 persistence:
   enabled: true
   size: 5Gi
@@ -18,7 +39,6 @@ persistence:
 sessionstorage:
   enabled: true
   storageClass: ceph-rbd
-internalDatabase:
-  persistence:
-    enabled: true
-    storageClass: ceph-rbd
+
+strategy:
+  type: Recreate

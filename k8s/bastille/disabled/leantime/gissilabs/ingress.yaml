@@ -10,7 +10,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`leantime.fkn.chancey.dev`)
+    - match: Host(`leantime.k8s.chancey.dev`)
       kind: Rule
       priority: 1
       services:
@@ -18,4 +18,4 @@ spec:
           kind: Service
           port: 80
   tls:
-    secretName: fkn-chancey-dev-tls
+    secretName: k8s-chancey-dev-tls

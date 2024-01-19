@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    meta.helm.sh/release-name: leantime
+    meta.helm.sh/release-namespace: leantime
+  name: leantime-mail
+  namespace: leantime
+spec:
+  ports:
+  - name: email
+    port: 8081
+    protocol: TCP
+    targetPort: 8081
+  selector:
+    app.kubernetes.io/instance: leantime
+    app.kubernetes.io/name: leantime
+  type: ClusterIP
