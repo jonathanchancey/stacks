@@ -33,7 +33,7 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: dcnt
-  namespace: nextcloud
+  namespace: privatebin
 spec:
   secretName: dcnt-company-tls
   issuerRef:
@@ -48,7 +48,7 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: dcnt
-  namespace: privatebin
+  namespace: synapse
 spec:
   secretName: dcnt-company-tls
   issuerRef:
