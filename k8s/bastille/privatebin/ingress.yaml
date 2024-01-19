@@ -19,5 +19,7 @@ spec:
       middlewares:
         - name: default-headers
           namespace: authentik
+        - name: authentik
+          namespace: authentik
   tls:
     secretName: dcnt-company-tls
