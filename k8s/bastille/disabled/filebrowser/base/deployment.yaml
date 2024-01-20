@@ -48,7 +48,7 @@ spec:
             value: "4888"
           - name: PGID
             value: "4888"
-        ports: 
+        ports:
         - containerPort: 80
         volumeMounts:
           - mountPath: "/srv"
@@ -72,5 +72,5 @@ spec:
           persistentVolumeClaim:
             claimName: filebrowser-config
         # - name: settings
-        #   configMap: 
+        #   configMap:
         #     name: filebrowser

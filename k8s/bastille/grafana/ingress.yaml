@@ -1,0 +1,23 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: grafana
+  namespace: cattle-monitoring-system
+  annotations:
+    kubernetes.io/ingress.class: traefik-external
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`grafana.k8s.dcnt.company`)
+      kind: Rule
+      priority: 0
+      services:
+        - name: rancher-monitoring-grafana
+          port: 80
+      middlewares:
+        - name: default-headers
+          namespace: authentik
+  tls:
+    secretName: k8s-chancey-dev-tls
