@@ -38,9 +38,6 @@ spec:
           requests:
             memory: "1024Mi"
             cpu: "1000m"
-          limits:
-            memory: "2048Mi"
-            cpu: "1000m"
         env:
           - name: TZ
             value: America/Los_Angeles
