@@ -20,4 +20,4 @@ helm:
             pathType: Prefix
     redis-cluster:
       cluster:
-        nodes: 1
+        nodes: 3
