@@ -3,6 +3,7 @@ kind: Deployment
 apiVersion: apps/v1
 metadata:
   name: nginx
+  namespace: pki-webserver
   labels:
     app: nginx
 spec:
@@ -29,3 +30,16 @@ spec:
           limits:
             memory: "128Mi"
             cpu: "100m"
+        volumeMounts:
+            - name: nginx-index-file
+              mountPath: /usr/share/nginx/html/
+            - name: default-nginx
+              mountPath: /etc/nginx/conf.d/default.conf
+              subPath: default.conf
+      volumes:
+      - name: nginx-index-file
+        configMap:
+          name: index-html-configmap
+      - name: default-nginx
+        configMap:
+          name: index-html-configmap

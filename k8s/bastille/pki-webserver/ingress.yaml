@@ -3,6 +3,7 @@ apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
   name: nginx
+  namespace: pki-webserver
   annotations:
     kubernetes.io/ingress.class: traefik-external
 spec:
@@ -17,6 +18,5 @@ spec:
           port: 80
       middlewares:
         - name: default-headers
-
   tls:
     secretName: dcnt-company-tls
