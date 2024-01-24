@@ -2,14 +2,14 @@ namespace: gitea
 
 helm:
   releaseName: gitea
-  chart: "https://dl.gitea.com/charts/gitea-10.0.1.tgz"
+  chart: "https://dl.gitea.com/charts/gitea-10.0.2.tgz"
   force: false
   timeoutSeconds: 0
   replicaCount: 1
 
   values:
     global:
-      storageClass: ceph-rbd
+      storageClass: smb
     ingress:
       enabled: true
       className: traefik
@@ -18,6 +18,3 @@ helm:
           paths:
           - path: /
             pathType: Prefix
-    redis-cluster:
-      cluster:
-        nodes: 3
