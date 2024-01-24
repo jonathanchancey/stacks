@@ -1,19 +1,6 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: index-html-configmap
-  namespace: pki-webserver
-data:
-  index.html: |
-    <html>
-    <h1>Welcome</h1>
-    </br>
-    <h1>Hi! This is a configmap Index file </h1>
-    </html
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
   name: default-nginx
   namespace: pki-webserver
 data:
