@@ -16,6 +16,7 @@ kind: ConfigMap
 metadata:
   name: default-nginx
   namespace: pki-webserver
+data:
   default.conf: |
     server {
         listen       80;
@@ -27,6 +28,12 @@ metadata:
         location / {
             root   /usr/share/nginx/html;
             index  index.html index.htm;
+        }
+
+
+
+        location /keys/ {
+            root /www/data/keys;
         }
 
         #error_page  404              /404.html;
@@ -61,3 +68,12 @@ metadata:
         #    deny  all;
         #}
     }
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: keys
+  namespace: pki-webserver
+data:
+  ice-cave.pub: |
+    ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKLvrXenlyToW4pXTP51vKa/i9l4nPL8ZrWp9pxA8VKV ice@cave.local
