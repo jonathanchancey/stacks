@@ -33,7 +33,7 @@ data:
 
 
         location /keys/ {
-            root /www/data/keys;
+            root /www/data;
         }
 
         #error_page  404              /404.html;

@@ -35,16 +35,16 @@ spec:
               mountPath: /usr/share/nginx/html/
             - name: keys
               mountPath: /www/data/keys
-            - name: default-nginx
-              mountPath: /etc/nginx/conf.d/default.conf
-              subPath: default.conf
+            - name: key
+              mountPath: /etc/nginx/conf.d/
+              # subPath: key.conf
       volumes:
       - name: nginx-index-file
         configMap:
           name: index-html-configmap
-      - name: default-nginx
+      - name: key
         configMap:
-          name: index-html-configmap
+          name: default-nginx
       - name: keys
         configMap:
           name: keys
