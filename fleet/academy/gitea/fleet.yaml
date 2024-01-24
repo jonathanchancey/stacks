@@ -1,0 +1,23 @@
+namespace: gitea
+
+helm:
+  releaseName: gitea
+  chart: "https://dl.gitea.com/charts/gitea-10.0.1.tgz"
+  force: false
+  timeoutSeconds: 0
+  replicaCount: 1
+
+  values:
+    global:
+      storageClass: ceph-rbd
+    ingress:
+      enabled: true
+      className: traefik
+      hosts:
+        - host: gitea.k8s.chancey.dev
+          paths:
+          - path: /
+            pathType: Prefix
+    redis-cluster:
+      cluster:
+        nodes: 3
