@@ -78,9 +78,7 @@ spec:
       requests:
         cpu: "300m"
         memory: "100Mi"
-      limits:
-        cpu: "500m"
-        memory: "300Mi"
+
 
 ---
 apiVersion: traefik.containo.us/v1alpha1
