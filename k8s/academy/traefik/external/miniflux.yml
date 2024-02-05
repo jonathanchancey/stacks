@@ -1,0 +1,36 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: miniflux
+  namespace: fkn
+spec:
+  type: ExternalName
+  ports:
+    - name: http
+      port: 12612
+      targetPort: 12612
+  externalName: 10.10.0.5
+  selector:
+    app.kubernetes.io/instance: traefik
+    app.kubernetes.io/name: traefik
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: miniflux-ingress
+  namespace: fkn
+  annotations: 
+    kubernetes.io/ingress.class: traefik-external
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`miniflux.fkn.chancey.dev`)
+      kind: Rule
+      priority: 1
+      services:
+        - name: miniflux
+          kind: Service
+          port: 12612
+  tls:
+    secretName: fkn-chancey-dev-tls
