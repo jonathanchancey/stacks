@@ -1,0 +1,23 @@
+services:
+  miniflux:
+    image: miniflux/miniflux:latest
+    ports:
+      - "12612:8080"
+    env_file:
+      - stack.env
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - RUN_MIGRATIONS=1
+      - CREATE_ADMIN=1
+  db:
+    image: postgres:15
+    env_file:
+      - stack.env
+    volumes:
+      - /leech/miniflux/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "miniflux"]
+      interval: 10s
+      start_period: 30s
