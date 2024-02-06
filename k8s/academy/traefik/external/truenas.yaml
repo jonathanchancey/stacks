@@ -19,7 +19,7 @@ kind: IngressRoute
 metadata:
   name: truenas-ingress
   namespace: k8s-chancey-dev
-  annotations: 
+  annotations:
     kubernetes.io/ingress.class: traefik-external
 spec:
   entryPoints:
@@ -33,4 +33,4 @@ spec:
           kind: Service
           port: 443
   tls:
-    secretName: chancey-dev-tls
+    secretName: k8s-chancey-dev-tls

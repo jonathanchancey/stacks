@@ -33,4 +33,4 @@ spec:
           kind: Service
           port: 8374
   tls:
-    secretName: chancey-dev-tls
+    secretName: k8s-chancey-dev-tls
