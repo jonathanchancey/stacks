@@ -51,3 +51,4 @@ nextcloud-creds
 password
 username
 smtp*
+*.env
