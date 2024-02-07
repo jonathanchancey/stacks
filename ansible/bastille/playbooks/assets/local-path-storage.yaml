@@ -133,16 +133,16 @@ data:
                     "paths":[]
             },
             {
-                        "node":"sentinel-00",
-                        "paths":["/opt/local-path-provisioner"]
+                    "node":"sentinel-00",
+                    "paths":["/opt/local-path-provisioner"]
             },
             {
-                        "node":"cavalier-01",
-                        "paths":["/opt/local-path-provisioner"]
+                    "node":"cavalier-01",
+                    "paths":["/opt/local-path-provisioner"]
             },
             {
-                        "node":"cavalier-02",
-                        "paths":["/opt/local-path-provisioner"]
+                    "node":"cavalier-02",
+                    "paths":["/opt/local-path-provisioner"]
             },
             ]
     }
