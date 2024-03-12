@@ -73,7 +73,7 @@ helm:
       mountPath: /mosquitto/data
       size: 1Gi
       subPath: ''
-      storageClass: ceph-rbd
+      storageClass: smb
     podSecurityContext: {}
     ports:
       mqtt:
