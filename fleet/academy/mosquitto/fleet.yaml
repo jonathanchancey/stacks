@@ -65,8 +65,7 @@ helm:
             cpu: 100m
             memory: 64Mi
     nameOverride: ''
-    nodeSelector:
-      - acolyte-02
+    nodeSelector: acolyte-02
     persistence:
       accessMode: ReadWriteOnce
       enabled: true
