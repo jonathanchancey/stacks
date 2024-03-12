@@ -65,7 +65,8 @@ helm:
             cpu: 100m
             memory: 64Mi
     nameOverride: ''
-    nodeSelector: {}
+    nodeSelector:
+      - acolyte-02
     persistence:
       accessMode: ReadWriteOnce
       enabled: true
@@ -73,7 +74,7 @@ helm:
       mountPath: /mosquitto/data
       size: 1Gi
       subPath: ''
-      storageClass: smb
+      storageClass: local-path
     podSecurityContext: {}
     ports:
       mqtt:
