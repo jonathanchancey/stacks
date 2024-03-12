@@ -65,7 +65,8 @@ helm:
             cpu: 100m
             memory: 64Mi
     nameOverride: ''
-    nodeSelector: acolyte-02
+    nodeSelector:
+      kubernetes.io/hostname: neophyte-02
     persistence:
       accessMode: ReadWriteOnce
       enabled: true
