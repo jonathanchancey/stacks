@@ -3,3 +3,11 @@ oak
 reap
 chicken
 salamander
+
+[soloproxmox]
+10.10.0.4
+
+[proxmox]
+10.10.0.19
+10.10.0.20
+10.10.0.21
