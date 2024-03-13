@@ -39,6 +39,27 @@ resource "proxmox_virtual_environment_vm" "vm" {
     size         = var.disk_size
   }
 
+  // Dynamic block for optional additional disk
+  dynamic "disk" {
+    for_each = var.additional_disk_size > 0 ? [1] : []
+    content {
+      datastore_id = var.additional_disk_datastore_id
+      file_format = var.additional_disk_file_format
+      # file_id      = var.additional_disk_file_id
+      interface    = "virtio1"
+      iothread     = true
+      discard      = "on"
+      size         = var.additional_disk_size
+    }
+  }
+
+  lifecycle {
+    ignore_changes = [
+      disk[0].file_format,
+      disk[0].path_in_datastore
+    ]
+  }
+
   tpm_state {
     version = var.tpm_state
   }
