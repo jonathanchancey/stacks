@@ -52,3 +52,4 @@ password
 username
 smtp*
 *.env
+**/scratch/
