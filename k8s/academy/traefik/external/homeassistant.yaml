@@ -19,7 +19,7 @@ kind: IngressRoute
 metadata:
   name: homeassistant-ingress
   namespace: fkn
-  annotations: 
+  annotations:
     kubernetes.io/ingress.class: traefik-external
 spec:
   entryPoints:
@@ -52,8 +52,6 @@ spec:
       X-Robots-Tag: "none,noarchive,nosnippet,notranslate,noimageindex"
       X-Forwarded-Proto: "https"
       server: ""
-    customRequestHeaders:
-      X-Forwarded-Proto: "https"
     sslProxyHeaders:
       X-Forwarded-Proto: "https"
     hostsProxyHeaders:
