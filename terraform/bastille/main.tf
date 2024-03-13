@@ -1,408 +1,147 @@
-resource "proxmox_virtual_environment_vm" "ubuntu_template-00" {
-  name        = "ubuntu-template"
-  node_name   = "forest"
-  description = "Managed by Terraform"
-
-  initialization {
-    datastore_id = "foxes-dir"
-    user_account {
-      keys     = var.sshkeys
-      username = var.vm_agent_username
-      password = var.vm_agent_password
-    }
-
-    dns {
-      domain  = "local"
-      servers = ["10.30.0.1", "1.1.1.1"]
-    }
-
-    ip_config {
-      ipv4 {
-        address = "dhcp"
-      }
-    }
-  }
-
-  disk {
-    datastore_id = "foxes-dir"
-    file_id      = proxmox_virtual_environment_file.ubuntu_cloud_image-00.id
-    interface    = "virtio0"
-    iothread     = true
-    discard      = "on"
-    size         = 20
-  }
-
-  network_device {
-    vlan_id = 30
-  }
-
-  tpm_state {
-    version = "v2.0"
-  }
-
-  template = true
-  reboot   = true
+module "forest-sentinel" {
+  source                       = "../modules/proxmox-vm"
+  name                         = "forest-sentinel"
+  description                  = "Managed by Terraform"
+  tags                         = ["opensuse", "terraform"]
+  node_name                    = "forest"
+  cloud_image_node_name        = "forest"
+  datastore_id                 = "foxes-dir"
+  cloud_image_datastore_id     = "foxes-dir"
+  vm_id                        = 25000
+  memory_dedicated             = 4096
+  cpu_cores                    = 2
+  disk_size                    = 26
+  dns_domain                   = "local"
+  dns_servers                  = ["10.30.0.1", "1.1.1.1"]
+  ip_config_gateway            = "10.30.0.1"
+  ip_config_ipv4               = "10.30.0.10/24"
+  sshkeys                      = var.sshkeys
+  username                     = var.username
+  password                     = var.password
+  reboot                       = false
+  cloud_image_url              = "https://download.opensuse.org/distribution/leap/15.5/appliances/openSUSE-Leap-15.5-Minimal-VM.x86_64-Cloud.qcow2"
+  cloud_image_file_name        = "openSUSE-Leap-15.5.img"
+  cloud_image_checksum         = "a356e5f259156b426cb54b280602fa424e10660167863a1fe9b8776fded4946a"
+  virtual_environment_endpoint = var.virtual_environment_endpoint
+  virtual_environment_password = var.virtual_environment_password
+  virtual_environment_username = var.virtual_environment_username
+  additional_disk_datastore_id = "ferris"
+  additional_disk_size         = 50
+  additional_disk_file_format = "raw"
 }
 
-resource "proxmox_virtual_environment_vm" "ubuntu_template-01" {
-  name        = "ubuntu-template"
-  node_name   = "lich"
-  description = "Managed by Terraform"
-
-  initialization {
-    datastore_id = "local-lvm"
-    user_account {
-      keys     = var.sshkeys
-      username = var.vm_agent_username
-      password = var.vm_agent_password
-    }
-
-    dns {
-      domain  = "local"
-      servers = ["10.30.0.1", "1.1.1.1"]
-    }
-
-    ip_config {
-      ipv4 {
-        address = "dhcp"
-      }
-    }
-  }
-
-  disk {
-    datastore_id = "local-lvm"
-    file_id      = proxmox_virtual_environment_file.ubuntu_cloud_image-01.id
-    interface    = "virtio0"
-    iothread     = true
-    discard      = "on"
-    size         = 20
-  }
-
-  network_device {
-    vlan_id = 30
-  }
-
-  tpm_state {
-    version = "v2.0"
-  }
-
-  template = true
-  reboot   = true
+module "lich-sentinel" {
+  source                       = "../modules/proxmox-vm"
+  name                         = "lich-sentinel"
+  description                  = "Managed by Terraform"
+  tags                         = ["opensuse", "terraform"]
+  node_name                    = "lich"
+  cloud_image_node_name        = "lich"
+  datastore_id                 = "local-lvm"
+  cloud_image_datastore_id     = "local"
+  vm_id                        = 25001
+  memory_dedicated             = 4096
+  cpu_cores                    = 2
+  disk_size                    = 26
+  dns_domain                   = "local"
+  dns_servers                  = ["10.30.0.1", "1.1.1.1"]
+  ip_config_gateway            = "10.30.0.1"
+  ip_config_ipv4               = "10.30.0.11/24"
+  sshkeys                      = var.sshkeys
+  username                     = var.username
+  password                     = var.password
+  reboot                       = false
+  cloud_image_url              = "https://download.opensuse.org/distribution/leap/15.5/appliances/openSUSE-Leap-15.5-Minimal-VM.x86_64-Cloud.qcow2"
+  cloud_image_file_name        = "openSUSE-Leap-15.5.img"
+  cloud_image_checksum         = "a356e5f259156b426cb54b280602fa424e10660167863a1fe9b8776fded4946a"
+  virtual_environment_endpoint = var.virtual_environment_endpoint
+  virtual_environment_password = var.virtual_environment_password
+  virtual_environment_username = var.virtual_environment_username
 }
 
-resource "proxmox_virtual_environment_vm" "ubuntu_template-02" {
-  name        = "ubuntu-template"
-  node_name   = "okapi"
-  description = "Managed by Terraform"
-
-  initialization {
-    datastore_id = "vm"
-    user_account {
-      keys     = var.sshkeys
-      username = var.vm_agent_username
-      password = var.vm_agent_password
-    }
-
-    dns {
-      domain  = "local"
-      servers = ["10.30.0.1", "1.1.1.1"]
-    }
-
-    ip_config {
-      ipv4 {
-        address = "dhcp"
-      }
-    }
-  }
-
-  disk {
-    datastore_id = "vm"
-    file_id      = proxmox_virtual_environment_file.ubuntu_cloud_image-02.id
-    interface    = "virtio0"
-    iothread     = true
-    discard      = "on"
-    size         = 20
-  }
-
-  network_device {
-    vlan_id = 30
-  }
-
-  tpm_state {
-    version = "v2.0"
-  }
-
-  template = true
-  reboot   = true
+module "selune-sentinel" {
+  source                       = "../modules/proxmox-vm"
+  name                         = "selune-sentinel"
+  description                  = "Managed by Terraform"
+  tags                         = ["opensuse", "terraform"]
+  node_name                    = "selune"
+  cloud_image_node_name        = "selune"
+  datastore_id                 = "local-lvm"
+  cloud_image_datastore_id     = "local"
+  vm_id                        = 25002
+  memory_dedicated             = 4096
+  cpu_cores                    = 2
+  disk_size                    = 26
+  dns_domain                   = "local"
+  dns_servers                  = ["10.30.0.1", "1.1.1.1"]
+  ip_config_gateway            = "10.30.0.1"
+  ip_config_ipv4               = "10.30.0.12/24"
+  sshkeys                      = var.sshkeys
+  username                     = var.username
+  password                     = var.password
+  reboot                       = false
+  cloud_image_url              = "https://download.opensuse.org/distribution/leap/15.5/appliances/openSUSE-Leap-15.5-Minimal-VM.x86_64-Cloud.qcow2"
+  cloud_image_file_name        = "openSUSE-Leap-15.5.img"
+  cloud_image_checksum         = "a356e5f259156b426cb54b280602fa424e10660167863a1fe9b8776fded4946a"
+  virtual_environment_endpoint = var.virtual_environment_endpoint
+  virtual_environment_password = var.virtual_environment_password
+  virtual_environment_username = var.virtual_environment_username
 }
 
-resource "proxmox_virtual_environment_vm" "sentinel-00" {
-  name        = "sentinel-00"
-  node_name   = "forest"
-  description = "Managed by Terraform"
-  vm_id       = 20000
-
-  clone {
-    vm_id = proxmox_virtual_environment_vm.ubuntu_template-00.id
-  }
-
-  memory {
-    dedicated = 4096
-  }
-
-  cpu {
-    cores = 2
-  }
-
-  disk {
-    datastore_id = "foxes-dir"
-    interface    = "virtio0"
-    iothread     = true
-    discard      = "on"
-    size         = 26
-  }
-
-  initialization {
-    user_account {
-      keys     = var.sshkeys
-      username = var.vm_server_username
-      password = var.vm_server_password
-    }
-    dns {
-      domain  = "local"
-      servers = ["10.30.0.1", "1.1.1.1"]
-    }
-    ip_config {
-      ipv4 {
-        address = "10.30.0.10/24"
-        gateway = "10.30.0.1"
-      }
-    }
-  }
+module "lich-cavalier" {
+  source                       = "../modules/proxmox-vm"
+  name                         = "lich-cavalier"
+  description                  = "Managed by Terraform"
+  tags                         = ["opensuse", "terraform"]
+  node_name                    = "lich"
+  cloud_image_node_name        = "lich"
+  datastore_id                 = "local-lvm"
+  cloud_image_datastore_id     = "local"
+  vm_id                        = 25100
+  memory_dedicated             = 8192
+  cpu_cores                    = 8
+  disk_size                    = 30
+  dns_domain                   = "local"
+  dns_servers                  = ["10.30.0.1", "1.1.1.1"]
+  ip_config_gateway            = "10.30.0.1"
+  ip_config_ipv4               = "10.30.0.100/24"
+  sshkeys                      = var.sshkeys
+  username                     = var.username
+  password                     = var.password
+  reboot                       = false
+  cloud_image_url              = "https://download.opensuse.org/distribution/leap/15.5/appliances/openSUSE-Leap-15.5-Minimal-VM.x86_64-Cloud.qcow2"
+  cloud_image_file_name        = "openSUSE-Leap-15.5-2.img"
+  cloud_image_checksum         = "a356e5f259156b426cb54b280602fa424e10660167863a1fe9b8776fded4946a"
+  virtual_environment_endpoint = var.virtual_environment_endpoint
+  virtual_environment_password = var.virtual_environment_password
+  virtual_environment_username = var.virtual_environment_username
 }
 
-resource "proxmox_virtual_environment_vm" "sentinel-01" {
-  name        = "sentinel-01"
-  node_name   = "lich"
-  description = "Managed by Terraform"
-  vm_id       = 20001
-
-  clone {
-    vm_id = proxmox_virtual_environment_vm.ubuntu_template-01.id
-  }
-
-  memory {
-    dedicated = 4096
-  }
-
-  cpu {
-    cores = 2
-  }
-
-  disk {
-    datastore_id = "local-lvm"
-    interface    = "virtio0"
-    iothread     = true
-    discard      = "on"
-    size         = 26
-  }
-
-  initialization {
-    user_account {
-      keys     = var.sshkeys
-      username = var.vm_server_username
-      password = var.vm_server_password
-    }
-    dns {
-      domain  = "local"
-      servers = ["10.30.0.1", "1.1.1.1"]
-    }
-    ip_config {
-      ipv4 {
-        address = "10.30.0.11/24"
-        gateway = "10.30.0.1"
-      }
-    }
-  }
-}
-
-resource "proxmox_virtual_environment_vm" "sentinel-02" {
-  name        = "sentinel-02"
-  node_name   = "okapi"
-  description = "Managed by Terraform"
-  vm_id       = 20002
-
-  clone {
-    vm_id = proxmox_virtual_environment_vm.ubuntu_template-02.id
-  }
-
-  memory {
-    dedicated = 4096
-  }
-
-  cpu {
-    cores = 2
-  }
-
-  disk {
-    datastore_id = "vm"
-    interface    = "virtio0"
-    iothread     = true
-    discard      = "on"
-    size         = 26
-  }
-
-  initialization {
-    user_account {
-      keys     = var.sshkeys
-      username = var.vm_server_username
-      password = var.vm_server_password
-    }
-    dns {
-      domain  = "local"
-      servers = ["10.30.0.1", "1.1.1.1"]
-    }
-    ip_config {
-      ipv4 {
-        address = "10.30.0.12/24"
-        gateway = "10.30.0.1"
-      }
-    }
-  }
-}
-
-resource "proxmox_virtual_environment_vm" "cavalier-01" {
-  name        = "cavalier-01"
-  node_name   = "lich"
-  description = "Managed by Terraform"
-  vm_id       = 20101
-
-  clone {
-    vm_id = proxmox_virtual_environment_vm.ubuntu_template-01.id
-  }
-
-  memory {
-    dedicated = 16384
-  }
-
-  cpu {
-    cores = 4
-  }
-
-  disk {
-    datastore_id = "local-lvm"
-    interface    = "virtio0"
-    iothread     = true
-    discard      = "on"
-    size         = 40
-  }
-
-  initialization {
-    user_account {
-      keys     = var.sshkeys
-      username = var.vm_agent_username
-      password = var.vm_agent_password
-    }
-    dns {
-      domain  = "local"
-      servers = ["10.30.0.1", "1.1.1.1"]
-    }
-    ip_config {
-      ipv4 {
-        address = "10.30.0.101/24"
-        gateway = "10.30.0.1"
-      }
-    }
-  }
-}
-
-resource "proxmox_virtual_environment_vm" "cavalier-02" {
-  name        = "cavalier-02"
-  node_name   = "okapi"
-  description = "Managed by Terraform"
-  vm_id       = 20102
-
-  clone {
-    vm_id = proxmox_virtual_environment_vm.ubuntu_template-02.id
-  }
-
-  memory {
-    dedicated = 16384
-  }
-
-  cpu {
-    cores = 4
-  }
-
-  disk {
-    datastore_id = "vm"
-    interface    = "virtio0"
-    iothread     = true
-    discard      = "on"
-    size         = 40
-  }
-
-  initialization {
-    user_account {
-      keys     = var.sshkeys
-      username = var.vm_agent_username
-      password = var.vm_agent_password
-    }
-    dns {
-      domain  = "local"
-      servers = ["10.30.0.1", "1.1.1.1"]
-    }
-    ip_config {
-      ipv4 {
-        address = "10.30.0.102/24"
-        gateway = "10.30.0.1"
-      }
-    }
-  }
-}
-
-resource "proxmox_virtual_environment_file" "ubuntu_cloud_image-00" {
-  content_type = "iso"
-  datastore_id = "foxes-dir"
-  node_name    = "forest"
-
-  source_file {
-    # you may download this image locally on your workstation and then use the local path instead of the remote URL
-    path      = "https://cloud-images.ubuntu.com/releases/22.04/release/ubuntu-22.04-server-cloudimg-amd64.img"
-    file_name = "ubuntu-22.04-00.img"
-
-    # you may also use the SHA256 checksum of the image to verify its integrity
-    # checksum = "a370d8e6141e5359ca865c29cc8b6d95926b0c162e906453e388ccf24d353b6b"
-  }
-}
-
-resource "proxmox_virtual_environment_file" "ubuntu_cloud_image-01" {
-  content_type = "iso"
-  datastore_id = "chimera"
-  node_name    = "lich"
-
-  source_file {
-    # you may download this image locally on your workstation and then use the local path instead of the remote URL
-    path      = "https://cloud-images.ubuntu.com/releases/22.04/release/ubuntu-22.04-server-cloudimg-amd64.img"
-    file_name = "ubuntu-22.04-01.img"
-
-    # you may also use the SHA256 checksum of the image to verify its integrity
-    # checksum = "a370d8e6141e5359ca865c29cc8b6d95926b0c162e906453e388ccf24d353b6b"
-  }
-}
-
-
-resource "proxmox_virtual_environment_file" "ubuntu_cloud_image-02" {
-  content_type = "iso"
-  datastore_id = "iso"
-  node_name    = "okapi"
-
-  source_file {
-    # you may download this image locally on your workstation and then use the local path instead of the remote URL
-    path      = "https://cloud-images.ubuntu.com/releases/22.04/release/ubuntu-22.04-server-cloudimg-amd64.img"
-    file_name = "ubuntu-22.04-02.img"
-
-    # you may also use the SHA256 checksum of the image to verify its integrity
-    # checksum = "a370d8e6141e5359ca865c29cc8b6d95926b0c162e906453e388ccf24d353b6b"
-  }
+module "okapi-cavalier" {
+  source                       = "../modules/proxmox-vm"
+  name                         = "okapi-cavalier"
+  description                  = "Managed by Terraform"
+  tags                         = ["opensuse", "terraform"]
+  node_name                    = "okapi"
+  cloud_image_node_name        = "okapi"
+  datastore_id                 = "local-lvm"
+  cloud_image_datastore_id     = "local"
+  vm_id                        = 25101
+  memory_dedicated             = 8192
+  cpu_cores                    = 8
+  disk_size                    = 30
+  dns_domain                   = "local"
+  dns_servers                  = ["10.30.0.1", "1.1.1.1"]
+  ip_config_gateway            = "10.30.0.1"
+  ip_config_ipv4               = "10.30.0.101/24"
+  sshkeys                      = var.sshkeys
+  username                     = var.username
+  password                     = var.password
+  reboot                       = false
+  cloud_image_url              = "https://download.opensuse.org/distribution/leap/15.5/appliances/openSUSE-Leap-15.5-Minimal-VM.x86_64-Cloud.qcow2"
+  cloud_image_file_name        = "openSUSE-Leap-15.5.img"
+  cloud_image_checksum         = "a356e5f259156b426cb54b280602fa424e10660167863a1fe9b8776fded4946a"
+  virtual_environment_endpoint = var.virtual_environment_endpoint
+  virtual_environment_password = var.virtual_environment_password
+  virtual_environment_username = var.virtual_environment_username
 }

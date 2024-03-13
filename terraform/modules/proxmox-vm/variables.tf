@@ -27,6 +27,11 @@ variable "description" {
   default = "Managed by Terraform"
 }
 
+variable "tags" {
+  type    = list(string)
+  default = ["terraform"]
+}
+
 variable "vm_id" {
   type = number
   default = null
@@ -76,10 +81,10 @@ variable "network_device_vlan_id" {
   default = 30
 }
 
-variable "disk_datastore_id" {
-  type    = string
-  default = "hydra"
-}
+# variable "disk_datastore_id" {
+#   type    = string
+#   default = "hydra"
+# }
 
 variable "disk_size" {
   type    = number
@@ -135,6 +140,12 @@ variable "cloud_image_node_name" {
   type = string
 }
 
+variable "cloud_image_checksum" {
+  type = string
+  default = ""
+  description = "SHA256 checksum of cloud image"
+}
+
 variable "cloud_image_url" {
   type    = string
   default = "https://cloud-images.ubuntu.com/releases/22.04/release/ubuntu-22.04-server-cloudimg-amd64.img"
@@ -143,4 +154,22 @@ variable "cloud_image_url" {
 variable "cloud_image_file_name" {
   type    = string
   default = "ubuntu-22.04-server-cloudimg-amd64.img"
+}
+
+variable "additional_disk_size" {
+  type    = number
+  default = 0
+  description = "Size of the additional disk"
+}
+
+variable "additional_disk_file_format" {
+  type    = string
+  default = ""
+  description = "File format for the additional disk. May need to be raw for LVM"
+}
+
+variable "additional_disk_datastore_id" {
+  type    = string
+  default = ""
+  description = "Datastore ID for the additional disk"
 }

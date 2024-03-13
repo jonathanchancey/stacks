@@ -10,31 +10,39 @@ variable "virtual_environment_password" {
 
 variable "virtual_environment_username" {
   type        = string
-  description = "The username for Proxmox Virtual Environment API (example: root@pam)"
+  description = "The username and realm for the Proxmox Virtual Environment API (example: root@pam)"
 }
 
-variable "vm_server_username" {
+variable "username" {
   type        = string
-  description = "The username for the server node(s)"
+  description = "The username and realm for the Proxmox Virtual Environment API (example: root@pam)"
 }
 
-variable "vm_server_password" {
+variable "password" {
   type        = string
-  description = "The password for the server node(s)"
-  sensitive   = true
-}
-
-variable "vm_agent_username" {
-  type        = string
-  description = "The username for the agent node(s)"
-}
-
-variable "vm_agent_password" {
-  type        = string
-  description = "The password for the agent node(s)"
+  description = "The username and realm for the Proxmox Virtual Environment API (example: root@pam)"
   sensitive   = true
 }
 
 variable "sshkeys" {
-  description = "The Public SSH key(s) to add to authorized_hosts on all vms"
+  # type        = string
+  description = "sshkeys"
+}
+
+variable "clone_template_name" {
+  type        = string
+  description = "Name of the template VM to clone from (optional)"
+  default     = "debian-12-cloudinit-refined"
+}
+
+variable "nameserver" {
+  type        = string
+  description = "nameserver"
+  default     = "1.1.1.1"
+}
+
+variable "clone_vm_id" {
+  type    = number
+  default = null
+  # default = proxmox_virtual_environment_vm.ubuntu_template.id
 }
