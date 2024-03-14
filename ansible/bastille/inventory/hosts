@@ -1,3 +1,6 @@
+[initial_server]
+forest-sentinel
+
 [server]
 forest-sentinel
 lich-sentinel
