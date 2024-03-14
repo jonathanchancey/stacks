@@ -1,5 +1,19 @@
 ---
 - name: Bastille
+  hosts: "*"
+  roles:
+    - role: shared
+- name: Bastille
   hosts: initial_server
+  gather_facts: yes
   roles:
     - role: initial_server
+# - name: Bastille
+#   hosts: initial_server
+#   tasks:
+
+- name: Bastille
+  gather_facts: yes
+  hosts: additional_servers
+  roles:
+    - role: servers

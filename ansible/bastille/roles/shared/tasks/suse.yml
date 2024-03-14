@@ -11,9 +11,3 @@
     state: latest
     update_cache: true
   become: true
-- name: "Rancher | Dependencies"
-  community.general.zypper:
-    name:
-      - bash
-    state: latest
-  become: true

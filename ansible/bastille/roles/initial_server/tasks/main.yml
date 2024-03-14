@@ -55,3 +55,14 @@
     copy:
       dest: /etc/profile.d/custom-path.sh
       content: 'PATH=$PATH:/opt/rke2/bin'
+  - name: obtain node-token
+    become: true
+    ansible.builtin.slurp:
+      src: /var/lib/rancher/rke2/server/node-token
+    register: nodetoken
+  # - name: Print returned information
+  #   ansible.builtin.debug:
+  #     msg: "{{ nodetoken['content'] | b64decode | regex_replace('\\n', '')}}"
+  - name: Decode and clean up nodetoken
+    set_fact:
+      TOKEN: "{{ nodetoken['content'] | b64decode | regex_replace('\\n', '') }}"

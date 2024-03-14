@@ -1,0 +1,58 @@
+- name: create directories if they don't exist
+  become: true
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+    recurse: true
+  loop:
+    - "{{ CONFDIR }}"
+    - "{{ WATCHDIR }}"
+    - "{{ NETWORKDIR }}"
+- name: get hostname short
+  shell: |
+    hostname -s
+  register: hostname_short
+- name: get hostname fqdn
+  shell: |
+    hostname -f
+  register: hostname_fqdn
+- name: print hostname fqdn and short
+  debug:
+    msg:
+    - "hostname short '{{ hostname_short.stdout }}'"
+    - "hostname fqdn: '{{ hostname_fqdn.stdout }}'"
+- name: create config.yaml
+  become: true
+  copy:
+    dest: "{{ CONFFILE }}"
+    content: |
+      token: {{ TOKEN }}
+      server: https://{{ SERVER_ADDRESS_FQDN }}:9345
+      tls-san:
+        - "{{ hostname_short.stdout }}"
+        - "{{ hostname_fqdn.stdout }}"
+        - "{{ SERVER_ADDRESS_SHORT }}"
+        - "{{ SERVER_ADDRESS_FQDN }}"
+        - "{{ SERVER_FAILOVER_IP }}"
+      write-kubeconfig-mode: 0644
+  notify: "rke2-server service restart"
+- name: configure NetworkManager to ignore calico/flannel related network interfaces
+  become: true
+  copy:
+    dest: "{{ NETWORKFILE }}"
+    content: |
+      [keyfile]
+      unmanaged-devices=interface-name:cali*;interface-name:flannel*
+- name: install rke2 server
+  become: true
+  shell: |
+    curl -sfL https://get.rke2.io | INSTALL_RKE2_VERSION="{{INSTALL_RKE2_VERSION }}" sh -
+  notify: "rke2-server service start"
+- name: Add rke2 dir to PATH.
+  become: true
+  copy:
+    dest: /etc/profile.d/custom-path.sh
+    content: 'PATH=$PATH:/opt/rke2/bin'

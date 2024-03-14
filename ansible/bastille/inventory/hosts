@@ -1,8 +1,7 @@
 [initial_server]
 forest-sentinel
 
-[server]
-forest-sentinel
+[additional_servers]
 lich-sentinel
 selune-sentinel
 
