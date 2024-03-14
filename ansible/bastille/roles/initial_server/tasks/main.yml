@@ -48,12 +48,23 @@
     become: true
     shell: |
       curl -sfL https://get.rke2.io | INSTALL_RKE2_VERSION="{{INSTALL_RKE2_VERSION }}" sh -
-    notify: "rke2-server service start"
+  - name: ensure rke2-server is enabled
+    become: true
+    systemd:
+      state: started
+      enabled: true
+      name: rke2-server
+  - name: ensure containerd is enabled
+    become: true
+    systemd:
+      state: started
+      enabled: true
+      name: containerd
   - name: add rke2 dir to PATH
     become: true
     copy:
       dest: /etc/profile.d/custom-path.sh
-      content: 'PATH=$PATH:/opt/rke2/bin'
+      content: 'PATH=$PATH:/var/lib/rancher/rke2/bin'
   - name: obtain node-token
     become: true
     ansible.builtin.slurp:
@@ -75,8 +86,8 @@
   - name: Deploy kube-vip
     become: true
     shell: |
-      ctr --namespace k8s.io image pull "{{ KUBE_VIP_IMAGE }}":"{{ KUBE_VIP_IMAGE_TAG }}"
-      ctr --namespace k8s.io run --rm --net-host "{{ KUBE_VIP_IMAGE }}":"{{ KUBE_VIP_IMAGE_TAG }}" vip /kube-vip \
+      /var/lib/rancher/rke2/bin/ctr --namespace k8s.io image pull "{{ KUBE_VIP_IMAGE }}":"{{ KUBE_VIP_IMAGE_TAG }}"
+      /var/lib/rancher/rke2/bin/ctr --namespace k8s.io run --rm --net-host "{{ KUBE_VIP_IMAGE }}":"{{ KUBE_VIP_IMAGE_TAG }}" vip /kube-vip \
       manifest daemonset \
       --arp \
       --interface "{{ INTERFACE }}" \
@@ -119,3 +130,10 @@
       dest: "{{ WATCHDIR }}/cert-manager.yaml"
       owner: rke2
       mode: 0644
+
+  - name: Deploy Traefik
+    copy:
+      src: traefik.yaml
+      dest: "{{ WATCHDIR }}/traefik.yaml"
+      owner: rke2
+      mode: '0644'

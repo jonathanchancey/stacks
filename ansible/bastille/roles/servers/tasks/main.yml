@@ -7,7 +7,6 @@
     path: "{{ item }}"
     state: directory
     owner: rke2
-    group: root
     mode: 0755
     recurse: true
   loop:

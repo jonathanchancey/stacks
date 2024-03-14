@@ -13,3 +13,8 @@ Host lich-cavalier
 Host okapi-cavalier
   HostName 10.30.0.101
 ```
+
+
+```bash
+ansible-playbook main.yml --user rke2 -i inventory/hosts
+```

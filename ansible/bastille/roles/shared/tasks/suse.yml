@@ -12,3 +12,18 @@
     state: latest
     update_cache: true
   become: true
+# - name: Copy Wicked 90-rke2.conf to enable ip forwarding
+#   become: true
+#   copy:
+#     dest: "/etc/sysctl.d/90-rke2.conf"
+#     content: |
+#       net.ipv4.conf.all.forwarding=1
+#       net.ipv6.conf.all.forwarding=1
+- ansible.posix.sysctl:
+    name: net.ipv4.ip_forward
+    value: '1'
+    sysctl_file: /etc/sysctl.d/90-rke2.conf
+    sysctl_set: true
+    state: present
+    reload: true
+  become: true
