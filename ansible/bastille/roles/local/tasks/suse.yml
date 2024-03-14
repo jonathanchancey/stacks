@@ -3,12 +3,11 @@
   community.general.zypper:
     name: '*'
     state: dist-upgrade
-- name: "RKE2 | update repositories cache and install qemu-guest-agent and containerd package"
+- name: "Install python and python kubernetes library"
   community.general.zypper:
     name:
-      - qemu-guest-agent
-      - containerd
       - python311
+      - python311-kubernetes
     state: latest
     update_cache: true
   become: true

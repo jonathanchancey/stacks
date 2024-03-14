@@ -9,10 +9,9 @@
     owner: rke2
     group: root
     mode: 0755
-    recurse: true
+    recurse: yes
   loop:
     - "{{ CONFDIR }}"
-    - "{{ WATCHDIR }}"
     - "{{ NETWORKDIR }}"
 - name: get hostname short
   shell: |
@@ -34,14 +33,6 @@
     content: |
       token: {{ TOKEN }}
       server: https://{{ SERVER_ADDRESS_FQDN }}:9345
-      tls-san:
-        - "{{ hostname_short.stdout }}"
-        - "{{ hostname_fqdn.stdout }}"
-        - "{{ SERVER_ADDRESS_SHORT }}"
-        - "{{ SERVER_ADDRESS_FQDN }}"
-        - "{{ SERVER_FAILOVER_IP }}"
-      write-kubeconfig-mode: 0644
-  notify: "rke2-server service restart"
 - name: configure NetworkManager to ignore calico/flannel related network interfaces
   become: true
   copy:
@@ -49,12 +40,12 @@
     content: |
       [keyfile]
       unmanaged-devices=interface-name:cali*;interface-name:flannel*
-- name: install rke2 server
+- name: install rke2 agent
   become: true
   shell: |
-    curl -sfL https://get.rke2.io | INSTALL_RKE2_VERSION="{{INSTALL_RKE2_VERSION }}" sh -
-  notify: "rke2-server service start"
-- name: Add rke2 dir to PATH.
+    curl -sfL https://get.rke2.io | INSTALL_RKE2_TYPE="agent" INSTALL_RKE2_VERSION="{{INSTALL_RKE2_VERSION }}" sh -
+  notify: "rke2-agent service start"
+- name: add rke2 dir to PATH.
   become: true
   copy:
     dest: /etc/profile.d/custom-path.sh

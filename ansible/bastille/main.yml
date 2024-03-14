@@ -1,19 +1,36 @@
 ---
-- name: Bastille
+- name: Run shared setup tasks
   hosts: "*"
   roles:
     - role: shared
-- name: Bastille
+
+- name: Setup RKE2 on initial_server
+  vars_files:
+    - secret.yml
   hosts: initial_server
   gather_facts: yes
   roles:
     - role: initial_server
-# - name: Bastille
-#   hosts: initial_server
-#   tasks:
 
-- name: Bastille
+- name: Setup RKE2 on additional_servers
+  vars_files:
+    - secret.yml
   gather_facts: yes
   hosts: additional_servers
   roles:
     - role: servers
+
+- name: Setup RKE2 on agents
+  vars_files:
+    - secret.yml
+  gather_facts: yes
+  hosts: agents
+  roles:
+    - role: agents
+
+- name: Prepare kubeconfig and run k8s and helm setup
+  vars_files:
+    - secret.yml
+  hosts: localhost
+  roles:
+    - role: local
