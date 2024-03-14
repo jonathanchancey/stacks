@@ -1,17 +1,8 @@
 - name: install rke2 on first server
   hosts: initial_server
-  vars_files:
-  - ../inventory/group_vars/env.yml
-  - ../inventory/group_vars/secret.yml
 
   tasks:
-    - name: update repositories cache and install qemu-guest-agent and containerd package
-      ansible.builtin.apt:
-        pkg:
-          - qemu-guest-agent
-          - containerd
-        update_cache: yes
-    - name: create directories if they don't exist
+    - name: Create directories if they don't exist
       file:
         path: "{{ item }}"
         state: directory
@@ -23,20 +14,20 @@
         - "{{ CONFDIR }}"
         - "{{ WATCHDIR }}"
         - "{{ NETWORKDIR }}"
-    - name: get hostname short
+    - name: Get hostname short
       shell: |
         hostname -s
       register: hostname_short
-    - name: get hostname fqdn
+    - name: Get hostname fqdn
       shell: |
         hostname -f
       register: hostname_fqdn
-    - name: print hostname fqdn and short
+    - name: Print hostname fqdn and short
       debug:
         msg:
         - "hostname short '{{ hostname_short.stdout }}'"
         - "hostname fqdn: '{{ hostname_fqdn.stdout }}'"
-    - name: creating the config.yaml
+    - name: Create config.yaml
       copy:
         dest: "{{ CONFFILE }}"
         content: |
@@ -48,13 +39,13 @@
             - "{{ SERVER_FAILOVER_IP }}"
           write-kubeconfig-mode: 0644
       notify: "rke2-server service restart"
-    - name: configure NetworkManager to ignore calico/flannel related network interfaces
+    - name: Configure NetworkManager to ignore calico/flannel related network interfaces
       copy:
         dest: "{{ NETWORKFILE }}"
         content: |
           [keyfile]
           unmanaged-devices=interface-name:cali*;interface-name:flannel*
-    - name: install rke2 server
+    - name: Install rke2 server
       become: true
       shell: |
         curl -sfL https://get.rke2.io | INSTALL_RKE2_VERSION="{{INSTALL_RKE2_VERSION }}" sh -
@@ -63,6 +54,7 @@
       copy:
         dest: /etc/profile.d/custom-path.sh
         content: 'PATH=$PATH:/opt/rke2/bin'
+
   handlers:
     - name: ensure rke2-server is running
       systemd:

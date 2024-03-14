@@ -1,0 +1,21 @@
+---
+- name: Set initial_server
+  hosts: localhost
+  vars:
+    group_name: 'server'
+
+  tasks:
+    - name: Get the first host in the specified group
+      debug:
+        msg: "The initial_server in '{{ group_name }}' is {{ groups[group_name][0] }}"
+    - name: Set fact for initial_server
+      set_fact:
+        initial_server: "{{ groups[group_name][0] }}"
+    - name: Show the first host in the group
+      debug:
+        var: initial_server
+
+- name: Bastille
+  hosts: initial_server
+  roles:
+    - role: initial_server

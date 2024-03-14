@@ -1,0 +1,13 @@
+- name: "Longhorn | Dependencies"
+  community.general.zypper:
+    name:
+      - open-iscsi
+      - bash
+      - curl
+      - findmnt
+      - grep
+      - awk
+      - blkid
+      - lsblk
+    state: latest
+  become: true

@@ -1,0 +1,19 @@
+- name: "System | {{ ansible_distribution }} | Perform a dist-upgrade"
+  become: true
+  community.general.zypper:
+    name: '*'
+    state: dist-upgrade
+- name: "RKE2 | update repositories cache and install qemu-guest-agent and containerd package"
+  community.general.zypper:
+    name:
+      - qemu-guest-agent
+      - containerd
+    state: latest
+    update_cache: true
+  become: true
+- name: "Rancher | Dependencies"
+  community.general.zypper:
+    name:
+      - bash
+    state: latest
+  become: true

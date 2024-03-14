@@ -1,15 +1,8 @@
 [server]
-10.30.0.10
-10.30.0.11
-10.30.0.12
+forest-sentinel
+lich-sentinel
+selune-sentinel
 
 [agent]
-10.30.0.101
-10.30.0.102
-
-[initial_server]
-10.30.0.10
-
-[additional_servers]
-10.30.0.11
-10.30.0.12
+lich-cavalier
+okapi-cavalier
