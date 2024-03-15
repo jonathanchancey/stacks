@@ -25,7 +25,7 @@ variable "password" {
 }
 
 variable "sshkeys" {
-  # type        = string
+  type        = list(string)
   description = "sshkeys"
 }
 
@@ -44,5 +44,4 @@ variable "nameserver" {
 variable "clone_vm_id" {
   type    = number
   default = null
-  # default = proxmox_virtual_environment_vm.ubuntu_template.id
 }
