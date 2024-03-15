@@ -75,9 +75,6 @@
     ansible.builtin.slurp:
       src: /var/lib/rancher/rke2/server/node-token
     register: nodetoken
-  # - name: Print returned information
-  #   ansible.builtin.debug:
-  #     msg: "{{ nodetoken['content'] | b64decode | regex_replace('\\n', '')}}"
   - name: Decode and clean up nodetoken
     set_fact:
       TOKEN: "{{ nodetoken['content'] | b64decode | regex_replace('\\n', '') }}"
