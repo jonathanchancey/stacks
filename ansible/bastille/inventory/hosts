@@ -8,3 +8,8 @@ selune-sentinel
 [agents]
 lich-cavalier
 okapi-cavalier
+
+[longhorn]
+okapi-cavalier
+forest-sentinel
+selune-sentinel
