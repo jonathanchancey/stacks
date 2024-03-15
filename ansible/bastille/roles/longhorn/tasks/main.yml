@@ -1,17 +1,7 @@
-- name: Check if filesystem exists
-  ansible.builtin.stat:
-    path: "{{ LONGHORN_DISK_IDENTIFIER }}"
-  register: filesystem_check
-
-- name: Debug filesystem check
-  debug:
-    var: filesystem_check.stat.exists
-
 - name: Create filesystem on volume
   community.general.filesystem:
     fstype: ext4
     dev: "{{ LONGHORN_DISK_IDENTIFIER }}"
-  when: filesystem_check.stat.exists == false
 
 - name: Create mount point
   ansible.builtin.file:
