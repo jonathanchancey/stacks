@@ -9,7 +9,7 @@ module "forest-sentinel" {
   cloud_image_datastore_id     = "foxes-dir"
   vm_id                        = 25000
   memory_dedicated             = 4096
-  cpu_cores                    = 2
+  cpu_cores                    = 4
   disk_size                    = 26
   dns_domain                   = "local"
   dns_servers                  = ["10.30.0.1", "1.1.1.1"]
@@ -41,7 +41,7 @@ module "lich-sentinel" {
   cloud_image_datastore_id     = "local"
   vm_id                        = 25001
   memory_dedicated             = 4096
-  cpu_cores                    = 2
+  cpu_cores                    = 4
   disk_size                    = 26
   dns_domain                   = "local"
   dns_servers                  = ["10.30.0.1", "1.1.1.1"]
@@ -70,7 +70,7 @@ module "selune-sentinel" {
   cloud_image_datastore_id     = "local"
   vm_id                        = 25002
   memory_dedicated             = 4096
-  cpu_cores                    = 2
+  cpu_cores                    = 4
   disk_size                    = 26
   dns_domain                   = "local"
   dns_servers                  = ["10.30.0.1", "1.1.1.1"]
@@ -99,7 +99,7 @@ module "lich-cavalier" {
   cloud_image_datastore_id     = "local"
   vm_id                        = 25100
   memory_dedicated             = 8192
-  cpu_cores                    = 8
+  cpu_cores                    = 10
   disk_size                    = 30
   dns_domain                   = "local"
   dns_servers                  = ["10.30.0.1", "1.1.1.1"]
@@ -128,7 +128,7 @@ module "okapi-cavalier" {
   cloud_image_datastore_id     = "local"
   vm_id                        = 25101
   memory_dedicated             = 8192
-  cpu_cores                    = 8
+  cpu_cores                    = 10
   disk_size                    = 30
   dns_domain                   = "local"
   dns_servers                  = ["10.30.0.1", "1.1.1.1"]
