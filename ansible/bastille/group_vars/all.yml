@@ -2,9 +2,6 @@
 # Set your timezone
 system_timezone: "America/Los_Angeles"
 
-# Set ansible python interpreter
-ansible_python_interpreter: /usr/bin/python3.11
-
 # interface which will be used for flannel
 flannel_iface: "eth0"
 
