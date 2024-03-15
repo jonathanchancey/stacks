@@ -40,7 +40,6 @@
         - "{{ SERVER_ADDRESS_FQDN }}"
         - "{{ SERVER_FAILOVER_IP }}"
       write-kubeconfig-mode: 0644
-  notify: "rke2-server service restart"
 - name: configure NetworkManager to ignore calico/flannel related network interfaces
   become: true
   copy:
@@ -52,9 +51,14 @@
   become: true
   shell: |
     curl -sfL https://get.rke2.io | INSTALL_RKE2_VERSION="{{INSTALL_RKE2_VERSION }}" sh -
-  notify: "rke2-server service start"
+- name: ensure rke2-server is running
+  become: true
+  systemd:
+    state: started
+    enabled: true
+    name: rke2-server
 - name: Add rke2 dir to PATH.
   become: true
   copy:
     dest: /etc/profile.d/custom-path.sh
-    content: 'PATH=$PATH:/opt/rke2/bin'
+    content: 'PATH=$PATH:/var/lib/rancher/rke2/bin'
