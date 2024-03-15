@@ -31,7 +31,7 @@
     release_namespace: cattle-system
     create_namespace: true
     values:
-      hostname: "rancher.{{ SERVER_ADDRESS_FQDN }}"
+      hostname: "rancher.{{ ROOT_DOMAIN }}"
       bootstrapPassword: "{{ RANCHER_BOOTSTRAP_PASSWORD }}"
       ingress.tls.source: letsEncrypt
       letsEncrypt.email: "{{ LETS_ENCRYPT_EMAIL }}"
