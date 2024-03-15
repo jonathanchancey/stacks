@@ -36,4 +36,15 @@
     values:
       ingress.enabled: true
       ingress.ingressClassName: traefik
-      host: longhorn.k8s.dcnt.company
+      host: longhorn.k8s.{{ ROOT_DOMAIN }}
+      defaultSettings.taintToleration: "CriticalAddonsOnly:NoSchedule"
+      longhornDriver.tolerations:
+        - key: "CriticalAddonsOnly"
+          operator: "Equal"
+          value: "true"
+          effect: "NoSchedule"
+      longhornManager.tolerations:
+        - key: "CriticalAddonsOnly"
+          operator: "Equal"
+          value: "true"
+          effect: "NoSchedule"
