@@ -1,0 +1,32 @@
+- name: Wait for Zypper to become unlocked
+  ansible.builtin.shell: |
+    zypper lp
+  register: zypper_status
+  until: zypper_status.rc == 0
+  retries: 30
+  delay: 10
+  changed_when: false
+  ignore_errors: true
+- name: "System | {{ ansible_distribution }} | Perform a dist-upgrade"
+  become: true
+  community.general.zypper:
+    name: '*'
+    state: dist-upgrade
+- name: "RKE2 | update repositories cache and install qemu-guest-agent and containerd package"
+  community.general.zypper:
+    name:
+      - qemu-guest-agent
+      - containerd
+      - python311
+      - iptables
+    state: latest
+    update_cache: true
+  become: true
+- ansible.posix.sysctl:
+    name: net.ipv4.conf.all.forwarding
+    value: '1'
+    sysctl_file: /etc/sysctl.d/90-rke2.conf
+    sysctl_set: true
+    state: present
+    reload: true
+  become: true

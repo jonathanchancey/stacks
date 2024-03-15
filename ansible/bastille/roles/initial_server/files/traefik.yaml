@@ -42,9 +42,6 @@ spec:
               - hello.dcnt.company
               - auth.dcnt.company
               - file.dcnt.company
-          - main: sadboy.city
-            sans:
-              - sadboy.city
     ingressRoute:
       dashboard:
         enabled: false

@@ -1,0 +1,51 @@
+- name: Get TOKEN from initial_server
+  set_fact:
+    TOKEN: "{{ hostvars['forest-sentinel'].TOKEN }}"
+- name: create directories if they don't exist
+  become: true
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: rke2
+    mode: 0755
+    recurse: yes
+  loop:
+    - "{{ CONFDIR }}"
+    - "{{ NETWORKDIR }}"
+- name: get hostname short
+  shell: |
+    hostname -s
+  register: hostname_short
+- name: get hostname fqdn
+  shell: |
+    hostname -f
+  register: hostname_fqdn
+- name: print hostname fqdn and short
+  debug:
+    msg:
+    - "hostname short '{{ hostname_short.stdout }}'"
+    - "hostname fqdn: '{{ hostname_fqdn.stdout }}'"
+- name: create config.yaml
+  become: true
+  copy:
+    dest: "{{ CONFFILE }}"
+    content: |
+      token: {{ TOKEN }}
+      server: https://{{ SERVER_ADDRESS_FQDN }}:9345
+- name: configure NetworkManager to ignore calico/flannel related network interfaces
+  become: true
+  copy:
+    dest: "{{ NETWORKFILE }}"
+    content: |
+      [keyfile]
+      unmanaged-devices=interface-name:cali*;interface-name:flannel*
+- name: install rke2 agent
+  become: true
+  shell: |
+    curl -sfL https://get.rke2.io | INSTALL_RKE2_TYPE="agent" INSTALL_RKE2_VERSION="{{INSTALL_RKE2_VERSION }}" sh -
+  notify: "rke2-agent service start"
+- name: add rke2 dir to PATH.
+  become: true
+  copy:
+    dest: /etc/profile.d/custom-path.sh
+    content: 'PATH=$PATH:/opt/rke2/bin'
