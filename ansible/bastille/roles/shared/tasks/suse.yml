@@ -1,4 +1,4 @@
-- name: Wait for Zypper to become unlocked
+- name: "System | {{ ansible_distribution }} | Wait for Zypper to unlock"
   ansible.builtin.shell: |
     zypper lp
   register: zypper_status
@@ -7,12 +7,14 @@
   delay: 10
   changed_when: false
   ignore_errors: true
+
 - name: "System | {{ ansible_distribution }} | Perform a dist-upgrade"
   become: true
   community.general.zypper:
     name: '*'
     state: dist-upgrade
-- name: "RKE2 | update repositories cache and install qemu-guest-agent and containerd package"
+
+- name: "RKE2 | Update repositories cache and install dependencies"
   community.general.zypper:
     name:
       - qemu-guest-agent
@@ -22,7 +24,22 @@
     state: latest
     update_cache: true
   become: true
-- ansible.posix.sysctl:
+
+- name: "Longhorn | Install Dependencies"
+  community.general.zypper:
+    name:
+      - open-iscsi
+      - util-linux
+      - nfs-client
+      - bash
+      - curl
+      - grep
+      - awk
+    state: latest
+  become: true
+
+- name: "RKE2 | Enable IPv4 forwarding"
+  ansible.posix.sysctl:
     name: net.ipv4.conf.all.forwarding
     value: '1'
     sysctl_file: /etc/sysctl.d/90-rke2.conf
