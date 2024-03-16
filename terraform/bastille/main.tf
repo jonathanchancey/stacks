@@ -27,7 +27,7 @@ module "forest-sentinel" {
   virtual_environment_username = var.virtual_environment_username
   additional_disk_datastore_id = "ferris"
   additional_disk_size         = 50
-  additional_disk_file_format = "raw"
+  additional_disk_file_format  = "raw"
 }
 
 module "lich-sentinel" {
@@ -86,6 +86,9 @@ module "selune-sentinel" {
   virtual_environment_endpoint = var.virtual_environment_endpoint
   virtual_environment_password = var.virtual_environment_password
   virtual_environment_username = var.virtual_environment_username
+  additional_disk_datastore_id = "corro"
+  additional_disk_size         = 50
+  additional_disk_file_format  = "raw"
 }
 
 module "lich-cavalier" {
@@ -144,4 +147,7 @@ module "okapi-cavalier" {
   virtual_environment_endpoint = var.virtual_environment_endpoint
   virtual_environment_password = var.virtual_environment_password
   virtual_environment_username = var.virtual_environment_username
+  additional_disk_datastore_id = "oxidus"
+  additional_disk_size         = 50
+  additional_disk_file_format  = "raw"
 }

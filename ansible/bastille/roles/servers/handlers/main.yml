@@ -1,5 +1,5 @@
 ---
-- name: ensure rke2-server is restarted
+- name: Ensure rke2-server is restarted
   become: true
   systemd:
     state: restarted

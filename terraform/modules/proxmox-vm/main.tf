@@ -44,8 +44,7 @@ resource "proxmox_virtual_environment_vm" "vm" {
     for_each = var.additional_disk_size > 0 ? [1] : []
     content {
       datastore_id = var.additional_disk_datastore_id
-      file_format = var.additional_disk_file_format
-      # file_id      = var.additional_disk_file_id
+      file_format  = var.additional_disk_file_format
       interface    = "virtio1"
       iothread     = true
       discard      = "on"

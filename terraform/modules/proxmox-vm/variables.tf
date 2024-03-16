@@ -33,7 +33,7 @@ variable "tags" {
 }
 
 variable "vm_id" {
-  type = number
+  type    = number
   default = null
 }
 
@@ -53,6 +53,7 @@ variable "password" {
 }
 
 variable "sshkeys" {
+  type        = list(string)
   description = "sshkeys"
 }
 
@@ -81,11 +82,6 @@ variable "network_device_vlan_id" {
   default = 30
 }
 
-# variable "disk_datastore_id" {
-#   type    = string
-#   default = "hydra"
-# }
-
 variable "disk_size" {
   type    = number
   default = 20
@@ -97,7 +93,7 @@ variable "tpm_state" {
 }
 
 variable "clone" {
-  type = set(map(bool))
+  type    = set(map(bool))
   default = []
 }
 
@@ -141,8 +137,8 @@ variable "cloud_image_node_name" {
 }
 
 variable "cloud_image_checksum" {
-  type = string
-  default = ""
+  type        = string
+  default     = ""
   description = "SHA256 checksum of cloud image"
 }
 
@@ -157,19 +153,19 @@ variable "cloud_image_file_name" {
 }
 
 variable "additional_disk_size" {
-  type    = number
-  default = 0
+  type        = number
+  default     = 0
   description = "Size of the additional disk"
 }
 
 variable "additional_disk_file_format" {
-  type    = string
-  default = ""
+  type        = string
+  default     = ""
   description = "File format for the additional disk. May need to be raw for LVM"
 }
 
 variable "additional_disk_datastore_id" {
-  type    = string
-  default = ""
+  type        = string
+  default     = ""
   description = "Datastore ID for the additional disk"
 }
