@@ -4111,6 +4111,12 @@ spec:
         app.kubernetes.io/version: v1.5.4
         app: longhorn-manager
     spec:
+      nodeSelector:
+        longhorn: "true"
+      tolerations:
+      - key: "CriticalAddonsOnly"
+        operator: "Exists"
+        effect: "NoSchedule"
       containers:
       - name: longhorn-manager
         image: longhornio/longhorn-manager:v1.5.4
@@ -4214,6 +4220,12 @@ spec:
         app.kubernetes.io/version: v1.5.4
         app: longhorn-driver-deployer
     spec:
+      nodeSelector:
+        longhorn: "true"
+      tolerations:
+      - key: "CriticalAddonsOnly"
+        operator: "Exists"
+        effect: "NoSchedule"
       initContainers:
         - name: wait-longhorn-manager
           image: longhornio/longhorn-manager:v1.5.4
