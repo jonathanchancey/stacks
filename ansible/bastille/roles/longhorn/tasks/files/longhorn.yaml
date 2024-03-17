@@ -4111,8 +4111,8 @@ spec:
         app.kubernetes.io/version: v1.5.4
         app: longhorn-manager
     spec:
-      nodeSelector:
-        longhorn: "true"
+      # nodeSelector:
+      #   longhorn: "true"
       tolerations:
       - key: "CriticalAddonsOnly"
         operator: "Exists"
@@ -4220,8 +4220,8 @@ spec:
         app.kubernetes.io/version: v1.5.4
         app: longhorn-driver-deployer
     spec:
-      nodeSelector:
-        longhorn: "true"
+      # nodeSelector:
+      #   longhorn: "true"
       tolerations:
       - key: "CriticalAddonsOnly"
         operator: "Exists"
