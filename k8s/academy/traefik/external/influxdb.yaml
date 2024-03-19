@@ -1,0 +1,36 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: influxdb
+  namespace: fkn
+spec:
+  type: ExternalName
+  ports:
+    - name: https
+      port: 42407
+      targetPort: 42407
+  externalName: 10.10.0.227
+  selector:
+    app.kubernetes.io/instance: traefik
+    app.kubernetes.io/name: traefik
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: influxdb-ingress
+  namespace: fkn
+  annotations:
+    kubernetes.io/ingress.class: traefik-external
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`influxdb.fkn.chancey.dev`)
+      kind: Rule
+      priority: 1
+      services:
+        - name: influxdb
+          kind: Service
+          port: 42407
+  tls:
+    secretName: fkn-chancey-dev-tls
