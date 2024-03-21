@@ -4114,7 +4114,7 @@ spec:
       # nodeSelector:
       #   longhorn: "true"
       tolerations:
-      - key: "CriticalAddonsOnly"
+      - key: "node-role.kubernetes.io/master"
         operator: "Exists"
         effect: "NoSchedule"
       containers:
@@ -4223,7 +4223,7 @@ spec:
       # nodeSelector:
       #   longhorn: "true"
       tolerations:
-      - key: "CriticalAddonsOnly"
+      - key: "node-role.kubernetes.io/master"
         operator: "Exists"
         effect: "NoSchedule"
       initContainers:

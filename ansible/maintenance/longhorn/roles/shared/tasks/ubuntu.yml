@@ -4,7 +4,7 @@
       - open-iscsi
       - iptables
       - util-linux
-      - awk
+      - python3-kubernetes
     update_cache: true
 - name: "RKE2 | Enable IPv4 forwarding"
   ansible.posix.sysctl:

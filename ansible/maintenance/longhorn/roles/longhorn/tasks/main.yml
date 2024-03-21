@@ -1,6 +1,6 @@
-- name: Longhorn | Ensure iscsi service is started
+- name: Longhorn | Ensure iscsid service is started
   ansible.builtin.systemd:
-    name: iscsi
+    name: iscsid
     enabled: yes
     state: started
 
@@ -9,6 +9,16 @@
     fstype: ext4
     resizefs: true # if the block device and filesystem size differ, grow the filesystem into the spaces
     dev: "{{ LONGHORN_DISK_IDENTIFIER }}"
+  when:
+    - inventory_hostname != 'acolyte-02'
+
+- name: Longhorn | Create filesystem on volume
+  community.general.filesystem:
+    fstype: ext4
+    resizefs: true # if the block device and filesystem size differ, grow the filesystem into the spaces
+    dev: "/dev/sda"
+  when:
+    - inventory_hostname == 'acolyte-02'
 
 - name: Longhorn | Create mount point
   ansible.builtin.file:
@@ -22,6 +32,18 @@
     fstype: ext4
     opts: defaults
     state: mounted
+  when:
+    - inventory_hostname != 'acolyte-02'
+
+- name: Longhorn | Mount volume
+  ansible.builtin.mount:
+    path: "/var/lib/longhorn"
+    src: "/dev/sda"
+    fstype: ext4
+    opts: defaults
+    state: mounted
+  when:
+    - inventory_hostname == 'acolyte-02'
 
 - name: Longhorn | Add Helm repository
   delegate_to: localhost
@@ -33,6 +55,7 @@
 - name: Longhorn | Add label to designate Longhorn node
   delegate_to: localhost
   kubernetes.core.k8s:
+    kubeconfig: ./inventory/local.yaml
     resource_definition:
       api_version: v1
       kind: Node
@@ -45,5 +68,6 @@
   delegate_to: localhost
   run_once: true
   kubernetes.core.k8s:
+    kubeconfig: ./inventory/local.yaml
     state: present
     src: longhorn.yaml

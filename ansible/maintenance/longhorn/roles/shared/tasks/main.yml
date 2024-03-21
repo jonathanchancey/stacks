@@ -5,5 +5,5 @@
 
 - name: Run Ubuntu Tasks
   ansible.builtin.import_tasks: ubuntu.yml
-  when: ansible_facts['distribution'] == 'Ubuntu'
+  when: ansible_os_family == 'Debian'
   become: true
