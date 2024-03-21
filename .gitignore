@@ -53,3 +53,4 @@ username
 smtp*
 *.env
 **/scratch/
+local.yaml
