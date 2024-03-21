@@ -4,7 +4,15 @@
   roles:
     - role: shared
 
+# - name: Restart nodes sequentially
+#   gather_facts: yes
+#   hosts: longhorn
+#   roles:
+#     - role: restart
+#   serial: 1
+
 - name: Setup Longhorn on longhorn
+  become: true
   gather_facts: yes
   hosts: longhorn
   roles:
