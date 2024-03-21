@@ -1,0 +1,17 @@
+- name: Install open-iscsi
+  ansible.builtin.apt:
+    name:
+      - open-iscsi
+      - iptables
+      - util-linux
+      - awk
+    update_cache: true
+- name: "RKE2 | Enable IPv4 forwarding"
+  ansible.posix.sysctl:
+    name: net.ipv4.conf.all.forwarding
+    value: '1'
+    sysctl_file: /etc/sysctl.d/90-rke2.conf
+    sysctl_set: true
+    state: present
+    reload: true
+  become: true

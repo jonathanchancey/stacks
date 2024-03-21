@@ -1,0 +1,11 @@
+- name: Setup Longhorn dependencies on all servers
+  gather_facts: yes
+  hosts: "*"
+  roles:
+    - role: shared
+
+- name: Setup Longhorn on longhorn
+  gather_facts: yes
+  hosts: longhorn
+  roles:
+    - role: longhorn

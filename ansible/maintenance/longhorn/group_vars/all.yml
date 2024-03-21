@@ -1,0 +1,2 @@
+---
+LONGHORN_DISK_IDENTIFIER: "/dev/sdb" # make sure this is correct, the disk will be wiped.
