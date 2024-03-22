@@ -10,11 +10,13 @@ data:
   kubernetes.yaml: |
     mode: cluster
   settings.yaml: |
-    # providers:
-    #   longhorn:
-    #     username: "longhorn-username" # optional
-    #     password: "very-secret-longhorn-password" # optional
-    #     url: https://longhorn.aesop.network
+    title: chancey.dev
+    background:
+      image: https://i.imgur.com/NdsEGXR.png
+      blur: sm # sm, "", md, xl... see https://tailwindcss.com/docs/backdrop-blur
+      saturate: 50 # 0, 50, 100... see https://tailwindcss.com/docs/backdrop-saturate
+      brightness: 50 # 0, 50, 75... see https://tailwindcss.com/docs/backdrop-brightness
+      opacity: 30 # 0-100
   custom.css: ""
   custom.js: ""
   bookmarks.yaml: |
@@ -22,7 +24,28 @@ data:
         - Github:
             - abbr: GH
               href: https://github.com/
-
+        - ChatCPT:
+            - abbr: GPT
+              href: https://chat.openai.com/
+        - Claude:
+            - abbr: CL
+              href: https://claude.ai/chats/
+        - Google Cloud:
+            - abbr: GCP
+              href: https://console.cloud.google.com/
+    - Personal:
+        - Email:
+            - abbr: PR
+              href: https://mail.proton.me/u/0/inbox
+        - Calendar:
+            - abbr: CAL
+              href: https://calendar.proton.me/u/0
+        - Hacker News:
+            - abbr: PR
+              href: https://news.ycombinator.com/news
+        - Kagi:
+            - abbr: K
+              href: https://kagi.com/
   services.yaml: |
     - Management:
       - Proxmox:
@@ -39,7 +62,7 @@ data:
           description: SMB shares
       - Home Assistant:
           href: https://ha.fkn.chancey.dev
-          icon: homeassistant.png
+          icon: home-assistant.png
           description: Home automation
       - Machinaris:
           href: http://10.10.0.5:8926/
@@ -53,16 +76,27 @@ data:
           href: https://syncthing.fkn.chancey.dev/
           icon: syncthing.png
           description: File sync
-    - Network:
+      - Rancher | chancey.dev:
+          href: https://rancher.k8s.chancey.dev/
+          icon: rancher.png
+          description: Kubernetes Management
+      - Rancher | dcnt.company:
+          href: https://rancher.dcnt.company/
+          icon: rancher.png
+          description: Kubernetes Management
+      - ZITADEL:
+          href: https://auth.chancey.dev/
+          icon: zitadel.png
+          description: IdP
+    - Network and Metrics:
       - OPNSense:
           href: https://opnsense.fkn.chancey.dev
           icon: opnsense.png
           description: Router
-      - Pi Hole:
+      - Pi-Hole:
           href: http://pit.fkn.chancey.dev/admin
           icon: pi-hole.png
           description: Local DNS
-    - Metrics:
       - Traefik:
           href: https://traefik.fkn.chancey.dev/dashboard/#/
           icon: traefik.png
@@ -71,6 +105,10 @@ data:
           href: https://uptime-kuma.fkn.chancey.dev/dashboard
           icon: uptime-kuma.png
           description: Status Page
+      - InfluxDB:
+          href: https://influxdb.fkn.chancey.dev/
+          icon: influxdb.png
+          description: Time Series Database
     - Media:
       - Jellyfin:
           href: https://traefik.fkn.chancey.dev/dashboard/#/
@@ -96,6 +134,10 @@ data:
           href: https://miniflux.fkn.chancey.dev/
           icon: miniflux.png
           description: RSS Reader
+      - Immich:
+          href: https://photos.fkn.chancey.dev/
+          icon: immich.png
+          description: RSS Reader
 
   widgets.yaml: |
     - kubernetes:
@@ -116,11 +158,6 @@ data:
         cpu: true
         memory: true
     - search:
-        provider: duckduckgo
+        provider: brave
         target: _blank
-    # - longhorn:
-    #   expanded: true
-    #   total: true
-    #   labels: true
-    #   nodes: true
   docker.yaml: ""
