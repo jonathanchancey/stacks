@@ -1,0 +1,14 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: zitadel-cert
+  namespace: zitadel
+spec:
+  secretName: zitadel-cert-tls
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  commonName: "auth.chancey.dev"
+  dnsNames:
+  - "auth.chancey.dev"

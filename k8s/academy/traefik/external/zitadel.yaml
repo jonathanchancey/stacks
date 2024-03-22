@@ -1,0 +1,21 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: zitadel-ingress
+  namespace: zitadel
+  annotations:
+    kubernetes.io/ingress.class: traefik-external
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`auth.chancey.dev`)
+      kind: Rule
+      priority: 1
+      services:
+        - name: zitadel
+          kind: Service
+          port: 8080
+  tls:
+    secretName: zitadel-cert-tls

@@ -54,3 +54,4 @@ smtp*
 *.env
 **/scratch/
 local.yaml
+*secrets.yaml
