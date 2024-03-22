@@ -19,7 +19,7 @@ kind: IngressRoute
 metadata:
   name: miniflux-ingress
   namespace: fkn
-  annotations: 
+  annotations:
     kubernetes.io/ingress.class: traefik-external
 spec:
   entryPoints:

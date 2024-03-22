@@ -1,0 +1,21 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: homepage-ingress
+  namespace: homepage
+  annotations:
+    kubernetes.io/ingress.class: traefik-external
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`home.chancey.dev`)
+      kind: Rule
+      priority: 1
+      services:
+        - name: homepage
+          kind: Service
+          port: 3000
+  tls:
+    secretName: homepage-cert-tls

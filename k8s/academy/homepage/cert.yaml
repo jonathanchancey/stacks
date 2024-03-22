@@ -1,0 +1,14 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: homepage-cert
+  namespace: homepage
+spec:
+  secretName: homepage-cert-tls
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  commonName: "home.chancey.dev"
+  dnsNames:
+  - "home.chancey.dev"
