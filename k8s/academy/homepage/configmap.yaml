@@ -24,7 +24,7 @@ data:
         - Github:
             - abbr: GH
               href: https://github.com/
-        - ChatCPT:
+        - ChatGPT:
             - abbr: GPT
               href: https://chat.openai.com/
         - Claude:
@@ -46,6 +46,10 @@ data:
         - Kagi:
             - abbr: K
               href: https://kagi.com/
+    - Professional:
+        - Google Drive:
+            - abbr: DOC
+              href: https://drive.google.com/drive/u/0/home
   services.yaml: |
     - Management:
       - Proxmox:
@@ -55,27 +59,27 @@ data:
       - Portainer:
           href: https://portainer.fkn.chancey.dev
           icon: portainer.png
-          description: Docker management
+          description: Docker Management
       - Chicken:
           href: https://chicken.fkn.chancey.dev
           icon: cockpit.png
-          description: SMB shares
+          description: SMB Shares
       - Home Assistant:
           href: https://ha.fkn.chancey.dev
           icon: home-assistant.png
-          description: Home automation
+          description: Home Automation
       - Machinaris:
           href: http://10.10.0.5:8926/
           icon: mdi-leaf
-          description: Chia
+          description: Chia Management
       - qBittorrent:
           href: https://chicken.fkn.chancey.dev
           icon: qbittorrent.svg
-          description: Download client
+          description: Download Client
       - Syncthing:
           href: https://syncthing.fkn.chancey.dev/
           icon: syncthing.png
-          description: File sync
+          description: File Sync
       - Rancher | chancey.dev:
           href: https://rancher.k8s.chancey.dev/
           icon: rancher.png
@@ -133,11 +137,11 @@ data:
       - Miniflux:
           href: https://miniflux.fkn.chancey.dev/
           icon: miniflux.png
-          description: RSS Reader
+          description: RSS Collection Manager
       - Immich:
           href: https://photos.fkn.chancey.dev/
           icon: immich.png
-          description: RSS Reader
+          description: Photo Collection Manager
 
   widgets.yaml: |
     - kubernetes:
