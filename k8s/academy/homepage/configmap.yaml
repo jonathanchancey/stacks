@@ -113,6 +113,10 @@ data:
           href: https://influxdb.fkn.chancey.dev/
           icon: influxdb.png
           description: Time Series Database
+      - Grafana:
+          href: https://grafana.chancey.dev/
+          icon: grafana.png
+          description: Observability Platform
     - Media:
       - Jellyfin:
           href: https://traefik.fkn.chancey.dev/dashboard/#/
