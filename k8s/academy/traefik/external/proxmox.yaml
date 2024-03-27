@@ -9,7 +9,7 @@ spec:
     - name: https
       port: 8006
       targetPort: 8006
-  externalName: 10.10.0.21
+  externalName: 10.10.0.19
   selector:
     app.kubernetes.io/instance: traefik
     app.kubernetes.io/name: traefik
@@ -19,7 +19,7 @@ kind: IngressRoute
 metadata:
   name: proxmox-ingress
   namespace: fkn
-  annotations: 
+  annotations:
     kubernetes.io/ingress.class: traefik-external
 spec:
   entryPoints:

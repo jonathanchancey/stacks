@@ -63,7 +63,11 @@ data:
       - Chicken:
           href: https://chicken.fkn.chancey.dev
           icon: cockpit.png
-          description: SMB Shares
+          description: Okapi SMB Shares
+      - Oak:
+          href: https://oak.fkn.chancey.dev
+          icon: cockpit.png
+          description: Forest SMB Shares
       - Home Assistant:
           href: https://ha.fkn.chancey.dev
           icon: home-assistant.png
@@ -73,7 +77,7 @@ data:
           icon: mdi-leaf
           description: Chia Management
       - qBittorrent:
-          href: https://chicken.fkn.chancey.dev
+          href: https://qbit.fkn.chancey.dev
           icon: qbittorrent.svg
           description: Download Client
       - Syncthing:
@@ -121,11 +125,11 @@ data:
       - Jellyfin:
           href: https://traefik.fkn.chancey.dev/dashboard/#/
           icon: jellyfin.png
-          description: Reverse Proxy
+          description: Media Server
       - Jellyseerr:
           href: https://jellyseerr.fkn.chancey.dev/
           icon: jellyseerr.png
-          description: Reverse Proxy
+          description: Media Request Manager
       - Radarr:
           href: https://radarr.fkn.chancey.dev/
           icon: radarr.png
