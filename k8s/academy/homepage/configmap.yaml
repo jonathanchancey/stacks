@@ -11,6 +11,7 @@ data:
     mode: cluster
   settings.yaml: |
     title: chancey.dev
+    target: _self
     background:
       image: https://i.imgur.com/NdsEGXR.png
       blur: sm # sm, "", md, xl... see https://tailwindcss.com/docs/backdrop-blur
@@ -97,14 +98,18 @@ data:
           icon: zitadel.png
           description: IdP
     - Network and Metrics:
+      - Shar:
+          href: https://shar.fkn.chancey.dev/
+          icon: proxmox.png
+          description: Forbidden Hypervisor
       - OPNSense:
           href: https://opnsense.fkn.chancey.dev
           icon: opnsense.png
-          description: Router
+          description: Forbidden Router
       - Pi-Hole:
           href: http://pit.fkn.chancey.dev/admin
           icon: pi-hole.png
-          description: Local DNS
+          description: Forbidden DNS
       - Traefik:
           href: https://traefik.fkn.chancey.dev/dashboard/#/
           icon: traefik.png
