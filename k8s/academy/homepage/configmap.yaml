@@ -62,11 +62,11 @@ data:
           description: Docker Management
       - Chicken:
           href: https://chicken.fkn.chancey.dev
-          icon: cockpit.png
+          icon: si-cockpit-#3B66BC
           description: Okapi SMB Shares
       - Oak:
           href: https://oak.fkn.chancey.dev
-          icon: cockpit.png
+          icon: si-cockpit-#54B848
           description: Forest SMB Shares
       - Home Assistant:
           href: https://ha.fkn.chancey.dev
@@ -74,7 +74,7 @@ data:
           description: Home Automation
       - Machinaris:
           href: http://10.10.0.5:8926/
-          icon: mdi-leaf
+          icon: si-chianetwork-#5ECE71
           description: Chia Management
       - qBittorrent:
           href: https://qbit.fkn.chancey.dev
@@ -121,9 +121,17 @@ data:
           href: https://grafana.chancey.dev/
           icon: grafana.png
           description: Observability Platform
+      - SwOS:
+          href: https://swos.k8s.chancey.dev/index.html
+          icon: si-mikrotik-#293239
+          description: Observability Platform
+      - EAP:
+          href: https://eap.k8s.chancey.dev/
+          icon: si-tp-link-#4ACBD6
+          description: Access Point
     - Media:
       - Jellyfin:
-          href: https://traefik.fkn.chancey.dev/dashboard/#/
+          href: https://jellyfin.fkn.chancey.dev/
           icon: jellyfin.png
           description: Media Server
       - Jellyseerr:
@@ -150,6 +158,10 @@ data:
           href: https://photos.fkn.chancey.dev/
           icon: immich.png
           description: Photo Collection Manager
+      - Kawa:
+          href: https://kawa.k8s.chancey.dev/
+          icon: mdi-waves-#A22846
+          description: Garage Soundbar
 
   widgets.yaml: |
     - kubernetes:
