@@ -1,0 +1,12 @@
+---
+version: "3.7"
+services:
+  homepage:
+    image: ghcr.io/gethomepage/homepage:latest
+    restart: unless-stopped
+    container_name: homepage
+    ports:
+      - 3000:3000
+    volumes:
+      - /media/Config/homepage:/app/config
+      - /var/run/docker.sock:/var/run/docker.sock:ro
