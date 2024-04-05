@@ -128,8 +128,8 @@ data:
           description: Observability Platform
       - SwOS:
           href: https://swos.k8s.chancey.dev/index.html
-          icon: si-mikrotik-#293239
-          description: Observability Platform
+          icon: si-mikrotik-#CCCCCC
+          description: Mikrotik Switch
       - EAP:
           href: https://eap.k8s.chancey.dev/
           icon: si-tp-link-#4ACBD6
