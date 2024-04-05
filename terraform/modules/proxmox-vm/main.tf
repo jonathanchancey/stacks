@@ -60,6 +60,7 @@ resource "proxmox_virtual_environment_vm" "vm" {
   }
 
   tpm_state {
+    datastore_id = var.tpm_state_datastore_id
     version = var.tpm_state
   }
 

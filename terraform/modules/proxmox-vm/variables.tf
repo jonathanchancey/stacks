@@ -169,3 +169,9 @@ variable "additional_disk_datastore_id" {
   default     = ""
   description = "Datastore ID for the additional disk"
 }
+
+variable "tpm_state_datastore_id" {
+  type        = string
+  default     = "local-lvm"
+  description = "tpm_state_datastore_id"
+}
