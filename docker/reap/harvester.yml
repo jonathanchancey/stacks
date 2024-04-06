@@ -13,8 +13,8 @@ services:
           - "/mnt/chia/a1e8:/a1e8"
           - "/mnt/chia/cd07:/cd07"
           - "/mnt/chia/ddd2:/ddd2"
-          - "/mnt/chia/ddd2:/8a48"
-          - "/mnt/chia/ddd2:/100a"
+          - "/mnt/chia/8a48:/8a48"
+          - "/mnt/chia/100a:/100a"
       environment:
           - TZ=UTC
           - farmer_address=10.10.0.5

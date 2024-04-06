@@ -1,6 +1,7 @@
 services:
   miniflux:
     image: miniflux/miniflux:latest
+    restart: unless-stopped
     ports:
       - "12612:8080"
     env_file:
@@ -13,6 +14,7 @@ services:
       - CREATE_ADMIN=1
   db:
     image: postgres:15
+    restart: unless-stopped
     env_file:
       - stack.env
     volumes:
