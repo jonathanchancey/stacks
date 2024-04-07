@@ -12,6 +12,9 @@ data:
       - job_name: 'prometheus'
         static_configs:
           - targets: ['localhost:9090']
-      - job_name: 'prometheus'
+      - job_name: 'chia_fullnode'
         static_configs:
-          - targets: ['10.0.0.5:9914']
+          - targets: ['10.10.0.5:9914']
+            labels:
+              application: 'chia-blockchain'
+              network: 'mainnet'

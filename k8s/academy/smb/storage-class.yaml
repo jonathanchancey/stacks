@@ -1,28 +1,8 @@
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  name: smb
-provisioner: smb.csi.k8s.io
-parameters:
-  source: "//10.10.0.70/k3s"
-  # if csi.storage.k8s.io/provisioner-secret is provided, will create a sub directory
-  # with PV name under source
-  csi.storage.k8s.io/provisioner-secret-name: "smbcreds"
-  csi.storage.k8s.io/provisioner-secret-namespace: "kube-system"
-  csi.storage.k8s.io/node-stage-secret-name: "smbcreds"
-  csi.storage.k8s.io/node-stage-secret-namespace: "kube-system"
-reclaimPolicy: Delete  # available values: Delete, Retain
-volumeBindingMode: Immediate
-mountOptions:
-  - dir_mode=0777
-  - file_mode=0777
-  - uid=1001
-  - gid=1001
 ---
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: smb-retain
+  name: smb
 provisioner: smb.csi.k8s.io
 parameters:
   source: "//10.10.0.70/k3s"
@@ -39,3 +19,7 @@ mountOptions:
   - file_mode=0777
   - uid=1001
   - gid=1001
+  - noperm
+  - mfsymlinks
+  - cache=strict
+  - noserverino  # required to prevent data corruption

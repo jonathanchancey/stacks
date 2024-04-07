@@ -21,8 +21,27 @@ spec:
           volumeMounts:
             - name: config-volume
               mountPath: /etc/prometheus
+            - name: prom-pvc
+              mountPath: /prometheus
       volumes:
         - name: config-volume
           configMap:
             name: prometheus-server-conf
             defaultMode: 420
+        - name: prom-pvc
+          persistentVolumeClaim:
+            claimName: prometheus
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus-service
+  namespace: grafana
+spec:
+  selector:
+    app: prometheus-server
+  ports:
+    - protocol: TCP
+      port: 9090
+      targetPort: 9090
+  type: LoadBalancer

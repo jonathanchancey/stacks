@@ -10,6 +10,7 @@ spec:
   resources:
     requests:
       storage: 4Gi
+  storageClassName: longhorn
 ---
 apiVersion: apps/v1
 kind: Deployment
