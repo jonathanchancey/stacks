@@ -21,11 +21,11 @@ from collections import defaultdict
 # Local plot sources
 # For wildcards:
 #   SOURCES = glob.glob('/mnt/*')
-SOURCES = glob.glob('/mnt/space/plots/*.plots')
+SOURCES = glob.glob('/mnt/space/plots/*.plot')
 
 # Rsync destinations
 # Examples: ["/mnt/HDD1", "192.168.1.10::hdd1"]
-DESTS = ["/mnt/silo"]
+DESTS = ["10.10.0.227::plots"]
 
 # Shuffle plot destinations. Useful when using many plotters to decrease the odds
 # of them copying to the same drive simultaneously.
