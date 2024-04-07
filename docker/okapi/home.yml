@@ -32,6 +32,7 @@ services:
       - mode=fullnode
       - worker_address=10.10.0.5
       - blockchains=chia
+      - chia_exporter=true
     ports:
       - 8926:8926
       - 8927:8927
