@@ -38,6 +38,7 @@ services:
       - 8927:8927
       - 8444:8444
       - 8447:8447
+      - 9914:9914
     labels:
       - homepage.group=Management
       - homepage.name=Machinaris
