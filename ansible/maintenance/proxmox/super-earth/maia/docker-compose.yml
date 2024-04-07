@@ -1,0 +1,29 @@
+version: '3.7'
+services:
+
+    machinaris:
+        image: ghcr.io/guydavis/machinaris:latest
+        container_name: machinaris
+        hostname: maia
+        restart: unless-stopped
+        volumes:
+            - ~/.machinaris:/root/.chia
+            - "/mnt/space/plots:/plots"
+            - "/mnt/space/plotting:/plotting"
+            - "/home/cadet/.ssh/id_rsa:/id_rsa:ro"
+        environment:
+            - TZ=America/Los_Angeles
+            - farmer_pk=b493ee5565d4797f20c719d4f41e317f1c58f67a84d7a9123a25b05cbf446c7fdc5929c71f6334bfb3c8f4a366388a5a
+            - pool_pk=9908cff36e18ca4009e835e5d45d6c2130866f2c9fafa55102ad8c24d2787fa945982749cbfb7df97133909f82c2711b
+            - pool_contract_address=xch1mx4eul0haersue5jmkta5k0ayjf7wm2jgg9v5zm9cn34f438ysts8sr5cu
+            - mode=plotter
+            - controller_host=10.10.0.5
+            - controller_api_port=8927
+            - worker_address=10.10.0.29
+            - worker_api_port=8927
+            - plots_dir=/plots
+            - blockchains=chia
+            - AUTO_PLOT=true
+        ports:
+            - 8926:8926
+            - 8927:8927
