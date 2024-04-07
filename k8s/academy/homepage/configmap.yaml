@@ -93,6 +93,10 @@ data:
           href: https://rancher.dcnt.company/
           icon: rancher.png
           description: Kubernetes Management
+      - Super Earth:
+          href: https://super-earth.k8s.chancey.dev
+          icon: si-intel-#0071C5
+          description: Super Earth Management
       - ZITADEL:
           href: https://auth.chancey.dev/
           icon: zitadel.png
