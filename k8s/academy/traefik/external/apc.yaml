@@ -1,15 +1,15 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: super-earth
+  name: apc
   namespace: k8s-chancey-dev
 spec:
   type: ExternalName
   ports:
-    - name: https
-      port: 443
-      targetPort: 443
-  externalName: 10.10.0.135
+    - name: http
+      port: 80
+      targetPort: 80
+  externalName: 10.10.0.84
   selector:
     app.kubernetes.io/instance: traefik
     app.kubernetes.io/name: traefik
@@ -17,7 +17,7 @@ spec:
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: super-earth-ingress
+  name: apc-ingress
   namespace: k8s-chancey-dev
   annotations:
     kubernetes.io/ingress.class: traefik-external
@@ -25,12 +25,12 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`super-earth.k8s.chancey.dev`)
+    - match: Host(`apc.k8s.chancey.dev`)
       kind: Rule
       priority: 1
       services:
-        - name: super-earth
+        - name: apc
           kind: Service
-          port: 443
+          port: 80
   tls:
     secretName: k8s-chancey-dev-tls

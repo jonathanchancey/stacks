@@ -74,7 +74,7 @@ data:
           icon: home-assistant.png
           description: Home Automation
       - Machinaris:
-          href: http://10.10.0.5:8926/
+          href: https://machinaris.fkn.chancey.dev/
           icon: si-chianetwork-#5ECE71
           description: Chia Management
       - qBittorrent:
@@ -93,10 +93,14 @@ data:
           href: https://rancher.dcnt.company/
           icon: rancher.png
           description: Kubernetes Management
-      - Super Earth:
-          href: https://super-earth.k8s.chancey.dev
+      - IPMI | TARS:
+          href: https://TARS.k8s.chancey.dev
           icon: si-intel-#0071C5
           description: Super Earth Management
+      - APC UPS:
+          href: apc.k8s.chancey.dev
+          icon: mdi-flash-#E21836
+          description: Power Management
       - ZITADEL:
           href: https://auth.chancey.dev/
           icon: zitadel.png
