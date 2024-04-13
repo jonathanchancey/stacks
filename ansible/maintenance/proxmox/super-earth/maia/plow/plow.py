@@ -52,7 +52,7 @@ ONE_PER_DRIVE = False
 SLEEP_FOR = 60 * 3
 SLEEP_FOR_LONG = 60 * 20
 
-RSYNC_CMD = "rsync"
+RSYNC_CMD = "rsync --port 12000"
 
 if SHUFFLE:
     random.shuffle(DESTS)
@@ -135,7 +135,7 @@ async def plow(dest, plot_queue, loop):
                 print(f"🚜 {plot} ➡️  {dest}")
 
                 # Send a quick test copy to make sure we can write, or fail early.
-                test_cmd = f"rsync /etc/hostname {dest}"
+                test_cmd = f"rsync --port 12000 /etc/hostname {dest}"
                 proc = await asyncio.create_subprocess_shell(
                     test_cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
                 )
