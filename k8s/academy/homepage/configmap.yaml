@@ -89,17 +89,17 @@ data:
           href: https://rancher.k8s.chancey.dev/
           icon: rancher.png
           description: Kubernetes Management
-      - Rancher | dcnt.company:
-          href: https://rancher.dcnt.company/
-          icon: rancher.png
-          description: Kubernetes Management
+    #   - Rancher | dcnt.company:
+    #       href: https://rancher.dcnt.company/
+    #       icon: rancher.png
+    #       description: Kubernetes Management
       - IPMI | TARS:
-          href: https://TARS.k8s.chancey.dev
+          href: https://TARS.k8s.chancey.dev/
           icon: si-intel-#0071C5
           description: Super Earth Management
       - APC UPS:
-          href: apc.k8s.chancey.dev
-          icon: mdi-flash-#E21836
+          href: https://apc.k8s.chancey.dev/
+          icon: mdi-car-battery-#E21836
           description: Power Management
       - ZITADEL:
           href: https://auth.chancey.dev/
