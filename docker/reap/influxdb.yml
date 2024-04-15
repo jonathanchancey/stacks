@@ -5,10 +5,10 @@ services:
     image: influxdb:2.7.5-alpine
     user: "42407:42407"
     volumes:
-      - /opt/influxdb/data:/var/lib/influxdb2
-      - /opt/influxdb/etc:/etc/influxdb2
-      - /opt/influxdb/ssl/cert.pem:/etc/ssl/cert.pem
-      - /opt/influxdb/ssl/cert-key.key:/etc/ssl/cert-key.pem
+      - /influxdb/data:/var/lib/influxdb2
+      - /influxdb/etc:/etc/influxdb2
+      - /influxdb/ssl/cert.pem:/etc/ssl/cert.pem
+      - /influxdb/ssl/cert-key.key:/etc/ssl/cert-key.pem
     command: influxd --tls-cert=/etc/ssl/cert.pem --tls-key=/etc/ssl/cert-key.pem
     ports:
       - "42407:8086"
