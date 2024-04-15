@@ -15,12 +15,6 @@ services:
     volumes:
       - /slug/config/jellyseerr:/app/config
     restart: unless-stopped
-    labels:
-      - homepage.group=Media
-      - homepage.name=Jellyseerr
-      - homepage.icon=jellyseerr.png
-      - homepage.href=https://jellyseerr.fkn.chancey.dev/
-      - homepage.description=Media Manager
   arch-delugevpn:
     image: binhex/arch-qbittorrentvpn:4.6.2-2-01
     container_name: qbittorentvpn
@@ -56,12 +50,6 @@ services:
       - 8118:8118
       - 6881:6881
       - 6881:6881/udp
-    labels:
-      - homepage.group=Management
-      - homepage.name=qBittorent
-      - homepage.icon=qBittorent.png
-      - homepage.href=https://qbit.fkn.chancey.dev/
-      - homepage.description=Torrent Client
   radarr:
     image: lscr.io/linuxserver/radarr:5.2.6
     container_name: radarr
@@ -77,12 +65,6 @@ services:
     ports:
       - 7878:7878
     restart: unless-stopped
-    labels:
-      - homepage.group=Media
-      - homepage.name=Radarr
-      - homepage.icon=radarr.png
-      - homepage.href=https://radarr.fkn.chancey.dev/
-      - homepage.description=TV Collection Manager
   sonarr:
     image: lscr.io/linuxserver/sonarr:4.0.0
     container_name: sonarr
@@ -98,12 +80,6 @@ services:
     ports:
       - 8989:8989
     restart: unless-stopped
-    labels:
-      - homepage.group=Media
-      - homepage.name=Sonarr
-      - homepage.icon=sonarr.png
-      - homepage.href=https://sonarr.fkn.chancey.dev/
-      - homepage.description=Movie Collection Manager
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:1.12.1-develop
     container_name: prowlarr
