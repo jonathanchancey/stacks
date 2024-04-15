@@ -9,7 +9,7 @@ spec:
     - name: https
       port: 443
       targetPort: 443
-  externalName: 10.10.0.195
+  externalName: 10.10.0.165
   selector:
     app.kubernetes.io/instance: traefik
     app.kubernetes.io/name: traefik
@@ -25,7 +25,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`truenas.k8s.chancey.dev`)
+    - match: Host(`vent.k8s.chancey.dev`)
       kind: Rule
       priority: 1
       services:
