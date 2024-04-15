@@ -25,7 +25,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`vent.k8s.chancey.dev`)
+    - match: Host(`truenas.k8s.chancey.dev`)
       kind: Rule
       priority: 1
       services:

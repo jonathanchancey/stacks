@@ -62,7 +62,7 @@ data:
           icon: portainer.png
           description: Docker Management
       - TrueNAS:
-          href: https://truenas.fkn.chancey.dev
+          href: https://truenas.k8s.chancey.dev
           icon: si-truenas-#0095D5
           description: Baremetal NAS
       - Chicken:
