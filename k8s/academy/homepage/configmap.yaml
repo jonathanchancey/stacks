@@ -63,7 +63,7 @@ data:
           description: Docker Management
       - TrueNAS:
           href: https://truenas.fkn.chancey.dev
-          icon: si-TrueNAS-#0095D5
+          icon: si-truenas-#0095D5
           description: Baremetal NAS
       - Chicken:
           href: https://chicken.fkn.chancey.dev

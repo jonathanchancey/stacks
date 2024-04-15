@@ -2,7 +2,7 @@ version: "3.7"
 services:
   machinaris:
       image: ghcr.io/guydavis/machinaris:latest
-      container_name: machinaris
+      container_name: machinaris-harvester
       hostname: reap-harvester
       restart: always
       volumes:
@@ -15,6 +15,8 @@ services:
           - "/mnt/chia/cd07:/cd07"
           - "/mnt/chia/ddd2:/ddd2"
           - "/mnt/chia/345d:/345d"
+          - "/mnt/chia/8a48:/8a48"
+          - "/mnt/chia/100a:/100a"
       environment:
           - TZ=UTC
           - farmer_address=10.10.0.5
@@ -24,7 +26,7 @@ services:
           - controller_api_port=8927
           - worker_address=10.10.0.227
           - worker_api_port=8927
-          - plots_dir=/22a5:/3242:/621a:/7f21:/a1e8:/cd07:/ddd2:/345d
+          - plots_dir=/22a5:/3242:/621a:/7f21:/a1e8:/cd07:/ddd2:/345d:/8a48:/100a
           - blockchains=chia
       ports:
           - 8926:8926
