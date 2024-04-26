@@ -61,20 +61,20 @@ data:
           href: https://portainer.fkn.chancey.dev
           icon: portainer.png
           description: Docker Management
+      - TrueNAS:
+          href: https://truenas.k8s.chancey.dev
+          icon: si-truenas-#0095D5
+          description: Baremetal NAS
       - Chicken:
           href: https://chicken.fkn.chancey.dev
           icon: si-cockpit-#3B66BC
           description: Okapi SMB Shares
-      - Oak:
-          href: https://oak.fkn.chancey.dev
-          icon: si-cockpit-#54B848
-          description: Forest SMB Shares
       - Home Assistant:
           href: https://ha.fkn.chancey.dev
           icon: home-assistant.png
           description: Home Automation
       - Machinaris:
-          href: http://10.10.0.5:8926/
+          href: https://machinaris.fkn.chancey.dev/
           icon: si-chianetwork-#5ECE71
           description: Chia Management
       - qBittorrent:
@@ -89,14 +89,14 @@ data:
           href: https://rancher.k8s.chancey.dev/
           icon: rancher.png
           description: Kubernetes Management
-      - Rancher | dcnt.company:
-          href: https://rancher.dcnt.company/
-          icon: rancher.png
-          description: Kubernetes Management
-      - Super Earth:
-          href: https://super-earth.k8s.chancey.dev
+      - IPMI | TARS:
+          href: https://TARS.k8s.chancey.dev/
           icon: si-intel-#0071C5
           description: Super Earth Management
+      - APC UPS:
+          href: https://apc.k8s.chancey.dev/
+          icon: mdi-car-battery-#E21836
+          description: Power Management
       - ZITADEL:
           href: https://auth.chancey.dev/
           icon: zitadel.png

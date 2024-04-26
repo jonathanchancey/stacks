@@ -15,9 +15,3 @@ services:
     volumes:
       - "/media/Config/navidrome:/data"
       - "/media/Music:/music:ro"
-    labels:
-      - homepage.group=Media
-      - homepage.name=Navidrome
-      - homepage.icon=navidrome.png
-      - homepage.href=https://navi.fkn.chancey.dev/
-      - homepage.description=Music server

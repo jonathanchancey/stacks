@@ -4,8 +4,8 @@
 ## quick update
 
 ```bash
-kubectl scale deploy homepage --replicas 0
-kubectl apply -f configmap.yaml
-kubectl scale deploy homepage --replicas 1
+kubectl -n homepage scale deploy homepage --replicas 0
+kubectl -n homepage apply -f configmap.yaml
+kubectl -n homepage scale deploy homepage --replicas 1
 ```
 

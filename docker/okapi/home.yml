@@ -15,12 +15,6 @@ services:
     ports:
       - 8123:8123
     restart: unless-stopped
-    labels:
-      - homepage.group=Management
-      - homepage.name=Home Assistant
-      - homepage.icon=home-assistant.png
-      - homepage.href=https://ha.fkn.chancey.dev/
-      - homepage.description=Home Automation
   machinaris:
     image: ghcr.io/guydavis/machinaris:latest
     container_name: machinaris
@@ -39,12 +33,6 @@ services:
       - 8444:8444
       - 8447:8447
       - 9914:9914
-    labels:
-      - homepage.group=Management
-      - homepage.name=Machinaris
-      - homepage.icon=https://lh5.googleusercontent.com/h89WYbTDxY6g3cJeb5FI2aAXwe5kRhX2hmbk4wKn55O5lB6LP0l5P5vOx5h-8KQhZmsLJVZQrMpTc-AUzUmJLfw=w16383
-      - homepage.href=http://10.10.0.5:8926/
-      - homepage.description=Chia
   syncthing:
     image: lscr.io/linuxserver/syncthing:latest
     container_name: syncthing
@@ -63,12 +51,6 @@ services:
       - 22000:22000/udp
       - 21027:21027/udp
     restart: unless-stopped
-    labels:
-      - homepage.group=Management
-      - homepage.name=Syncthing
-      - homepage.icon=syncthing.png
-      - homepage.href=https://syncthing.fkn.chancey.dev/
-      - homepage.description=File Sync
   watchtower:
     image: containrrr/watchtower
     container_name: watchtower
