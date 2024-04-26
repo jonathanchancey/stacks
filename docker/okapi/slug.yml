@@ -105,7 +105,7 @@ services:
       - homepage.href=https://sonarr.fkn.chancey.dev/
       - homepage.description=Movie Collection Manager
   prowlarr:
-    image: lscr.io/linuxserver/prowlarr:1.12.1-develop
+    image: lscr.io/linuxserver/prowlarr:1.16.2.4435-ls66
     container_name: prowlarr
     environment:
       - PUID=9696
@@ -114,7 +114,6 @@ services:
       - TZ=America/Los_Angeles
     volumes:
       - /slug/config/prowlarr:/config
-      - /media/Downloads:/downloads
     ports:
       - 9696:9696
     restart: unless-stopped
