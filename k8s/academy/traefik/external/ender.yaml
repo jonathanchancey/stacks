@@ -1,0 +1,36 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: ender
+  namespace: fkn
+spec:
+  type: ExternalName
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+  externalName: 10.10.0.115
+  selector:
+    app.kubernetes.io/instance: traefik
+    app.kubernetes.io/name: traefik
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: ender-ingress
+  namespace: fkn
+  annotations:
+    kubernetes.io/ingress.class: traefik-external
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`ender.fkn.chancey.dev`)
+      kind: Rule
+      priority: 1
+      services:
+        - name: ender
+          kind: Service
+          port: 80
+  tls:
+    secretName: fkn-chancey-dev-tls

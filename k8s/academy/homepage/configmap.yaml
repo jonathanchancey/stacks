@@ -73,6 +73,10 @@ data:
           href: https://ha.fkn.chancey.dev
           icon: home-assistant.png
           description: Home Automation
+      - Klipper | Ender 3:
+          href: https://ender.fkn.chancey.dev
+          icon: si-creality
+          description: 3D Printer Automation
       - Machinaris:
           href: https://machinaris.fkn.chancey.dev/
           icon: si-chianetwork-#5ECE71
