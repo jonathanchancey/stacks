@@ -1,0 +1,25 @@
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: academy-smb
+provisioner: smb.csi.k8s.io
+parameters:
+  source: "//10.10.0.165/academy-smb"
+  # if csi.storage.k8s.io/provisioner-secret is provided, will create a sub directory
+  # with PV name under source
+  csi.storage.k8s.io/provisioner-secret-name: "smbcreds-scale-worm-academy"
+  csi.storage.k8s.io/provisioner-secret-namespace: "kube-system"
+  csi.storage.k8s.io/node-stage-secret-name: "smbcreds-scale-worm-academy"
+  csi.storage.k8s.io/node-stage-secret-namespace: "kube-system"
+reclaimPolicy: Retain  # available values: Delete, Retain
+volumeBindingMode: Immediate
+mountOptions:
+  - dir_mode=0770
+  - file_mode=0770
+  - uid=3002
+  - gid=3002
+  - noperm
+  - mfsymlinks
+  - cache=strict
+  - noserverino  # required to prevent data corruption

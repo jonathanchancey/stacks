@@ -10,7 +10,7 @@ spec:
   resources:
     requests:
       storage: 1Gi
-  storageClassName: smb
+  storageClassName: academy-smb
 ---
 apiVersion: v1
 kind: Pod
@@ -33,4 +33,3 @@ spec:
       volumeMounts:
         - mountPath: "/usr/share/nginx/html"
           name: task-pv-storage
-
