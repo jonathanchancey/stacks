@@ -142,6 +142,10 @@ data:
           href: https://eap.k8s.chancey.dev/
           icon: si-tp-link-#4ACBD6
           description: Access Point
+      - Gotify:
+          href: https://gotify.k8s.chancey.dev/
+          icon: si-go-#00ADD8
+          description: Alerts
     - Media:
       - Jellyfin:
           href: https://jellyfin.fkn.chancey.dev/
