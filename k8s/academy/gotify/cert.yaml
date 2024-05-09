@@ -1,0 +1,14 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: gotify-cert
+  namespace: gotify
+spec:
+  secretName: gotify-cert-tls
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  commonName: "gotify.k8s.chancey.dev"
+  dnsNames:
+  - "gotify.k8s.chancey.dev"
