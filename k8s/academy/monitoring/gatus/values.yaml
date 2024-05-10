@@ -1,0 +1,135 @@
+persistence:
+  enabled: true
+  size: 200Mi
+  mountPath: /data
+  accessModes:
+    - ReadWriteOnce
+  finalizers:
+    - kubernetes.io/pvc-protection
+  storageClassName: longhorn
+config:
+  storage:
+    type: sqlite
+    path: /data/data.db
+  endpoints:
+    - name: Proxmox
+      url: https://proxmox.fkn.chancey.dev
+      conditions:
+      - '[STATUS] == 200'
+    - name: Portainer
+      url: https://portainer.fkn.chancey.dev
+      conditions:
+      - '[STATUS] == 200'
+    - name: TrueNAS
+      url: https://truenas.k8s.chancey.dev
+      conditions:
+      - '[STATUS] == 200'
+    - name: Chicken
+      url: https://chicken.fkn.chancey.dev
+      conditions:
+      - '[STATUS] == 200'
+    - name: Home Assistant
+      url: https://ha.fkn.chancey.dev
+      conditions:
+      - '[STATUS] == 200'
+    - name: Klipper | Ender 3
+      url: https://ender.fkn.chancey.dev
+      conditions:
+      - '[STATUS] == 200'
+    - name: Machinaris
+      url: https://machinaris.fkn.chancey.dev/
+      conditions:
+      - '[STATUS] == 200'
+    - name: qBittorrent
+      url: https://qbit.fkn.chancey.dev
+      conditions:
+      - '[STATUS] == 200'
+    - name: Syncthing
+      url: https://syncthing.fkn.chancey.dev/
+      conditions:
+      - '[STATUS] == 200'
+    - name: Rancher | chancey.dev
+      url: https://rancher.k8s.chancey.dev/
+      conditions:
+      - '[STATUS] == 200'
+    - name: APC UPS
+      url: https://apc.k8s.chancey.dev/
+      conditions:
+      - '[STATUS] == 200'
+    - name: ZITADEL
+      url: https://auth.chancey.dev/
+      conditions:
+      - '[STATUS] == 200'
+    - name: Shar
+      url: https://shar.fkn.chancey.dev/
+      conditions:
+      - '[STATUS] == 200'
+    - name: OPNSense
+      url: https://opnsense.fkn.chancey.dev
+      conditions:
+      - '[STATUS] == 200'
+    - name: Pi-Hole
+      url: http://pit.fkn.chancey.dev/admin
+      conditions:
+      - '[STATUS] == 200'
+    - name: Traefik
+      url: https://traefik.fkn.chancey.dev/dashboard/#/
+      conditions:
+      - '[STATUS] == 401'
+    - name: Uptime Kuma
+      url: https://uptime-kuma.fkn.chancey.dev/dashboard
+      conditions:
+      - '[STATUS] == 200'
+    - name: InfluxDB
+      url: https://influxdb.fkn.chancey.dev/
+      conditions:
+      - '[STATUS] == 200'
+    - name: Grafana
+      url: https://grafana.chancey.dev/
+      conditions:
+      - '[STATUS] == 200'
+    - name: SwOS
+      url: https://swos.k8s.chancey.dev/index.html
+      conditions:
+      - '[STATUS] == 200'
+    - name: EAP
+      url: https://eap.k8s.chancey.dev/
+      conditions:
+      - '[STATUS] == 200'
+    - name: Gotify
+      url: https://gotify.k8s.chancey.dev/
+      conditions:
+      - '[STATUS] == 200'
+    - name: Jellyfin
+      url: https://jellyfin.fkn.chancey.dev/
+      conditions:
+      - '[STATUS] == 200'
+    - name: Jellyseerr
+      url: https://jellyseerr.fkn.chancey.dev/
+      conditions:
+      - '[STATUS] == 200'
+    - name: Radarr
+      url: https://radarr.fkn.chancey.dev/
+      conditions:
+      - '[STATUS] == 200'
+    - name: Sonarr
+      url: https://sonarr.fkn.chancey.dev/
+      conditions:
+      - '[STATUS] == 200'
+    - name: Navidrome
+      url: https://navi.fkn.chancey.dev/
+      conditions:
+      - '[STATUS] == 200'
+    - name: Miniflux
+      url: https://miniflux.fkn.chancey.dev/
+      conditions:
+      - '[STATUS] == 200'
+    - name: Immich
+      url: https://photos.fkn.chancey.dev/
+      conditions:
+      - '[STATUS] == 200'
+    - name: Kawa
+      url: https://kawa.k8s.chancey.dev/
+      conditions:
+      - '[STATUS] == 200'
+
