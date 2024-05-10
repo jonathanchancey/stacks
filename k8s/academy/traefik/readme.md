@@ -21,3 +21,12 @@ helm upgrade --namespace=traefik traefik traefik/traefik --values=values.yaml
 
 kubectl apply -f default-headers.yaml
 ```
+
+
+## automation
+
+return all active ingressroutes
+
+```bash
+kubectl get ingressroute --all-namespaces -o jsonpath='{range .items[*]}{.spec.routes[*].match}{"\n"}{end}' | sed -e 's/Host(`/\n/g' -e 's/`)//g' | grep -v '^[[:space:]]*$'
+```

@@ -1,6 +1,6 @@
 # Stacks - IaC for hosting simple functional services at home.
 
-Hello and welcome to my homelab. I use this place to practice DevOps concepts and for hosting simple functional services at home. 
+Hello and welcome to my homelab. I use this place to practice DevOps concepts and for hosting simple functional services at home.
 
 ## General Flow
 
@@ -115,7 +115,7 @@ Many more!
   - LXC/VMs
     - loss # DNS, DHCP for 10.10.0.1/24
     - dread # OPNsense VM
-- selune # computer
+- selune # compute
   - LXC/VMs
     - sentinel-02 # RKE2 server VM
     - unused # OPNsense failover
