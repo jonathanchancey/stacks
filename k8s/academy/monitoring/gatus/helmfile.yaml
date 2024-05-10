@@ -1,0 +1,29 @@
+---
+repositories:
+  - name: minicloudlabs
+    url: https://minicloudlabs.github.io/helm-charts
+
+releases:
+  - name: gatus
+    namespace: gatus
+    chart: minicloudlabs/gatus
+    version: 3.4.4
+    values:
+      - persistence:
+          enabled: true
+          size: 200Mi
+          mountPath: /data
+          accessModes:
+            - ReadWriteOnce
+          finalizers:
+            - kubernetes.io/pvc-protection
+          storageClassName: longhorn
+      - config:
+          storage:
+            type: sqlite
+            path: /data/data.db
+          endpoints:
+            - name: Homepage
+              url: https://home.chancey.dev/
+              conditions:
+                - '[STATUS] == 200'
