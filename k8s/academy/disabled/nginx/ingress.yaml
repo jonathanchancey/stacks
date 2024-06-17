@@ -10,11 +10,6 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`www.nginx.fkn.chancey.dev`)
-      kind: Rule
-      services:
-        - name: nginx
-          port: 80
     - match: Host(`nginx.fkn.chancey.dev`)
       kind: Rule
       services:
