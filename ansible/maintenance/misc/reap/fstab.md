@@ -29,10 +29,13 @@ mp6: /mnt/chia/621a,mp=/mnt/chia/621a
 UUID=cf0c6835-e5b1-439b-9610-03e7c81d345d /mnt/chia/345d ext4 defaults,nofail 0 1
 UUID=f75517c0-72d6-4b60-8b4d-22a1ad427f21 /mnt/chia/7f21 ext4 defaults,nofail 0 1
 UUID=fca2c14c-ef33-4f44-a8d9-504dec23100a /mnt/chia/100a ext4 defaults,nofail 0 1
+UUID=6a508991-4a10-49da-a195-9c787879aa99 /mnt/chia/aa99 ext4 defaults,nofail 0 1
 
 sdb    cf0c6835-e5b1-439b-9610-03e7c81d345d
 └─sdc1 f75517c0-72d6-4b60-8b4d-22a1ad427f21
 sdd    fca2c14c-ef33-4f44-a8d9-504dec23100a
+sde     7.3T
+└─sde1  7.3T 6a508991-4a10-49da-a195-9c787879aa99
 
 mkdir /mnt/chia
 mkdir /mnt/chia/345d
