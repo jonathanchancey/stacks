@@ -9,7 +9,7 @@ spec:
     - name: http
       port: 3001
       targetPort: 3001
-  externalName: 10.10.0.5
+  externalName: 10.10.0.160
   selector:
     app.kubernetes.io/instance: traefik
     app.kubernetes.io/name: traefik
@@ -46,7 +46,7 @@ spec:
     - name: http
       port: 3001
       targetPort: 3001
-  externalName: 10.10.0.5
+  externalName: 10.10.0.160
   selector:
     app.kubernetes.io/instance: traefik
     app.kubernetes.io/name: traefik
