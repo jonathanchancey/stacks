@@ -13,3 +13,11 @@ services:
     ports:
       - "42407:8086"
     restart: unless-stopped
+  telegraf:
+    image: docker.io/telegraf:latest
+    container_name: telegraf
+    environment:
+      - INFLUX_TOKEN=REDACTED
+    volumes:
+      - /influxdb/telegraf/:/etc/telegraf/
+    command: telegraf --config https://influxdb.fkn.chancey.dev/api/v2/telegrafs/REDACTED
