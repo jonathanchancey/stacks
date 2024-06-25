@@ -25,9 +25,6 @@ data:
         - Github:
             - abbr: GH
               href: https://github.com/
-        - ChatGPT:
-            - abbr: GPT
-              href: https://chat.openai.com/
         - Claude:
             - abbr: CL
               href: https://claude.ai/chats/
@@ -41,9 +38,6 @@ data:
         - Calendar:
             - abbr: CAL
               href: https://calendar.proton.me/u/0
-        - Hacker News:
-            - abbr: PR
-              href: https://news.ycombinator.com/news
         - Kagi:
             - abbr: K
               href: https://kagi.com/
@@ -69,26 +63,6 @@ data:
           href: https://chicken.fkn.chancey.dev
           icon: si-cockpit-#3B66BC
           description: Okapi SMB Shares
-      - Home Assistant:
-          href: https://ha.fkn.chancey.dev
-          icon: home-assistant.png
-          description: Home Automation
-      - Klipper | Ender 3:
-          href: https://ender.fkn.chancey.dev
-          icon: si-creality
-          description: 3D Printer Automation
-      - Machinaris:
-          href: https://machinaris.fkn.chancey.dev/
-          icon: si-chianetwork-#5ECE71
-          description: Chia Management
-      - qBittorrent:
-          href: https://qbit.fkn.chancey.dev
-          icon: qbittorrent.svg
-          description: Download Client
-      - Syncthing:
-          href: https://syncthing.fkn.chancey.dev/
-          icon: syncthing.png
-          description: File Sync
       - Rancher | chancey.dev:
           href: https://rancher.k8s.chancey.dev/
           icon: rancher.png
@@ -101,11 +75,7 @@ data:
           href: https://apc.k8s.chancey.dev/
           icon: mdi-car-battery-#E21836
           description: Power Management
-      - ZITADEL:
-          href: https://auth.chancey.dev/
-          icon: zitadel.png
-          description: IdP
-    - Network and Metrics:
+    - Network:
       - Shar:
           href: https://shar.fkn.chancey.dev/
           icon: proxmox.png
@@ -122,31 +92,77 @@ data:
           href: https://traefik.fkn.chancey.dev/dashboard/#/
           icon: traefik.png
           description: Reverse Proxy
-      - Uptime Kuma:
-          href: https://uptime-kuma.fkn.chancey.dev/dashboard
-          icon: uptime-kuma.png
-          description: Status Page
-      - InfluxDB:
-          href: https://influxdb.fkn.chancey.dev/
-          icon: influxdb.png
-          description: Time Series Database
-      - Grafana:
-          href: https://grafana.chancey.dev/
-          icon: grafana.png
-          description: Observability Platform
       - SwOS:
           href: https://swos.k8s.chancey.dev/index.html
           icon: si-mikrotik-#CCCCCC
-          description: Mikrotik Switch
+          description: 24p Mikrotik Switch
+      - RouterOS:
+          href: https://routeros.k8s.chancey.dev
+          icon: si-mikrotik-#CCCCCC
+          description: 2.5Gb Mikrotik Switch
       - EAP:
           href: https://eap.k8s.chancey.dev/
           icon: si-tp-link-#4ACBD6
           description: Access Point
+    - Metrics:
+      - Grafana:
+          href: https://grafana.chancey.dev/
+          icon: grafana.png
+          description: Observability Platform
+      - Gatus:
+          href: https://status.chancey.dev/
+          icon: mdi-gate-#3cad4b
+          description: Status
       - Gotify:
           href: https://gotify.k8s.chancey.dev/
           icon: si-go-#00ADD8
           description: Alerts
+      - InfluxDB:
+          href: https://influxdb.fkn.chancey.dev/
+          icon: influxdb.png
+          description: Time Series Database
+      - Uptime Kuma:
+          href: https://uptime-kuma.fkn.chancey.dev/dashboard
+          icon: uptime-kuma.png
+          description: Status Page
+    - Services:
+      - ZITADEL:
+          href: https://auth.chancey.dev/
+          icon: zitadel.png
+          description: Identity Provider
+      - Miniflux:
+          href: https://miniflux.fkn.chancey.dev/
+          icon: miniflux.png
+          description: RSS Collection Manager
+      - Kawa:
+          href: https://kawa.k8s.chancey.dev/
+          icon: mdi-waves-#A22846
+          description: Garage Soundbar
+      - Home Assistant:
+          href: https://ha.fkn.chancey.dev
+          icon: home-assistant.png
+          description: Home Automation
+      - Klipper | Ender 3:
+          href: https://ender.fkn.chancey.dev
+          icon: si-creality
+          description: 3D Printer Automation
+      - Machinaris:
+          href: https://machinaris.fkn.chancey.dev/
+          icon: si-chianetwork-#5ECE71
+          description: Chia Management
+      - Download Client:
+          href: https://qbit.fkn.chancey.dev
+          icon: mdi-transfer-#68a9ed
+          description: Download Client
+      - Syncthing:
+          href: https://syncthing.fkn.chancey.dev/
+          icon: syncthing.png
+          description: File Sync
     - Media:
+      - Immich:
+          href: https://photos.fkn.chancey.dev/
+          icon: immich.png
+          description: Photo Collection Manager
       - Jellyfin:
           href: https://jellyfin.fkn.chancey.dev/
           icon: jellyfin.png
@@ -167,18 +183,6 @@ data:
           href: https://navi.fkn.chancey.dev/
           icon: navidrome.png
           description: Music Collection Manager
-      - Miniflux:
-          href: https://miniflux.fkn.chancey.dev/
-          icon: miniflux.png
-          description: RSS Collection Manager
-      - Immich:
-          href: https://photos.fkn.chancey.dev/
-          icon: immich.png
-          description: Photo Collection Manager
-      - Kawa:
-          href: https://kawa.k8s.chancey.dev/
-          icon: mdi-waves-#A22846
-          description: Garage Soundbar
 
   widgets.yaml: |
     - kubernetes:
