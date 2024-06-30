@@ -160,7 +160,7 @@ data:
           description: File Sync
     - Media:
       - Immich:
-          href: https://photos.fkn.chancey.dev/
+          href: https://photos.chancey.dev/
           icon: immich.png
           description: Photo Collection Manager
       - Jellyfin:
