@@ -32,10 +32,10 @@ config:
       url: https://ha.fkn.chancey.dev
       conditions:
       - '[STATUS] == 200'
-    - name: Klipper | Ender 3
-      url: https://ender.fkn.chancey.dev
-      conditions:
-      - '[STATUS] == 200'
+    # - name: Klipper | Ender 3
+    #   url: https://ender.fkn.chancey.dev
+    #   conditions:
+    #   - '[STATUS] == 200'
     - name: Machinaris
       url: https://machinaris.fkn.chancey.dev/
       conditions:
@@ -125,7 +125,7 @@ config:
       conditions:
       - '[STATUS] == 200'
     - name: Immich
-      url: https://photos.fkn.chancey.dev/
+      url: https://photos.chancey.dev/
       conditions:
       - '[STATUS] == 200'
     - name: Kawa
