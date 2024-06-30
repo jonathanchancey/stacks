@@ -1,0 +1,72 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+    name: personal-nfs-pv
+    namespace: immich
+    labels:
+        store: personal-nfs
+spec:
+    accessModes:
+        - ReadWriteMany
+    persistentVolumeReclaimPolicy: Retain
+    capacity:
+        storage: 10Ti
+    nfs:
+        server: ENC[AES256_GCM,data:r+TLjlHkY9whvkc=,iv:eDYaguZ6PMY4Qew+Q0eZAfgnfSY1TKnfZ7xsA5isuyM=,tag:LTTtAia4x5JECu8E+1w/Ow==,type:str]
+        path: /mnt/scale-worm/strawberry/personal/upload
+sops:
+    kms: []
+    gcp_kms: []
+    azure_kv: []
+    hc_vault: []
+    age:
+        - recipient: age1rl8s5e3al83x28ecwpn7ed3773uvyuhhvqujc47dz4chpw7xvc6qlzd8hq
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSA1ZTRuU1E3bEV1YkJ0RjlS
+            d3ViVHlkNFNpMHF4cENPSElvSXJnYnVvNGdVCjZIZWpic1Y5L091eUQ4TlFZZ2VR
+            RytubzdncmxmQThMMWE5NUZCdUZrUmMKLS0tIEZiVFVoY3QrR3pkVVlCQ0d4MHpU
+            UGpmZEZYYllDVTlLOFExa2hyNThmOUUKi+hK9apF3Cfci9rdATzj8/T8QYN/cxuo
+            UgCBUbcV2741+CAFsPoT0jt8DkAWbztPIKhZL/PLl8NdK12gseCypQ==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2024-06-30T04:03:29Z"
+    mac: ENC[AES256_GCM,data:ivqHaC2jvVoFwBjKfVovZbxjnv5gIsZ2u8MD9e3w7/i9dGkC8xbr2NeV2o5vEuCBKXGuDBWYrBXGhhPL4njz7Ank0V76fBAw+NpVNGrV7VEcjidGiTz0xgczzSrbz1MzZzTu7Zi4QZYWhHWMaqTgPrUnGlVCRqjrZTdf1V9F6q8=,iv:3h5x/vNTpfRB6l8vAVcRzg4nc8Qx6maiOTQ3g9rL3L4=,tag:Xog/JAlsjEUb7ZfPI2caQw==,type:str]
+    pgp: []
+    encrypted_regex: ^(username|password|user|pass|id|key|secret|server)$
+    version: 3.9.0
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+    name: personal-nfs-pvc
+    namespace: immich
+spec:
+    selector:
+        matchLabels:
+            store: personal-nfs
+    storageClassName: ""
+    accessModes:
+        - ReadWriteMany
+    resources:
+        requests:
+            storage: 10Ti
+sops:
+    kms: []
+    gcp_kms: []
+    azure_kv: []
+    hc_vault: []
+    age:
+        - recipient: age1rl8s5e3al83x28ecwpn7ed3773uvyuhhvqujc47dz4chpw7xvc6qlzd8hq
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSA1ZTRuU1E3bEV1YkJ0RjlS
+            d3ViVHlkNFNpMHF4cENPSElvSXJnYnVvNGdVCjZIZWpic1Y5L091eUQ4TlFZZ2VR
+            RytubzdncmxmQThMMWE5NUZCdUZrUmMKLS0tIEZiVFVoY3QrR3pkVVlCQ0d4MHpU
+            UGpmZEZYYllDVTlLOFExa2hyNThmOUUKi+hK9apF3Cfci9rdATzj8/T8QYN/cxuo
+            UgCBUbcV2741+CAFsPoT0jt8DkAWbztPIKhZL/PLl8NdK12gseCypQ==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2024-06-30T04:03:29Z"
+    mac: ENC[AES256_GCM,data:ivqHaC2jvVoFwBjKfVovZbxjnv5gIsZ2u8MD9e3w7/i9dGkC8xbr2NeV2o5vEuCBKXGuDBWYrBXGhhPL4njz7Ank0V76fBAw+NpVNGrV7VEcjidGiTz0xgczzSrbz1MzZzTu7Zi4QZYWhHWMaqTgPrUnGlVCRqjrZTdf1V9F6q8=,iv:3h5x/vNTpfRB6l8vAVcRzg4nc8Qx6maiOTQ3g9rL3L4=,tag:Xog/JAlsjEUb7ZfPI2caQw==,type:str]
+    pgp: []
+    encrypted_regex: ^(username|password|user|pass|id|key|secret|server)$
+    version: 3.9.0

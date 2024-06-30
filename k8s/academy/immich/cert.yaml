@@ -1,0 +1,14 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: immich-cert
+  namespace: immich
+spec:
+  secretName: immich-cert-tls
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  commonName: "photos.chancey.dev"
+  dnsNames:
+  - "photos.chancey.dev"

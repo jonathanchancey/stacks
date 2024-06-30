@@ -1,0 +1,21 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: immich-ingress
+  namespace: immich
+  annotations:
+    kubernetes.io/ingress.class: traefik-external
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`photos.chancey.dev`)
+      kind: Rule
+      priority: 1
+      services:
+        - name: immich-server
+          kind: Service
+          port: 3001
+  tls:
+    secretName: immich-cert-tls

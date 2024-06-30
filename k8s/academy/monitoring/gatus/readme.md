@@ -4,7 +4,7 @@
 kubectl create ns monitoring
 kubens monitoring
 helm repo add minicloudlabs https://minicloudlabs.github.io/helm-charts
-helm upgrade --install gatus -n monitoring -f values.yaml minicloudlabs/gatus
+helm upgrade --install gatus -n monitoring -f values.yaml minicloudlabs/gatus --reset-values
 ```
 
 ## parse_homepage

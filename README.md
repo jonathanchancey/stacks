@@ -1,4 +1,4 @@
-# Stacks - IaC for hosting simple functional services at home.
+# Stacks
 
 Hello and welcome to my homelab. I use this place to practice DevOps concepts and for hosting simple functional services at home.
 
