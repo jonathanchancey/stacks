@@ -132,4 +132,3 @@ config:
       url: https://kawa.k8s.chancey.dev/
       conditions:
       - '[STATUS] == 200'
-
