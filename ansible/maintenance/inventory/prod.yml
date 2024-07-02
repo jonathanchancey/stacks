@@ -1,0 +1,5 @@
+lxc:
+  hosts:
+    wombat:
+      ansible_host: wombat
+      ansible_user: root
