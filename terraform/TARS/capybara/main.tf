@@ -1,0 +1,29 @@
+module "capybara" {
+  source                       = "../../modules/proxmox-vm"
+  name                         = "capybara"
+  description                  = "Managed by Terraform"
+  tags                         = ["debian", "terraform"]
+  node_name                    = "TARS"
+  cloud_image_node_name        = "TARS"
+  datastore_id                 = "cornfield"
+  cloud_image_datastore_id     = "local"
+  vm_id                        = 129
+  memory_dedicated             = 16384
+  cpu_cores                    = 8
+  disk_size                    = 30
+  dns_domain                   = "local"
+  dns_servers                  = ["10.10.0.3"]
+  ip_config_gateway            = ""
+  ip_config_ipv4               = "dhcp"
+  sshkeys                      = var.sshkeys
+  username                     = var.username
+  password                     = var.password
+  reboot                       = false
+  cloud_image_url              = "https://cloud.debian.org/images/cloud/bookworm/20240701-1795/debian-12-generic-amd64-20240701-1795.qcow2"
+  cloud_image_file_name        = "debian-12-generic-amd64-20240701-1795.img"
+  cloud_image_checksum         = ""
+  virtual_environment_endpoint = var.virtual_environment_endpoint
+  virtual_environment_password = var.virtual_environment_password
+  virtual_environment_username = var.virtual_environment_username
+  tpm_state_datastore_id = "local"
+}
