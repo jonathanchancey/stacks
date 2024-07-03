@@ -3,3 +3,6 @@ lxc:
     wombat:
       ansible_host: wombat
       ansible_user: root
+    wombat:
+      ansible_host: capybara
+      ansible_user: jorn
