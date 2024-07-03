@@ -13,7 +13,7 @@ env:
     DB_PASSWORD: '{{ .Values.postgresql.global.postgresql.auth.password }}'
     IMMICH_MACHINE_LEARNING_URL: '{{ printf "http://%s-machine-learning:3003" .Release.Name }}'
 image:
-    tag: v1.106.4
+    tag: v1.107.1
 immich:
     metrics:
         # Enabling this will create the service monitors needed to monitor immich with the prometheus operator
