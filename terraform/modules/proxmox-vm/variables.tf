@@ -39,7 +39,7 @@ variable "vm_id" {
 
 variable "datastore_id" {
   type      = string
-  default   = "hydra"
+  default   = "local"
   sensitive = true
 }
 
@@ -64,7 +64,7 @@ variable "dns_domain" {
 
 variable "dns_servers" {
   type    = list(string)
-  default = ["10.30.0.1", "1.1.1.1"]
+  default = ["10.10.0.3", "1.1.1.1"]
 }
 
 variable "ip_config_ipv4" {
@@ -74,12 +74,12 @@ variable "ip_config_ipv4" {
 
 variable "ip_config_gateway" {
   type    = string
-  default = "10.30.0.1"
+  default = "10.10.0.1"
 }
 
 variable "network_device_vlan_id" {
   type    = number
-  default = 30
+  default = 0
 }
 
 variable "disk_size" {
@@ -129,7 +129,6 @@ variable "cloud_image_content_type" {
 
 variable "cloud_image_datastore_id" {
   type    = string
-  default = "chimera"
 }
 
 variable "cloud_image_node_name" {
@@ -144,12 +143,10 @@ variable "cloud_image_checksum" {
 
 variable "cloud_image_url" {
   type    = string
-  default = "https://cloud-images.ubuntu.com/releases/22.04/release/ubuntu-22.04-server-cloudimg-amd64.img"
 }
 
 variable "cloud_image_file_name" {
   type    = string
-  default = "ubuntu-22.04-server-cloudimg-amd64.img"
 }
 
 variable "additional_disk_size" {
