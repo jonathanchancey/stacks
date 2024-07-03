@@ -9,12 +9,13 @@
       force_apt_get: yes
       cache_valid_time: 3600
 
-  # - name: apt upgrade
-  #   apt:
-  #     upgrade: dist
+  - name: apt upgrade
+    apt:
+      upgrade: dist
 
   # - name: remove old packages and clean cache
   #   apt:
   #     autoremove: yes
   #     autoclean: yes
   #     clean: yes
+
