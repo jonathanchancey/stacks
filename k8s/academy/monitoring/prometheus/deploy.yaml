@@ -13,6 +13,10 @@ spec:
       labels:
         app: prometheus-server
     spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
       containers:
         - name: prometheus
           image: prom/prometheus
@@ -26,11 +30,11 @@ spec:
       volumes:
         - name: config-volume
           configMap:
-            name: prometheus-server-conf
+            name: prometheus-server-conf-gt5ctb4fmm
             defaultMode: 420
         - name: prom-pvc
           persistentVolumeClaim:
-            claimName: prometheus
+            claimName: promhorn
 ---
 apiVersion: v1
 kind: Service
