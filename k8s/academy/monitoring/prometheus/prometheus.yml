@@ -11,36 +11,16 @@ scrape_configs:
         labels:
           application: 'chia-blockchain'
           network: 'mainnet'
-  - job_name: 'KIPP'
+  - job_name: 'node_exporter'
     static_configs:
       - targets: ['KIPP:9100']
-  - job_name: 'reap'
-    static_configs:
       - targets: ['reap:9100']
-  - job_name: 'beholder'
-    static_configs:
       - targets: ['beholder:9100']
-  - job_name: 'sculpin'
-    static_configs:
       - targets: ['sculpin:9100']
-  - job_name: 'salamander'
-    static_configs:
       - targets: ['salamander:9100']
-  - job_name: 'chicken'
-    static_configs:
       - targets: ['chicken:9100']
-  - job_name: 'acolyte-00'
-    static_configs:
       - targets: ['acolyte-00:9100']
-  - job_name: 'acolyte-01'
-    static_configs:
       - targets: ['acolyte-01:9100']
-  - job_name: 'acolyte-02'
-    static_configs:
       - targets: ['acolyte-02:9100']
-  - job_name: 'neophyte-01'
-    static_configs:
       - targets: ['neophyte-01:9100']
-  - job_name: 'neophyte-02'
-    static_configs:
       - targets: ['neophyte-02:9100']

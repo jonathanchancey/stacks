@@ -5,6 +5,8 @@ metadata:
   namespace: grafana
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: prometheus-server
@@ -30,7 +32,7 @@ spec:
       volumes:
         - name: config-volume
           configMap:
-            name: prometheus-server-conf-gt5ctb4fmm
+            name: prometheus-server-conf-42592bth7h
             defaultMode: 420
         - name: prom-pvc
           persistentVolumeClaim:
