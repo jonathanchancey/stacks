@@ -13,7 +13,7 @@ env:
     DB_PASSWORD: '{{ .Values.postgresql.global.postgresql.auth.password }}'
     IMMICH_MACHINE_LEARNING_URL: '{{ printf "http://%s-machine-learning:3003" .Release.Name }}'
 image:
-    tag: v1.107.1
+    tag: v1.107.2
 immich:
     metrics:
         # Enabling this will create the service monitors needed to monitor immich with the prometheus operator
@@ -46,9 +46,9 @@ postgresql:
         storageClass: longhorn
         postgresql:
             auth:
-                username: ENC[AES256_GCM,data:QkvVjdhfbjw=,iv:f7v2UKfl6zHsIb5xZcSLoBS7AWN0zEWDcmEJVFt+dKA=,tag:RcibrOQCm7ljc/j/i3P37w==,type:str]
+                username: ENC[AES256_GCM,data:XKs9FISrdzU=,iv:kaO02PcB3AjKwQX6I8puZ7kGXX3OAZ3uG+nItvX4oEg=,tag:5TqfremBzaX/1r+4mw02qg==,type:str]
                 database: immich
-                password: ENC[AES256_GCM,data:Vtk3j3MORfmY4lSwhIBO+Z2aXGFlopZBDly+wZ526gY=,iv:aYhVYIjHQvc4YhtKDFQ8ENBrQ8mD3EMSagEpfpbE258=,tag:IgGvCIIpDxk9lzRQdn/QYg==,type:str]
+                password: ENC[AES256_GCM,data:cdFaH0fEuijUmOMPEWQ2TQeLrXuo4bwJBrplkQpcZsA=,iv:yB40I9XHhJSQfdakb6ImLqDfajb/aGwLVJE24HCANT4=,tag:Fha3EMrVlGFLPvQq5trKpQ==,type:str]
     primary:
         initdb:
             scripts:
@@ -65,20 +65,20 @@ redis:
         enabled: false
 # Immich components
 server:
-    enabled: true
+    enabled: ENC[AES256_GCM,data:acQZzg==,iv:PgKIjVA6vzceCYRmNiLjtpilTrUHJ5VVOljZPBdJIvg=,tag:eWdnBwzWWmxGEBwH10ZNkw==,type:bool]
     image:
-        repository: ghcr.io/immich-app/immich-server
-        pullPolicy: IfNotPresent
+        repository: ENC[AES256_GCM,data:Yl6gHi4LH47GKlz4xEQeLf3MqH74XTPgNRYnPw9tqY0=,iv:b2HxCAdVIhJcQyVlX4XNcsy2idwjqYGxTBN2KZ7U1nc=,tag:g1Y9e4J3B4tO7BQlF5FUjg==,type:str]
+        pullPolicy: ENC[AES256_GCM,data:hp9MXnJxAIiv2hXi,iv:9LWHzdE1GcTT2ZIxBGwzVvWsl6/9P0qKAPB1vizFfXs=,tag:b7Fzzs7c2QYq34WZ3eEslw==,type:str]
     ingress:
         main:
-            enabled: false
+            enabled: ENC[AES256_GCM,data:QKYFbpU=,iv:jYAkmqImWazdb28EY0319lNdvt9kFcXcRV4KHRxDeGk=,tag:Qk5Tw7RKrQiJn/ud/T/9VQ==,type:bool]
             annotations:
-                # proxy-body-size is set to 0 to remove the body limit on file uploads
-                nginx.ingress.kubernetes.io/proxy-body-size: "0"
+                #ENC[AES256_GCM,data:14LM3AbnhLNtfvn5NGvVGFR9VCuQ6UpRZAHV/fMko9jXXOjPDsDAO7f3JzsKoHzAA/t3cD3055vCEs6aWRp7NRpfu21H,iv:h616G8xGg9jgW+CbYKYZoVPQVeX7xLHPZqzWkopFDxg=,tag:i+DAo4HqzYzLRVFcSCLPUQ==,type:comment]
+                nginx.ingress.kubernetes.io/proxy-body-size: ENC[AES256_GCM,data:lA==,iv:K38lZSbfLLPYPgYrjtc+i9qaOq/d4IWq83ofTfV9TTQ=,tag:FzU8fJSA22wvkz/zIeapDQ==,type:str]
             hosts:
-                - host: immich.local
+                - host: ENC[AES256_GCM,data:pl+6kCj92sOVHEGd,iv:vuLngRLJzTAbbfO5lqkeGo/UCMkh61NarYBhrH3jx9g=,tag:rqYRikk9znZVn0z+xLWLTg==,type:str]
                   paths:
-                    - path: /
+                    - path: ENC[AES256_GCM,data:CA==,iv:OWVH8LGbcosJurLX7CXN7dt3MlaWpA15rN85yZE8avs=,tag:xS0FDqhwdYyEmi/JxLgDkw==,type:str]
             tls: []
 machine-learning:
     enabled: true
@@ -104,14 +104,14 @@ sops:
         - recipient: age1rl8s5e3al83x28ecwpn7ed3773uvyuhhvqujc47dz4chpw7xvc6qlzd8hq
           enc: |
             -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSAxT1NNRFN6UGluTlN5VGVB
-            YTRBK3lsZnNhVWpvTElVTlh3dTNVM1o2Nmw0Cmx1YVZvanFBNkJjMWJmbXFibXJh
-            N00rU09MMHYrUlEyS0xJZmllazJDY28KLS0tIEcwT0Q0M081SFBtMHBhVVlydTdl
-            M2ZKcGp1cHcwNWliTE1oYW82S1Rpek0KLM+q7PMPwmNOuvOOhw+yp2NLvtdSbHw5
-            dB19i3Pfo7n3MvP8RBmIM/NJU3GC4Y2t6AmUQx2UscPnfS9DAcFYEg==
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBPVFIwbHlrMWNocit1VGVm
+            OWEwS1dIdFp4TFFFc2s1cmxVTXRGU2lQZkNRCnhaeVM5dTlaVVhKYkhWRUliYnBK
+            Tm1ROEFKZmJzVWNHa2hqRHRQNGJXMjgKLS0tIFVUazlwWmlPZXFVazBMQzU3Qzda
+            ekJKN0pROVJCTFF5bzVNU05iODFnbkEKu+cs5BNiZR80qz0dm75pGPAbROeCQZwH
+            eLJW3pt3QEbnwhuLh1ESaAIK8av0Od8pOp14uuj0k2Imn9vWUq3Tww==
             -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2024-06-30T03:51:58Z"
-    mac: ENC[AES256_GCM,data:UdBuVERP5/1DdW/rQEdKzs/F0U0K6jBkWFXF8wtICmrlHIr7Xpyz4TRdqgs5J7MK0M0mur4WOhmtt3Zwk7iP+ZHvsekx10QdSePiURh/Kc7InrUZ6rKFRJOP6haKskbtxs7EA1Gq7oDhdtEYu1wOtMrnCC0AsbL9RwSYdOKtmNE=,iv:0oBwE4+FNvgXKEJs+wFdBDwIO8czqOv025R4TZMYYY4=,tag:IHHvyMJAWl033ECjZb0i+w==,type:str]
+    lastmodified: "2024-07-03T18:54:53Z"
+    mac: ENC[AES256_GCM,data:yB+Vk64kfnrlqg/ZOO5tIWVvZ50s2UkmES2el39eRAjAnf+rqeMMmFqDezqyqaja22EV4Ly3zjgfaXStKH4cik6+NMSEIjMWQ92GJvpIyuIp3XKk3mf5ODKIM5idkY5n6JXvoN2UTMjyf/yZ5h5F0JFpzV06l57w4eWwmeuGqC8=,iv:mGJlu5j999/0HqA1Z2yqai3gv/S+2jw1uSxf0UBUw0Q=,tag:7kY4XQ6wlHpw9nhjFk5TWQ==,type:str]
     pgp: []
-    encrypted_regex: ^(username|password|user|pass|id|key|secret)$
+    encrypted_regex: ^(username|password|user|pass|id|key|secret|server)$
     version: 3.9.0
