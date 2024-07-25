@@ -1,0 +1,32 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: immich-db-backup
+  namespace: immich
+spec:
+  template:
+    spec:
+      containers:
+      - name: backup
+        image: docker.io/tensorchord/pgvecto-rs:pg14-v0.2.0
+        command:
+        - /bin/sh
+        - -c
+        - |
+          pg_dumpall --clean --if-exists --username=postgres | gzip > /backup/dump_$(date +%Y-%m-%d).sql.gz
+        env:
+        - name: PGHOST
+          value: "immich-postgres"  # Replace with your database service name
+        - name: PGPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: immich-postgresql
+              key: postgres-password
+        volumeMounts:
+        - name: backup-volume
+          mountPath: /backup
+      restartPolicy: OnFailure
+      volumes:
+      - name: backup-volume
+        persistentVolumeClaim:
+          claimName: immich-postgres-backup
