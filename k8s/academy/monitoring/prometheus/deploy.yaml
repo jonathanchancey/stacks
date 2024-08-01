@@ -32,7 +32,7 @@ spec:
       volumes:
         - name: config-volume
           configMap:
-            name: prometheus-server-conf-42592bth7h
+            name: prometheus-server-conf-h98g4mbk2f
             defaultMode: 420
         - name: prom-pvc
           persistentVolumeClaim:
