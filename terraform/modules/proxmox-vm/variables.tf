@@ -59,22 +59,32 @@ variable "sshkeys" {
 
 variable "dns_domain" {
   type    = string
-  default = "local"
+  default = ""
 }
 
 variable "dns_servers" {
   type    = list(string)
-  default = ["10.10.0.3", "1.1.1.1"]
+  default = []
 }
 
 variable "ip_config_ipv4" {
   type    = string
-  default = "dhcp"
+  default = ""
 }
 
 variable "ip_config_gateway" {
   type    = string
-  default = "10.10.0.1"
+  default = ""
+}
+
+variable "ip_config_ipv6_address" {
+  type    = string
+  default = ""
+}
+
+variable "ip_config_ipv6_gateway" {
+  type    = string
+  default = ""
 }
 
 variable "network_device_vlan_id" {

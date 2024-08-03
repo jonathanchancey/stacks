@@ -23,6 +23,10 @@ resource "proxmox_virtual_environment_vm" "vm" {
         address = var.ip_config_ipv4
         gateway = var.ip_config_gateway
       }
+      ipv6 {
+        address = var.ip_config_ipv6_address
+        gateway = var.ip_config_ipv6_gateway
+      }
     }
   }
 
