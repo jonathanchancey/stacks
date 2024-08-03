@@ -9,7 +9,7 @@ spec:
     - name: http
       port: 80
       targetPort: 80
-  externalName: 10.10.0.127
+  externalName: 10.10.0.6
   selector:
     app.kubernetes.io/instance: traefik
     app.kubernetes.io/name: traefik
