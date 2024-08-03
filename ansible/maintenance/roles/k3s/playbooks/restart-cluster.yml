@@ -1,0 +1,64 @@
+---
+- name: Taint, Drain, and Restart Kubernetes Nodes
+  hosts: k8s_nodes
+  become: yes
+  serial: 1  # Process one node at a time
+
+  vars:
+    node_name: "{{ inventory_hostname }}"
+    max_wait_time: 300  # Maximum time to wait for node to come back up (in seconds)
+
+  tasks:
+    - name: Taint the node
+      kubernetes:
+        kind: Node
+        name: "{{ node_name }}"
+        api_version: v1
+        state: present
+        resource_definition:
+          spec:
+            taints:
+              - effect: NoSchedule
+                key: node.kubernetes.io/unschedulable
+                value: "true"
+      delegate_to: localhost
+
+    - name: Drain the node
+      k8s_drain:
+        name: "{{ node_name }}"
+        delete_emptydir_data: yes
+        ignore_daemonsets: yes
+        force: yes
+      delegate_to: localhost
+
+    - name: Restart the node
+      reboot:
+        reboot_timeout: 600
+
+    - name: Wait for node to be ready
+      k8s_info:
+        kind: Node
+        name: "{{ node_name }}"
+      register: node_info
+      until: node_info.resources[0].status.conditions | selectattr('type', 'equalto', 'Ready') | map(attribute='status') | first == "True"
+      retries: "{{ (max_wait_time | int / 5) | int }}"
+      delay: 5
+      delegate_to: localhost
+
+    - name: Remove taint from the node
+      kubernetes:
+        kind: Node
+        name: "{{ node_name }}"
+        api_version: v1
+        state: present
+        resource_definition:
+          spec:
+            taints: []
+      delegate_to: localhost
+
+    - name: Verify node is schedulable
+      k8s_info:
+        kind: Node
+        name: "{{ node_name }}"
+      register: node_info
+      failed_when: node_info.resources[0].spec.unschedulable
