@@ -16,7 +16,7 @@ services:
       - 8123:8123
     restart: unless-stopped
   machinaris:
-    image: ghcr.io/guydavis/machinaris:latest
+    image: ghcr.io/guydavis/machinaris:2.4.1
     container_name: machinaris
     restart: unless-stopped
     volumes:
