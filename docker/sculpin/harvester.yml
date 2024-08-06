@@ -1,7 +1,7 @@
 version: "3.7"
 services:
   machinaris:
-      image: ghcr.io/guydavis/machinaris:2.4.1
+      image: ghcr.io/guydavis/machinaris:v2.4.1
       container_name: machinaris
       hostname: sculpin-harvester
       restart: always
