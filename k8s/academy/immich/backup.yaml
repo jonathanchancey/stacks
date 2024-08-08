@@ -32,4 +32,4 @@ spec:
           volumes:
           - name: backup-volume
             persistentVolumeClaim:
-              claimName: immich-postgres-backup
+              claimName: immich-postgres-backup-nfs

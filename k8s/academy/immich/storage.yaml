@@ -43,3 +43,16 @@ spec:
     requests:
       storage: 5Gi
   storageClassName: longhorn
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+    name: immich-postgres-backup-nfs
+    namespace: immich
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: academy-smb
