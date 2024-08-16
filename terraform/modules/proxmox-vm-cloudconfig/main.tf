@@ -4,11 +4,24 @@ resource "proxmox_virtual_environment_vm" "vm" {
   description = var.description
   tags        = var.tags
   vm_id       = var.vm_id
+  agent {
+    enabled = true
+  }
 
   initialization {
     datastore_id = var.datastore_id
 
     user_data_file_id = proxmox_virtual_environment_file.cloud_config.id
+    # dns {
+    #   domain  = var.dns_domain
+    #   servers = var.dns_servers
+    # }
+    ip_config {
+      ipv6 {
+        address = var.ip_config_ipv6_address
+        # gateway = var.ip_config_ipv6_gateway
+      }
+    }
   }
 
   network_device {
@@ -46,7 +59,7 @@ resource "proxmox_virtual_environment_vm" "vm" {
 
   tpm_state {
     datastore_id = var.tpm_state_datastore_id
-    version = var.tpm_state
+    version      = var.tpm_state
   }
 
   dynamic "clone" {
@@ -83,32 +96,6 @@ resource "proxmox_virtual_environment_file" "cloud_image" {
   }
 }
 
-  # initialization {
-  #   datastore_id = var.datastore_id
-  #   user_account {
-  #     username = var.username
-  #     password = var.password
-  #     keys     = var.sshkeys
-  #   }
-
-  #   dns {
-  #     domain  = var.dns_domain
-  #     servers = var.dns_servers
-  #   }
-
-  #   user_data_file_id = proxmox_virtual_environment_file.cloud_config.id
-
-  #   ip_config {
-  #     ipv4 {
-  #       address = var.ip_config_ipv4
-  #       gateway = var.ip_config_gateway
-  #     }
-  #     ipv6 {
-  #       address = var.ip_config_ipv6_address
-  #       gateway = var.ip_config_ipv6_gateway
-  #     }
-  #   }
-  # }
 resource "proxmox_virtual_environment_file" "cloud_config" {
   content_type = "snippets"
   datastore_id = var.cloud_image_datastore_id
@@ -122,18 +109,30 @@ resource "proxmox_virtual_environment_file" "cloud_config" {
         ${var.username}:${var.password}
       expire: false
     hostname: ${var.name}
+    fqdn: ${var.name}.${var.dns_domain}
+    ssh_pwauth: false
+    package_update: true
+    package_upgrade: true
+    manage_etc_hosts: true
+
     packages:
       - qemu-guest-agent
+    runcmd:
+      - timedatectl set-timezone UTC
+      - systemctl enable qemu-guest-agent
+      - systemctl start qemu-guest-agent
+      - echo "done" > /tmp/cloud-config.done
     users:
       - default
       - name: ${var.username}
         groups: sudo
         shell: /bin/bash
         ssh-authorized-keys:
-          - ${trimspace(tls_private_key.example.public_key_openssh)}
+          - ${yamlencode(var.sshkeys)}
         sudo: ALL=(ALL) NOPASSWD:ALL
+
     EOF
 
-    file_name = "cloud-config.yaml"
+    file_name = "cloud-config-${var.vm_id}.yaml"
   }
 }

@@ -138,7 +138,7 @@ variable "cloud_image_content_type" {
 }
 
 variable "cloud_image_datastore_id" {
-  type    = string
+  type = string
 }
 
 variable "cloud_image_node_name" {
@@ -152,11 +152,11 @@ variable "cloud_image_checksum" {
 }
 
 variable "cloud_image_url" {
-  type    = string
+  type = string
 }
 
 variable "cloud_image_file_name" {
-  type    = string
+  type = string
 }
 
 variable "additional_disk_size" {
