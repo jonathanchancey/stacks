@@ -19,14 +19,17 @@ resource "proxmox_virtual_environment_vm" "vm" {
       servers = var.dns_servers
     }
 
-    ip_config {
-      ipv4 {
-        address = var.ip_config_ipv4
-        gateway = var.ip_config_gateway
-      }
-      ipv6 {
-        address = var.ip_config_ipv6_address
-        gateway = var.ip_config_ipv6_gateway
+    dynamic "ip_config" {
+      for_each = var.ip_config != null ? [var.ip_config] : []
+      content {
+        ipv4 {
+          address = var.ip_config.ipv4_address
+          gateway = var.ip_config.ipv4_gateway
+        }
+        ipv6 {
+          address = var.ip_config.ipv6_address
+          gateway = var.ip_config.ipv6_gateway
+        }
       }
     }
   }
@@ -60,7 +63,8 @@ resource "proxmox_virtual_environment_vm" "vm" {
   lifecycle {
     ignore_changes = [
       disk[0].file_format,
-      disk[0].path_in_datastore
+      disk[0].path_in_datastore,
+      initialization[0].user_data_file_id,
     ]
   }
 
