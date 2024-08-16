@@ -8,7 +8,7 @@ output "vm_id" {
   value       = proxmox_virtual_environment_vm.vm.id
 }
 
-output "vm_ipv6_address" {
+output "vm_ipv6_addresses" {
   description = "The IPv6 address assigned to the VM via DHCP"
-  value       = proxmox_virtual_environment_vm.vm.ipv6_addresses[0]
+  value       = proxmox_virtual_environment_vm.vm.ipv6_addresses
 }
