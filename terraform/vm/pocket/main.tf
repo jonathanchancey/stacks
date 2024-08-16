@@ -1,19 +1,21 @@
-module "spot" {
-  source                       = "../../modules/proxmox-vm"
-  name                         = "spot"
-  description                  = "Managed by Terraform"
-  tags                         = ["debian", "terraform"]
-  node_name                    = "TARS"
-  cloud_image_node_name        = "TARS"
-  datastore_id                 = "cornfield"
-  cloud_image_datastore_id     = "local"
-  vm_id                        = 131
-  memory_dedicated             = 4096
-  cpu_cores                    = 4
-  disk_size                    = 10
-  ip_config_ipv6_address       = "dhcp"
-  ip_config_ipv6_gateway       = var.ip_config_ipv6_gateway
-  dns_domain                   = "local"
+module "pocket" {
+  source                   = "../../modules/proxmox-vm-cloudconfig"
+  name                     = "pocket"
+  description              = "Managed by Terraform"
+  tags                     = ["debian", "terraform"]
+  node_name                = "TARS"
+  cloud_image_node_name    = "TARS"
+  datastore_id             = "cornfield"
+  cloud_image_datastore_id = "local"
+  vm_id                    = 132
+  memory_dedicated         = 4096
+  cpu_cores                = 4
+  disk_size                = 10
+  ip_config = {
+    ipv6_address = "dhcp"
+    ipv6_gateway = ""
+  }
+  dns_domain                   = ""
   dns_servers                  = var.dns_servers
   sshkeys                      = var.sshkeys
   username                     = var.username
