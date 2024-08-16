@@ -34,12 +34,13 @@ variable "dns_servers" {
   default = []
 }
 
-variable "ip_config_ipv6_address" {
-  type    = string
-  default = ""
-}
-
-variable "ip_config_ipv6_gateway" {
-  type    = string
-  default = ""
-}
+# variable "ip_config" {
+#   description = "IP configuration for the VM"
+#   type = object({
+#     ipv4_address = optional(string)
+#     ipv4_gateway = optional(string)
+#     ipv6_address = optional(string)
+#     ipv6_gateway = optional(string)
+#   })
+#   default = null
+# }
