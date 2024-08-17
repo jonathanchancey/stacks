@@ -21,3 +21,4 @@ services:
     volumes:
       - /influxdb/telegraf/:/etc/telegraf/
     command: telegraf --config https://influxdb.fkn.chancey.dev/api/v2/telegrafs/REDACTED
+    restart: unless-stopped
