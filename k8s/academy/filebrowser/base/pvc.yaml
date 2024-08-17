@@ -10,7 +10,7 @@ spec:
   resources:
     requests:
       storage: 100Gi
-  storageClassName: ceph-rbd
+  storageClassName: academy-smb
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
@@ -22,18 +22,5 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 10Gi
-  storageClassName: ceph-rbd
----
-kind: PersistentVolumeClaim
-apiVersion: v1
-metadata:
-  name: filebrowser-config
-  namespace: filebrowser
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
-  storageClassName: ceph-rbd
+      storage: 2Gi
+  storageClassName: longhorn

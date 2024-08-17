@@ -10,23 +10,12 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`filebrowser.dcnt.company`)
+    - match: Host(`filebrowser.k8s.chancey.dev`)
       kind: Rule
-      priority: 0
+      priority: 1
       services:
         - name: filebrowser
+          kind: Service
           port: 80
-      middlewares:
-        - name: default-headers
-        - name: authentik
-          namespace: authentik
-    - match: "Host(`filebrowser.dcnt.company`) && PathPrefix(`/outpost.goauthentik.io/`)"
-      kind: Rule
-      priority: 15
-      services:
-          - kind: Service
-            name: ak-outpost-authentik-embedded-outpost
-            namespace: authentik
-            port: 9000
   tls:
-    secretName: k8s-dcnt-company-tls
+    secretName: k8s-chancey-dev-tls
