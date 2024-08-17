@@ -60,14 +60,6 @@ resource "proxmox_virtual_environment_vm" "vm" {
     }
   }
 
-  lifecycle {
-    ignore_changes = [
-      disk[0].file_format,
-      disk[0].path_in_datastore,
-      initialization[0].user_data_file_id,
-    ]
-  }
-
   tpm_state {
     datastore_id = var.tpm_state_datastore_id
     version      = var.tpm_state
@@ -90,6 +82,14 @@ resource "proxmox_virtual_environment_vm" "vm" {
 
   template = var.template
   reboot   = var.reboot
+
+  lifecycle {
+    ignore_changes = [
+      disk[0].file_format,
+      disk[0].path_in_datastore,
+      initialization[0].user_data_file_id,
+    ]
+  }
 }
 
 resource "proxmox_virtual_environment_file" "cloud_image" {
@@ -141,7 +141,13 @@ resource "proxmox_virtual_environment_file" "cloud_config" {
         ssh-authorized-keys:
           - ${yamlencode(var.sshkeys)}
         sudo: ALL=(ALL) NOPASSWD:ALL
-
+      - name: ansible
+        groups: users,admin,wheel
+        shell: /bin/bash
+        sudo: ALL=(ALL) NOPASSWD:ALL
+        lock_passwd: true
+        ssh_authorized_keys:
+          - ${yamlencode(var.sshkeys)}
     EOF
 
     file_name = "cloud-config-${var.vm_id}.yaml"
