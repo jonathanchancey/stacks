@@ -183,6 +183,10 @@ data:
           href: https://navi.fkn.chancey.dev/
           icon: navidrome.png
           description: Music Collection Manager
+      - Filebrowser:
+          href: https://filebrowser.k8s.chancey.dev/
+          icon: filebrowser.png
+          description: Music Collection Manager
 
   widgets.yaml: |
     - kubernetes:
