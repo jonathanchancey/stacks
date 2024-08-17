@@ -1,5 +1,5 @@
 ---
-- hosts: proxmox
+- hosts: all
   name: update apt
 
   tasks:
