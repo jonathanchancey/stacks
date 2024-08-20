@@ -210,7 +210,7 @@ variable "tpm_state_datastore_id" {
 
 variable "cloud_image_manage_etc_hosts" {
   type        = string
-  default     = "false"
+  default     = "true"
   description = "This module will update the contents of the local hosts database (hosts file, usually /etc/hosts) based on the hostname/FQDN specified in config."
 }
 
