@@ -6,7 +6,7 @@ resource "proxmox_virtual_environment_vm" "vm" {
   vm_id       = var.vm_id
 
   agent {
-    enabled = true
+    enabled = var.agent
   }
 
   initialization {
@@ -47,7 +47,7 @@ resource "proxmox_virtual_environment_vm" "vm" {
     size         = var.disk_size
   }
 
-  // Dynamic block for optional additional disk
+  # Dynamic block for optional additional disk
   dynamic "disk" {
     for_each = var.additional_disk_size > 0 ? [1] : []
     content {
@@ -120,19 +120,14 @@ resource "proxmox_virtual_environment_file" "cloud_config" {
         ${var.username}:${var.password}
       expire: false
     hostname: ${var.name}
-    fqdn: ${var.name}.${var.dns_domain}
-    ssh_pwauth: false
-    package_update: true
+    fqdn: ${var.fqdn}
+    ssh_pwauth: ${var.cloud_image_ssh_pwauth}
     package_upgrade: true
-    manage_etc_hosts: true
-
+    manage_etc_hosts: ${var.cloud_image_manage_etc_hosts}
     packages:
-      - qemu-guest-agent
+      - ${yamlencode(var.cloud_image_packages)}
     runcmd:
-      - timedatectl set-timezone UTC
-      - systemctl enable qemu-guest-agent
-      - systemctl start qemu-guest-agent
-      - echo "done" > /tmp/cloud-config.done
+      - ${yamlencode(var.cloud_image_runcmd)}
     users:
       - default
       - name: ${var.username}
