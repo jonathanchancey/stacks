@@ -1,22 +1,18 @@
 module "pocket" {
-  source                   = "../../modules/proxmox-vm-cloudconfig"
-  name                     = "pocket"
-  description              = "Managed by Terraform"
-  tags                     = ["debian", "terraform"]
-  node_name                = "TARS"
-  cloud_image_node_name    = "TARS"
-  datastore_id             = "cornfield"
-  cloud_image_datastore_id = "local"
-  vm_id                    = 132
-  memory_dedicated         = 4096
-  cpu_cores                = 4
-  disk_size                = 10
-  ip_config = {
-    ipv6_address = "dhcp"
-    ipv6_gateway = ""
-  }
-  dns_domain                   = ""
-  dns_servers                  = var.dns_servers
+  source                       = "../../modules/proxmox-vm-cloudconfig"
+  name                         = "pocket"
+  description                  = "Managed by Terraform"
+  tags                         = ["debian", "terraform"]
+  node_name                    = "TARS"
+  cloud_image_node_name        = "TARS"
+  datastore_id                 = "cornfield"
+  cloud_image_datastore_id     = "local"
+  vm_id                        = 132
+  memory_dedicated             = 4096
+  cpu_cores                    = 4
+  disk_size                    = 10
+  fqdn                         = "pocket.internal"
+  dns_domain                   = "internal"
   sshkeys                      = var.sshkeys
   username                     = var.username
   password                     = var.password
@@ -29,4 +25,8 @@ module "pocket" {
   virtual_environment_username = var.virtual_environment_username
   tpm_state_datastore_id       = "local"
   network_device_vlan_id       = 131
+  ip_config = {
+    ipv6_address = "dhcp"
+    ipv6_gateway = ""
+  }
 }
