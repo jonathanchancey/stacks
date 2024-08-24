@@ -28,6 +28,8 @@ locals {
       disk_size              = 10
       network_device_vlan_id = 131
       fqdn                   = "pocket.internal"
+      # ansible_group_name     = "testing"
+      # ansible_group_children = ["kube_control_plane", "kube_node"]
       ip_config = {
         ipv6_address = "dhcp"
         ipv6_gateway = ""
@@ -64,6 +66,8 @@ module "vm" {
   fqdn                   = each.value.fqdn
   network_device_vlan_id = each.value.network_device_vlan_id
   ip_config              = each.value.ip_config
+  # ansible_group_name     = each.value.ansible_group_name
+  # ansible_group_children = each.value.ansible_group_children
 
   # Common Configuration
   description                  = local.common_config.description

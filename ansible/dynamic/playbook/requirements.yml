@@ -1,0 +1,4 @@
+# Inside playbook/requirements.yml
+collections:
+  - name: cloud.terraform
+    version: 3.0.0
