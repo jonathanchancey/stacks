@@ -98,6 +98,19 @@ resource "proxmox_virtual_environment_vm" "vm" {
   }
 }
 
+# resource "ansible_group" "group" {
+#   name     = var.ansible_group_name
+#   children = var.ansible_group_children
+# }
+
+# resource "ansible_host" "host" {
+#   name   = var.name
+#   groups = var.ansible_host.groups
+#   variables = {
+#     ansible_host = module.vm_ipv6_addresses
+#   }
+# }
+
 resource "proxmox_virtual_environment_file" "cloud_image" {
   content_type = var.cloud_image_content_type
   datastore_id = var.cloud_image_datastore_id

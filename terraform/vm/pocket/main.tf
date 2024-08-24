@@ -87,3 +87,16 @@ module "vm" {
   username = var.username
   password = var.password
 }
+
+resource "ansible_group" "cluster" {
+  name     = "k8s"
+  children = ["kube_control_plane", "kube_node"]
+}
+
+resource "ansible_host" "debug" {
+  name   = "debian-debug"
+  groups = ["kube_control_plane", "kube_node"]
+  variables = {
+    ansible_host = module.vm["pocket"].vm_ipv6_addresses[1][0]
+  }
+}
