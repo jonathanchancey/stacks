@@ -1,5 +1,4 @@
 resource "proxmox_virtual_environment_vm" "vm" {
-  # provider    = bpg.proxmox
   name        = var.name
   node_name   = var.node_name
   description = var.description
@@ -100,7 +99,6 @@ resource "proxmox_virtual_environment_vm" "vm" {
 }
 
 resource "proxmox_virtual_environment_file" "cloud_image" {
-  # provider     = bpg.proxmox
   content_type = var.cloud_image_content_type
   datastore_id = var.cloud_image_datastore_id
   node_name    = var.cloud_image_node_name
@@ -116,7 +114,6 @@ resource "proxmox_virtual_environment_file" "cloud_image" {
 }
 
 resource "proxmox_virtual_environment_file" "cloud_config" {
-  # provider     = bpg.proxmox
   content_type = "snippets"
   datastore_id = var.cloud_image_datastore_id
   node_name    = var.cloud_image_node_name
@@ -146,7 +143,9 @@ resource "proxmox_virtual_environment_file" "cloud_config" {
         groups: sudo
         shell: /bin/bash
         ssh-authorized-keys:
-          - ${yamlencode(var.sshkeys)}
+          %{for key in var.sshkeys}
+          - ${key}
+          %{endfor}
         sudo: ALL=(ALL) NOPASSWD:ALL
       - name: ansible
         groups: users,admin,wheel
@@ -154,7 +153,9 @@ resource "proxmox_virtual_environment_file" "cloud_config" {
         sudo: ALL=(ALL) NOPASSWD:ALL
         lock_passwd: true
         ssh_authorized_keys:
-          - ${yamlencode(var.sshkeys)}
+          %{for key in var.sshkeys}
+          - ${key}
+          %{endfor}
     EOF
 
     file_name = "cloud-config-${var.vm_id}.yaml"
