@@ -39,8 +39,13 @@ resource "ansible_host" "vms" {
   for_each = module.vm
 
   name   = each.key
-  groups = ["kube_control_plane", "kube_node"]
+  groups = try(local.vm_configs[each.key].ansible_groups, local.common_config.ansible_groups)
   variables = {
     ansible_host = each.value.vm_ipv6_addresses[1][0]
   }
+}
+
+resource "ansible_group" "cluster" {
+  name     = "k8s_cluster"
+  children = ["kube_control_plane", "kube_node"]
 }

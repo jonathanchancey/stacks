@@ -266,13 +266,3 @@ variable "cloud_image_packages" {
   default     = ["qemu-guest-agent"]
   description = "Install additional packages on first boot"
 }
-
-# variable "ansible_group_children" {
-#   type        = list(string)
-#   description = "Ansible group children for ansible provider"
-# }
-
-# variable "ansible_group_name" {
-#   type        = string
-#   description = "Ansible group name for ansible provider"
-# }

@@ -4,6 +4,7 @@ locals {
   common_config = {
     description                    = "Managed by Terraform"
     tags                           = ["debian", "terraform"]
+    ansible_groups                 = ["debian"]
     node_name                      = "TARS"
     cloud_image_node_name          = "TARS"
     datastore_id                   = "cornfield"
@@ -34,9 +35,12 @@ locals {
   # define VMs
   vms = {
     pocket = {
-      vm_id = 132
+      vm_id          = 132
+      ansible_groups = ["debian", "kube_control_plane"]
     }
-    turn = {}
+    turn = {
+      ansible_groups = ["debian", "kube_node"]
+    }
   }
   # create list to sequentially assign ids
   vm_names = keys(local.vms)
