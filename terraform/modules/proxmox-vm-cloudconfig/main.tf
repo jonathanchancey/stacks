@@ -6,7 +6,7 @@ resource "proxmox_virtual_environment_vm" "vm" {
   vm_id       = var.vm_id
 
   agent {
-    enabled = true
+    enabled = var.agent
   }
 
   initialization {
@@ -22,13 +22,19 @@ resource "proxmox_virtual_environment_vm" "vm" {
     dynamic "ip_config" {
       for_each = var.ip_config != null ? [var.ip_config] : []
       content {
-        ipv4 {
-          address = var.ip_config.ipv4_address
-          gateway = var.ip_config.ipv4_gateway
+        dynamic "ipv4" {
+          for_each = var.ip_config.ipv4_address != null && var.ip_config.ipv4_gateway != null ? [var.ip_config] : []
+          content {
+            address = var.ip_config.ipv4_address
+            gateway = var.ip_config.ipv4_gateway
+          }
         }
-        ipv6 {
-          address = var.ip_config.ipv6_address
-          gateway = var.ip_config.ipv6_gateway
+        dynamic "ipv6" {
+          for_each = var.ip_config.ipv6_address != null && var.ip_config.ipv6_gateway != null ? [var.ip_config] : []
+          content {
+            address = var.ip_config.ipv6_address
+            gateway = var.ip_config.ipv6_gateway
+          }
         }
       }
     }
@@ -40,14 +46,14 @@ resource "proxmox_virtual_environment_vm" "vm" {
 
   disk {
     datastore_id = var.datastore_id
-    file_id      = proxmox_virtual_environment_file.cloud_image.id
+    file_id      = proxmox_virtual_environment_download_file.cloud_image.id
     interface    = "virtio0"
     iothread     = true
     discard      = "on"
     size         = var.disk_size
   }
 
-  // Dynamic block for optional additional disk
+  # Dynamic block for optional additional disk
   dynamic "disk" {
     for_each = var.additional_disk_size > 0 ? [1] : []
     content {
@@ -92,19 +98,18 @@ resource "proxmox_virtual_environment_vm" "vm" {
   }
 }
 
-resource "proxmox_virtual_environment_file" "cloud_image" {
+resource "proxmox_virtual_environment_download_file" "cloud_image" {
   content_type = var.cloud_image_content_type
   datastore_id = var.cloud_image_datastore_id
   node_name    = var.cloud_image_node_name
 
-  source_file {
-    # you may download this image locally on your workstation and then use the local path instead of the remote URL
-    path      = var.cloud_image_url
-    file_name = var.cloud_image_file_name
+  # you may download this image locally on your workstation and then use the local path instead of the remote URL
+  url       = var.cloud_image_url
+  file_name = var.cloud_image_file_name
 
-    # you may also use the SHA256 checksum of the image to verify its integrity
-    checksum = var.cloud_image_checksum
-  }
+  # you may also use the SHA256 checksum of the image to verify its integrity
+  checksum           = var.cloud_image_checksum
+  checksum_algorithm = var.cloud_image_checksum_algorithm
 }
 
 resource "proxmox_virtual_environment_file" "cloud_config" {
@@ -120,12 +125,10 @@ resource "proxmox_virtual_environment_file" "cloud_config" {
         ${var.username}:${var.password}
       expire: false
     hostname: ${var.name}
-    fqdn: ${var.name}.${var.dns_domain}
-    ssh_pwauth: false
-    package_update: true
+    fqdn: ${coalesce(var.fqdn, "${var.name}.${var.dns_domain}")}
+    ssh_pwauth: ${var.cloud_image_ssh_pwauth}
     package_upgrade: true
-    manage_etc_hosts: true
-
+    manage_etc_hosts: ${var.cloud_image_manage_etc_hosts}
     packages:
       - qemu-guest-agent
     runcmd:
@@ -139,7 +142,9 @@ resource "proxmox_virtual_environment_file" "cloud_config" {
         groups: sudo
         shell: /bin/bash
         ssh-authorized-keys:
-          - ${yamlencode(var.sshkeys)}
+          %{for key in var.sshkeys}
+          - ${key}
+          %{endfor}
         sudo: ALL=(ALL) NOPASSWD:ALL
       - name: ansible
         groups: users,admin,wheel
@@ -147,7 +152,9 @@ resource "proxmox_virtual_environment_file" "cloud_config" {
         sudo: ALL=(ALL) NOPASSWD:ALL
         lock_passwd: true
         ssh_authorized_keys:
-          - ${yamlencode(var.sshkeys)}
+          %{for key in var.sshkeys}
+          - ${key}
+          %{endfor}
     EOF
 
     file_name = "cloud-config-${var.vm_id}.yaml"

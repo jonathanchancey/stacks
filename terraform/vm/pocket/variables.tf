@@ -34,13 +34,14 @@ variable "dns_servers" {
   default = []
 }
 
-# variable "ip_config" {
-#   description = "IP configuration for the VM"
-#   type = object({
-#     ipv4_address = optional(string)
-#     ipv4_gateway = optional(string)
-#     ipv6_address = optional(string)
-#     ipv6_gateway = optional(string)
-#   })
-#   default = null
-# }
+variable "fqdn" {
+  type        = string
+  default     = null
+  description = "The fully qualified domain name"
+}
+
+variable "pihole_api_token" {
+  type        = string
+  description = " "
+  sensitive   = true
+}
