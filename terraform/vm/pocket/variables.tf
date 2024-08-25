@@ -39,3 +39,9 @@ variable "fqdn" {
   default     = null
   description = "The fully qualified domain name"
 }
+
+variable "pihole_api_token" {
+  type        = string
+  description = " "
+  sensitive   = true
+}

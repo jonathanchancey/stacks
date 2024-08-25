@@ -49,3 +49,10 @@ resource "ansible_group" "cluster" {
   name     = "k8s_cluster"
   children = ["kube_control_plane", "kube_node"]
 }
+
+resource "pihole_dns_record" "vmm_dns" {
+  for_each = module.vm
+
+  domain = coalesce(local.vm_configs[each.key].fqdn, "${each.key}.${local.common_config.dns_domain}")
+  ip     = each.value.vm_ipv6_addresses[1][0]
+}
