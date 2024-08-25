@@ -1,5 +1,6 @@
-# Define a local variable for common configurations
+# define a local variable for common configurations
 locals {
+  vm_id_start = 2000
   common_config = {
     description                  = "Managed by Terraform"
     tags                         = ["debian", "terraform"]
@@ -16,91 +17,98 @@ locals {
     virtual_environment_password = var.virtual_environment_password
     virtual_environment_username = var.virtual_environment_username
     tpm_state_datastore_id       = "local"
+    memory_dedicated             = 4096
+    cpu_cores                    = 4
+    disk_size                    = 10
+    network_device_vlan_id       = 131
+    ip_config = {
+      ipv6_address = "dhcp"
+      ipv6_gateway = ""
+    }
+    # fqdn = "pocket.internal"
+    # vm_id                        = 132
   }
 
-  # Define VMs
+  # define VMs
   vms = {
     pocket = {
-      name                   = "pocket"
-      vm_id                  = 132
-      memory_dedicated       = 4096
-      cpu_cores              = 4
-      disk_size              = 10
-      network_device_vlan_id = 131
-      fqdn                   = "pocket.internal"
-      # ansible_group_name     = "testing"
-      # ansible_group_children = ["kube_control_plane", "kube_node"]
-      ip_config = {
-        ipv6_address = "dhcp"
-        ipv6_gateway = ""
-      }
+      vm_id = 132
     }
-    # Add more VMs as needed
-    # another_vm = {
-    #   name              = "another-vm"
-    #   vm_id             = 133
-    #   memory_dedicated  = 2048
-    #   cpu_cores         = 2
-    #   disk_size         = 20
-    #   fqdn              = "another-vm.internal"
-    #   network_device_vlan_id = 131
-    #   ip_config = {
-    #     ipv6_address = "dhcp"
-    #     ipv6_gateway = ""
-    #   }
-    # }
+  }
+  # create list to sequentially assign ids
+  vm_names = keys(local.vms)
+
+
+  vm_configs = {
+    for name in local.vm_names : name => merge(
+      local.common_config,
+      local.vms[name],
+      {
+        vm_id = try(
+          local.vms[name].vm_id,
+          local.vm_id_start + index(local.vm_names, name)
+        )
+        name = try(local.vms[name].name, name)
+      }
+    )
   }
 }
 
 module "vm" {
   source = "../../modules/proxmox-vm-cloudconfig"
 
-  for_each = local.vms
+  for_each = local.vm_configs
 
-  # Individual Configuration
-  name                   = each.value.name
-  vm_id                  = each.value.vm_id
-  memory_dedicated       = each.value.memory_dedicated
-  cpu_cores              = each.value.cpu_cores
-  disk_size              = each.value.disk_size
-  fqdn                   = each.value.fqdn
-  network_device_vlan_id = each.value.network_device_vlan_id
-  ip_config              = each.value.ip_config
-  # ansible_group_name     = each.value.ansible_group_name
-  # ansible_group_children = each.value.ansible_group_children
+  # individual configuration
+  name                         = each.value.name
+  vm_id                        = each.value.vm_id
+  memory_dedicated             = each.value.memory_dedicated
+  cpu_cores                    = each.value.cpu_cores
+  disk_size                    = each.value.disk_size
+  fqdn                         = try(each.value.fqdn, null)
+  network_device_vlan_id       = each.value.network_device_vlan_id
+  ip_config                    = each.value.ip_config
+  description                  = each.value.description
+  tags                         = each.value.tags
+  node_name                    = each.value.node_name
+  cloud_image_node_name        = each.value.cloud_image_node_name
+  datastore_id                 = each.value.datastore_id
+  cloud_image_datastore_id     = each.value.cloud_image_datastore_id
+  dns_domain                   = each.value.dns_domain
+  reboot                       = each.value.reboot
+  cloud_image_url              = each.value.cloud_image_url
+  cloud_image_file_name        = each.value.cloud_image_file_name
+  cloud_image_checksum         = each.value.cloud_image_checksum
+  virtual_environment_endpoint = each.value.virtual_environment_endpoint
+  virtual_environment_password = each.value.virtual_environment_password
+  virtual_environment_username = each.value.virtual_environment_username
+  tpm_state_datastore_id       = each.value.tpm_state_datastore_id
 
-  # Common Configuration
-  description                  = local.common_config.description
-  tags                         = local.common_config.tags
-  node_name                    = local.common_config.node_name
-  cloud_image_node_name        = local.common_config.cloud_image_node_name
-  datastore_id                 = local.common_config.datastore_id
-  cloud_image_datastore_id     = local.common_config.cloud_image_datastore_id
-  dns_domain                   = local.common_config.dns_domain
-  reboot                       = local.common_config.reboot
-  cloud_image_url              = local.common_config.cloud_image_url
-  cloud_image_file_name        = local.common_config.cloud_image_file_name
-  cloud_image_checksum         = local.common_config.cloud_image_checksum
-  virtual_environment_endpoint = local.common_config.virtual_environment_endpoint
-  virtual_environment_password = local.common_config.virtual_environment_password
-  virtual_environment_username = local.common_config.virtual_environment_username
-  tpm_state_datastore_id       = local.common_config.tpm_state_datastore_id
-
-  # Variables likely to be common but might change
+  # variables likely to be common but might change
   sshkeys  = var.sshkeys
   username = var.username
   password = var.password
 }
 
-resource "ansible_group" "cluster" {
-  name     = "k8s"
-  children = ["kube_control_plane", "kube_node"]
-}
+resource "ansible_host" "vms" {
+  for_each = module.vm
 
-resource "ansible_host" "debug" {
-  name   = "debian-debug"
+  name   = each.key
   groups = ["kube_control_plane", "kube_node"]
   variables = {
-    ansible_host = module.vm["pocket"].vm_ipv6_addresses[1][0]
+    ansible_host = each.value.vm_ipv6_addresses[1][0]
   }
 }
+
+# resource "ansible_group" "cluster" {
+#   name     = "k8s"
+#   children = ["kube_control_plane", "kube_node"]
+# }
+
+# resource "ansible_host" "debug" {
+#   name   = "debian-debug"
+#   groups = ["kube_control_plane", "kube_node"]
+#   variables = {
+#     ansible_host = module.vm["pocket"].vm_ipv6_addresses[1][0]
+#   }
+# }
