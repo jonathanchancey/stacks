@@ -46,7 +46,7 @@ resource "proxmox_virtual_environment_vm" "vm" {
 
   disk {
     datastore_id = var.datastore_id
-    file_id      = proxmox_virtual_environment_file.cloud_image.id
+    file_id      = proxmox_virtual_environment_download_file.cloud_image.id
     interface    = "virtio0"
     iothread     = true
     discard      = "on"
@@ -98,32 +98,18 @@ resource "proxmox_virtual_environment_vm" "vm" {
   }
 }
 
-# resource "ansible_group" "group" {
-#   name     = var.ansible_group_name
-#   children = var.ansible_group_children
-# }
-
-# resource "ansible_host" "host" {
-#   name   = var.name
-#   groups = var.ansible_host.groups
-#   variables = {
-#     ansible_host = module.vm_ipv6_addresses
-#   }
-# }
-
-resource "proxmox_virtual_environment_file" "cloud_image" {
+resource "proxmox_virtual_environment_download_file" "cloud_image" {
   content_type = var.cloud_image_content_type
   datastore_id = var.cloud_image_datastore_id
   node_name    = var.cloud_image_node_name
 
-  source_file {
-    # you may download this image locally on your workstation and then use the local path instead of the remote URL
-    path      = var.cloud_image_url
-    file_name = var.cloud_image_file_name
+  # you may download this image locally on your workstation and then use the local path instead of the remote URL
+  url       = var.cloud_image_url
+  file_name = var.cloud_image_file_name
 
-    # you may also use the SHA256 checksum of the image to verify its integrity
-    checksum = var.cloud_image_checksum
-  }
+  # you may also use the SHA256 checksum of the image to verify its integrity
+  checksum           = var.cloud_image_checksum
+  checksum_algorithm = var.cloud_image_checksum_algorithm
 }
 
 resource "proxmox_virtual_environment_file" "cloud_config" {
@@ -139,7 +125,7 @@ resource "proxmox_virtual_environment_file" "cloud_config" {
         ${var.username}:${var.password}
       expire: false
     hostname: ${var.name}
-    fqdn: ${var.fqdn}
+    fqdn: ${coalesce(var.fqdn, "${var.name}.${var.dns_domain}")}
     ssh_pwauth: ${var.cloud_image_ssh_pwauth}
     package_upgrade: true
     manage_etc_hosts: ${var.cloud_image_manage_etc_hosts}

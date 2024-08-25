@@ -171,7 +171,13 @@ variable "cloud_image_node_name" {
 variable "cloud_image_checksum" {
   type        = string
   default     = ""
-  description = "SHA256 checksum of cloud image for verification."
+  description = "checksum of cloud image for verification."
+}
+
+variable "cloud_image_checksum_algorithm" {
+  type        = string
+  default     = "sha512"
+  description = "checksum algorithm"
 }
 
 variable "cloud_image_url" {
