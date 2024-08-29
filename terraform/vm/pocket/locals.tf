@@ -24,6 +24,7 @@ locals {
     disk_size                      = 10
     network_device_vlan_id         = 131
     ip_config = {
+      ipv4_address = "dhcp"
       ipv6_address = "dhcp"
       ipv6_gateway = ""
     }
@@ -35,6 +36,12 @@ locals {
   # define VMs
   vms = {
     pocket = {
+      ip_config = {
+        ipv4_address = "dhcp"
+        ipv4_gateway = ""
+        ipv6_address = "dhcp"
+        ipv6_gateway = ""
+      }
       vm_id          = 132
       ansible_groups = ["debian", "kube_control_plane"]
     }
