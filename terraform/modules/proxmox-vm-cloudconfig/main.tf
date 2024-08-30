@@ -19,22 +19,19 @@ resource "proxmox_virtual_environment_vm" "vm" {
       servers = var.dns_servers
     }
 
-    dynamic "ip_config" {
-      for_each = var.ip_config != null ? [var.ip_config] : []
-      content {
-        dynamic "ipv4" {
-          for_each = var.ip_config.ipv4_address != null && var.ip_config.ipv4_gateway != null ? [var.ip_config] : []
-          content {
-            address = var.ip_config.ipv4_address
-            gateway = var.ip_config.ipv4_gateway
-          }
+    ip_config {
+      dynamic "ipv4" {
+        for_each = var.ip_config.ipv4_address != null && var.ip_config.ipv4_gateway != null ? [var.ip_config] : []
+        content {
+          address = var.ip_config.ipv4_address
+          gateway = var.ip_config.ipv4_gateway
         }
-        dynamic "ipv6" {
-          for_each = var.ip_config.ipv6_address != null && var.ip_config.ipv6_gateway != null ? [var.ip_config] : []
-          content {
-            address = var.ip_config.ipv6_address
-            gateway = var.ip_config.ipv6_gateway
-          }
+      }
+      dynamic "ipv6" {
+        for_each = var.ip_config.ipv6_address != null && var.ip_config.ipv6_gateway != null ? [var.ip_config] : []
+        content {
+          address = var.ip_config.ipv6_address
+          gateway = var.ip_config.ipv6_gateway
         }
       }
     }
