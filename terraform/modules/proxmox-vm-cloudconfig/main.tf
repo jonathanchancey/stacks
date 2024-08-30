@@ -43,7 +43,7 @@ resource "proxmox_virtual_environment_vm" "vm" {
 
   disk {
     datastore_id = var.datastore_id
-    file_id      = proxmox_virtual_environment_download_file.cloud_image.id
+    file_id      = var.cloud_image_id
     interface    = "virtio0"
     iothread     = true
     discard      = "on"
@@ -106,24 +106,10 @@ resource "proxmox_virtual_environment_vm" "vm" {
   }
 }
 
-resource "proxmox_virtual_environment_download_file" "cloud_image" {
-  content_type = var.cloud_image_content_type
-  datastore_id = var.cloud_image_datastore_id
-  node_name    = var.cloud_image_node_name
-
-  # you may download this image locally on your workstation and then use the local path instead of the remote URL
-  url       = var.cloud_image_url
-  file_name = var.cloud_image_file_name
-
-  # you may also use the SHA256 checksum of the image to verify its integrity
-  checksum           = var.cloud_image_checksum
-  checksum_algorithm = var.cloud_image_checksum_algorithm
-}
-
 resource "proxmox_virtual_environment_file" "cloud_config" {
   content_type = "snippets"
-  datastore_id = var.cloud_image_datastore_id
-  node_name    = var.cloud_image_node_name
+  datastore_id = var.cloud_config_datastore_id
+  node_name    = var.node_name
 
   source_raw {
     data = <<-EOF
@@ -139,6 +125,7 @@ resource "proxmox_virtual_environment_file" "cloud_config" {
     manage_etc_hosts: ${var.cloud_image_manage_etc_hosts}
     packages:
       - qemu-guest-agent
+      - python312
     runcmd:
       - timedatectl set-timezone UTC
       - systemctl enable qemu-guest-agent
