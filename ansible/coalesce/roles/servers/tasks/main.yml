@@ -1,13 +1,13 @@
-- name: Get TOKEN from initial_server
+- name: Get node_token from initial_server
   set_fact:
-    TOKEN: "{{ hostvars['forest-sentinel'].TOKEN }}"
+    node_token: "{{ hostvars['forest-sentinel'].node_token }}"
 - name: Create directories if they don't exist
   become: true
   file:
     path: "{{ item }}"
     state: directory
     owner: rke2
-    mode: 0755
+    mode: "0755"
     recurse: true
   loop:
     - "{{ CONFDIR }}"
@@ -31,7 +31,7 @@
   copy:
     dest: "{{ CONFFILE }}"
     content: |
-      token: {{ TOKEN }}
+      token: {{ node_token }}
       server: https://{{ SERVER_ADDRESS_FQDN }}:9345
       tls-san:
         - "{{ hostname_short.stdout }}"
@@ -62,3 +62,4 @@
   copy:
     dest: /etc/profile.d/custom-path.sh
     content: 'PATH=$PATH:/var/lib/rancher/rke2/bin'
+    mode: "0755"

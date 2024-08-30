@@ -1,7 +1,7 @@
-- name: "System | {{ ansible_distribution }} | Perform a dist-upgrade"
+- name: "System | Perform a dist-upgrade | {{ ansible_distribution }}"
   become: true
   community.general.zypper:
-    name: '*'
+    name: "*"
     state: dist-upgrade
 - name: "Install python and python kubernetes library"
   community.general.zypper:

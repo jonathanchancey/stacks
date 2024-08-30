@@ -12,14 +12,6 @@
   roles:
     - role: initial_server
 
-- name: Setup RKE2 on additional_servers
-  vars_files:
-    - ./group_vars/secret.yml
-  gather_facts: yes
-  hosts: additional_servers
-  roles:
-    - role: servers
-
 - name: Setup RKE2 on agents
   vars_files:
     - ./group_vars/secret.yml
@@ -34,12 +26,3 @@
   hosts: localhost
   roles:
     - role: local
-
-- name: Setup Longhorn
-  become: true
-  vars_files:
-    - ./group_vars/secret.yml
-  gather_facts: yes
-  hosts: longhorn
-  roles:
-    - role: longhorn

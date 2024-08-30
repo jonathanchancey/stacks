@@ -35,13 +35,9 @@ spec:
         tls:
           enabled: true
           domains:
-          - main: dcnt.company
+          - main: {{ ROOT_DOMAIN }}
             sans:
-              - dcnt.company
-              - k8s.dcnt.company
-              - hello.dcnt.company
-              - auth.dcnt.company
-              - file.dcnt.company
+              - {{ SERVER_ADDRESS_FQDN }}
     ingressRoute:
       dashboard:
         enabled: false
@@ -67,7 +63,7 @@ spec:
       annotations: {}
       labels: {}
       spec:
-        loadBalancerIP: 10.30.0.31 # this should be an IP in the MetalLB range
+        loadBalancerIP: {{ traefik_loadBalancerIP }} # this should be an IP in the MetalLB range
       loadBalancerSourceRanges: []
       externalIPs: []
 
@@ -75,7 +71,6 @@ spec:
       requests:
         cpu: "300m"
         memory: "100Mi"
-
 
 ---
 apiVersion: traefik.containo.us/v1alpha1
