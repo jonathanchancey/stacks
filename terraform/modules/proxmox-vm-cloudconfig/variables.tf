@@ -266,3 +266,15 @@ variable "cloud_image_packages" {
   default     = ["qemu-guest-agent"]
   description = "Install additional packages on first boot"
 }
+
+variable "hostpci" {
+  description = "Configuration for hostpci device"
+  type = object({
+    device = string
+    id     = string
+    pcie   = bool
+    rombar = bool
+    xvga   = bool
+  })
+  default = null
+}
