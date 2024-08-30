@@ -1,0 +1,14 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: jellyfin-cert
+  namespace: fkn
+spec:
+  secretName: jellyfin-cert-tls
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  commonName: "jellyfin.chancey.dev"
+  dnsNames:
+    - "jellyfin.chancey.dev"
