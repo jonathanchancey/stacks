@@ -1,0 +1,15 @@
+---
+- name: clean up docker images
+  hosts: all
+  collections:
+    - community.docker
+  tasks:
+    - name: "prune docker caches"
+      containers: yes
+      community.docker.docker_prune:
+      images: yes
+      images_filters:
+      dangling: false
+      networks: yes
+      volumes: yes
+      builder_cache: yes
