@@ -1,0 +1,26 @@
+- name: install rke2
+  hosts: "agent"
+  tasks:
+    - name: install qemu-guest-agent
+      become: true
+      command: transactional-update --non-interactive pkg in qemu-guest-agent
+    - name: install rke2 agent
+      become: true
+      command: transactional-update --continue run bash -c 'curl -sfL https://get.rke2.io | INSTALL_RKE2_TYPE="agent" sh -'
+    - name: add rke2 to path
+      become: true
+      command: transactional-update --continue run bash -c 'export PATH=$PATH:/opt/rke2/bin'
+    - name: Reboot the nodes
+      become: true
+      reboot:
+        reboot_timeout: 300
+    - name: enable rke2-agent service
+      become: true
+      command: transactional-update run bash -c 'systemctl enable rke2-agent.service'
+    - name: Reboot the nodes
+      become: true
+      reboot:
+        reboot_timeout: 300
+    - name: add token to config
+      become: true
+      command: transactional-update --continue run bash -c ''

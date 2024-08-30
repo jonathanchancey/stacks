@@ -1,0 +1,36 @@
+- name: install metallb
+  hosts: initial_server
+  become: true
+  vars_files:
+    - ../inventory/group_vars/env.yml
+
+  tasks:
+  - name: download metallb-native
+    get_url:
+      url: https://raw.githubusercontent.com/metallb/metallb/{{ METALLB_IMAGE_TAG }}/config/manifests/metallb-native.yaml
+      dest: "{{ WATCHDIR }}/metallb-native.yaml"
+      owner: root
+      group: root
+      mode: 0644
+
+  - name: create ipaddresspool.yaml
+    copy:
+      dest: "{{ WATCHDIR }}/ipaddresspool.yaml"
+      content: |
+        apiVersion: metallb.io/v1beta1
+        kind: IPAddressPool
+        metadata:
+          name: metallb-address-pool
+          namespace: metallb-system
+        spec:
+          addresses:
+          - {{ METALLB_IP_RANGE }}
+        ---
+        apiVersion: metallb.io/v1beta1
+        kind: L2Advertisement
+        metadata:
+          name: metallb-advertisement
+          namespace: metallb-system
+        spec:
+          ipAddressPools:
+          - metallb-address-pool

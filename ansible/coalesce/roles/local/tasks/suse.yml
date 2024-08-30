@@ -1,0 +1,14 @@
+- name: "System | {{ ansible_distribution }} | Perform a dist-upgrade"
+  become: true
+  community.general.zypper:
+    name: '*'
+    state: dist-upgrade
+- name: "Install python and python kubernetes library"
+  community.general.zypper:
+    name:
+      - python311
+      - python311-kubernetes
+      - helm
+    state: latest
+    update_cache: true
+  become: true

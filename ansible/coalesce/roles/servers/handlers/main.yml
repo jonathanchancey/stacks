@@ -1,0 +1,7 @@
+---
+- name: Ensure rke2-server is restarted
+  become: true
+  systemd:
+    state: restarted
+    name: rke2-server
+  listen: "rke2-server service restart"

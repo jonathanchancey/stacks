@@ -1,0 +1,14 @@
+- name: Install traefik
+  hosts: initial_server
+  become: true
+  vars_files:
+    - ../inventory/group_vars/env.yml
+
+  tasks:
+    - name: Create traefik
+      copy:
+        src: ./assets/traefik.yaml
+        dest: "{{ WATCHDIR }}/traefik.yaml"
+        owner: root
+        group: root
+        mode: '0644'

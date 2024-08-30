@@ -1,0 +1,14 @@
+- name: install cert-manager
+  hosts: initial_server
+  become: true
+  vars_files:
+    - ../inventory/group_vars/env.yml
+
+  tasks:
+  - name: download cert-manager
+    get_url:
+      url: https://github.com/cert-manager/cert-manager/releases/download/{{ CERT_MANAGER_IMAGE_TAG }}/cert-manager.yaml
+      dest: "{{ WATCHDIR }}/cert-manager.yaml"
+      owner: root
+      group: root
+      mode: 0644
