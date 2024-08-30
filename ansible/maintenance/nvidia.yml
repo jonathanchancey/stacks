@@ -1,0 +1,21 @@
+- hosts: gpu_nodes
+  become: yes
+  tasks:
+    - name: Add Debian non-free repository
+      ansible.builtin.lineinfile:
+        path: /etc/apt/sources.list
+        line: "deb http://deb.debian.org/debian/ bookworm main contrib non-free non-free-firmware"
+        state: present
+
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: yes
+
+    - name: Install NVIDIA driver and firmware
+      ansible.builtin.apt:
+        name:
+          - nvidia-driver
+          - firmware-misc-nonfree
+        state: present
+    - name: Restart the system
+      ansible.builtin.reboot:
