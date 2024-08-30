@@ -1,0 +1,22 @@
+---
+- name: Install and Configure Samba
+  hosts: samba_servers
+  become: yes
+  tasks:
+    - name: Install Samba
+      package:
+        name: samba
+        state: present
+      when: ansible_facts['os_family'] == "Debian" or ansible_facts['os_family'] == "RedHat"
+
+    - name: Configure smb.conf
+      template:
+        src: smb.conf.j2
+        dest: /etc/samba/smb.conf
+      notify: restart samba
+
+  handlers:
+    - name: restart samba
+      service:
+        name: smbd
+        state: restarted
