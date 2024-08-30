@@ -45,7 +45,8 @@ resource "ansible_host" "vms" {
   name   = each.key
   groups = try(local.vm_configs[each.key].ansible_groups, local.common_config.ansible_groups)
   variables = {
-    ansible_host = each.value.vm_ipv4_addresses[1][0]
+    ansible_host               = each.value.vm_ipv4_addresses[1][0]
+    ansible_python_interpreter = "/usr/bin/python3.12"
   }
 }
 

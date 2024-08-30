@@ -4,7 +4,7 @@ locals {
   # define VMs
   vms = {
     convergence-00 = {
-      ansible_groups = ["leap", "kube_control_plane", "kube_worker", "coalesce"]
+      ansible_groups = ["leap", "kube_control_plane", "kube_worker", "coalesce", "initial_server"]
     }
     convergence-01 = {
       ansible_groups = ["leap", "kube_control_plane", "kube_worker", "coalesce"]
