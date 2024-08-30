@@ -1,3 +1,5 @@
 # Inside playbook/inventory/nodes/hosts.yml
 plugin: cloud.terraform.terraform_provider
-project_path: ../../../terraform/vm/pocket
+project_path:
+  - ../../terraform/vm/prism
+  - ../../terraform/vm/pocket
