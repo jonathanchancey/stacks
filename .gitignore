@@ -55,4 +55,7 @@ smtp*
 **/scratch/
 local.yaml
 *secrets.yaml
+*secret.yaml
+*secrets.yml
+*secret.yml
 .DS_Store
