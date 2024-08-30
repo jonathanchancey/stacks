@@ -50,6 +50,17 @@ resource "proxmox_virtual_environment_vm" "vm" {
     size         = var.disk_size
   }
 
+  dynamic "hostpci" {
+    for_each = var.hostpci != null ? [var.hostpci] : []
+    content {
+      device = hostpci.value.device
+      id     = hostpci.value.id
+      pcie   = hostpci.value.pcie
+      rombar = hostpci.value.rombar
+      xvga   = hostpci.value.xvga
+    }
+  }
+
   # Dynamic block for optional additional disk
   dynamic "disk" {
     for_each = var.additional_disk_size > 0 ? [1] : []
