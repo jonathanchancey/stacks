@@ -2,7 +2,7 @@
 INSTALL_RKE2_VERSION: "v1.30.4+rke2r1" # https://github.com/rancher/rke2/releases
 KUBE_VIP_IMAGE: "ghcr.io/kube-vip/kube-vip"
 KUBE_VIP_IMAGE_TAG: "v0.8.2" # https://ghcr.io/kube-vip/kube-vip
-METALLB_IMAGE_TAG: "v0.14.18" # https://github.com/metallb/metallb/releases
+METALLB_IMAGE_TAG: "v0.14.8" # https://github.com/metallb/metallb/releases
 CERT_MANAGER_IMAGE_TAG: "v1.15.3" # https://github.com/cert-manager/cert-manager/releases
 # Set ansible user
 ansible_user: ansible
