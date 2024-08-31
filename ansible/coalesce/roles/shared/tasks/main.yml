@@ -33,3 +33,11 @@
     sysctl_set: true
     state: present
     reload: true
+
+- name: Configure NetworkManager to ignore calico/flannel related network interfaces
+  copy:
+    dest: "{{ NETWORKFILE }}"
+    mode: "0644"
+    content: |
+      [keyfile]
+      unmanaged-devices=interface-name:cali*;interface-name:flannel*
