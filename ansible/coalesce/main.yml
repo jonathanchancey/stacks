@@ -1,16 +1,17 @@
 ---
 - name: Run shared setup tasks
   hosts: "*"
+  become: true
   roles:
     - role: shared
 
-- name: Setup RKE2 on initial_server
+- name: Setup RKE2 on servers
   vars_files:
     - ./group_vars/./group_vars/secret.yml
-  hosts: initial_server
+  hosts: server
   gather_facts: yes
   roles:
-    - role: initial_server
+    - role: controlplane
 
 - name: Setup RKE2 on agents
   vars_files:

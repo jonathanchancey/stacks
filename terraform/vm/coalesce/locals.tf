@@ -4,28 +4,28 @@ locals {
   # define VMs
   vms = {
     convergence-00 = {
-      ansible_groups = ["leap", "kube_control_plane", "kube_worker", "coalesce", "initial_server"]
+      ansible_groups = ["leap", "controlplane", "worker", "coalesce", "initial_server"]
     }
     convergence-01 = {
-      ansible_groups = ["leap", "kube_control_plane", "kube_worker", "coalesce"]
+      ansible_groups = ["leap", "controlplane", "worker", "coalesce"]
     }
     convergence-02 = {
-      ansible_groups = ["leap", "kube_control_plane", "kube_worker", "coalesce"]
+      ansible_groups = ["leap", "controlplane", "worker", "coalesce"]
     }
     divergence-00 = {
-      ansible_groups = ["leap", "kube_control_plane", "kube_worker", "dichotomy"]
+      ansible_groups = ["leap", "controlplane", "worker", "dichotomy"]
     }
     divergence-01 = {
-      ansible_groups = ["leap", "kube_control_plane", "kube_worker", "dichotomy"]
+      ansible_groups = ["leap", "controlplane", "worker", "dichotomy"]
     }
     divergence-02 = {
-      ansible_groups = ["leap", "kube_control_plane", "kube_worker", "dichotomy"]
+      ansible_groups = ["leap", "controlplane", "worker", "dichotomy"]
     }
   }
   common_config = {
     description                    = "Managed by Terraform"
     tags                           = ["leap", "terraform"]
-    ansible_groups                 = ["leap", "kube_control_plane", "kube_worker"]
+    ansible_groups                 = ["leap", "controlplane", "worker"]
     node_name                      = "TARS"
     cloud_image_node_name          = "TARS"
     datastore_id                   = "cornfield"
