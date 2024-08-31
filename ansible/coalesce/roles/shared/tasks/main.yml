@@ -1,4 +1,35 @@
+- name: Set timezone
+  community.general.timezone:
+    name: "{{ system_timezone }}"
+  when: (system_timezone is defined) and (system_timezone != "Your/Timezone")
+
 - name: Run openSUSE Tasks
   ansible.builtin.import_tasks: suse.yml
   when: ansible_os_family == 'Suse'
-  become: true
+
+- name: "RKE2 | Enable IPv4 forwarding"
+  ansible.posix.sysctl:
+    name: net.ipv4.conf.all.forwarding
+    value: "1"
+    sysctl_file: /etc/sysctl.d/90-rke2.conf
+    sysctl_set: true
+    state: present
+    reload: true
+
+- name: Enable IPv6 forwarding
+  ansible.posix.sysctl:
+    name: net.ipv6.conf.all.forwarding
+    value: "1"
+    sysctl_file: /etc/sysctl.d/90-rke2.conf
+    sysctl_set: true
+    state: present
+    reload: true
+
+- name: Enable IPv6 router advertisements
+  ansible.posix.sysctl:
+    name: net.ipv6.conf.all.accept_ra
+    value: "2"
+    sysctl_file: /etc/sysctl.d/90-rke2.conf
+    sysctl_set: true
+    state: present
+    reload: true
