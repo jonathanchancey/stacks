@@ -10,9 +10,9 @@
     - "{{ NETWORKDIR }}"
 
 - name: Create config.yaml
-  mode: "0644"
   copy:
     dest: "{{ CONFFILE }}"
+    mode: "0644"
     content: |
       token: {{ node_token }}
       server: https://{{ SERVER_ADDRESS_FQDN }}:9345
