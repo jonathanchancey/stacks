@@ -16,8 +16,3 @@
   become: true
   roles:
     - role: worker
-
-- name: Run local tasks
-  hosts: localhost
-  roles:
-    - role: local
