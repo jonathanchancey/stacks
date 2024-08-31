@@ -114,10 +114,6 @@ resource "proxmox_virtual_environment_file" "cloud_config" {
   source_raw {
     data = <<-EOF
     #cloud-config
-    chpasswd:
-      list: |
-        ${var.username}:${var.password}
-      expire: false
     hostname: ${var.name}
     fqdn: ${coalesce(var.fqdn, "${var.name}.${var.dns_domain}")}
     ssh_pwauth: ${var.cloud_image_ssh_pwauth}
@@ -136,6 +132,7 @@ resource "proxmox_virtual_environment_file" "cloud_config" {
       - name: ${var.username}
         groups: sudo
         shell: /bin/bash
+        passwd: ${var.password}
         ssh-authorized-keys:
           %{for key in var.sshkeys}
           - ${key}
