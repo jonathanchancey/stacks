@@ -5,26 +5,19 @@
   roles:
     - role: shared
 
-- name: Setup RKE2 on servers
-  vars_files:
-    - ./group_vars/./group_vars/secret.yml
+- name: Setup RKE2 on controlplanes
   hosts: controlplane
   become: true
-  # gather_facts: yes
   roles:
     - role: controlplane
 
-# - name: Setup RKE2 on agents
-#   vars_files:
-#     - ./group_vars/secret.yml
-#   gather_facts: yes
-#   hosts: agents
-#   roles:
-#     - role: worker
+- name: Setup RKE2 on agents
+  hosts: agents
+  become: true
+  roles:
+    - role: worker
 
-# - name: Prepare kubeconfig and run k8s and helm setup
-#   vars_files:
-#     - ./group_vars/secret.yml
-#   hosts: localhost
-#   roles:
-#     - role: local
+- name: Run local tasks
+  hosts: localhost
+  roles:
+    - role: local
