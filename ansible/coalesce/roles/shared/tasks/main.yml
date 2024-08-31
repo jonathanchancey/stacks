@@ -1,3 +1,11 @@
+- name: Check if SERVER_ADDRESS_FQDN resolves
+  ansible.builtin.uri:
+    url: "https://{{ SERVER_ADDRESS_FQDN }}"
+    method: HEAD
+    validate_certs: no
+  register: curl_check
+  failed_when: curl_check.status == -1
+
 - name: Set timezone
   community.general.timezone:
     name: "{{ system_timezone }}"
