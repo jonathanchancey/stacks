@@ -20,6 +20,10 @@ terraform {
       source  = "ryanwholey/pihole"
       version = "0.2.0"
     }
+    cloudflare = {
+      source  = "cloudflare/cloudflare"
+      version = "~>4.40"
+    }
   }
 }
 
@@ -28,6 +32,10 @@ provider "pihole" {
 
   # Requires Pi-hole Web Interface >= 5.11.0
   api_token = var.pihole_api_token
+}
+
+provider "cloudflare" {
+  api_token = var.cloudflare_api_token
 }
 
 provider "proxmox" {

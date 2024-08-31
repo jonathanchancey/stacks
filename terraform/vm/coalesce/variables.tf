@@ -42,6 +42,27 @@ variable "fqdn" {
 
 variable "pihole_api_token" {
   type        = string
-  description = " "
+  description = "pihole_api_token"
   sensitive   = true
+}
+
+variable "cloudflare_api_token" {
+  type        = string
+  description = "cloudflare_api_token"
+  sensitive   = true
+}
+
+variable "cloudflare_zone_id" {
+  type    = string
+  default = null
+}
+
+variable "cloudflare_account_id" {
+  type    = string
+  default = null
+}
+
+variable "cloudflare_domain" {
+  type    = string
+  default = null
 }

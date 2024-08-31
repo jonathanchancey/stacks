@@ -41,9 +41,9 @@ locals {
     virtual_environment_password   = var.virtual_environment_password
     virtual_environment_username   = var.virtual_environment_username
     tpm_state_datastore_id         = "local"
-    memory_dedicated               = 4096
+    memory_dedicated               = 8192
     cpu_cores                      = 4
-    disk_size                      = 10
+    disk_size                      = 16
     network_device_vlan_id         = 131
     ip_config = {
       ipv4_address = "dhcp"
