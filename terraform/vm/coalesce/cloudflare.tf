@@ -5,6 +5,20 @@ resource "cloudflare_record" "coalesce-vip" {
   type    = "A"
 }
 
+resource "cloudflare_record" "coalesce-istio" {
+  zone_id = var.cloudflare_zone_id
+  name    = "ist.c"
+  content = "10.131.129.12"
+  type    = "A"
+}
+
+resource "cloudflare_record" "coalesce-istio-webfrontend" {
+  zone_id = var.cloudflare_zone_id
+  name    = "webfrontend.c"
+  content = "10.131.129.12"
+  type    = "A"
+}
+
 resource "cloudflare_record" "c" {
   zone_id = var.cloudflare_zone_id
   name    = "c"
