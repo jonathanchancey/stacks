@@ -1,0 +1,18 @@
+---
+- name: Run shared setup tasks
+  hosts: all
+  become: true
+  roles:
+    - role: shared
+
+- name: Setup RKE2 on controlplanes
+  hosts: controlplane
+  become: true
+  roles:
+    - role: controlplane
+
+- name: Setup RKE2 on agents
+  hosts: agents
+  become: true
+  roles:
+    - role: worker

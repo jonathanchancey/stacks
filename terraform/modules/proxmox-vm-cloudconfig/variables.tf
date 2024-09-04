@@ -42,7 +42,7 @@ variable "vm_id" {
 variable "datastore_id" {
   type        = string
   default     = "local"
-  description = "Storage kocation for VM disk"
+  description = "Storage location for VM disk"
 }
 
 variable "username" {
@@ -160,12 +160,26 @@ variable "cloud_image_content_type" {
 
 variable "cloud_image_datastore_id" {
   type        = string
+  default     = ""
   description = "The ID of the datastore where the cloud image will be stored."
 }
 
 variable "cloud_image_node_name" {
   type        = string
+  default     = ""
   description = "The name of the node where the cloud image will be stored."
+}
+
+variable "cloud_config_datastore_id" {
+  type        = string
+  default     = "local"
+  description = "The name of the node where the cloud image will be stored."
+}
+
+variable "cloud_image_id" {
+  type        = string
+  default     = ""
+  description = "Alternatively, pass the id of a cloud image terraform resource"
 }
 
 variable "cloud_image_checksum" {
@@ -182,11 +196,13 @@ variable "cloud_image_checksum_algorithm" {
 
 variable "cloud_image_url" {
   type        = string
+  default     = ""
   description = "The URL from which to download the cloud image."
 }
 
 variable "cloud_image_file_name" {
   type        = string
+  default     = ""
   description = "The file name to use when storing the cloud image."
 }
 

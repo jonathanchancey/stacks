@@ -1,0 +1,9 @@
+---
+- name: Reboot cluster
+  hosts: all
+  gather_facts: yes
+  tasks:
+    - name: Reboot nodes
+      become: true
+      reboot:
+        reboot_timeout: 500

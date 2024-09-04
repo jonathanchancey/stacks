@@ -1,0 +1,51 @@
+- name: Check if SERVER_ADDRESS_FQDN resolves
+  ansible.builtin.uri:
+    url: "https://{{ SERVER_ADDRESS_FQDN }}"
+    method: HEAD
+    validate_certs: no
+  register: curl_check
+  failed_when: curl_check.status == -1
+
+- name: Set timezone
+  community.general.timezone:
+    name: "{{ system_timezone }}"
+  when: (system_timezone is defined) and (system_timezone != "Your/Timezone")
+
+- name: Run openSUSE Tasks
+  ansible.builtin.import_tasks: suse.yml
+  when: ansible_os_family == 'Suse'
+
+- name: "RKE2 | Enable IPv4 forwarding"
+  ansible.posix.sysctl:
+    name: net.ipv4.conf.all.forwarding
+    value: "1"
+    sysctl_file: /etc/sysctl.d/90-rke2.conf
+    sysctl_set: true
+    state: present
+    reload: true
+
+- name: Enable IPv6 forwarding
+  ansible.posix.sysctl:
+    name: net.ipv6.conf.all.forwarding
+    value: "1"
+    sysctl_file: /etc/sysctl.d/90-rke2.conf
+    sysctl_set: true
+    state: present
+    reload: true
+
+- name: Enable IPv6 router advertisements
+  ansible.posix.sysctl:
+    name: net.ipv6.conf.all.accept_ra
+    value: "2"
+    sysctl_file: /etc/sysctl.d/90-rke2.conf
+    sysctl_set: true
+    state: present
+    reload: true
+
+- name: Configure NetworkManager to ignore calico/flannel related network interfaces
+  copy:
+    dest: "{{ NETWORKFILE }}"
+    mode: "0644"
+    content: |
+      [keyfile]
+      unmanaged-devices=interface-name:cali*;interface-name:flannel*

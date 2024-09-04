@@ -1,0 +1,9 @@
+- name: "RKE2 | Update repositories cache and install dependencies"
+  community.general.zypper:
+    name:
+      - containerd
+      - python312
+      - iptables
+    state: latest
+    update_cache: true
+  become: true

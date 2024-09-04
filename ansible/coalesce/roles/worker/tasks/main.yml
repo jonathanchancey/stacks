@@ -1,0 +1,36 @@
+- name: Create directories if they don't exist
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ user }}"
+    mode: "0755"
+    recurse: yes
+  loop:
+    - "{{ CONFDIR }}"
+    - "{{ NETWORKDIR }}"
+
+- name: Create config.yaml
+  copy:
+    dest: "{{ CONFFILE }}"
+    mode: "0644"
+    content: |
+      token: {{ node_token }}
+      server: https://{{ SERVER_ADDRESS_FQDN }}:9345
+
+- name: Install rke2 agent
+  shell: |
+    set -o pipefail && curl -sfL https://get.rke2.io | INSTALL_RKE2_TYPE="agent" INSTALL_RKE2_VERSION="{{ INSTALL_RKE2_VERSION }}" sh -
+  register: rke2_output
+  changed_when: rke2_output.rc == 0
+
+- name: Ensure rke2-agent is running
+  systemd:
+    state: started
+    enabled: true
+    name: rke2-agent
+
+- name: Add rke2 dir to PATH.
+  copy:
+    dest: /etc/profile.d/custom-path.sh
+    content: 'PATH=$PATH:/opt/rke2/bin'
+    mode: "0755"
