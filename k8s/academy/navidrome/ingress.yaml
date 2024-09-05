@@ -1,0 +1,21 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: navidrome-ingress
+  namespace: navidrome
+  annotations:
+    kubernetes.io/ingress.class: traefik-external
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`navidrome.chancey.dev`)
+      kind: Rule
+      priority: 10
+      services:
+        - name: navidrome
+          kind: Service
+          port: 4533
+  tls:
+    secretName: navidrome-cert-tls

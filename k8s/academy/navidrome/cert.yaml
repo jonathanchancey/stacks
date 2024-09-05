@@ -1,0 +1,14 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: navidrome-cert
+  namespace: navidrome
+spec:
+  secretName: navidrome-cert-tls
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  commonName: "navidrome.chancey.dev"
+  dnsNames:
+    - "navidrome.chancey.dev"
