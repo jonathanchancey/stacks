@@ -1,0 +1,55 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: navidrome
+  namespace: navidrome
+  labels:
+    app: navidrome
+spec:
+  replicas: 1
+  progressDeadlineSeconds: 600
+  revisionHistoryLimit: 2
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: navidrome
+  template:
+    metadata:
+      labels:
+        app: navidrome
+    spec:
+      containers:
+        - name: navidrome
+          image: deluan/navidrome:latest
+          resources:
+            requests:
+              memory: "100Mi"
+              cpu: "100m"
+            limits:
+              memory: "500Mi"
+              cpu: "500m"
+          env:
+            - name: TZ
+              value: America/Los_Angeles
+            - name: ND_SCANSCHEDULE
+              value: "1h"
+            - name: ND_LOGLEVEL
+              value: "info"
+            - name: ND_SESSIONTIMEOUT
+              value: "24h"
+          ports:
+            - containerPort: 4533
+          volumeMounts:
+            - mountPath: /music
+              name: pv-ladybug-music-smb
+            - mountPath: "/data"
+              name: db
+      volumes:
+        - name: db
+          persistentVolumeClaim:
+            claimName: navidrome-db
+        - name: pv-ladybug-music-smb
+          persistentVolumeClaim:
+            claimName: pv-ladybug-music-smb
