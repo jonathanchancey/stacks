@@ -1,0 +1,25 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: syncthing
+  namespace: syncthing
+spec:
+  selector:
+    app: syncthing
+  ports:
+    - name: webui
+      port: 8384
+      targetPort: 8384
+    - name: listening-tcp
+      port: 22000
+      targetPort: 22000
+      protocol: TCP
+    - name: listening-udp
+      port: 22000
+      targetPort: 22000
+      protocol: UDP
+    - name: protocol-discovery
+      port: 21027
+      targetPort: 21027
+      protocol: UDP
