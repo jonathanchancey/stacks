@@ -4,3 +4,4 @@ project_path:
   - ../../terraform/vm/prism
   - ../../terraform/vm/pocket
   - ../../terraform/vm/coalesce
+  - ../../terraform/vm/blobfish
