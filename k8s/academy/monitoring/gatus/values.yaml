@@ -41,20 +41,12 @@ config:
       url: https://truenas.k8s.chancey.dev
       conditions:
         - "[STATUS] == 200"
-    - name: Chicken
-      url: https://chicken.fkn.chancey.dev
-      conditions:
-        - "[STATUS] == 200"
     - name: Home Assistant
       url: https://ha.fkn.chancey.dev
       conditions:
         - "[STATUS] == 200"
     - name: Machinaris
       url: https://machinaris.fkn.chancey.dev/
-      conditions:
-        - "[STATUS] == 200"
-    - name: qBittorrent
-      url: https://qbit.fkn.chancey.dev
       conditions:
         - "[STATUS] == 200"
     - name: Syncthing
@@ -89,10 +81,6 @@ config:
       url: https://traefik.fkn.chancey.dev/dashboard/#/
       conditions:
         - "[STATUS] == 401"
-    - name: Uptime Kuma
-      url: https://uptime-kuma.fkn.chancey.dev/dashboard
-      conditions:
-        - "[STATUS] == 200"
     - name: InfluxDB
       url: https://influxdb.fkn.chancey.dev/
       conditions:
@@ -117,24 +105,8 @@ config:
       url: https://jellyfin.chancey.dev/
       conditions:
         - "[STATUS] == 200"
-    - name: Jellyseerr
-      url: https://jellyseerr.fkn.chancey.dev/
-      conditions:
-        - "[STATUS] == 200"
-    - name: Radarr
-      url: https://radarr.fkn.chancey.dev/
-      conditions:
-        - "[STATUS] == 200"
-    - name: Sonarr
-      url: https://sonarr.fkn.chancey.dev/
-      conditions:
-        - "[STATUS] == 200"
     - name: Navidrome
-      url: https://navi.fkn.chancey.dev/
-      conditions:
-        - "[STATUS] == 200"
-    - name: Miniflux
-      url: https://miniflux.fkn.chancey.dev/
+      url: https://navidrome.chancey.dev/
       conditions:
         - "[STATUS] == 200"
     - name: Immich
