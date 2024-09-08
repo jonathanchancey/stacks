@@ -120,8 +120,9 @@ resource "proxmox_virtual_environment_file" "cloud_config" {
     package_upgrade: true
     manage_etc_hosts: ${var.cloud_image_manage_etc_hosts}
     packages:
-      - qemu-guest-agent
-      - python312
+      %{for key in var.cloud_image_packages}
+      - ${key}
+      %{endfor}
     runcmd:
       - timedatectl set-timezone UTC
       - systemctl enable qemu-guest-agent
