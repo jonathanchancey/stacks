@@ -1,5 +1,5 @@
 module "vm" {
-  source = "../../modules/proxmox-vm-cloudconfig"
+  source = "git::git@github.com:jonathanchancey/stacks.git//terraform/modules/proxmox-vm-cloudconfig?ref=fc07c0d9228ad85a2c20e853d21314d691e04418"
 
   for_each = local.vm_configs
 
@@ -42,7 +42,7 @@ resource "ansible_host" "vms" {
   name   = each.key
   groups = try(local.vm_configs[each.key].ansible_groups, local.common_config.ansible_groups)
   variables = {
-    ansible_host = each.value.vm_ipv6_addresses[1][0]
+    ansible_host = each.value.vm_ipv4_addresses[1][0]
   }
 }
 
@@ -50,18 +50,3 @@ resource "ansible_group" "cluster" {
   name     = "k8s_cluster"
   children = ["kube_control_plane", "kube_node"]
 }
-
-resource "pihole_dns_record" "vm_dns" {
-  for_each = module.vm
-
-  domain = coalesce(local.vm_configs[each.key].fqdn, "${each.key}.${local.common_config.dns_domain}")
-  ip     = each.value.vm_ipv6_addresses[1][0]
-}
-
-
-# resource "pihole_dns_record" "vm_dns_ipv4" {
-#   for_each = module.vm
-
-#   domain = coalesce(local.vm_configs[each.key].fqdn, "${each.key}.${local.common_config.dns_domain}")
-#   ip     = each.value.vm_ipv4_addresses[1][0]
-# }

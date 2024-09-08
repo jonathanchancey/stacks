@@ -5,7 +5,7 @@ locals {
   vms = {
     prism = {
       vm_id          = 151
-      ansible_groups = ["debian", "gpu_nodes"]
+      ansible_groups = ["debian", "production", "gpu_nodes"]
       hostpci = {
         device = "hostpci0"
         id     = "0000:18:00"
@@ -13,10 +13,6 @@ locals {
         rombar = true
         xvga   = false
       }
-    }
-    conduit = {
-      vm_id          = 152
-      ansible_groups = ["debian", "critical"]
     }
   }
 
