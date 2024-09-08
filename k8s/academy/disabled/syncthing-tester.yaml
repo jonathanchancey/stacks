@@ -1,0 +1,33 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: example-mounter
+  labels:
+    app: example-mounter
+spec:
+  selector:
+    matchLabels:
+      app: example-mounter
+  template:
+    metadata:
+      labels:
+        app: example-mounter
+    spec:
+      containers:
+        - name: app
+          imagePullPolicy: IfNotPresent
+          image: opensuse/leap
+          command: ["/bin/sh", "-c", "sleep infinity"]
+          volumeMounts:
+            - mountPath: /leech # not leech anymore, but keeping the directory
+              name: syncthing-storage
+            - mountPath: /config
+              name: db
+      volumes:
+        - name: db
+          persistentVolumeClaim:
+            claimName: syncthing-db
+        - name: syncthing-storage
+          persistentVolumeClaim:
+            claimName: syncthing-storage
