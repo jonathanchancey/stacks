@@ -59,18 +59,10 @@ data:
               href: https://truenas.k8s.chancey.dev
               icon: si-truenas-#0095D5
               description: Baremetal NAS
-          - Chicken:
-              href: https://chicken.fkn.chancey.dev
-              icon: si-cockpit-#3B66BC
-              description: Okapi SMB Shares
           - Rancher | chancey.dev:
               href: https://rancher.k8s.chancey.dev/
               icon: rancher.png
               description: Kubernetes Management
-          - IPMI | TARS:
-              href: https://TARS.k8s.chancey.dev/
-              icon: si-intel-#0071C5
-              description: Super Earth Management
           - APC UPS:
               href: https://apc.k8s.chancey.dev/
               icon: mdi-car-battery-#E21836
@@ -104,7 +96,7 @@ data:
               href: https://eap.k8s.chancey.dev/
               icon: si-tp-link-#4ACBD6
               description: Access Point
-        - Metrics:
+        - Monitoring:
           - Grafana:
               href: https://grafana.chancey.dev/
               icon: grafana.png
@@ -121,19 +113,11 @@ data:
               href: https://influxdb.fkn.chancey.dev/
               icon: influxdb.png
               description: Time Series Database
-          - Uptime Kuma:
-              href: https://uptime-kuma.fkn.chancey.dev/dashboard
-              icon: uptime-kuma.png
-              description: Status Page
         - Services:
           - ZITADEL:
               href: https://auth.chancey.dev/
               icon: zitadel.png
               description: Identity Provider
-          - Miniflux:
-              href: https://miniflux.fkn.chancey.dev/
-              icon: miniflux.png
-              description: RSS Collection Manager
           - Kawa:
               href: https://kawa.k8s.chancey.dev/
               icon: mdi-waves-#A22846
@@ -142,18 +126,10 @@ data:
               href: https://ha.fkn.chancey.dev
               icon: home-assistant.png
               description: Home Automation
-          - Klipper | Ender 3:
-              href: https://ender.fkn.chancey.dev
-              icon: si-creality
-              description: 3D Printer Automation
           - Machinaris:
               href: https://machinaris.fkn.chancey.dev/
               icon: si-chianetwork-#5ECE71
               description: Chia Management
-          - Download Client:
-              href: https://qbit.fkn.chancey.dev
-              icon: mdi-transfer-#68a9ed
-              description: Download Client
           - Syncthing:
               href: https://syncthing.fkn.chancey.dev/
               icon: syncthing.png
@@ -167,18 +143,6 @@ data:
               href: https://jellyfin.chancey.dev/
               icon: jellyfin.png
               description: Media Server
-          - Jellyseerr:
-              href: https://jellyseerr.fkn.chancey.dev/
-              icon: jellyseerr.png
-              description: Media Request Manager
-          - Radarr:
-              href: https://radarr.fkn.chancey.dev/
-              icon: radarr.png
-              description: TV Collection Manager
-          - Sonarr:
-              href: https://sonarr.fkn.chancey.dev/
-              icon: sonarr.png
-              description: Movie Collection Manager
           - Navidrome:
               href: https://navi.fkn.chancey.dev/
               icon: navidrome.png
@@ -207,6 +171,9 @@ data:
             cpu: true
             memory: true
         - search:
-            provider: brave
+            provider: custom
+            url: https://kagi.com/search?q=
             target: _blank
+            suggestionUrl: https://kagi.com/api/autosuggest?q= # Optional
+            showSearchSuggestions: true # Optional
     docker.yaml: ""
