@@ -1,10 +1,10 @@
-- hosts: gpu_nodes
+- hosts: blobfish
   become: yes
   vars:
     user_name: machinaris
-    user_id: 1000
+    user_id: 1010
     group_name: machinaris
-    group_id: 1000
+    group_id: 1010
     directory_path: /opt/machinaris
 
   tasks:

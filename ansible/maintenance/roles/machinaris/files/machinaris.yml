@@ -1,18 +1,19 @@
-machinaris:
-  image: ghcr.io/guydavis/machinaris:v2.4.1
-  container_name: machinaris
-  restart: unless-stopped
-  volumes:
-    - "/machinaris:/root/.chia"
-  environment:
-    - TZ=America/Los_Angeles
-    - mode=fullnode
-    - worker_address=10.131.181.36
-    - blockchains=chia
-    - chia_exporter=true
-  ports:
-    - 8926:8926
-    - 8927:8927
-    - 8444:8444
-    - 8447:8447
-    - 9914:9914
+services:
+  machinaris:
+    image: ghcr.io/guydavis/machinaris:v2.4.3
+    container_name: machinaris
+    restart: unless-stopped
+    volumes:
+      - "/machinaris:/root/.chia"
+    environment:
+      - TZ=America/Los_Angeles
+      - mode=fullnode
+      - worker_address=10.131.181.36
+      - blockchains=chia
+      - chia_exporter=true
+    ports:
+      - 8926:8926
+      - 8927:8927
+      - 8444:8444
+      - 8447:8447
+      - 9914:9914
