@@ -138,11 +138,11 @@ resource "proxmox_virtual_environment_file" "cloud_config" {
           %{for key in var.sshkeys}
           - ${key}
           %{endfor}
-        sudo: ALL=(ALL) NOPASSWD:ALL
+        sudo: ${var.username} NOPASSWD:ALL
       - name: ansible
         groups: users,admin,wheel
         shell: /bin/bash
-        sudo: ALL=(ALL) NOPASSWD:ALL
+        sudo: ansible NOPASSWD:ALL
         lock_passwd: true
         ssh_authorized_keys:
           %{for key in var.sshkeys}
