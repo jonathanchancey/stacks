@@ -11,9 +11,9 @@ locals {
     description                    = "Managed by Terraform"
     tags                           = ["debian", "terraform"]
     ansible_groups                 = ["debian", "docker"]
-    node_name                      = "okapi"
-    cloud_image_node_name          = "okapi"
-    datastore_id                   = "vm"
+    node_name                      = "TARS"
+    cloud_image_node_name          = "TARS"
+    datastore_id                   = "local"
     cloud_image_datastore_id       = "local"
     dns_domain                     = "internal"
     reboot                         = false
