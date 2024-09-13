@@ -2,25 +2,25 @@ global:
   scrape_interval: 15s
   evaluation_interval: 15s
 scrape_configs:
-  - job_name: 'prometheus'
+  - job_name: "prometheus"
     static_configs:
-      - targets: ['localhost:9090']
-  - job_name: 'chia_fullnode'
+      - targets: ["localhost:9090"]
+  - job_name: "chia_fullnode"
     static_configs:
-      - targets: ['10.10.0.5:9914']
+      - targets: ["blobfish:9914"]
         labels:
-          application: 'chia-blockchain'
-          network: 'mainnet'
-  - job_name: 'node_exporter'
+          application: "chia-blockchain"
+          network: "mainnet"
+  - job_name: "node_exporter"
     static_configs:
-      - targets: ['KIPP.local:9100']
-      - targets: ['reap.local:9100']
-      - targets: ['beholder.local:9100']
-      - targets: ['sculpin.local:9100']
-      - targets: ['salamander.local:9100']
-      - targets: ['chicken.local:9100']
-      - targets: ['acolyte-00.local:9100']
-      - targets: ['acolyte-01.local:9100']
-      - targets: ['acolyte-02.local:9100']
-      - targets: ['neophyte-01.local:9100']
-      - targets: ['neophyte-02.local:9100']
+      - targets: ["KIPP.local:9100"]
+      - targets: ["reap.local:9100"]
+      - targets: ["beholder.local:9100"]
+      - targets: ["sculpin.local:9100"]
+      - targets: ["salamander.local:9100"]
+      - targets: ["chicken.local:9100"]
+      - targets: ["acolyte-00.local:9100"]
+      - targets: ["acolyte-01.local:9100"]
+      - targets: ["acolyte-02.local:9100"]
+      - targets: ["neophyte-01.local:9100"]
+      - targets: ["neophyte-02.local:9100"]
