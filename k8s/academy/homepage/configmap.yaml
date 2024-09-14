@@ -67,6 +67,10 @@ data:
               href: https://apc.k8s.chancey.dev/
               icon: mdi-car-battery-#E21836
               description: Power Management
+          - ZITADEL:
+              href: https://auth.chancey.dev/
+              icon: zitadel.png
+              description: Identity Provider
         - Network:
           - Shar:
               href: https://shar.fkn.chancey.dev/
@@ -84,14 +88,18 @@ data:
               href: https://traefik.fkn.chancey.dev/dashboard/#/
               icon: traefik.png
               description: Reverse Proxy
-          - SwOS:
-              href: https://swos.k8s.chancey.dev/index.html
-              icon: si-mikrotik-#CCCCCC
-              description: 24p Mikrotik Switch
-          - RouterOS:
-              href: https://routeros.k8s.chancey.dev
+          - 10p 2.5Gb Switch:
+              href: https://CRS310.k8s.chancey.dev
               icon: si-mikrotik-#CCCCCC
               description: 2.5Gb Mikrotik Switch
+          - 24p Hearth Switch:
+              href: https://CSS326.k8s.chancey.dev/index.html
+              icon: si-mikrotik-#CCCCCC
+              description: 24p Mikrotik Switch
+          - 24p PoE Switch:
+              href: https://CRS328.k8s.chancey.dev
+              icon: si-mikrotik-#CCCCCC
+              description: 24p PoE Mikrotik Switch
           - EAP:
               href: https://eap.k8s.chancey.dev/
               icon: si-tp-link-#4ACBD6
@@ -114,10 +122,6 @@ data:
               icon: influxdb.png
               description: Time Series Database
         - Services:
-          - ZITADEL:
-              href: https://auth.chancey.dev/
-              icon: zitadel.png
-              description: Identity Provider
           - Kawa:
               href: https://kawa.k8s.chancey.dev/
               icon: mdi-waves-#A22846
@@ -144,7 +148,7 @@ data:
               icon: jellyfin.png
               description: Media Server
           - Navidrome:
-              href: https://navi.fkn.chancey.dev/
+              href: https://navidrome.chancey.dev/
               icon: navidrome.png
               description: Music Collection Manager
           - Filebrowser:

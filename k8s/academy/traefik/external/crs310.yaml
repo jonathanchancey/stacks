@@ -25,7 +25,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`routeros.k8s.chancey.dev`)
+    - match: Host(`CRS310.k8s.chancey.dev`)
       kind: Rule
       priority: 1
       services:
