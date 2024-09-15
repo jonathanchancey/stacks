@@ -29,7 +29,7 @@ spec:
       kind: Rule
       priority: 1
       services:
-        - name: swos
+        - name: crs328
           kind: Service
           port: 80
   tls:
