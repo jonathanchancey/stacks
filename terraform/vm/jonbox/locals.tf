@@ -6,6 +6,7 @@ locals {
     controlbox-00 = {}
     controlbox-01 = {}
     controlbox-02 = {}
+    jonbox-00 = {}
   }
   common_config = {
     description                    = "Managed by Terraform"
