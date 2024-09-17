@@ -18,6 +18,9 @@ resource "proxmox_virtual_environment_vm" "vm" {
     file_format  = "raw"
   }
 
+  boot_order      = ["virtio0", "ide3"]
+  stop_on_destroy = true
+
   cdrom {
     enabled = true
     file_id = "local:iso/talos-nocloud-amd64.iso"
