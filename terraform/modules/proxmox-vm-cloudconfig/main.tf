@@ -48,6 +48,7 @@ resource "proxmox_virtual_environment_vm" "vm" {
     iothread     = true
     discard      = "on"
     size         = var.disk_size
+    file_format  = "raw"
   }
 
   dynamic "hostpci" {
@@ -138,11 +139,11 @@ resource "proxmox_virtual_environment_file" "cloud_config" {
           %{for key in var.sshkeys}
           - ${key}
           %{endfor}
-        sudo: ${var.username} NOPASSWD:ALL
+        sudo: ALL=(ALL) NOPASSWD:ALL
       - name: ansible
         groups: users,admin,wheel
         shell: /bin/bash
-        sudo: ansible NOPASSWD:ALL
+        sudo: ALL=(ALL) NOPASSWD:ALL
         lock_passwd: true
         ssh_authorized_keys:
           %{for key in var.sshkeys}
