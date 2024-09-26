@@ -1,0 +1,13 @@
+master:
+  hosts:
+    controlbox-01:
+      ansible_host: 10.131.128.40
+      ansible_user: jon
+
+jonbox:
+  children:
+    master:
+
+k3s_cluster:
+  children:
+    master:
