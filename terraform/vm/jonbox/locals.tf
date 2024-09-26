@@ -3,19 +3,29 @@ locals {
   vm_id_start = 12810
   # define VMs
   vms = {
-    controlbox-00 = {
-      ansible_groups = ["jonbox", "master", "k3s_cluster"]
+    # controlbox-00 = {
+    #   ansible_groups = ["jonbox", "master", "k3s_cluster"]
+    #   ip_config = {
+    #     ipv4_address = "10.131.128.20/18"
+    #     ipv4_gateway = "10.131.128.1"
+    #   }
+    # }
+    # controlbox-01 = {
+    #   ansible_groups = ["jonbox", "master", "k3s_cluster"]
+    #   ip_config = {
+    #     ipv4_address = "10.131.128.40/18"
+    #     ipv4_gateway = "10.131.128.1"
+    #   }
+    # }
+    kind-00 = {
+      ansible_groups = ["jonbox"]
       ip_config = {
-        ipv4_address = "10.131.128.20/18"
+        ipv4_address = "10.131.128.60/18"
         ipv4_gateway = "10.131.128.1"
       }
-    }
-    controlbox-01 = {
-      ansible_groups = ["jonbox", "master", "k3s_cluster"]
-      ip_config = {
-        ipv4_address = "10.131.128.40/18"
-        ipv4_gateway = "10.131.128.1"
-      }
+      cpu_cores        = 20
+      disk_size        = 50
+      memory_dedicated = 65536
     }
     # controlbox-02 = {
     #   ansible_groups = ["debian", "terraform", "controlplane", "etcd", "jonbox", "master"]
