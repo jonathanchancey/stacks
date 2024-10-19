@@ -37,12 +37,12 @@ metadata:
     name: immich-postgres-backup
     namespace: immich
 spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 5Gi
-  storageClassName: longhorn
+    accessModes:
+        - ReadWriteOnce
+    resources:
+        requests:
+            storage: 5Gi
+    storageClassName: longhorn
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
@@ -50,9 +50,42 @@ metadata:
     name: immich-postgres-backup-nfs
     namespace: immich
 spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 5Gi
-  storageClassName: academy-smb
+    accessModes:
+        - ReadWriteOnce
+    resources:
+        requests:
+            storage: 5Gi
+    storageClassName: academy-smb
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+    name: personal-external-library-nfs-pv
+    namespace: immich
+    labels:
+        store: personal-external-library-nfs
+spec:
+    accessModes:
+        - ReadWriteOnce
+    persistentVolumeReclaimPolicy: Retain
+    capacity:
+        storage: 10Ti
+    nfs:
+        server: 10.10.0.165
+        path: /mnt/scale-worm/strawberry/personal/external-library
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+    name: personal-external-library-nfs-pvc
+    namespace: immich
+spec:
+    selector:
+        matchLabels:
+            store: personal-external-library-nfs
+    storageClassName: ""
+    accessModes:
+        - ReadWriteOnce
+    resources:
+        requests:
+            storage: 10Ti
