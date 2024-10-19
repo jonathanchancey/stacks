@@ -1,0 +1,35 @@
+cluster_cidr: 10.43.0.0/16
+ansible_hostname: controlbox-01
+# apiserver_endpoint is virtual ip-address which will be configured on each master
+apiserver_endpoint: 10.131.128.41
+
+# k3s_token is required  masters can talk together securely
+# this token should be alpha numeric only
+k3s_token: redacted
+
+# The IP on which the node is reachable in the cluster.
+# Here, a sensible default is provided, you can still override
+# it for each of your hosts, though.
+k3s_node_ip: "{{ ansible_facts[(cilium_iface | default(calico_iface | default(flannel_iface)))]['ipv4']['address'] }}"
+
+# these arguments are recommended for servers as well as agents:
+extra_args: >-
+  --node-ip={{ k3s_node_ip }}
+
+# change these to your liking, the only required are: --disable servicelb, --tls-san {{ apiserver_endpoint }}
+# the contents of the if block is also required if using calico or cilium
+extra_server_args: >-
+  --node-ip={{ k3s_node_ip }}
+  --flannel-backend=none
+  --disable-network-policy
+  --cluster-cidr={{ cluster_cidr }}
+  --tls-san {{ apiserver_endpoint }}
+  --disable servicelb
+  --disable traefik
+  --cluster-init
+
+extra_agent_args: >-
+  --node-ip={{ k3s_node_ip }}
+
+# metallb ip range for load balancer
+metal_lb_ip_range: 10.131.128.42-10.131.128.46
