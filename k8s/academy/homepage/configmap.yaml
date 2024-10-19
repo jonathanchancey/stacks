@@ -135,7 +135,7 @@ data:
               icon: si-chianetwork-#5ECE71
               description: Chia Management
           - Syncthing:
-              href: https://syncthing.fkn.chancey.dev/
+              href: https://syncthing.chancey.dev/
               icon: syncthing.png
               description: File Sync
         - Media:
