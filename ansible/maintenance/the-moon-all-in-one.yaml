@@ -1,0 +1,65 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: solar-system
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: moon-lb-svc
+  namespace: solar-system
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 8080
+      protocol: TCP
+      name: http
+  selector:
+    app: moon
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: moon-svc
+  namespace: solar-system
+  labels:
+    app: moon
+spec:
+  # clusterIP: None
+  ports:
+    - port: 80
+      targetPort: 8080
+      protocol: TCP
+      name: http
+  selector:
+    app: moon
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: moon
+  namespace: solar-system
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: moon
+  template:
+    metadata:
+      labels:
+        app: moon
+    spec:
+      containers:
+        - name: moon
+          image: armsultan/solar-system:moon-nonroot
+          imagePullPolicy: Always
+          # resources:
+          #   limits:
+          #     cpu: "1"
+          #     memory: "200Mi"
+          #   requests:
+          #     cpu: "0.5"
+          #     memory: "100Mi"
+          ports:
+            - containerPort: 8080
