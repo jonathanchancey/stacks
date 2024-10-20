@@ -71,39 +71,6 @@ data:
               href: https://auth.chancey.dev/
               icon: zitadel.png
               description: Identity Provider
-        - Network:
-          - Shar:
-              href: https://shar.fkn.chancey.dev/
-              icon: proxmox.png
-              description: Forbidden Hypervisor
-          - OPNSense:
-              href: https://opnsense.fkn.chancey.dev
-              icon: opnsense.png
-              description: Forbidden Router
-          - Pi-Hole:
-              href: http://pit.fkn.chancey.dev/admin
-              icon: pi-hole.png
-              description: Forbidden DNS
-          - Traefik:
-              href: https://traefik.fkn.chancey.dev/dashboard/#/
-              icon: traefik.png
-              description: Reverse Proxy
-          - 10p 2.5Gb Switch:
-              href: https://CRS310.k8s.chancey.dev
-              icon: si-mikrotik-#CCCCCC
-              description: 2.5Gb Mikrotik Switch
-          - 24p Hearth Switch:
-              href: https://CSS326.k8s.chancey.dev/index.html
-              icon: si-mikrotik-#CCCCCC
-              description: 24p Mikrotik Switch
-          - 24p PoE Switch:
-              href: https://CRS328.k8s.chancey.dev
-              icon: si-mikrotik-#CCCCCC
-              description: 24p PoE Mikrotik Switch
-          - EAP:
-              href: https://eap.k8s.chancey.dev/
-              icon: si-tp-link-#4ACBD6
-              description: Access Point
         - Monitoring:
           - Grafana:
               href: https://grafana.chancey.dev/
@@ -121,23 +88,44 @@ data:
               href: https://influxdb.fkn.chancey.dev/
               icon: influxdb.png
               description: Time Series Database
+        - Network:
+          - 10p 2.5Gb Switch:
+              href: https://CRS310.k8s.chancey.dev
+              icon: si-mikrotik-#CCCCCC
+              description: 2.5Gb Mikrotik Switch
+          - 24p Hearth Switch:
+              href: https://CSS326.k8s.chancey.dev/index.html
+              icon: si-mikrotik-#CCCCCC
+              description: 24p Mikrotik Switch
+          - 24p PoE Switch:
+              href: https://CRS328.k8s.chancey.dev
+              icon: si-mikrotik-#CCCCCC
+              description: 24p PoE Mikrotik Switch
+          - EAP:
+              href: https://eap.k8s.chancey.dev/
+              icon: si-tp-link-#4ACBD6
+              description: Access Point
+          - Traefik:
+              href: https://traefik.fkn.chancey.dev/dashboard/#/
+              icon: traefik.png
+              description: Reverse Proxy
         - Services:
-          - Kawa:
-              href: https://kawa.k8s.chancey.dev/
-              icon: mdi-waves-#A22846
-              description: Garage Soundbar
           - Home Assistant:
               href: https://ha.fkn.chancey.dev
               icon: home-assistant.png
               description: Home Automation
-          - Machinaris:
-              href: https://machinaris.fkn.chancey.dev/
-              icon: si-chianetwork-#5ECE71
-              description: Chia Management
           - Syncthing:
               href: https://syncthing.chancey.dev/
               icon: syncthing.png
               description: File Sync
+          - Machinaris:
+              href: https://machinaris.fkn.chancey.dev/
+              icon: si-chianetwork-#5ECE71
+              description: Chia Management
+          - Kawa:
+              href: https://kawa.k8s.chancey.dev/
+              icon: mdi-waves-#A22846
+              description: Garage Soundbar
         - Media:
           - Immich:
               href: https://photos.chancey.dev/
@@ -155,6 +143,19 @@ data:
               href: https://filebrowser.k8s.chancey.dev/
               icon: filebrowser.png
               description: Music Collection Manager
+        - Forbidden Network:
+          - Shar:
+              href: https://shar.fkn.chancey.dev/
+              icon: proxmox.png
+              description: Forbidden Hypervisor
+          - OPNSense:
+              href: https://opnsense.fkn.chancey.dev
+              icon: opnsense.png
+              description: Forbidden Router
+          - Pi-Hole:
+              href: http://pit.fkn.chancey.dev/admin
+              icon: pi-hole.png
+              description: Forbidden DNS
 
     widgets.yaml: |
         - kubernetes:
