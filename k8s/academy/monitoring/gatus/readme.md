@@ -4,6 +4,7 @@
 kubectl create ns monitoring
 kubens monitoring
 helm repo add minicloudlabs https://minicloudlabs.github.io/helm-charts
+helm repo update
 helm upgrade --install gatus -n monitoring -f values.yaml -f values-secrets.yaml minicloudlabs/gatus --reset-values
 ```
 
