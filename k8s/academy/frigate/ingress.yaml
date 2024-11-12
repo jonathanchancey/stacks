@@ -1,0 +1,21 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: frigate-ingress
+  namespace: frigate
+  annotations:
+    kubernetes.io/ingress.class: traefik-external
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`frigate.chancey.dev`)
+      kind: Rule
+      priority: 1
+      services:
+        - name: frigate
+          kind: Service
+          port: 5000
+  tls:
+    secretName: frigate-cert-tls
