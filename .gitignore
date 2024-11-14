@@ -60,3 +60,4 @@ local.yaml
 *secret.yml
 .DS_Store
 k8s/coalesce/cert-manager
+keys
