@@ -1,0 +1,17 @@
+- name: Restart timesyncd
+  service:
+    name: systemd-timesyncd
+    state: restarted
+
+- name: Restart sshd
+  service:
+    name: ssh
+    state: restarted
+
+- name: Reboot system if required
+  reboot:
+    msg: "Rebooting due to system updates"
+    connect_timeout: 5
+    reboot_timeout: 300
+    pre_reboot_delay: 0
+    post_reboot_delay: 30

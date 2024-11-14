@@ -1,0 +1,5 @@
+hostname_prefix: scribe
+system_timezone: America/Los_Angeles
+ansible_user: ""
+ansible_become_user: ""
+ansible_password: ""
