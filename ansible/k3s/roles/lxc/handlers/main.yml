@@ -1,5 +1,0 @@
----
-- name: Reboot server
-  become: true
-  reboot:
-  listen: reboot server
