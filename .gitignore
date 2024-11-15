@@ -33,6 +33,7 @@ terraform-plugin-proxmox.log
 
 .env
 *.env
+.private
 
 id_rsa*
 id_ed25519*
