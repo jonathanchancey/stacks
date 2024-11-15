@@ -7,7 +7,11 @@
       become: true
     - role: download
       become: true
-    - role: raspberrypi
+
+- name: Setup longhorn
+  hosts: node
+  roles:
+    - role: longhorn
       become: true
 
 - name: Setup k3s servers
