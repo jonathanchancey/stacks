@@ -5,7 +5,7 @@
     state: directory
     owner: root
     group: root
-    mode: 0644
+    mode: "0644"
   when: ansible_hostname == hostvars[groups[group_name_master | default('master')][0]]['ansible_hostname']
 
 - name: Download vip rbac manifest to first master
@@ -14,7 +14,7 @@
     dest: "/var/lib/rancher/k3s/server/manifests/vip-rbac.yaml"
     owner: root
     group: root
-    mode: 0644
+    mode: "0644"
   when: ansible_hostname == hostvars[groups[group_name_master | default('master')][0]]['ansible_hostname']
 
 - name: Copy vip manifest to first master
@@ -23,5 +23,5 @@
     dest: "/var/lib/rancher/k3s/server/manifests/vip.yaml"
     owner: root
     group: root
-    mode: 0644
+    mode: "0644"
   when: ansible_hostname == hostvars[groups[group_name_master | default('master')][0]]['ansible_hostname']

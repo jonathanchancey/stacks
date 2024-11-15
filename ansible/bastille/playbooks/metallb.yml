@@ -11,7 +11,7 @@
       dest: "{{ WATCHDIR }}/metallb-native.yaml"
       owner: root
       group: root
-      mode: 0644
+      mode: "0644"
 
   - name: create ipaddresspool.yaml
     copy:
