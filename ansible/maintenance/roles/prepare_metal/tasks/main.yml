@@ -9,15 +9,9 @@
     success_msg: "Host is running on ARM architecture with Debian Bookworm"
 
 - name: Check and create ansible user
+  become: true
+  become_user: root
   block:
-    - name: Check if ansible user exists
-      getent:
-        database: passwd
-        key: ansible
-      register: ansible_user_exists
-      failed_when: false
-      changed_when: false
-
     - name: Create ansible user if not exists
       user:
         name: ansible
@@ -27,14 +21,12 @@
         create_home: true
         groups: sudo
         password: "!"
-      when: ansible_user_exists.failed is defined and ansible_user_exists.failed
 
     - name: Set up authorized keys for ansible user
       ansible.posix.authorized_key:
         user: ansible
         state: present
         key: "{{ ansible_ssh_public_key }}"
-      when: ansible_ssh_public_key is defined
 
     - name: Configure sudo access for ansible user
       lineinfile:
@@ -42,30 +34,33 @@
         line: "ansible ALL=(ALL) NOPASSWD: ALL"
         state: present
         mode: '0440'
+        owner: root
+        group: root
         create: yes
         validate: '/usr/sbin/visudo -cf %s'
 
-    - name: Test ansible user sudo access
-      command: whoami
-      become: true
-      become_user: ansible
-      register: sudo_test
-      changed_when: false
-      failed_when: sudo_test.stdout != 'root'
+- name: Test ansible user sudo access
+  command: whoami
+  become: true
+  become_user: ansible
+  register: sudo_test
+  changed_when: false
+  failed_when: sudo_test.stdout != 'root'
 
 - name: Update ansible_user for subsequent tasks
   set_fact:
     ansible_user: ansible
-    ansible_become_user: ansible
+    ansible_become_user: root
 
 - name: Reconnect as ansible user
   meta: reset_connection
 
-- name: Set hostname with padded zeros
-  hostname:
-    name: "{{ hostname_prefix }}-{{ '%02d' | format(play_hosts.index(inventory_hostname)) }}"
+- name: Debug system information
+  debug:
+    msg: "{{ hostname_prefix }}-{{ '%02d' | format(play_hosts.index(inventory_hostname)) }}"
 
 - name: Update /etc/hosts
+  become: true
   lineinfile:
     path: /etc/hosts
     regexp: |
@@ -73,7 +68,24 @@
     line: "127.0.1.1 {{ hostname_prefix }}-{{ '%02d' | format(play_hosts.index(inventory_hostname)) }}"
     state: present
 
+- name: Update /etc/hostname
+  copy:
+    content: "{{ hostname_prefix }}-{{ '%02d' | format(play_hosts.index(inventory_hostname)) }}\n"
+    dest: /etc/hostname
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Set hostname with padded zeros
+  become: true
+  become_user: root
+  command: "hostnamectl set-hostname {{ hostname_prefix }}-{{ '%02d' | format(play_hosts.index(inventory_hostname)) }}"
+  register: hostname_result
+  changed_when: hostname_result.rc == 0
+  failed_when: hostname_result.rc != 0
+
 - name: Harden SSH configuration
+  become: true
   block:
     - name: Update sshd configuration
       lineinfile:
@@ -96,22 +108,12 @@
           line: 'MaxAuthTries 7'
       notify: Restart sshd
 
-- name: Remove pi user if exists
-  block:
-    - name: Check if pi user exists
-      getent:
-        database: passwd
-        key: pi
-      register: pi_user_exists
-      failed_when: false
-
-    - name: Remove pi user and home directory
-      user:
-        name: pi
-        state: absent
-        remove: yes
-        force: yes
-      when: pi_user_exists.rc == 0
+- name: Remove pi user and home directory
+  user:
+    name: pi
+    state: absent
+    remove: yes
+    force: yes
 
 - name: Replace apt sources.list
   block:
@@ -133,14 +135,6 @@
     name: "{{ system_timezone }}"
   when: system_timezone is defined
 
-# - name: install latest zsh on all hosts
-#   hosts: "*"
-#   tasks:
-#     - name: install zsh
-#       apt:
-#         name: zsh
-#         state: present
-
 - name: Perform dist-upgrade
   apt:
     upgrade: dist
@@ -150,8 +144,16 @@
     autoremove: yes
   register: upgrade_output
 
-- name: Check if reboot is required
-  stat:
-    path: /var/run/reboot-required
-  notify: Reboot system if required
-  changed_when: reboot_required.stat.exists
+- name: Reboot system
+  reboot:
+    msg: "Rebooting due to system updates"
+    connect_timeout: 5
+    reboot_timeout: 300
+    pre_reboot_delay: 0
+    post_reboot_delay: 30
+
+# - name: Check if reboot is required
+#   stat:
+#     path: /var/run/reboot-required
+#   notify: Reboot system if required
+#   failed_when: false

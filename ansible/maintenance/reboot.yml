@@ -1,0 +1,7 @@
+- hosts: scribe
+  become: true
+  tasks:
+    - name: Reboot and wait for node to come back up
+      become: true
+      ansible.builtin.reboot:
+        reboot_timeout: 3600
