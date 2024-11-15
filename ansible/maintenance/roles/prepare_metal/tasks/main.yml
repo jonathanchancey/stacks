@@ -12,7 +12,7 @@
   become: true
   become_user: root
   block:
-    - name: Create ansible user if not exists
+    - name: Create ansible user
       user:
         name: ansible
         state: present
@@ -54,6 +54,36 @@
 
 - name: Reconnect as ansible user
   meta: reset_connection
+
+- name: Check and create service user
+  become: true
+  block:
+    - name: Create service user
+      user:
+        name: "{{ service_user }}"
+        state: present
+        shell: /bin/bash
+        system: true
+        create_home: true
+        groups: sudo
+        password: "{{ service_user_pass | password_hash('sha512') }}"
+
+    - name: Set up authorized keys for ansible user
+      ansible.posix.authorized_key:
+        user: "{{ service_user }}"
+        state: present
+        key: "{{ service_user_pass_ssh_public_key }}"
+
+    - name: Configure sudo access for ansible user
+      lineinfile:
+        path: /etc/sudoers.d/"{{ service_user }}"
+        line: "{{ service_user }} ALL=(ALL) NOPASSWD: ALL"
+        state: present
+        mode: '0440'
+        owner: root
+        group: root
+        create: yes
+        validate: '/usr/sbin/visudo -cf %s'
 
 - name: Debug system information
   debug:
@@ -151,9 +181,3 @@
     reboot_timeout: 300
     pre_reboot_delay: 0
     post_reboot_delay: 30
-
-# - name: Check if reboot is required
-#   stat:
-#     path: /var/run/reboot-required
-#   notify: Reboot system if required
-#   failed_when: false
