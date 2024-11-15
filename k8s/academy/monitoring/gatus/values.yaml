@@ -1,3 +1,4 @@
+replicaCount: 1
 persistence:
   enabled: true
   size: 200Mi
@@ -37,14 +38,6 @@ config:
       url: https://truenas.k8s.chancey.dev
       conditions:
         - "[STATUS] == 200"
-    - name: Home Assistant
-      url: https://ha.fkn.chancey.dev
-      conditions:
-        - "[STATUS] == 200"
-    - name: Machinaris
-      url: https://machinaris.fkn.chancey.dev/
-      conditions:
-        - "[STATUS] == 200"
     - name: Syncthing
       url: https://syncthing.chancey.dev/
       conditions:
@@ -82,15 +75,15 @@ config:
       conditions:
         - "[STATUS] == 200"
     - name: 10p 2.5Gb Switch
-      url: https://CRS310.k8s.chancey.dev/index.html
+      url: https://CRS310.k8s.chancey.dev
       conditions:
         - "[STATUS] == 200"
     - name: 24p Hearth Switch
-      url: https://CSS326.k8s.chancey.dev/index.html
+      url: https://CSS326.k8s.chancey.dev/
       conditions:
         - "[STATUS] == 200"
     - name: 24p PoE Switch
-      url: https://CRS328.k8s.chancey.dev/index.html
+      url: https://CRS328.k8s.chancey.dev/
       conditions:
         - "[STATUS] == 200"
     - name: EAP
