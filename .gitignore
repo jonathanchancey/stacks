@@ -37,8 +37,11 @@ terraform-plugin-proxmox.log
 id_rsa*
 id_ed25519*
 *.secret
+*.secrets
 *secret.yaml
 *secret.yml
+*secrets.yaml
+*secrets.yml
 keys
 
 **/scratch/

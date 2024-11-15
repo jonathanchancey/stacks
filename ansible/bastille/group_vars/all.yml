@@ -10,7 +10,7 @@ apiserver_endpoint: "10.30.0.30"
 
 # k3s_token is required  masters can talk together securely
 # this token should be alpha numeric only
-rke2_token: "REDACTED"
+rke2_token: ""
 
 # image tag for kube-vip
 kube_vip_tag_version: "v0.6.3"

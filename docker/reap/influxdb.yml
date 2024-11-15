@@ -16,9 +16,8 @@ services:
   telegraf:
     image: docker.io/telegraf:latest
     container_name: telegraf
-    environment:
-      - INFLUX_TOKEN=REDACTED
+    env_file: influxdb.secret.env
     volumes:
       - /influxdb/telegraf/:/etc/telegraf/
-    command: telegraf --config https://influxdb.fkn.chancey.dev/api/v2/telegrafs/REDACTED
+    command: telegraf --config ${$TELEGRAF_URL}
     restart: unless-stopped
