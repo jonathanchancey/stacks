@@ -1,24 +1,17 @@
 ---
-- name: Prepare Proxmox cluster
-  hosts: proxmox
-  gather_facts: true
-  become: yes
-  roles:
-    - role: proxmox_lxc
-      when: proxmox_lxc_configure
-
 - name: Prepare k3s nodes
   hosts: k3s_cluster
   gather_facts: yes
   roles:
-    - role: lxc
-      become: true
-      when: proxmox_lxc_configure
     - role: prereq
       become: true
     - role: download
       become: true
-    - role: raspberrypi
+
+- name: Setup longhorn
+  hosts: node
+  roles:
+    - role: longhorn
       become: true
 
 - name: Setup k3s servers

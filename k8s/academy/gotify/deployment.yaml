@@ -17,9 +17,18 @@ spec:
       labels:
         app.kubernetes.io/name: gotify
     spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/arch
+                    operator: In
+                    values:
+                      - arm64
       containers:
         - name: gotify
-          image: "ghcr.io/gotify/server:latest"
+          image: "ghcr.io/gotify/server-arm64:2.5"
           imagePullPolicy: IfNotPresent
           env:
             - name: PUID

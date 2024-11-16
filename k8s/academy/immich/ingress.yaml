@@ -16,6 +16,6 @@ spec:
       services:
         - name: immich-server
           kind: Service
-          port: 3001
+          port: 2283
   tls:
     secretName: immich-cert-tls

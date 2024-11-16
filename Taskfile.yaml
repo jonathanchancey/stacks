@@ -1,0 +1,22 @@
+---
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+version: "3"
+
+set: [pipefail]
+shopt: [globstar]
+
+vars:
+  INIT_DIR: "{{.ROOT_DIR}}/init"
+  PRIVATE_DIR: "{{.ROOT_DIR}}/private"
+  KUBERNETES_DIR: "{{.ROOT_DIR}}/k8s/academy"
+  INIT_CONFIG_FILE: "{{.ROOT_DIR}}/config.yaml"
+  SOPS_CONFIG_FILE: "{{.ROOT_DIR}}/.sops.yaml"
+
+env:
+  KUBECONFIG: "$HOME/.kube/config"
+
+includes:
+  init: k8s/academy/.taskfiles/init
+
+tasks:
+  default: task --list

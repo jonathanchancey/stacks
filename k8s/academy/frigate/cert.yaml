@@ -1,0 +1,14 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: frigate-cert
+  namespace: frigate
+spec:
+  secretName: frigate-cert-tls
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  commonName: "frigate.chancey.dev"
+  dnsNames:
+    - "frigate.chancey.dev"

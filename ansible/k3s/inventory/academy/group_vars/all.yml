@@ -1,5 +1,5 @@
 ---
-k3s_version: v1.25.12+k3s1
+k3s_version: v1.29.9+k3s1
 # this is the user that has ssh access to these machines
 ansible_user: napkin
 systemd_dir: /etc/systemd/system
@@ -15,7 +15,7 @@ apiserver_endpoint: "10.10.0.39"
 
 # k3s_token is required  masters can talk together securely
 # this token should be alpha numeric only
-k3s_token: "REDACTED"
+k3s_token: ""
 
 # The IP on which the node is reachable in the cluster.
 # Here, a sensible default is provided, you can still override
@@ -40,6 +40,9 @@ extra_server_args: >-
 extra_agent_args: >-
   {{ extra_args }}
 
+extra_soc_args: >-
+  --snapshotter=fuse-overlayfs
+
 # image tag for kube-vip
 kube_vip_tag_version: "v0.5.12"
 
@@ -55,29 +58,10 @@ metal_lb_mode: "layer2"
 # metal_lb_bgp_peer_address: "192.168.30.1"
 
 # image tag for metal lb
-metal_lb_speaker_tag_version: "v0.13.9"
-metal_lb_controller_tag_version: "v0.13.9"
+metal_lb_speaker_tag_version: "v0.14.8"
+metal_lb_controller_tag_version: "v0.14.8"
 
 # metallb ip range for load balancer
 metal_lb_ip_range: "10.10.0.40-10.10.0.49"
 
-# Only enable if your nodes are proxmox LXC nodes, make sure to configure your proxmox nodes
-# in your hosts.ini file.
-# Please read https://gist.github.com/triangletodd/02f595cd4c0dc9aac5f7763ca2264185 before using this.
-# Most notably, your containers must be privileged, and must not have nesting set to true.
-# Please note this script disables most of the security of lxc containers, with the trade off being that lxc
-# containers are significantly more resource efficent compared to full VMs.
-# Mixing and matching VMs and lxc containers is not supported, ymmv if you want to do this.
-# I would only really recommend using this if you have partiularly low powered proxmox nodes where the overhead of
-# VMs would use a significant portion of your available resources.
-proxmox_lxc_configure: false
-# the user that you would use to ssh into the host, for example if you run ssh some-user@my-proxmox-host,
-# set this value to some-user
-proxmox_lxc_ssh_user: root
-# the unique proxmox ids for all of the containers in the cluster, both worker and master nodes
-proxmox_lxc_ct_ids:
-  - 200
-  - 201
-  - 202
-  - 203
-  - 204
+longhorn_lvm_drive_match_string: .*476.9G.*
