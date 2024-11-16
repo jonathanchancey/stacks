@@ -15,19 +15,10 @@ tasks:
     desc: Bootstrap Flux into cluster
     cmds:
       - kubectl create namespace flux-system
-      - cat {{.CLUSTER_AGE_KEY_FILE}} | \
-        kubectl create secret generic sops-age \
-        --namespace=flux-system \
-        --from-file=age.agekey=/dev/stdin
+      - cat .private/academy/academy.age | kubectl create secret generic sops-age  --namespace=flux-system --from-file=age.agekey=/dev/stdin
       - flux check --pre
-      - cat {{.GITHUB_DEPLOY_KEY_FILE}} | flux bootstrap github \
-        --owner=$GITHUB_USER \
-        --token-auth \
-        --repository=stacks \
-        --branch=main \
-        --path=./flux/academy \
-        --personal
-      - sops exec-file {{.CLUSTER_PRIVATE_DIR}}/academy-secrets.sops.yaml "kubectl apply --server-side --filename {}"
+      - flux bootstrap github --owner=$GITHUB_USER --token-auth --repository=stacks --branch=main --path=./flux/academy --personal
+      # - sops exec-file {{.CLUSTER_PRIVATE_DIR}}/academy-secrets.sops.yaml "kubectl apply --server-side --filename {}"
       # - kubectl apply --server-side --filename {{.KUBERNETES_DIR}}/flux/vars/cluster-settings.yaml
       # - kubectl apply --server-side --kustomize {{.KUBERNETES_DIR}}/flux/config
     preconditions:

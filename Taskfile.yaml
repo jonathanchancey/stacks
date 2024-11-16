@@ -6,11 +6,7 @@ set: [pipefail]
 shopt: [globstar]
 
 vars:
-  INIT_DIR: "{{.ROOT_DIR}}/init"
-  PRIVATE_DIR: "{{.ROOT_DIR}}/private"
-  KUBERNETES_DIR: "{{.ROOT_DIR}}/k8s/academy"
-  INIT_CONFIG_FILE: "{{.ROOT_DIR}}/config.yaml"
-  SOPS_CONFIG_FILE: "{{.ROOT_DIR}}/.sops.yaml"
+  PRIVATE_DIR: "{{.ROOT_DIR}}/.private"
 
 env:
   KUBECONFIG: "$HOME/.kube/config"
