@@ -1,36 +1,36 @@
-namespace: mosquitto
-
-# Custom helm options
-helm:
-  # The release name to use. If empty a generated release name will be used
-  releaseName: mosquitto
-
-  # The directory of the chart in the repo.  Also any valid go-getter supported
-  # URL can be used there is specify where to download the chart from.
-  # If repo below is set this value if the chart name in the repo
-  chart: "https://storage.googleapis.com/t3n-helm-charts/mosquitto-2.4.1.tgz"
-
-  # An https to a valid Helm repository to download the chart from
-  # repo: ""
-
-  # Used if repo is set to look up the version of the chart
-  # version: "2.4.1"
-
-  # Force recreate resource that can not be updated
-  force: false
-
-  # How long for helm to wait for the release to be active. If the value
-  # is less that or equal to zero, we will not wait in Helm
-  timeoutSeconds: 0
-
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: mosquitto
+  namespace: mosquitto
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: mosquitto
+      version: 2.4.1
+      sourceRef:
+        kind: HelmRepository
+        name: t3n
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
   values:
     affinity: {}
     authentication:
-      passwordEntries: ''
+      passwordEntries: ""
       passwordFilePath: /etc/mosquitto/passwordfile
     authorization:
       aclfilePath: /etc/mosquitto/aclfile
-      acls: ''
+      acls: ""
     config: |
       persistence true
       persistence_location /mosquitto/data/
@@ -38,10 +38,10 @@ helm:
       listener 1883
       listener 9090
       protocol websockets
-    existingConfigMap: ''
+    existingConfigMap: ""
     extraVolumeMounts: null
     extraVolumes: null
-    fullnameOverride: ''
+    fullnameOverride: ""
     image:
       pullPolicy: IfNotPresent
       repository: eclipse-mosquitto
@@ -64,16 +64,16 @@ helm:
           requests:
             cpu: 100m
             memory: 64Mi
-    nameOverride: ''
+    nameOverride: ""
     nodeSelector:
       kubernetes.io/hostname: neophyte-02
     persistence:
       accessMode: ReadWriteOnce
       enabled: true
-      existingClaim: ''
+      existingClaim: ""
       mountPath: /mosquitto/data
       size: 1Gi
-      subPath: ''
+      subPath: ""
       storageClass: local-path
     podSecurityContext: {}
     ports:
@@ -101,11 +101,3 @@ helm:
       name: null
     strategyType: Recreate
     tolerations: null
-    global:
-      cattle:
-        clusterId: local
-        clusterName: local
-        rkePathPrefix: ''
-        rkeWindowsPathPrefix: ''
-        systemProjectId: p-7vq66
-        url: https://rancher.k8s.chancey.dev
