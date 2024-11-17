@@ -35,6 +35,11 @@ spec:
     cleanPrometheusOperatorObjectNames: true
     kubeProxy:
       enabled: false
+    kubeEtcd:
+      endpoints:
+        - acolyte-00
+        - acolyte-01
+        - acolyte-02
     prometheus:
       prometheusSpec:
         scrapeInterval: 1m # Must match interval in Grafana Helm chart
