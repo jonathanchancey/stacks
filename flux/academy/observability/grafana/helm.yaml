@@ -48,6 +48,18 @@ spec:
         org_role: Viewer
       news:
         news_feed_enabled: false
+    dashboardProviders:
+      dashboardproviders.yaml:
+        apiVersion: 1
+        providers:
+          - name: default
+            orgId: 1
+            folder: ""
+            type: file
+            disableDeletion: false
+            editable: true
+            options:
+              path: /var/lib/grafana/dashboards/default
     dashboards:
       default:
         cert-manager:
@@ -141,9 +153,6 @@ spec:
         labelValue: ""
     plugins:
       - grafana-clock-panel
-      - grafana-piechart-panel
-      - grafana-worldmap-panel
-      - natel-discrete-panel
       - vonage-status-panel
     serviceMonitor:
       enabled: true
