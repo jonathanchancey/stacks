@@ -43,6 +43,10 @@ spec:
           gnetId: 1860
           revision: 37
           datasource: Prometheus
+    datasources:
+      enabled: true
+      searchNamespace: ALL
+      labelValue: ""
     serviceMonitor:
       enabled: true
     resources:
