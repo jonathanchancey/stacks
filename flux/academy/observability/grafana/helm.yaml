@@ -36,8 +36,28 @@ spec:
       GF_EXPLORE_ENABLED: true
       GF_SECURITY_ANGULAR_SUPPORT_ENABLED: true
       GF_SERVER_ROOT_URL: https://grafana.chancey.dev
+    grafana.ini:
+      analytics:
+        check_for_updates: false
+        check_for_plugin_updates: false
+        reporting_enabled: false
+      auth.anonymous:
+        enabled: true
+        org_id: 1
+        org_name: Main Org.
+        org_role: Viewer
+      news:
+        news_feed_enabled: false
     dashboards:
       default:
+        cert-manager:
+          url: https://raw.githubusercontent.com/monitoring-mixins/website/master/assets/cert-manager/dashboards/cert-manager.json
+          datasource: Prometheus
+        flux-cluster:
+          url: https://raw.githubusercontent.com/fluxcd/flux2-monitoring-example/main/monitoring/configs/dashboards/cluster.json
+          datasource: Prometheus
+        flux-control-plane:
+          url: https://raw.githubusercontent.com/fluxcd/flux2-monitoring-example/main/monitoring/configs/dashboards/control-plane.json
         kubernetes-api-server:
           # renovate: depName="Kubernetes / System / API Server"
           gnetId: 15761
@@ -78,6 +98,9 @@ spec:
           gnetId: 1860
           revision: 37
           datasource: Prometheus
+        node-feature-discovery:
+          url: https://raw.githubusercontent.com/kubernetes-sigs/node-feature-discovery/master/examples/grafana-dashboard.json
+          datasource: Prometheus
         prometheus:
           # renovate: depName="Prometheus"
           gnetId: 19105
@@ -86,6 +109,10 @@ spec:
     datasources:
       datasources.yaml:
         apiVersion: 1
+        deleteDatasources:
+          - { name: Alertmanager, orgId: 1 }
+          - { name: Loki, orgId: 1 }
+          - { name: Prometheus, orgId: 1 }
         datasources:
           - name: Prometheus
             type: prometheus
@@ -108,6 +135,12 @@ spec:
         enabled: true
         searchNamespace: ALL
         labelValue: ""
+    plugins:
+      - grafana-clock-panel
+      - grafana-piechart-panel
+      - grafana-worldmap-panel
+      - natel-discrete-panel
+      - vonage-status-panel
     serviceMonitor:
       enabled: true
     resources:
