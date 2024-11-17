@@ -44,7 +44,7 @@ spec:
       auth.anonymous:
         enabled: true
         org_id: 1
-        org_name: Main Org.
+        org_name: chancey.dev
         org_role: Viewer
       news:
         news_feed_enabled: false
@@ -105,6 +105,10 @@ spec:
           # renovate: depName="Prometheus"
           gnetId: 19105
           revision: 5
+          datasource: Prometheus
+        traefik:
+          gnetId: 17347
+          revision: 9
           datasource: Prometheus
     datasources:
       datasources.yaml:
