@@ -48,7 +48,7 @@ spec:
     kubeEtcd:
       service:
         selector:
-          component: etcd
+          k8s-app: kube-controller-manager
     kubeProxy:
       enabled: false
     prometheus:
