@@ -29,8 +29,6 @@ spec:
   dependsOn:
     - name: prometheus-operator-crds
       namespace: observability
-    - name: longhorn
-      namespace: longhorn-system
   values:
     crds:
       enabled: false
