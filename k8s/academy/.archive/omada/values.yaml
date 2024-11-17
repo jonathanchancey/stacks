@@ -5,7 +5,7 @@ service:
         protocol: https
         port: 443
 ingress:
-  main: 
+  main:
     autolink: true
 # persistence:
 #   data:

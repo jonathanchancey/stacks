@@ -1,24 +1,21 @@
+---
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: grafana-ingress
-  namespace: monitoring
+  name: nginx
+  namespace: fkn
   annotations:
     kubernetes.io/ingress.class: traefik-external
 spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`grafana.fkn.chancey.dev`)
+    - match: Host(`nginx.fkn.chancey.dev`)
       kind: Rule
       services:
-        - name: grafana
+        - name: nginx
           port: 80
-          sticky:
-            cookie:
-              httpOnly: true
-              name: grafana
-              secure: true
-              sameSite: none
+      middlewares:
+        - name: default-headers
   tls:
     secretName: fkn-chancey-dev-tls
