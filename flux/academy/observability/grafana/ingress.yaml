@@ -3,7 +3,7 @@ apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
   name: grafana-ingress
-  namespace: grafana
+  namespace: observability
   annotations:
     kubernetes.io/ingress.class: traefik-external
 spec:
@@ -12,7 +12,7 @@ spec:
   routes:
     - match: Host(`grafana.chancey.dev`)
       kind: Rule
-      priority: 1
+      priority: 10
       services:
         - name: grafana
           kind: Service
