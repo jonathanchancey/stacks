@@ -28,14 +28,6 @@ spec:
       type: Recreate
     admin:
       existingSecret: grafana-admin-secret
-    env:
-      GF_ANALYTICS_CHECK_FOR_UPDATES: false
-      GF_ANALYTICS_CHECK_FOR_PLUGIN_UPDATES: false
-      GF_ANALYTICS_REPORTING_ENABLED: false
-      GF_DATE_FORMATS_USE_BROWSER_LOCALE: true
-      GF_EXPLORE_ENABLED: true
-      GF_SECURITY_ANGULAR_SUPPORT_ENABLED: true
-      GF_SERVER_ROOT_URL: https://grafana.chancey.dev
     serviceMonitor:
       enabled: true
     resources:
@@ -50,10 +42,3 @@ spec:
       enabled: false
     testFramework:
       enabled: false
-    topologySpreadConstraints:
-      - maxSkew: 1
-        topologyKey: kubernetes.io/hostname
-        whenUnsatisfiable: DoNotSchedule
-        labelSelector:
-          matchLabels:
-            app.kubernetes.io/name: grafana
