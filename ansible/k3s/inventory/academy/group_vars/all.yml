@@ -35,6 +35,7 @@ extra_server_args: >-
   {{ extra_args }}
   {{ '--node-taint node-role.kubernetes.io/master=true:NoSchedule' if k3s_master_taint else '' }}
   --tls-san {{ apiserver_endpoint }}
+  --etcd-expose-metrics=true
   --disable servicelb
   --disable traefik
 extra_agent_args: >-
@@ -44,7 +45,7 @@ extra_soc_args: >-
   --snapshotter=fuse-overlayfs
 
 # image tag for kube-vip
-kube_vip_tag_version: "v0.5.12"
+kube_vip_tag_version: "v0.6.4"
 
 # metallb type frr or native
 metal_lb_type: "native"
