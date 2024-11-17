@@ -3,7 +3,7 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: grafana-cert
-  namespace: grafana
+  namespace: observability
 spec:
   secretName: grafana-cert-tls
   issuerRef:
@@ -11,4 +11,4 @@ spec:
     kind: ClusterIssuer
   commonName: "grafana.chancey.dev"
   dnsNames:
-  - "grafana.chancey.dev"
+    - "grafana.chancey.dev"
