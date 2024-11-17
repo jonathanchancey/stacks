@@ -45,8 +45,7 @@ spec:
           datasource: Prometheus
     datasources:
       enabled: true
-      searchNamespace: ALL
-      labelValue: ""
+      searchNamespace: observability
     serviceMonitor:
       enabled: true
     resources:
