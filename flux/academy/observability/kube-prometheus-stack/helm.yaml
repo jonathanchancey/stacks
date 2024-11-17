@@ -33,22 +33,6 @@ spec:
     crds:
       enabled: false
     cleanPrometheusOperatorObjectNames: true
-    kubeApiServer:
-      serviceMonitor:
-        selector:
-          k8s-app: kube-apiserver
-    kubeScheduler:
-      service:
-        selector:
-          k8s-app: kube-scheduler
-    kubeControllerManager:
-      service:
-        selector:
-          k8s-app: kube-controller-manager
-    kubeEtcd:
-      service:
-        selector:
-          k8s-app: kube-controller-manager
     kubeProxy:
       enabled: false
     prometheus:
