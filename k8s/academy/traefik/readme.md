@@ -29,7 +29,8 @@ kubectl get ingressroute --all-namespaces -o jsonpath='{range .items[*]}{.spec.r
 
 ## upgrade helm chart to v28
 ```shell
-helm upgrade --namespace=traefik traefik traefik/traefik --values=values.yaml --version v27.0.0
+helm upgrade --namespace=traefik traefik traefik/traefik --values=values.yaml --version v27.0.2
 kubectl apply --server-side --force-conflicts -k https://github.com/traefik/traefik-helm-chart/traefik/crds/
-helm upgrade --namespace=traefik traefik traefik/traefik --values=values.yaml --version v28.0.0
+helm upgrade --namespace=traefik traefik traefik/traefik --values=values.yaml --version v27.0.2
+# helm upgrade --namespace=traefik traefik traefik/traefik --values=values.yaml --version v28.0.0
 ```
