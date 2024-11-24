@@ -45,6 +45,12 @@ extra_agent_args: >-
 extra_soc_args: >-
   --snapshotter=fuse-overlayfs
 
+extra_gpu_args: >-
+  --node-label gpu.intel.com/i915=1
+  --node-label intel.feature.node.kubernetes.io/gpu=true
+  --node-label node.longhorn.io/create-default-disk=false
+  --node-label google.feature.node.kubernetes.io/coral=true
+
 # image tag for kube-vip
 kube_vip_tag_version: "v0.6.4"
 
