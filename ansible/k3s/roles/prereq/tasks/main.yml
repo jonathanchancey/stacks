@@ -63,3 +63,12 @@
     path: /etc/sudoers
     validate: 'visudo -cf %s'
   when: ansible_os_family == "RedHat"
+
+- name: Longhorn | Install basic longhorn dependencies
+  apt:
+    name:
+      - open-iscsi
+      - nfs-common
+    state: present
+    update_cache: true
+  when: longhorn_install_dependencies

@@ -8,9 +8,6 @@
       - curl
       - grep
       - iptables
-      - python3-kubernetes
-      - fuse-overlayfs
-      - lvm2
     state: present
     update_cache: true
 
@@ -20,44 +17,6 @@
     enabled: yes
     state: started
 
-- name: Longhorn | Get disk information
-  ansible.builtin.command: lsblk -d -o NAME,SIZE,VENDOR,MODEL
-  register: disk_info
-  changed_when: false
-
-- name: Longhorn | Filter drives and create list
-  ansible.builtin.set_fact:
-    eligible_drives: "{{ disk_info.stdout_lines | select('match', longhorn_lvm_drive_match_string) | list }}"
-
-- name: Longhorn | Create PV group from filtered drives
-  community.general.lvg:
-    vg: longhorn_vg
-    pvs: "{{ eligible_drives | map('regex_replace', '^([^ ]+).*', '/dev/\\1') | list }}"
-  when: eligible_drives | length > 0
-
-- name: Longhorn | Create logical volume using all available space
-  community.general.lvol:
-    vg: longhorn_vg
-    lv: longhorn_lv
-    size: 100%VG
-
-- name: Longhorn | Create ext4 filesystem on logical volume
-  community.general.filesystem:
-    fstype: ext4
-    dev: /dev/longhorn_vg/longhorn_lv
-
-- name: Longhorn | Create mount point
-  ansible.builtin.file:
-    path: "/var/lib/longhorn"
-    state: directory
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-    mode: "0755"
-
-- name: Longhorn | Add mount entry to /etc/fstab
-  ansible.posix.mount:
-    path: /var/lib/longhorn
-    src: /dev/longhorn_vg/longhorn_lv
-    fstype: ext4
-    state: mounted
-    opts: defaults
+- name: Longhorn | Provision Physical Storage with LVM
+  ansible.builtin.import_tasks: provision.yml
+  when: longhorn_provision_physical_storage
