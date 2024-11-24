@@ -5,8 +5,17 @@
     dest: "{{ systemd_dir }}/k3s-node.service"
     owner: root
     group: root
-    mode: "0755"
-  when: ansible_architecture == "x86_64"
+    mode: "0644"
+  when: ansible_architecture == "x86_64" and ansible_hostname != "lich-00"
+
+- name: Copy K3s service file for amd64 and intel gpu
+  template:
+    src: "k3s-gpu.service.j2"
+    dest: "{{ systemd_dir }}/k3s-node.service"
+    owner: root
+    group: root
+    mode: "0644"
+  when: ansible_hostname == "lich-00"
 
 - name: Copy K3s service file for soc
   template:
@@ -14,7 +23,7 @@
     dest: "{{ systemd_dir }}/k3s-node.service"
     owner: root
     group: root
-    mode: "0755"
+    mode: "0644"
   when: ansible_architecture == "aarch64"
 
 - name: Enable and check K3s service
