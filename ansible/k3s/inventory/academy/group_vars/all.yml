@@ -1,5 +1,4 @@
 ---
-k3s_version: v1.29.10+k3s1
 k3s_version: v1.30.6+k3s1
 # this is the user that has ssh access to these machines
 ansible_user: napkin
@@ -74,3 +73,6 @@ metal_lb_ip_range: "10.10.0.40-10.10.0.49"
 
 longhorn_lvm_drive_match_string: .*476.9G.*
 k3s_version_match_override: false
+
+longhorn_install_dependencies: true
+longhorn_provision_physical_storage: false
