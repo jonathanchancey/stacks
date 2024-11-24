@@ -15,6 +15,7 @@ spec:
     kind: GitRepository
     name: flux-system
   wait: false
+  force: true
   interval: 30m
   timeout: 15m
   # postBuild:
