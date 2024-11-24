@@ -9,7 +9,7 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  path: observability/grafana
+  path: ./flux/academy/observability/grafana
   prune: true
   sourceRef:
     kind: GitRepository
