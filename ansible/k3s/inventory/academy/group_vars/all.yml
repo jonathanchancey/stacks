@@ -1,5 +1,6 @@
 ---
 k3s_version: v1.29.10+k3s1
+k3s_version: v1.30.6+k3s1
 # this is the user that has ssh access to these machines
 ansible_user: napkin
 systemd_dir: /etc/systemd/system
