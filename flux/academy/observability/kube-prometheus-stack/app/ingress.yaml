@@ -1,0 +1,21 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: prometheus-ingress
+  namespace: observability
+  annotations:
+    kubernetes.io/ingress.class: traefik-external
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`prometheus.k8s.chancey.dev`)
+      kind: Rule
+      priority: 10
+      services:
+        - name: prometheus-operated
+          kind: Service
+          port: 9090
+  tls:
+    secretName: k8s-chancey-dev-tls
