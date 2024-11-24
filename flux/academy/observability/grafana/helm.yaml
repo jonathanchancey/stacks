@@ -41,11 +41,6 @@ spec:
         check_for_updates: false
         check_for_plugin_updates: false
         reporting_enabled: false
-      auth.anonymous:
-        enabled: true
-        org_id: 1
-        org_name: chancey.dev
-        org_role: Viewer
       news:
         news_feed_enabled: false
     dashboardProviders:
