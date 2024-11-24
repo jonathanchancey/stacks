@@ -1,4 +1,4 @@
-- hosts: scribe
+- hosts: all
   become: true
   roles:
     - prepare_metal
