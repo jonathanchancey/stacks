@@ -7,10 +7,10 @@ metadata:
   labels:
     app.kubernetes.io/name: homepage
 spec:
-  revisionHistoryLimit: 3
+  revisionHistoryLimit: 10
   replicas: 1
   strategy:
-    type: RollingUpdate
+    type: Recreate
   selector:
     matchLabels:
       app.kubernetes.io/name: homepage
@@ -23,9 +23,18 @@ spec:
       automountServiceAccountToken: true
       dnsPolicy: ClusterFirst
       enableServiceLinks: true
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: NotIn
+                    values:
+                      - lich-00
       containers:
         - name: homepage
-          image: "ghcr.io/gethomepage/homepage:v0.8.9"
+          image: "ghcr.io/gethomepage/homepage:v0.9.12"
           imagePullPolicy: Always
           ports:
             - name: http
