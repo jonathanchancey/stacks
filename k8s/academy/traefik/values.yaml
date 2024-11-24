@@ -10,7 +10,7 @@ additionalArguments:
 
 deployment:
   enabled: true
-  replicas: 2
+  replicas: 3
   annotations: {}
   podAnnotations: {}
   additionalContainers: []
@@ -28,6 +28,9 @@ ingressRoute:
   dashboard:
     enabled: false
 
+core:
+  defaultRuleSyntax: v2
+
 providers:
   kubernetesCRD:
     enabled: true
@@ -38,6 +41,10 @@ providers:
     allowExternalNameServices: true
     publishedService:
       enabled: false
+
+metrics:
+  addInternals: true
+  prometheus: {}
 
 rbac:
   enabled: true
