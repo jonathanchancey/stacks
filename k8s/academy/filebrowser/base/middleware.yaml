@@ -1,0 +1,34 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: oauth
+  namespace: filebrowser
+spec:
+  chain:
+    middlewares:
+      - name: oauth-signin
+      - name: oauth-verify
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: oauth-verify
+  namespace: filebrowser
+spec:
+  forwardAuth:
+    address: "https://auth.chancey.dev/oauth2/auth"
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: oauth-signin
+  namespace: filebrowser
+spec:
+  errors:
+    status: ["401"]
+    service:
+      name: oauth2-proxy
+      namespace: auth-system
+      port: 4180
+    query: "/oauth2/sign_in"
