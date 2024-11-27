@@ -13,6 +13,10 @@ spec:
     - match: Host(`filebrowser.k8s.chancey.dev`)
       kind: Rule
       priority: 1
+      middlewares:
+        - name: oauth
+        # - name: default-headers
+        #   namespace: default
       services:
         - name: filebrowser
           kind: Service
