@@ -10,7 +10,7 @@ additionalArguments:
 
 deployment:
   enabled: true
-  replicas: 3
+  replicas: 1
   annotations: {}
   podAnnotations: {}
   additionalContainers: []
@@ -45,7 +45,21 @@ providers:
 
 metrics:
   addInternals: true
-  prometheus: {}
+  prometheus:
+    entryPoint: metrics
+  service:
+    enabled: true
+  serviceMonitor:
+    relabelings:
+      - sourceLabels: [__meta_kubernetes_pod_node_name]
+        separator: ;
+        regex: ^(.*)$
+        targetLabel: nodename
+        replacement: $1
+        action: replace
+    jobLabel: traefik
+    interval: 30s
+    honorLabels: true
 
 rbac:
   enabled: true
