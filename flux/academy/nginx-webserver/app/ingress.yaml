@@ -15,12 +15,14 @@ spec:
       services:
         - name: nginx
           port: 80
+      middlewares:
+        - name: default-headers
+        - name: oauth
+          namespace: auth-system
     - match: Host(`k8s.chancey.dev`)
       kind: Rule
       services:
         - name: nginx
           port: 80
-      middlewares:
-        - name: default-headers
   tls:
     secretName: k8s-chancey-dev-tls
