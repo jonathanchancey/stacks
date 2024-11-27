@@ -1,0 +1,21 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: miniflux
+  namespace: miniflux
+  annotations:
+    kubernetes.io/ingress.class: traefik-external
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`miniflux.k8s.chancey.dev`)
+      kind: Rule
+      priority: 10
+      services:
+        - name: miniflux
+          kind: Service
+          port: 80
+  tls:
+    secretName: k8s-chancey-dev-tls
