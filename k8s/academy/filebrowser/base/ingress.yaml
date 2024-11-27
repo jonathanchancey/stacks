@@ -10,13 +10,11 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`filebrowser.k8s.chancey.dev`)
+    - match: Host(`filebrowser.k8s.chancey.dev`) && !PathPrefix(`/oauth2`)
       kind: Rule
-      priority: 1
+      priority: 10
       middlewares:
         - name: oauth
-        # - name: default-headers
-        #   namespace: default
       services:
         - name: filebrowser
           kind: Service
