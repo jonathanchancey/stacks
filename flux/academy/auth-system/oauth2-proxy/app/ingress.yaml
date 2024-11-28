@@ -14,7 +14,6 @@ spec:
       kind: Rule
       priority: 10
       middlewares:
-        # - name: auth-headers
         - name: default-headers
           namespace: default
       services:

@@ -33,7 +33,6 @@ spec:
       name: oauth2-proxy
       namespace: auth-system
       port: 4180
-    # query: "/oauth2/sign_in"
     query: "/oauth2/sign_in?rd={url}"
 ---
 apiVersion: traefik.containo.us/v1alpha1
