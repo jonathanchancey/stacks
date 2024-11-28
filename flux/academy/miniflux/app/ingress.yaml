@@ -2,20 +2,20 @@
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: zitadel-ingress
-  namespace: zitadel
+  name: miniflux
+  namespace: miniflux
   annotations:
     kubernetes.io/ingress.class: traefik-external
 spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`auth.chancey.dev`)
+    - match: Host(`miniflux.k8s.chancey.dev`)
       kind: Rule
-      priority: 1
+      priority: 10
       services:
-        - name: zitadel
+        - name: miniflux
           kind: Service
-          port: 8080
+          port: 80
   tls:
-    secretName: zitadel-cert-tls
+    secretName: k8s-chancey-dev-tls

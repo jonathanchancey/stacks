@@ -1,0 +1,29 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: k8s-chancey-dev
+  namespace: auth-system
+spec:
+  secretName: k8s-chancey-dev-tls
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  commonName: "*.k8s.chancey.dev"
+  dnsNames:
+    - "k8s.chancey.dev"
+    - "*.k8s.chancey.dev"
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: auth-cert
+  namespace: auth-system
+spec:
+  secretName: auth-cert-tls
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  commonName: "auth.chancey.dev"
+  dnsNames:
+    - "auth.chancey.dev"

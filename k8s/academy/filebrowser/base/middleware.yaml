@@ -1,0 +1,23 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: oauth
+  namespace: filebrowser
+spec:
+  chain:
+    middlewares:
+      - name: oauth-verify
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: oauth-verify
+  namespace: filebrowser
+spec:
+  forwardAuth:
+    address: "https://filebrowser.k8s.chancey.dev/oauth2/"
+    trustForwardHeader: true
+    authResponseHeaders:
+      - X-Auth-Request-Access-Token
+      - Authorization

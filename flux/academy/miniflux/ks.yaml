@@ -1,0 +1,19 @@
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app miniflux
+  namespace: flux-system
+spec:
+  targetNamespace: k8s-chancey-dev
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  path: ./flux/academy/miniflux
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: stacks
+  wait: false
+  interval: 30m
+  timeout: 15m
