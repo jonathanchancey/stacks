@@ -5,7 +5,7 @@ metadata:
   name: &app miniflux
   namespace: flux-system
 spec:
-  targetNamespace: k8s-chancey-dev
+  targetNamespace: miniflux
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
