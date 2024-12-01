@@ -1,0 +1,6 @@
+kernel_version: "6.1.57"
+work_dir: "~/work"
+module_source: "out-modules/lib/modules/{{ kernel_version }}"
+kernel_source: "kernel.img"
+resource_source: "resource.img"
+backup_dir: "~/work/backup"

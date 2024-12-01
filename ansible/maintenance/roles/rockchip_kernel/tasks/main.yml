@@ -1,0 +1,180 @@
+---
+- name: Local | Check if source files exist
+  stat:
+    path: "{{ item }}"
+  register: source_files
+  loop:
+    - "{{ work_dir }}/{{ kernel_source }}"
+    - "{{ work_dir }}/{{ resource_source }}"
+    - "{{ work_dir }}/{{ module_source }}"
+  delegate_to: localhost
+
+- name: Local | Verify all required files exist
+  assert:
+    that:
+      - source_files.results[0].stat.exists
+      - source_files.results[1].stat.exists
+      - source_files.results[2].stat.exists
+      - source_files.results[2].stat.isdir
+    fail_msg: Missing required files
+
+- name: Validate environment
+  block:
+    - name: Validate system architecture and OS
+      assert:
+        that:
+          - ansible_architecture in ['aarch64', 'arm64']
+          - ansible_distribution == 'Debian'
+          - ansible_distribution_release == 'bookworm'
+        fail_msg: "Host must be ARM architecture running Debian Bookworm"
+
+    - name: Verify all required variables are defined
+      assert:
+        that:
+          - kernel_version is defined and kernel_version | length > 0
+          - work_dir is defined and work_dir | length > 0
+          - module_source is defined and module_source | length > 0
+          - kernel_source is defined and kernel_source | length > 0
+          - resource_source is defined and resource_source | length > 0
+          - backup_dir is defined and backup_dir | length > 0
+
+    - name: Get partition information
+      command: parted /dev/mmcblk2 print
+      register: parted_output
+      changed_when: false
+
+    - name: Verify partition names
+      assert:
+        that:
+          - "'resource' in parted_output.stdout and 'kernel' in parted_output.stdout"
+        fail_msg: "Required partitions 'resource' and 'kernel' not found"
+
+    - name: Parse partition information
+      set_fact:
+        kernel_partition: "{{ parted_output.stdout_lines | select('match', '.*kernel.*') | list | first | regex_search('[0-9]+') }}"
+        resource_partition: "{{ parted_output.stdout_lines | select('match', '.*resource.*') | list | first | regex_search('[0-9]+') }}"
+
+    - name: Verify kernel partition number is 5
+      assert:
+        that: "kernel_partition == '5'"
+        fail_msg: "Kernel partition is not partition 5 as expected"
+
+    - name: Verify resource partition number is 4
+      assert:
+        that: "resource_partition == '4'"
+        fail_msg: "Resource partition is not partition 4 as expected"
+  always:
+    - name: Cleanup temp images directory
+      file:
+        path: "{{ temp_images_dir.path }}"
+        state: absent
+      when: temp_images_dir.path is defined
+
+- name: Backup kernel partitions and kernel modules
+  block:
+    - name: Create ansible temp directory
+      tempfile:
+        state: directory
+        suffix: backup
+      register: temp_dir
+
+    - name: Backup kernel partition
+      command: dd if=/dev/mmcblk2p{{ kernel_partition }} of={{ temp_dir.path }}/kernel-backup.img bs=1M
+      register: dd_result
+      failed_when: dd_result.rc != 0
+      when: kernel_partition == '5'
+      changed_when: true
+
+    - name: Fetch kernel backup
+      fetch:
+        src: "{{ temp_dir.path }}/kernel-backup.img"
+        dest: "{{ backup_dir }}/kernel-backup.img"
+
+    - name: Backup resource partition
+      command: dd if=/dev/mmcblk2p{{ resource_partition }} of={{ temp_dir.path }}/resource-backup.img bs=1M
+      register: dd_result
+      failed_when: dd_result.rc != 0
+      when: resource_partition == '4'
+      changed_when: true
+
+    - name: Fetch resource backup
+      fetch:
+        src: "{{ temp_dir.path }}/resource-backup.img"
+        dest: "{{ backup_dir }}/resource-backup.img"
+
+    - name: Archive old kernel modules
+      community.general.archive:
+        path: "/lib/modules/{{ kernel_version }}"
+        dest: "{{ temp_dir.path }}/kernel-modules-{{ kernel_version }}.tar.gz"
+        mode: "0755"
+
+    - name: Fetch old kernel modules
+      fetch:
+        src: "{{ temp_dir }}/kernel-modules-{{ kernel_version }}.tar.gz"
+        dest: "{{ backup_dir }}"
+        mode: "0755"
+
+  always:
+    - name: Cleanup temp directory
+      file:
+        path: "{{ temp_dir.path }}"
+        state: absent
+      when: temp_dir.path is defined
+
+- name: Write images to partitions
+  block:
+    - name: Create ansible temp directory for images
+      tempfile:
+        state: directory
+        suffix: images
+      register: temp_images_dir
+
+    - name: Copy kernel_source
+      copy:
+        src: "{{ work_dir }}/{{ kernel_source }}"
+        dest: "{{ temp_images_dir.path }}/kernel.img"
+        owner: "root"
+        group: "root"
+        mode: "0755"
+
+    - name: Copy resource_source
+      copy:
+        src: "{{ work_dir }}/{{ resource_source }}"
+        dest: "{{ temp_images_dir.path }}/resource.img"
+        owner: "root"
+        group: "root"
+        mode: "0755"
+
+    - name: Copy resource image to partition 4
+      command: dd if={{ temp_images_dir.path }}/resource.img of=/dev/mmcblk2p4 bs=1M
+      when: resource_partition == '4'
+      changed_when: true
+
+    - name: Copy kernel image to partition 5
+      command: dd if={{ temp_images_dir.path }}/kernel.img of=/dev/mmcblk2p5 bs=1M
+      when: kernel_partition == '5'
+      changed_when: true
+
+    - name: Remove existing kernel modules directory
+      file:
+        path: "/lib/modules/{{ kernel_version }}"
+        state: absent
+
+    - name: Copy new kernel modules
+      copy:
+        src: "{{ module_source }}"
+        dest: "/lib/modules/{{ kernel_version }}"
+        owner: "root"
+        group: "root"
+        mode: "0644"
+        directory_mode: "0755"
+
+
+- name: Reboot node
+  reboot:
+    msg: "Rebooting to apply kernel changes"
+    reboot_timeout: 300
+    connect_timeout: 5
+    pre_reboot_delay: 0
+    post_reboot_delay: 30
+    test_command: uptime
