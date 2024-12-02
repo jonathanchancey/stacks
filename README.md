@@ -2,31 +2,49 @@
 
 Hello and welcome to my homelab. I use this place to practice DevOps concepts and for hosting simple functional services at home.
 
-## General Flow
+## Structure
 
-### Platforms
+### Ansible - `ansible`
 
-Proxmox - Clustered Hypervisor for Kubernetes, Docker, Ceph, LXCs, and VMs
+Bare Metal Provisioning and Configuration management
 
-K3S - Lightweight Kubernetes for Internal Services
+### Flux - `flux`
 
-RKE2 - Secure Kubernetes for External Services
+GitOps, used to be fleet but so far flux is lovely
 
-### Automation
+### Kubernetes Clusters - `k8s`
 
-Terraform - Proxmox Provisioning
+I'm heavily invested in k3s due to Raspberry Pi and SBC compatibility but it would be nice to jump to talos when support gets better.
 
-Ansible - Configuration management
+#### Academy - K3s
 
-### Services
+My production cluster, adopting nodes and moving towards best practices slowly but surely
 
-Rancher - Enterprise Kubernetes management
+9 nodes, 44 cores (32 qemu64, 12 arm64), 144GiB RAM
+- 3 master
+- 5 workers, three of which are cm3588s for longhorn
 
-Portainer - GitOps workflow for Docker IaC
+#### Bastille - RKE2
 
-Many more!
+For External Services
 
-## Proxmox Cluster
+#### Coalesce and Dichotomy - K3s
+
+Cilium Cluster Mesh and multi zone testing
+
+### Terraform - `terraform`
+
+I use terraform for local/public DNS and for "Quick" VM Provisioning
+
+Proxmox really isn't suited for terraform but I'm excited to try VMs in kubernetes or maybe that popsicle operator (crossplane)
+
+### Proxmox
+
+Clustered Hypervisor for Kubernetes, Docker, ~~Ceph (someday we will return)~~, LXCs, and VMs
+
+## Dec 2023
+
+### Proxmox Cluster
 
 <table align="center">
   <tr>
