@@ -19,6 +19,7 @@
     fail_msg: Missing required files
 
 - name: Validate environment
+  become: true
   block:
     - name: Validate system architecture and OS
       assert:
@@ -27,6 +28,12 @@
           - ansible_distribution == 'Debian'
           - ansible_distribution_release == 'bookworm'
         fail_msg: "Host must be ARM architecture running Debian Bookworm"
+
+    - name: Install rsync
+      apt:
+        name: rsync
+        state: present
+        update_cache: yes
 
     - name: Verify all required variables are defined
       assert:
@@ -63,14 +70,9 @@
       assert:
         that: "resource_partition == '4'"
         fail_msg: "Resource partition is not partition 4 as expected"
-  always:
-    - name: Cleanup temp images directory
-      file:
-        path: "{{ temp_images_dir.path }}"
-        state: absent
-      when: temp_images_dir.path is defined
 
 - name: Backup kernel partitions and kernel modules
+  become: true
   block:
     - name: Create ansible temp directory
       tempfile:
@@ -88,7 +90,7 @@
     - name: Fetch kernel backup
       fetch:
         src: "{{ temp_dir.path }}/kernel-backup.img"
-        dest: "{{ backup_dir }}/kernel-backup.img"
+        dest: "{{ backup_dir }}/kernel-backup"
 
     - name: Backup resource partition
       command: dd if=/dev/mmcblk2p{{ resource_partition }} of={{ temp_dir.path }}/resource-backup.img bs=1M
@@ -100,7 +102,7 @@
     - name: Fetch resource backup
       fetch:
         src: "{{ temp_dir.path }}/resource-backup.img"
-        dest: "{{ backup_dir }}/resource-backup.img"
+        dest: "{{ backup_dir }}/resource-backup"
 
     - name: Archive old kernel modules
       community.general.archive:
@@ -110,7 +112,7 @@
 
     - name: Fetch old kernel modules
       fetch:
-        src: "{{ temp_dir }}/kernel-modules-{{ kernel_version }}.tar.gz"
+        src: "{{ temp_dir.path }}/kernel-modules-{{ kernel_version }}.tar.gz"
         dest: "{{ backup_dir }}"
         mode: "0755"
 
@@ -122,6 +124,7 @@
       when: temp_dir.path is defined
 
 - name: Write images to partitions
+  become: true
   block:
     - name: Create ansible temp directory for images
       tempfile:
@@ -161,16 +164,30 @@
         state: absent
 
     - name: Copy new kernel modules
-      copy:
-        src: "{{ module_source }}"
-        dest: "/lib/modules/{{ kernel_version }}"
-        owner: "root"
-        group: "root"
-        mode: "0644"
-        directory_mode: "0755"
+      ansible.posix.synchronize:
+        src: "{{ work_dir }}/{{ module_source }}"
+        dest: "/lib/modules/"
+        archive: true
+        checksum: true
 
+    - name: Set kernel modules permissions and ownership
+      file:
+        path: "/lib/modules/{{ kernel_version }}"
+        state: directory
+        recurse: true
+        owner: root
+        group: root
+        mode: "0755"
+
+  always:
+    - name: Cleanup temp images directory
+      file:
+        path: "{{ temp_images_dir.path }}"
+        state: absent
+      when: temp_images_dir.path is defined
 
 - name: Reboot node
+  become: true
   reboot:
     msg: "Rebooting to apply kernel changes"
     reboot_timeout: 300
