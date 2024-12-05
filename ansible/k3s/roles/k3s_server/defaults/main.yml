@@ -4,7 +4,7 @@
 # will determine the right interface automatically at runtime.
 kube_vip_iface: null
 
-# Name of the master group
+# # Name of the master group
 group_name_master: master
 
 # yamllint disable rule:line-length
@@ -17,4 +17,4 @@ server_init_args: >-
     {% endif %}
     --token {{ k3s_token }}
   {% endif %}
-  {{ extra_server_args | default('') }}
+  {{ extra_server_args }}
