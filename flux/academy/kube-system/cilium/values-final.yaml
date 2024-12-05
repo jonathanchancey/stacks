@@ -1,0 +1,48 @@
+bpf:
+  hostLegacyRouting: false
+cluster:
+  name: academy
+cni:
+  customConf: false
+  uninstall: false
+ipam:
+  mode: cluster-pool
+  operator:
+    clusterPoolIPv4PodCIDRList:
+      - 10.44.0.0/16
+operator:
+  replicas: 1
+  unmanagedPodWatcher:
+    restart: true
+policyEnforcementMode: default
+routingMode: tunnel
+tunnelProtocol: vxlan
+tunnelPort: 8473
+# Roll out cilium agent pods automatically when ConfigMap is updated.
+rollOutCiliumPods: true
+# gatewayAPI:
+#   enabled: true
+# hubble:
+#   enabled: true
+#   relay:
+#     enabled: true
+#     rollOutPods: true
+#   ui:
+#     enabled: true
+#     rollOutPods: true
+
+# ingressController:
+#   enabled: true
+#   # default: true
+#   loadbalancerMode: shared
+#   service:
+#     annotations:
+#       io.cilium/lb-ipam-ips: 10.10.0.41
+# autoDirectNodeRoutes: true
+
+# # Increase rate limit when doing L2 announcements
+# k8sClientRateLimit:
+#   qps: 20
+#   burst: 100
+# l2announcements:
+#   enabled: true
