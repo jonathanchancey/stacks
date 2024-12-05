@@ -4,9 +4,6 @@
 # will determine the right interface automatically at runtime.
 kube_vip_iface: null
 
-# # Name of the master group
-group_name_master: master
-
 # yamllint disable rule:line-length
 server_init_args: >-
   {% if groups[group_name_master | default('master')] | length > 1 %}
