@@ -3,6 +3,6 @@ kind: Kustomization
 resources:
   - gotk-components.yaml
   - gotk-sync.yaml
-# patches:
-#   - path: patches/gotk-sync-sops-patch.yaml
-#   - path: patches/repo-ignore-dir-patch.yaml
+patches:
+  - path: patches/gotk-sync-sops-patch.yaml
+  # - path: patches/repo-ignore-dir-patch.yaml
