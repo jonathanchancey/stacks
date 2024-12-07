@@ -5,4 +5,4 @@ resources:
   - gotk-sync.yaml
 patches:
   - path: patches/gotk-sync-sops-patch.yaml
-  # - path: patches/repo-ignore-dir-patch.yaml
+  - path: patches/gotk-sync-exclude-dirs.yaml
