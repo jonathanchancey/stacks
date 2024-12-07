@@ -1,6 +1,6 @@
 ---
-- name: Deploy metallb pool
-  include_tasks: metallb.yml
+# - name: Deploy metallb pool
+#   include_tasks: metallb.yml
 
 - name: Remove tmp directory used for manifests
   file:

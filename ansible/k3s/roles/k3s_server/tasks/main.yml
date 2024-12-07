@@ -12,7 +12,7 @@
     msg: >-
       Current k3s version ({{ current_version }})
       does not match desired version ({{ k3s_version }})
-  when: (current_version != k3s_version) && not k3s_version_match_override
+  when: (current_version != k3s_version) and not k3s_version_match_override
 
 - name: Stop k3s-init
   systemd:
@@ -29,8 +29,8 @@
 - name: Deploy vip manifest
   include_tasks: vip.yml
 
-- name: Deploy metallb manifest
-  include_tasks: metallb.yml
+# - name: Deploy metallb manifest
+#   include_tasks: metallb.yml
 
 - name: Init cluster inside the transient k3s-init service
   command:
