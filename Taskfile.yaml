@@ -16,3 +16,4 @@ includes:
 
 tasks:
   default: task --list
+  rek: flux reconcile kustomization flux-system
