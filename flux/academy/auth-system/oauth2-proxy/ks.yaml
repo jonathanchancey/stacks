@@ -9,7 +9,7 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  path: ./flux/academy/auth-system/oauth2-proxy
+  path: ./flux/academy/auth-system/oauth2-proxy/app
   prune: true
   sourceRef:
     kind: GitRepository
