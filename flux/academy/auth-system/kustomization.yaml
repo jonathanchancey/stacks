@@ -5,3 +5,4 @@ kind: Kustomization
 resources:
   - ./cert.yaml
   - ./namespace.yaml
+  - ./oauth2-proxy/ks.yaml
