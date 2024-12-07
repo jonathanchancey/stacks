@@ -1,6 +1,6 @@
 ---
 - name: Reset k3s cluster
-  hosts: academy-test
+  hosts: ephemera
   gather_facts: yes
   roles:
     - role: reset

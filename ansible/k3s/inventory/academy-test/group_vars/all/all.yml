@@ -31,7 +31,7 @@ extra_args: >-
   --flannel-iface={{ flannel_iface }}
   --node-ip={{ k3s_node_ip }}
 
-log_destination: ~/logs/academy-test
+log_destination: ~/logs/ephemera
 # extra_args: >-
 #   --node-ip={{ k3s_node_ip }}
 

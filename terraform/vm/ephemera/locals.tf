@@ -3,20 +3,20 @@ locals {
   vm_id_start = 2000
   # define VMs
   vms = {
-    academy-test-00 = {
-      ansible_groups = ["debian", "academy-test", "controlplane", "initial_server"]
+    ephemera-00 = {
+      ansible_groups = ["debian", "ephemera", "controlplane", "initial_server"]
     }
-    academy-test-01 = {
-      ansible_groups = ["debian", "academy-test", "controlplane"]
+    ephemera-01 = {
+      ansible_groups = ["debian", "ephemera", "controlplane"]
     }
-    academy-test-02 = {
-      ansible_groups = ["debian", "academy-test", "controlplane"]
+    ephemera-02 = {
+      ansible_groups = ["debian", "ephemera", "controlplane"]
     }
-    academy-test-03 = {
-      ansible_groups = ["debian", "academy-test", "worker"]
+    ephemera-03 = {
+      ansible_groups = ["debian", "ephemera", "worker"]
     }
-    academy-test-04 = {
-      ansible_groups = ["debian", "academy-test", "worker"]
+    ephemera-04 = {
+      ansible_groups = ["debian", "ephemera", "worker"]
     }
   }
 
