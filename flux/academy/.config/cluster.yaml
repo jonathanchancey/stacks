@@ -12,6 +12,11 @@ spec:
     name: flux-system
   timeout: 1m0s
   url: https://github.com/jonathanchancey/stacks.git
+  ignore: |
+    # exclude all
+    /*
+    # include kubernetes directory
+    !/flux
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
