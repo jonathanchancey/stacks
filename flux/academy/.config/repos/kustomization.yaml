@@ -6,3 +6,4 @@ resources:
   - ./t3n.yaml
   - ./bjw-s.yaml
   - ./bitnami.yaml
+  - ./goldpinger.yaml
