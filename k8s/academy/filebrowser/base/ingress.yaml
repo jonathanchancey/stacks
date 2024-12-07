@@ -13,8 +13,8 @@ spec:
     - match: Host(`filebrowser.k8s.chancey.dev`) && !PathPrefix(`/oauth2`)
       kind: Rule
       priority: 10
-      middlewares:
-        - name: oauth
+      # middlewares:
+      #   - name: oauth
       services:
         - name: filebrowser
           kind: Service
