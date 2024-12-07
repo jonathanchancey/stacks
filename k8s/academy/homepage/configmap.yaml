@@ -51,26 +51,22 @@ data:
               href: https://proxmox.fkn.chancey.dev
               icon: proxmox.png
               description: Hypervisor
-          - Portainer:
-              href: https://portainer.fkn.chancey.dev
-              icon: portainer.png
-              description: Docker Management
           - TrueNAS:
               href: https://truenas.k8s.chancey.dev
               icon: si-truenas-#0095D5
               description: Baremetal NAS
-          - Rancher | chancey.dev:
-              href: https://rancher.k8s.chancey.dev/
-              icon: rancher.png
-              description: Kubernetes Management
-          - APC UPS:
-              href: https://apc.k8s.chancey.dev/
-              icon: mdi-car-battery-#E21836
-              description: Power Management
           - ZITADEL:
               href: https://auth.chancey.dev/
               icon: zitadel.png
               description: Identity Provider
+          - Home Assistant:
+              href: https://ha.fkn.chancey.dev
+              icon: home-assistant.png
+              description: Home Automation
+          - Syncthing:
+              href: https://syncthing.chancey.dev/
+              icon: syncthing.png
+              description: File Sync
         - Monitoring:
           - Grafana:
               href: https://grafana.chancey.dev/
@@ -109,23 +105,6 @@ data:
               href: https://traefik.fkn.chancey.dev/dashboard/#/
               icon: traefik.png
               description: Reverse Proxy
-        - Services:
-          - Home Assistant:
-              href: https://ha.fkn.chancey.dev
-              icon: home-assistant.png
-              description: Home Automation
-          - Syncthing:
-              href: https://syncthing.chancey.dev/
-              icon: syncthing.png
-              description: File Sync
-          - Machinaris:
-              href: https://machinaris.fkn.chancey.dev/
-              icon: si-chianetwork-#5ECE71
-              description: Chia Management
-          - Kawa:
-              href: https://kawa.k8s.chancey.dev/
-              icon: mdi-waves-#A22846
-              description: Garage Soundbar
         - Media:
           - Immich:
               href: https://photos.chancey.dev/
