@@ -1,0 +1,24 @@
+# https://oauth2-proxy.github.io/oauth2-proxy/docs/features/endpoints states:
+# All other endpoints will be proxied upstream when authenticated
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: oauth-svc-forwardauth
+  namespace: traefik
+spec:
+  forwardAuth:
+    address: http://oauth2-proxy.oauth2-proxy
+    trustForwardHeader: true
+
+---
+# https://oauth2-proxy.github.io/oauth2-proxy/docs/features/endpoints states:
+# /oauth2/auth - only returns a 202 Accepted response or a 401 Unauthorized response;
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: oauth-svc-forwardauth-filebrowser
+  namespace: traefik
+spec:
+  forwardAuth:
+    address: http://oauth2-proxy.oauth2-proxy/oauth2/auth?allowed_groups=/filebrowser
+    trustForwardHeader: true

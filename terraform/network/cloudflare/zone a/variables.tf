@@ -23,3 +23,8 @@ variable "traefik_ip" {
   type    = string
   default = null
 }
+
+variable "nginx_internal_ip" {
+  type    = string
+  default = null
+}
