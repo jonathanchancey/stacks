@@ -3,13 +3,13 @@
   "extends": [
     "config:recommended",
     "docker:enableMajor",
-    ":disableRateLimiting",
+    // ":disableRateLimiting",
     ":dependencyDashboard",
     ":semanticCommits",
     ":automergeBranch"
   ],
   "dependencyDashboard": true,
-  "dependencyDashboardTitle": "Renovate Dashboard 🤖",
+  "dependencyDashboardTitle": "Renovate Dashboard 🚰",
   "suppressNotifications": [
     "prEditedNotification",
     "prIgnoreNotification"
@@ -20,26 +20,26 @@
   ],
   "ignorePaths": [
     "**/*.sops.*",
-    "**/.archive"
+    "**/.archive/"
   ],
   "flux": {
     "fileMatch": [
-      "(^|/)kubernetes/.+\\.ya?ml(?:\\.j2)?$"
+      "(^|/)flux/.+\\.ya?ml(?:\\.j2)?$"
     ]
   },
   "helm-values": {
     "fileMatch": [
-      "(^|/)kubernetes/.+\\.ya?ml(?:\\.j2)?$"
+      "(^|/)flux/.+\\.ya?ml(?:\\.j2)?$"
     ]
   },
   "helmfile": {
     "fileMatch": [
-      "(^|/)helmfile\\.ya?ml(?:\\.j2)?$"
+      "(^|/)helm\\.ya?ml(?:\\.j2)?$"
     ]
   },
   "kubernetes": {
     "fileMatch": [
-      "(^|/)kubernetes/.+\\.ya?ml(?:\\.j2)?$"
+      "(^|/)flux/.+\\.ya?ml(?:\\.j2)?$"
     ]
   },
   "kustomize": {
@@ -50,6 +50,11 @@
   "pip_requirements": {
     "fileMatch": [
       "(^|/)[\\w-]*requirements(-\\w+)?\\.(txt|pip)(?:\\.j2)?$"
+    ]
+  },
+  "ansible-galaxy": {
+    "fileMatch": [
+      "(^|/)(galaxy|requirements)(\\.ansible)?\\.ya?ml(?:\\.j2)?$"
     ]
   },
   // commit message topics
@@ -320,7 +325,7 @@
         "Process custom dependencies"
       ],
       "fileMatch": [
-        "(^|/)kubernetes/.+\\.ya?ml(?:\\.j2)?$"
+        "(^|/)flux/.+\\.ya?ml(?:\\.j2)?$"
       ],
       "matchStrings": [
         // # renovate: datasource=helm depName=cilium repository=https://helm.cilium.io
