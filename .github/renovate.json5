@@ -20,7 +20,7 @@
   ],
   "ignorePaths": [
     "**/*.sops.*",
-    "**/.archive/"
+    "**/.archive/*"
   ],
   "flux": {
     "fileMatch": [
