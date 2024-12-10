@@ -3,8 +3,4 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - ./deployment.yaml
-  - ./ingress.yaml
-  - ./secret.sops.yaml
-  - ./secret2.sops.yaml
-  - ./service.yaml
+  - ./jellyfin-external-ingress.yaml

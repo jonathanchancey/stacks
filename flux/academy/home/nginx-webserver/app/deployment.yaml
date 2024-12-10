@@ -3,7 +3,6 @@ kind: Deployment
 apiVersion: apps/v1
 metadata:
   name: nginx
-  namespace: k8s-chancey-dev
   labels:
     app: nginx
 spec:

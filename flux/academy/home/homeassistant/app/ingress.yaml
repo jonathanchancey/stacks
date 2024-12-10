@@ -1,0 +1,22 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: homeassistant-ingress
+  namespace: fkn
+  annotations:
+    kubernetes.io/ingress.class: traefik-external
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`ha.fkn.chancey.dev`) && !PathPrefix(`/oauth2`)
+      kind: Rule
+      priority: 8
+      services:
+        - name: homeassistant
+          kind: Service
+          namespace: home
+          port: 8123
+  tls:
+    secretName: fkn-chancey-dev-tls

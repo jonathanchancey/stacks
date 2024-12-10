@@ -3,11 +3,10 @@ apiVersion: v1
 kind: Service
 metadata:
   name: nginx
-  namespace: k8s-chancey-dev
 spec:
   selector:
     app: nginx
   ports:
-  - name: http
-    targetPort: 80
-    port: 80
+    - name: http
+      targetPort: 80
+      port: 80
