@@ -10,10 +10,17 @@ vars:
 
 env:
   KUBECONFIG: "$HOME/.kube/config"
+  ANSIBLE_DIR: "{{.ROOT_DIR}}/ansible"
+  VIRTUAL_ENV: "{{.ROOT_DIR}}/k8s/academy/.venv"
+  REQUIREMENTS_TXT: "{{.ROOT_DIR}}/k8s/academy/.config/requirements.txt"
 
 includes:
   init: k8s/academy/.taskfiles/init
+  flux: k8s/academy/.taskfiles/flux
+  ansible: ansible/
 
 tasks:
   default: task --list
-  rek: flux reconcile kustomization flux-system
+  conform:
+    desc: run kubeconform
+    cmd: k8s/academy/.scripts/kubeconform.sh flux/academy/
