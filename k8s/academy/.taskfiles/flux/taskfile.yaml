@@ -1,0 +1,41 @@
+---
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+version: "3"
+
+tasks:
+  count:
+    desc: Count kustomize config
+    cmd: flux-local build ks --path flux/academy/ | kustomize cfg count
+  diff:
+    desc: Flux diff
+    cmd: flux-local diff ks --path flux/academy/
+  test-without-helm:
+    desc: Flux test
+    cmd: flux-local test --path flux/academy/
+  test:
+    desc: Flux test
+    cmd: flux-local test --enable-helm --path flux/academy/
+  rek:
+    desc: reconcile flux-system kustomization
+    cmd: flux reconcile kustomization -n flux-system flux-system
+  direnv:
+    desc: Set up direnv hooks
+    cmd: direnv allow .
+    status:
+      - '[[ $(direnv status --json | jq ".state.foundRC.allowed") == 0 ]]'
+      - '[[ $(direnv status --json | jq ".state.loadedRC.allowed") == 0 ]]'
+    preconditions:
+      - which direnv
+  venv:
+    desc: Set up virtual environment
+    cmds:
+      - python3 -m venv {{.VIRTUAL_ENV}}
+      - "{{.VIRTUAL_ENV}}/bin/python3 -m pip install --upgrade pip setuptools wheel"
+      - '{{.VIRTUAL_ENV}}/bin/python3 -m pip install --upgrade --requirement "{{.REQUIREMENTS_TXT}}"'
+    sources:
+      - "{{.REQUIREMENTS_TXT}}"
+    generates:
+      - "{{.VIRTUAL_ENV}}/pyvenv.cfg"
+    preconditions:
+      - test -f {{.REQUIREMENTS_TXT}}
+      - which python3
