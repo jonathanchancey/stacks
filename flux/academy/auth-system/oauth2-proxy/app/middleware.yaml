@@ -49,4 +49,16 @@ spec:
     stsIncludeSubdomains: true
     stsPreload: true
     frameDeny: true
-
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: oauth-auth-redirect
+  namespace: auth-system
+spec:
+  forwardAuth:
+    address: https://oauth.chancey.dev
+    trustForwardHeader: true
+    authResponseHeaders:
+      - X-Auth-Request-Access-Token
+      - Authorization

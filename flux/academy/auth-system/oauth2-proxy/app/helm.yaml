@@ -4,7 +4,6 @@ apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: &app oauth2-proxy
-  namespace: auth-system
 spec:
   interval: 30m
   chart:
@@ -48,15 +47,15 @@ spec:
               OAUTH2_PROXY_HTTP_ADDRESS: 0.0.0.0:4180
               OAUTH2_PROXY_METRICS_ADDRESS: 0.0.0.0:44180
               OAUTH2_PROXY_SKIP_PROVIDER_BUTTON: "true"
-              OAUTH2_PROXY_PASS_AUTHORIZATION_HEADER: "true"
-              OAUTH2_PROXY_PASS_HOST_HEADER: "true"
-              OAUTH2_PROXY_PASS_ACCESS_TOKEN: "true"
-              OAUTH2_PROXY_PASS_USER_HEADERS: "true"
-              OAUTH2_PROXY_SET_AUTHORIZATION_HEADER: "true"
-              OAUTH2_PROXY_SET_XAUTHREQUEST: "true"
+              # OAUTH2_PROXY_PASS_AUTHORIZATION_HEADER: "true"
+              # OAUTH2_PROXY_PASS_HOST_HEADER: "true"
+              # OAUTH2_PROXY_PASS_ACCESS_TOKEN: "true"
+              # OAUTH2_PROXY_PASS_USER_HEADERS: "true"
+              # OAUTH2_PROXY_SET_AUTHORIZATION_HEADER: "true"
+              # OAUTH2_PROXY_SET_XAUTHREQUEST: "true"
               OAUTH2_PROXY_REVERSE_PROXY: "true"
-              OAUTH2_PROXY_UPSTREAMS: "static://200"
-              # OAUTH2_PROXY_UPSTREAMS: "static://202"
+              # OAUTH2_PROXY_UPSTREAMS: "static://200"
+              OAUTH2_PROXY_UPSTREAMS: "static://202"
               OAUTH2_PROXY_SILENCE_PING_LOGGING: "true"
               OAUTH2_PROXY_COOKIE_NAME: "_oauth2_proxy"
               OAUTH2_PROXY_SESSION_STORE_TYPE: "cookie"

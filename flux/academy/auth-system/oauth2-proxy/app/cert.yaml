@@ -1,0 +1,14 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: oauth-auth-cert
+  namespace: auth-system
+spec:
+  secretName: oauth-auth-cert-tls
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  commonName: "oauth.chancey.dev"
+  dnsNames:
+    - "oauth.chancey.dev"

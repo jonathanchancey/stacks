@@ -11,14 +11,39 @@ spec:
     - websecure
   routes:
     - match: Host(`auth.chancey.dev`) && PathPrefix(`/oauth2/`) || PathPrefix(`/oauth2/`)
+      # - match: Host(`auth.chancey.dev`) && PathPrefix(`/oauth2/`))
       kind: Rule
       priority: 10
       middlewares:
-        - name: default-headers
-          namespace: default
+        - name: auth-headers
+          namespace: auth-system
       services:
         - name: oauth2-proxy
           kind: Service
           port: 4180
   tls:
     secretName: auth-cert-tls
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: oauth2-proxy-record-ingress
+  namespace: auth-system
+  annotations:
+    kubernetes.io/ingress.class: traefik-external
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`oauth.chancey.dev`)
+      kind: Rule
+      priority: 10
+      middlewares:
+        - name: auth-headers
+          namespace: auth-system
+      services:
+        - name: oauth2-proxy
+          kind: Service
+          port: 4180
+  tls:
+    secretName: oauth-auth-cert-tls
