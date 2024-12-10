@@ -1,0 +1,15 @@
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: homeassistant-config
+  labels:
+    kustomize.toolkit.fluxcd.io/prune: disabled
+
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 6Gi
+  storageClassName: longhorn

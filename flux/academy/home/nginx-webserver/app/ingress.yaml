@@ -3,7 +3,6 @@ apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
   name: nginx
-  namespace: k8s-chancey-dev
   annotations:
     kubernetes.io/ingress.class: traefik-external
 spec:
