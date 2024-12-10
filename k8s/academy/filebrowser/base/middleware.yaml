@@ -8,6 +8,8 @@ spec:
   chain:
     middlewares:
       - name: oauth-verify
+      - name: oauth-forwardauth-filebrowser
+
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
@@ -21,3 +23,29 @@ spec:
     authResponseHeaders:
       - X-Auth-Request-Access-Token
       - Authorization
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: oauth-forwardauth-filebrowser
+  namespace: filebrowser
+spec:
+  forwardAuth:
+    address: https://filebrowser.k8s.chancey.dev/oauth2/auth?allowed_groups=/csright
+    trustForwardHeader: true
+
+---
+# apiVersion: traefik.containo.us/v1alpha1
+# kind: Middleware
+# metadata:
+#   name: oauth-errors
+#   namespace: filebrowser
+# spec:
+#   errors:
+#     status:
+#       - "401-403"
+#     service:
+#       name: oauth2-proxy
+#       namespace: auth-system
+#       port: 4180
+#     query: "/oauth2/sign_in?rd={url}"
