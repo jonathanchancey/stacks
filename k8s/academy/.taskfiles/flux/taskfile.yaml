@@ -9,6 +9,9 @@ tasks:
   diff:
     desc: Flux diff
     cmd: flux-local diff ks --path flux/academy/
+  diffhelm:
+    desc: Flux diff
+    cmd: flux-local diff hr --path flux/academy/
   test-without-helm:
     desc: Flux test
     cmd: flux-local test --path flux/academy/
