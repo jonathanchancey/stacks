@@ -1,0 +1,72 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: nginx
+  namespace: network
+  labels:
+    app: nginx
+spec:
+  replicas: 3
+  progressDeadlineSeconds: 600
+  revisionHistoryLimit: 2
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:latest
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "100m"
+            limits:
+              memory: "128Mi"
+              cpu: "100m"
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-webserver-ingress
+  namespace: network
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/auth-url: "https://auth.chancey.dev/oauth2/auth"
+    nginx.ingress.kubernetes.io/auth-signin: "https://auth.chancey.dev/oauth2/start?rd=$scheme%3A%2F%2F$host$escaped_request_uri"
+spec:
+  ingressClassName: nginx-internal
+  rules:
+    - host: ingress-nginx-test.x.chancey.dev
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: nginx
+                port:
+                  number: 80
+  tls:
+    - hosts:
+        - ingress-nginx-test.x.chancey.dev
+      secretName: x-chancey-dev-tls
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+  namespace: network
+spec:
+  selector:
+    app: nginx
+  ports:
+    - name: http
+      targetPort: 80
+      port: 80
