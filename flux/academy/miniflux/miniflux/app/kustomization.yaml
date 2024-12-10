@@ -6,6 +6,5 @@ resources:
   - ./cert.yaml
   - ./helm.yaml
   - ./ingress.yaml
-  - ./namespace.yaml
   - ./postgres.yaml
   - ./secret.sops.yaml
