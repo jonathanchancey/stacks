@@ -7,3 +7,4 @@ resources:
   - ./bjw-s.yaml
   - ./bitnami.yaml
   - ./goldpinger.yaml
+  - ./ingress-nginx.yaml
