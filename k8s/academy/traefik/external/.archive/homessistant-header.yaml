@@ -1,0 +1,19 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: homeassistant-ssl-header
+  namespace: fkn
+spec:
+  headers:
+    customRequestHeaders:
+      Connection: keep-alive, Upgrade
+      Upgrade: WebSocket
+    customResponseHeaders:
+      X-Robots-Tag: "none,noarchive,nosnippet,notranslate,noimageindex"
+      X-Forwarded-Proto: "https"
+      server: ""
+    sslProxyHeaders:
+      X-Forwarded-Proto: "https"
+    hostsProxyHeaders:
+      - "X-Forwarded-Host"
