@@ -61,6 +61,11 @@ jobs:
           message-id: "${{ github.event.pull_request.number }}/${{ matrix.paths }}/${{ matrix.resources }}"
           message-failure: Diff was not successful
           message: |
+          <details>
+            <summary>Flux Diff</summary>
+
             ```diff
             ${{ steps.diff.outputs.diff }}
             ```
+
+          </details>
