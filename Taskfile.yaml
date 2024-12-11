@@ -15,7 +15,6 @@ env:
   REQUIREMENTS_TXT: "{{.ROOT_DIR}}/k8s/academy/.config/requirements.txt"
 
 includes:
-  init: k8s/academy/.taskfiles/init
   flux: k8s/academy/.taskfiles/flux
   ansible: ansible/
 
