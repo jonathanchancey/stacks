@@ -4,6 +4,7 @@
     'config:recommended',
     'docker:enableMajor',
     ':dependencyDashboard',
+    ':disableRateLimiting',
     ':semanticCommits',
     ':automergeBranch',
   ],
@@ -66,6 +67,36 @@
       ],
       matchManagers: [
         'github-actions',
+      ],
+      automerge: true,
+      automergeType: 'branch',
+      ignoreTests: true,
+      matchUpdateTypes: [
+        'minor',
+        'patch',
+      ],
+    },
+    {
+      description: [
+        'Auto merge Ansible Galaxy',
+      ],
+      matchManagers: [
+        'ansible-galaxy',
+      ],
+      automerge: true,
+      automergeType: 'branch',
+      ignoreTests: true,
+      matchUpdateTypes: [
+        'minor',
+        'patch',
+      ],
+    },
+    {
+      description: [
+        'Auto merge pip requirements',
+      ],
+      matchManagers: [
+        'pip_requirements',
       ],
       automerge: true,
       automergeType: 'branch',
