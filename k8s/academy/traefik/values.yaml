@@ -1,47 +1,34 @@
-globalArguments:
-  - "--global.sendanonymoususage=false"
-  - "--global.checknewversion=false"
+core:
+  defaultRuleSyntax: v2
 
+# Configure Traefik static configuration
+# -- Additional arguments to be passed at Traefik's binary
+# All available options available on https://docs.traefik.io/reference/static-configuration/cli/
+## Use curly braces to pass values: `helm install --set="additionalArguments={--providers.kubernetesingress.ingressclass=traefik-internal,--log.level=DEBUG}"`
 additionalArguments:
-  - "--serversTransport.insecureSkipVerify=true"
-  - "--log.level=INFO"
-  - "--providers.kubernetesingress.allowexternalnameservices"
-  - "--providers.kubernetescrd.allowexternalnameservices"
+  - --serversTransport.insecureSkipVerify=true
+  - --log.level=INFO
+  - --providers.kubernetesingress.allowexternalnameservices
+  - --providers.kubernetescrd.allowexternalnameservices
+
+# -- Global command arguments to be passed to all traefik's pods
+globalArguments:
+  - --global.sendanonymoususage=false
+  - --global.checknewversion=false
+  - --metrics.prometheus=true
+  - --metrics.prometheus.entryPoint=metrics
 
 deployment:
   enabled: true
   replicas: 1
-  annotations: {}
-  podAnnotations: {}
   additionalContainers: []
   initContainers: []
-
-ports:
-  web:
-    redirectTo:
-      port: websecure
-  websecure:
-    tls:
-      enabled: true
+  annotations: {}
+  podAnnotations: {}
 
 ingressRoute:
   dashboard:
     enabled: false
-
-core:
-  defaultRuleSyntax: v2
-
-providers:
-  kubernetesCRD:
-    enabled: true
-    ingressClass: traefik-external
-    allowExternalNameServices: true
-    allowCrossNamespace: true
-  kubernetesIngress:
-    enabled: true
-    allowExternalNameServices: true
-    publishedService:
-      enabled: false
 
 metrics:
   addInternals: true
@@ -50,6 +37,9 @@ metrics:
   service:
     enabled: true
   serviceMonitor:
+    honorLabels: true
+    interval: 30s
+    jobLabel: traefik
     relabelings:
       - sourceLabels: [__meta_kubernetes_pod_node_name]
         separator: ;
@@ -57,9 +47,30 @@ metrics:
         targetLabel: nodename
         replacement: $1
         action: replace
-    jobLabel: traefik
-    interval: 30s
-    honorLabels: true
+ports:
+  web:
+    redirectTo:
+      port: websecure
+  websecure:
+    tls:
+      enabled: true
+  metrics:
+    port: 9100
+    expose:
+      default: true
+    exposedPort: 9100
+
+providers:
+  kubernetesCRD:
+    allowCrossNamespace: true
+    allowExternalNameServices: true
+    enabled: true
+    ingressClass: traefik-external
+  kubernetesIngress:
+    allowExternalNameServices: true
+    enabled: true
+    publishedService:
+      enabled: false
 
 rbac:
   enabled: true
@@ -68,8 +79,8 @@ service:
   enabled: true
   type: LoadBalancer
   annotations: {}
-  labels: {}
-  spec:
-    loadBalancerIP: 10.10.0.40 # this should be an IP in the MetalLB range
-  loadBalancerSourceRanges: []
   externalIPs: []
+  labels: {}
+  loadBalancerSourceRanges: []
+  spec:
+    loadBalancerIP: 10.10.0.40
