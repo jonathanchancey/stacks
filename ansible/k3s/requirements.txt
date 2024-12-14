@@ -24,9 +24,9 @@ certifi==2024.12.14
     #   requests
 cffi==1.17.1
     # via cryptography
-cfgv==3.3.1
+cfgv==3.4.0
     # via pre-commit
-chardet==5.0.0
+chardet==5.2.0
     # via binaryornot
 charset-normalizer==2.1.1
     # via requests
