@@ -18,17 +18,37 @@ tasks:
   test:
     desc: Flux test
     cmd: flux-local test --enable-helm --path flux/academy/
+  etcd-save:
+    desc: Flux test
+    cmd: ssh -i ~/.ssh/id_seki_rsa napkin@acolyte-00 -t "sudo k3s etcd-snapshot save"
   rek:
     desc: reconcile flux-system kustomization
     cmd: flux reconcile kustomization -n flux-system flux-system
-  direnv:
-    desc: Set up direnv hooks
-    cmd: direnv allow .
-    status:
-      - '[[ $(direnv status --json | jq ".state.foundRC.allowed") == 0 ]]'
-      - '[[ $(direnv status --json | jq ".state.loadedRC.allowed") == 0 ]]'
+  reconcile:
+    desc: Force update Flux to pull in changes from your Git repository
+    cmd: flux --namespace flux-system reconcile kustomization cluster --with-source
     preconditions:
-      - which direnv
+      - test -f {{.KUBECONFIG}}
+      - which flux
+  resources:
+    desc: Gather common resources in your cluster, useful when asking for support
+    cmds:
+      - for: { var: RESOURCE }
+        cmd: KUBECONFIG={{.KUBECONFIG}} kubectl get {{.ITEM}} {{.CLI_ARGS | default "-A"}}
+    vars:
+      RESOURCE: >-
+        nodes
+        gitrepositories
+        kustomizations
+        helmrepositories
+        helmreleases
+        certificates
+        certificaterequests
+        ingresses
+        pods
+    preconditions:
+      - test -f {{.KUBECONFIG}}
+      - which kubectl
   venv:
     desc: Set up virtual environment
     cmds:
