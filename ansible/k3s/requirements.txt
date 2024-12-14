@@ -35,7 +35,7 @@ click==8.1.7
     #   click-help-colors
     #   cookiecutter
     #   molecule
-click-help-colors==0.9.1
+click-help-colors==0.9.4
     # via molecule
 commonmark==0.9.1
     # via rich
