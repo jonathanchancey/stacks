@@ -1,14 +1,14 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: homepage
+  name: jellyseerr
   namespace: fkn
 spec:
   type: ExternalName
   ports:
     - name: http
-      port: 3000
-      targetPort: 3000
+      port: 5055
+      targetPort: 5055
   externalName: 10.10.0.5
   selector:
     app.kubernetes.io/instance: traefik
@@ -17,20 +17,20 @@ spec:
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: homepage-ingress
+  name: jellyseerr-ingress
   namespace: fkn
-  annotations: 
+  annotations:
     kubernetes.io/ingress.class: traefik-external
 spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`home.fkn.chancey.dev`)
+    - match: Host(`jellyseerr.fkn.chancey.dev`)
       kind: Rule
       priority: 1
       services:
-        - name: homepage
+        - name: jellyseerr
           kind: Service
-          port: 3000
+          port: 5055
   tls:
     secretName: fkn-chancey-dev-tls

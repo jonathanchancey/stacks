@@ -1,15 +1,15 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: oak
+  name: qbit
   namespace: fkn
 spec:
   type: ExternalName
   ports:
-    - name: https
-      port: 9090
-      targetPort: 9090
-  externalName: 10.10.0.231
+    - name: http
+      port: 8080
+      targetPort: 8080
+  externalName: 10.10.0.5
   selector:
     app.kubernetes.io/instance: traefik
     app.kubernetes.io/name: traefik
@@ -17,20 +17,20 @@ spec:
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: oak-ingress
+  name: qbit-ingress
   namespace: fkn
-  annotations: 
+  annotations:
     kubernetes.io/ingress.class: traefik-external
 spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`oak.fkn.chancey.dev`)
+    - match: Host(`qbit.fkn.chancey.dev`)
       kind: Rule
       priority: 1
       services:
-        - name: oak
+        - name: qbit
           kind: Service
-          port: 9090
+          port: 8080
   tls:
     secretName: fkn-chancey-dev-tls
