@@ -1,29 +1,3 @@
-# ---
-# apiVersion: traefik.containo.us/v1alpha1
-# kind: IngressRoute
-# metadata:
-#   name: filebrowser
-#   namespace: filebrowser
-#   annotations:
-#     kubernetes.io/ingress.class: traefik-external
-# spec:
-#   entryPoints:
-#     - websecure
-#   routes:
-#     - match: Host(`filebrowser.k8s.chancey.dev`)
-#       kind: Rule
-#       priority: 10
-#       middlewares:
-#         - name: oauth-svc-forwardauth
-#           namespace: traefik
-#         - name: oauth-svc-forwardauth-filebrowser
-#           namespace: traefik
-#       services:
-#         - name: filebrowser
-#           kind: Service
-#           port: 80
-#   tls:
-#     secretName: k8s-chancey-dev-tls
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
@@ -42,8 +16,6 @@ spec:
       middlewares:
         - name: auth-headers
           namespace: auth-system
-        # - name: oauth-auth-redirect
-        #   namespace: auth-system
         - name: oauth-verify
       services:
         - name: filebrowser
@@ -51,3 +23,29 @@ spec:
           port: 80
   tls:
     secretName: k8s-chancey-dev-tls
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: filebrowser-ingress
+  namespace: filebrowser
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/auth-url: "https://auth.chancey.dev/oauth2/auth"
+    nginx.ingress.kubernetes.io/auth-signin: "https://auth.chancey.dev/oauth2/start?rd=$scheme%3A%2F%2F$host$escaped_request_uri"
+spec:
+  ingressClassName: nginx-internal
+  rules:
+    - host: &host filebrowser.chancey.dev
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: filebrowser
+                port:
+                  number: 80
+  tls:
+    - hosts:
+        - *host
