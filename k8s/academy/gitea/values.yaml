@@ -1,0 +1,99 @@
+strategy:
+  type: Recreate
+service:
+  ssh:
+    type: LoadBalancer
+    port: 22
+    annotations:
+      external-dns.alpha.kubernetes.io/hostname: git.chancey.dev
+      metallb.universe.tf/loadBalancerIPs: "10.10.0.48"
+      metallb.universe.tf/allow-shared-ip: "true"
+ingress:
+  enabled: true
+  className: nginx-internal
+  # annotations:
+  #   nginx.ingress.kubernetes.io/proxy-body-size: "8000m"
+  hosts:
+    - host: &host gitea.chancey.dev
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - hosts:
+        - *host
+persistence:
+  enabled: true
+  create: true
+  claimName: gitea-shared-storage
+  size: 30Gi
+  storageClass: longhorn
+redis-cluster:
+  enabled: false
+postgresql-ha:
+  enabled: false
+redis:
+  enabled: true
+  persistence:
+    storageClass: longhorn
+postgresql:
+  enabled: true
+  persistence:
+    storageClass: longhorn
+extraVolumes:
+  - name: gitea-themes
+    secret:
+      secretName: gitea-themes
+
+extraContainerVolumeMounts:
+  - name: gitea-themes
+    mountPath: /data/gitea/public/assets/css
+    readOnly: true
+gitea:
+  admin:
+    existingSecret: gitea-admin-secret
+  # See https://docs.gitea.io/en-us/config-cheat-sheet/
+  config:
+    APP_NAME: Gitea
+    oauth2:
+      ACCOUNT_LINKING: auto
+      ENABLE_AUTO_REGISTRATION: true
+      OPENID_CONNECT_SCOPES: "openid email groups"
+      UPDATE_AVATAR: true
+      USERNAME: userid
+    openid:
+      ENABLE_OPENID_SIGNIN: false
+      ENABLE_OPENID_SIGNUP: true
+      WHITELISTED_URIS: auth.chancey.dev
+    repository:
+      DEFAULT_PRIVATE: last
+    security:
+      MIN_PASSWORD_LENGTH: 12
+    server:
+      SSH_DOMAIN: git.chancey.dev
+      SSH_LISTEN_PORT: 2222
+      SSH_PORT: 22
+      ENABLE_PPROF: true
+    service:
+      ALLOW_ONLY_EXTERNAL_REGISTRATION: true
+      DISABLE_REGISTRATION: false
+      ENABLE_NOTIFY_MAIL: true
+      REQUIRE_SIGNIN_VIEW: true
+      SHOW_REGISTRATION_BUTTON: false
+      DISABLE_LOCAL_LOGIN: true
+      DEFAULT_SIGNIN_SOURCE: zitadel
+    ui:
+      DEFAULT_THEME: catppuccin-mocha-lavender
+      THEMES: gitea-light,gitea-dark,gitea-auto,catppuccin-mocha-lavender
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+  oauth:
+    - adminGroup: admin
+      autoDiscoverUrl: https://auth.chancey.dev/.well-known/openid-configuration
+      existingSecret: gitea-oauth-secret
+      groupClaimName: groups
+      iconUrl: https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/png/zitadel.png
+      name: zitadel
+      provider: openidConnect
+      scopes: openid profile email

@@ -32,3 +32,10 @@ resource "cloudflare_record" "wild-root" {
   content = var.nginx_internal_ip
   type    = "A"
 }
+
+resource "cloudflare_record" "gitea_ssh" {
+  zone_id = var.cloudflare_zone_id
+  name    = "git"
+  content = var.gitea_ssh_internal_ip
+  type    = "A"
+}

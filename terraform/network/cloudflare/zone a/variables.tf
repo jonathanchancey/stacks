@@ -28,3 +28,8 @@ variable "nginx_internal_ip" {
   type    = string
   default = null
 }
+
+variable "gitea_ssh_internal_ip" {
+  type    = string
+  default = null
+}

@@ -1,0 +1,49 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.18b.haus/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: gitea
+spec:
+  interval: 2h
+  chart:
+    spec:
+      chart: gitea
+      version: 10.3.0
+      sourceRef:
+        kind: HelmRepository
+        name: gitea
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    # moved to values.yaml
+
+  valuesFrom:
+    - kind: Secret
+      name: &dbSecret gitea-init-db
+      valuesKey: INIT_POSTGRES_HOST
+      targetPath: gitea.config.database.HOST
+    - kind: Secret
+      name: *dbSecret
+      valuesKey: INIT_POSTGRES_DBNAME
+      targetPath: gitea.config.database.NAME
+    - kind: Secret
+      name: *dbSecret
+      valuesKey: INIT_POSTGRES_USER
+      targetPath: gitea.config.database.USER
+    - kind: Secret
+      name: *dbSecret
+      valuesKey: INIT_POSTGRES_PASS
+      targetPath: gitea.config.database.PASSWD
+    - kind: Secret
+      name: &secret gitea-secret
+      valuesKey: secret-key
+      targetPath: gitea.config.security.SECRET_KEY
