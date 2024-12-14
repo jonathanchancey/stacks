@@ -43,7 +43,7 @@ metadata:
 spec:
   ingressClassName: nginx-internal
   rules:
-    - host: ingress-nginx-test.x.chancey.dev
+    - host: ingress-nginx-test.chancey.dev
       http:
         paths:
           - path: /
@@ -55,8 +55,7 @@ spec:
                   number: 80
   tls:
     - hosts:
-        - ingress-nginx-test.x.chancey.dev
-      secretName: x-chancey-dev-tls
+        - ingress-nginx-test.chancey.dev
 ---
 apiVersion: v1
 kind: Service
