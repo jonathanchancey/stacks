@@ -16,6 +16,7 @@ spec:
           port: 80
       middlewares:
         - name: default-headers
+          namespace: default
         - name: oauth
           namespace: auth-system
     - match: Host(`k8s.chancey.dev`)
