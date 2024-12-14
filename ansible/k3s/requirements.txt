@@ -78,7 +78,7 @@ jsonschema==4.17.0
     #   molecule
 kubernetes==25.3.0
     # via -r requirements.in
-markupsafe==2.1.1
+markupsafe==2.1.5
     # via jinja2
 molecule==4.0.4
     # via
