@@ -45,6 +45,12 @@ data:
             - Google Drive:
                 - abbr: DOC
                   href: https://drive.google.com/drive/u/0/home
+            - Prusa Connect:
+                - abbr: PRU
+                  href: https://connect.prusa3d.com
+            - Onshape:
+                - abbr: ONS
+                  href: https://cad.onshape.com/documents
     services.yaml: |
         - Management:
           - Proxmox:
