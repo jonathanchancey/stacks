@@ -13,3 +13,9 @@ helm install \
   --version v1.12.7 \
   --namespace cert-manager
 ```
+
+```
+helm upgrade --install \
+  cert-manager jetstack/cert-manager \
+  --namespace cert-manager --values values.yaml
+```
