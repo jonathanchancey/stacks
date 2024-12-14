@@ -90,6 +90,10 @@ data:
               href: https://influxdb.fkn.chancey.dev/
               icon: influxdb.png
               description: Time Series Database
+          - Prometheus:
+              href: https://prometheus.k8s.chancey.dev/
+              icon: prometheus.png
+              description: Time Series Database
         - Network:
           - 10p 2.5Gb Switch:
               href: https://CRS310.k8s.chancey.dev
