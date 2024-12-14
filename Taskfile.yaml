@@ -13,9 +13,11 @@ env:
   ANSIBLE_DIR: "{{.ROOT_DIR}}/ansible"
   VIRTUAL_ENV: "{{.ROOT_DIR}}/k8s/academy/.venv"
   REQUIREMENTS_TXT: "{{.ROOT_DIR}}/k8s/academy/.config/requirements.txt"
+  KUBERNETES_DIR: "{{.ROOT_DIR}}/flux/academy/"
 
 includes:
   flux: k8s/academy/.taskfiles/flux
+  flux: k8s/academy/.taskfiles/bootstrap
   ansible: ansible/
 
 tasks:
@@ -23,3 +25,11 @@ tasks:
   conform:
     desc: run kubeconform
     cmd: k8s/academy/.scripts/kubeconform.sh flux/academy/
+  direnv:
+    desc: Set up direnv hooks
+    cmd: direnv allow .
+    status:
+      - '[[ $(direnv status --json | jq ".state.foundRC.allowed") == 0 ]]'
+      - '[[ $(direnv status --json | jq ".state.loadedRC.allowed") == 0 ]]'
+    preconditions:
+      - which direnv
