@@ -111,7 +111,7 @@ pyasn1==0.6.1
     #   rsa
 pyasn1-modules==0.4.1
     # via google-auth
-pycparser==2.21
+pycparser==2.22
     # via cffi
 pygments==2.15.0
     # via rich
