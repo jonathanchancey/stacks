@@ -45,7 +45,7 @@ cryptography==43.0.3
     # via ansible-core
 distlib==0.3.9
     # via virtualenv
-distro==1.8.0
+distro==1.9.0
     # via selinux
 enrich==1.2.7
     # via molecule
