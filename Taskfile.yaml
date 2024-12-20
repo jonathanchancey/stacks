@@ -10,7 +10,7 @@ env:
   ANSIBLE_DIR: "{{.ROOT_DIR}}/ansible"
   VIRTUAL_ENV: "{{.ROOT_DIR}}/k8s/academy/.venv"
   REQUIREMENTS_TXT: "{{.ROOT_DIR}}/k8s/academy/.config/requirements.txt"
-  KUBERNETES_DIR: "{{.ROOT_DIR}}/flux/academy/"
+  KUBERNETES_DIR: "{{.ROOT_DIR}}/flux/academy"
   SOPS_AGE_KEY_FILE: "{{.PRIVATE_DIR}}/academy/academy.age"
 
 includes:

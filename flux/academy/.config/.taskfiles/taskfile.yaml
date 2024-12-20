@@ -7,7 +7,7 @@ vars:
 
 tasks:
   flux:
-    desc: Bootstrap Flux into the Talos cluster
+    desc: Bootstrap Flux
     cmds:
       - kubectl create namespace flux-system --dry-run=client -o yaml | kubectl apply --filename -
       - sops exec-file {{.DEPLOY_KEY_FILE}} "kubectl apply --server-side --filename {}"
@@ -23,6 +23,14 @@ tasks:
       - test -f {{.SOPS_AGE_KEY_FILE}}
       - test -f {{.DEPLOY_KEY_FILE}}
       - which flux kubectl sops
+
+  uninstall-flux:
+    desc: Uninstall Flux
+    cmds:
+      - flux uninstall --namespace=flux-system --keep-namespace=true
+      - kubectl delete resourcequota --all -n flux-system
+    preconditions:
+      - which flux kubectl
 
   apply-cluster-config:
     desc: Bootstrap Flux into the Talos cluster
