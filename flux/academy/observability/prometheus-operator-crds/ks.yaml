@@ -14,8 +14,7 @@ spec:
   prune: false # never should be deleted
   sourceRef:
     kind: GitRepository
-    name: flux-system
-    namespace: flux-system
+    name: academy
   wait: false
   interval: 30m
   timeout: 5m
