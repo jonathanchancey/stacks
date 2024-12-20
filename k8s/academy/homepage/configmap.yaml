@@ -129,7 +129,7 @@ data:
               icon: navidrome.png
               description: Music Collection Manager
           - Filebrowser:
-              href: https://filebrowser.k8s.chancey.dev/
+              href: https://filebrowser.chancey.dev/
               icon: filebrowser.png
               description: Music Collection Manager
         - Forbidden Network:
