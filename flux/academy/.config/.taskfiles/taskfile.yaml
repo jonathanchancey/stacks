@@ -1,0 +1,26 @@
+---
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+version: "3"
+
+vars:
+  DEPLOY_KEY_FILE: "{{.KUBERNETES_DIR}}/.config/vars/cluster-deploy-key.sops.yaml"
+
+tasks:
+  flux:
+    desc: Bootstrap Flux into the Talos cluster
+    cmds:
+      - kubectl create namespace flux-system --dry-run=client -o=yaml | kubectl apply --filename -
+      - sops exec-file {{.DEPLOY_KEY_FILE}} "kubectl apply --server-side --filename {}"
+      - kubectl apply --server-side --kustomize {{.KUBERNETES_DIR}}/.config/bootstrap
+      - '{{if eq .SOPS_SECRET_EXISTS "false"}}cat {{.SOPS_AGE_KEY_FILE}} | kubectl --namespace flux-system create secret generic sops-age --from-file=age.agekey=/dev/stdin{{end}}'
+      - sops exec-file {{.KUBERNETES_DIR}}/.config/vars/cluster-secrets.sops.yaml "kubectl apply --server-side --filename {}"
+      - kubectl apply --server-side --filename {{.KUBERNETES_DIR}}/.config/vars/cluster-settings.yaml
+      - kubectl apply --server-side --kustomize {{.KUBERNETES_DIR}}/.config
+    vars:
+      SOPS_SECRET_EXISTS:
+        sh: kubectl --namespace flux-system get secret sops-age &>/dev/null && echo true || echo false
+    preconditions:
+      - test -f {{.KUBECONFIG}}
+      - test -f {{.SOPS_AGE_KEY_FILE}}
+      - test -f {{.DEPLOY_KEY_FILE}}
+      - which flux kubectl sops

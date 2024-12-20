@@ -1,0 +1,45 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: academy
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  ref:
+    branch: main
+  secretRef:
+    name: flux-system
+  url: https://github.com/jonathanchancey/stacks.git
+  ignore: |
+  # exclude all
+  /*
+  # include dirs
+  !/flux/academy
+  # exclude config
+  /flux/academy/.config
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: academy-cluster
+  namespace: flux-system
+spec:
+  interval: 10m0s
+  path: ./flux/academy
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: academy-repo
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age
+  postBuild:
+    substituteFrom:
+      - name: cluster-settings
+        kind: ConfigMap
+        optional: true
+      - kind: Secret
+        name: cluster-secrets
+        optional: true
