@@ -171,7 +171,7 @@ urllib3==2.2.3
     #   requests
 virtualenv==20.28.0
     # via pre-commit
-websocket-client==1.4.2
+websocket-client==1.8.0
     # via kubernetes
 
 # The following packages are considered to be unsafe in a requirements file:
