@@ -30,7 +30,7 @@ chardet==5.2.0
     # via binaryornot
 charset-normalizer==2.1.1
     # via requests
-click==8.1.7
+click==8.1.8
     # via
     #   click-help-colors
     #   cookiecutter
