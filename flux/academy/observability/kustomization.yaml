@@ -9,3 +9,4 @@ resources:
   - ./kube-prometheus-stack/ks.yaml
   - ./grafana/ks.yaml
   - ./goldpinger/ks.yaml
+  - ./loki/ks.yaml
