@@ -5,4 +5,4 @@ kind: Kustomization
 resources:
   - ./helm.yaml
   - ./webserver.yaml
-  - ../../../../common/templates/gatus/internal
+  - ../../../.templates/gatus/internal
