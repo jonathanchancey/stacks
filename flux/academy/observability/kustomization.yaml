@@ -10,3 +10,4 @@ resources:
   - ./grafana/ks.yaml
   - ./goldpinger/ks.yaml
   - ./loki/ks.yaml
+  - ./promtail/ks.yaml
