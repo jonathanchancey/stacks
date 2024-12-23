@@ -9,7 +9,7 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  path: ./flux/academy/home/nginx-webserver
+  path: ./flux/academy/home/nginx-webserver/app
   prune: true
   sourceRef:
     kind: GitRepository

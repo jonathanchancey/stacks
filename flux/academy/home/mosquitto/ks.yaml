@@ -9,7 +9,7 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  path: ./flux/academy/home/mosquitto
+  path: ./flux/academy/home/mosquitto/app
   prune: true
   sourceRef:
     kind: GitRepository
