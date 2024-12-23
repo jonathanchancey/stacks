@@ -5,4 +5,4 @@ metadata:
   name: cluster-settings
   namespace: flux-system
 data:
-  SETTINGS: example
+  TIMEZONE: America/Los_Angeles
