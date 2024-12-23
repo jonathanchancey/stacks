@@ -8,3 +8,6 @@ resources:
   - ./bitnami.yaml
   - ./goldpinger.yaml
   - ./ingress-nginx.yaml
+  - ./node-feature-discovery.yaml
+  - ./stakater.yaml
+  - ./cilium.yaml
