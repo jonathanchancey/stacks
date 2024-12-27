@@ -52,14 +52,14 @@ spec:
               prefix: loki_index_
               period: 24h
       limits_config:
-        retention_period: 14d
+        retention_period: 8d
         allow_structured_metadata: true
     singleBinary:
       replicas: 1
       persistence:
         enabled: true
         storageClass: longhorn
-        size: 50Gi
+        size: 75Gi
     gateway:
       replicas: 0
     backend:
