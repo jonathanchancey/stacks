@@ -47,4 +47,4 @@
     src: /dev/longhorn_vg/longhorn_lv
     fstype: ext4
     state: mounted
-    opts: defaults
+    opts: defaults,nofail

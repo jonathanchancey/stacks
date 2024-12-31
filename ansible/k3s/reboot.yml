@@ -1,6 +1,6 @@
 ---
 - name: Reboot k3s_cluster
-  hosts: ephemera
+  hosts: all
   gather_facts: yes
   tasks:
     - name: Reboot the nodes (timeout 5 mins)
