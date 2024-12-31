@@ -1,0 +1,8 @@
+scribe:
+  hosts:
+    scribe-00:
+      ansible_host: 10.10.0.214
+    # scribe-01:
+    #   ansible_host: 10.10.0.214
+    # scribe-02:
+    #   ansible_host: 10.10.0.214

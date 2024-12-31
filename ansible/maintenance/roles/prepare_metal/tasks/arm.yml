@@ -8,11 +8,14 @@
     fail_msg: "Host must be ARM architecture running Debian Bookworm"
     success_msg: "Host is running on ARM architecture with Debian Bookworm"
 
-- name: Ensure hostname_prefix var defined
-  assert:
-    that:
-      - "{{ hostname_prefix | length > 0 }}"
-    fail_msg: hostname_prefix var empty
+# - name: Ensure hostname_prefix var defined
+#   assert:
+#     that:
+#       - "{{ hostname_prefix | length > 0 }}"
+#     fail_msg: hostname_prefix var empty
+
+# set hostname to below unless prefix is defined
+# {{ hostname_override }}
 
 - name: Check and create ansible user
   become: true
@@ -93,7 +96,7 @@
 
 - name: Debug system information
   debug:
-    msg: "{{ hostname_prefix }}-{{ '%02d' | format(play_hosts.index(inventory_hostname)) }}"
+    msg: ""
 
 - name: Update /etc/hosts
   become: true
@@ -101,12 +104,12 @@
     path: /etc/hosts
     regexp: |
       "^127\.0\.1\.1"
-    line: "127.0.1.1 {{ hostname_prefix }}-{{ '%02d' | format(play_hosts.index(inventory_hostname)) }}"
+    line: "127.0.1.1 {{ hostname_override }}"
     state: present
 
 - name: Update /etc/hostname
   copy:
-    content: "{{ hostname_prefix }}-{{ '%02d' | format(play_hosts.index(inventory_hostname)) }}\n"
+    content: "{{ hostname_override }}\n"
     dest: /etc/hostname
     owner: root
     group: root
@@ -115,7 +118,7 @@
 - name: Set hostname with padded zeros
   become: true
   become_user: root
-  command: "hostnamectl set-hostname {{ hostname_prefix }}-{{ '%02d' | format(play_hosts.index(inventory_hostname)) }}"
+  command: "hostnamectl set-hostname {{ hostname_override }}"
   register: hostname_result
   changed_when: hostname_result.rc == 0
   failed_when: hostname_result.rc != 0
