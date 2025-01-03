@@ -8,12 +8,6 @@
     - role: download
       become: true
 
-- name: Setup longhorn
-  hosts: node
-  roles:
-    - role: longhorn
-      become: true
-
 - name: Setup k3s servers
   hosts: master
   roles:

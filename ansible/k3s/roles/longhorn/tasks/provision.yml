@@ -3,7 +3,6 @@
   apt:
     name:
       - fuse-overlayfs
-      - lvm2
     state: present
     update_cache: true
 
@@ -16,35 +15,36 @@
   ansible.builtin.set_fact:
     eligible_drives: "{{ disk_info.stdout_lines | select('match', longhorn_lvm_drive_match_string) | list }}"
 
-- name: Longhorn | Create PV group from filtered drives
-  community.general.lvg:
-    vg: longhorn_vg
-    pvs: "{{ eligible_drives | map('regex_replace', '^([^ ]+).*', '/dev/\\1') | list }}"
-  when: eligible_drives | length > 0
-
-- name: Longhorn | Create logical volume using all available space
-  community.general.lvol:
-    vg: longhorn_vg
-    lv: longhorn_lv
-    size: 100%VG
-
-- name: Longhorn | Create ext4 filesystem on logical volume
+- name: Longhorn | Create ext4 filesystem from filtered drives with label
   community.general.filesystem:
     fstype: ext4
-    dev: /dev/longhorn_vg/longhorn_lv
+    dev: "/dev/{{ item | regex_replace('^([^ ]+).*', '\\1') }}"
+    opts: "-L longhorn{{ '%02d' | format(i) }}"
+  loop: "{{ eligible_drives }}"
+  loop_control:
+    index_var: i
+  when: eligible_drives | length > 0
 
-- name: Longhorn | Create mount point
+- name: Longhorn | Create mount points
   ansible.builtin.file:
-    path: "/var/lib/longhorn"
+    path: "/var/lib/longhorn-{{ '%02d' | format(i) }}"
     state: directory
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: "0755"
+  loop: "{{ eligible_drives }}"
+  loop_control:
+    index_var: i
+  when: eligible_drives | length > 0
 
-- name: Longhorn | Add mount entry to /etc/fstab
+- name: Longhorn | Add mount entries to /etc/fstab
   ansible.posix.mount:
-    path: /var/lib/longhorn
-    src: /dev/longhorn_vg/longhorn_lv
+    path: "/var/lib/longhorn-{{ '%02d' | format(i) }}"
+    src: "LABEL=longhorn{{ '%02d' | format(i) }}"
     fstype: ext4
     state: mounted
     opts: defaults,nofail
+  loop: "{{ eligible_drives }}"
+  loop_control:
+    index_var: i
+  when: eligible_drives | length > 0
