@@ -15,36 +15,42 @@
   ansible.builtin.set_fact:
     eligible_drives: "{{ disk_info.stdout_lines | select('match', longhorn_lvm_drive_match_string) | list }}"
 
-- name: Longhorn | Create ext4 filesystem from filtered drives with label
+- name: Longhorn | Create ext4 filesystem on filtered drives
   community.general.filesystem:
     fstype: ext4
-    dev: "/dev/{{ item | regex_replace('^([^ ]+).*', '\\1') }}"
-    opts: "-L longhorn{{ '%02d' | format(i) }}"
+    dev: "/dev/{{ item.split()[0] }}"
+    force: "{{ longhorn_force_filesystem | default(false) }}"
   loop: "{{ eligible_drives }}"
-  loop_control:
-    index_var: i
+  when: eligible_drives | length > 0
+
+- name: Longhorn | Get UUID for each drive
+  ansible.builtin.command: blkid -s UUID -o value /dev/{{ item.split()[0] }}
+  register: drive_uuids
+  loop: "{{ eligible_drives }}"
+  changed_when: false
+  when: eligible_drives | length > 0
+
+- name: Longhorn | Set drive labels using last 4 digits of UUID
+  ansible.builtin.command: e2label /dev/{{ item.0.split()[0] }} longhorn-{{ item.1.stdout[-4:] }}
+  loop: "{{ eligible_drives | zip(drive_uuids.results) | list }}"
   when: eligible_drives | length > 0
 
 - name: Longhorn | Create mount points
   ansible.builtin.file:
-    path: "/var/lib/longhorn-{{ '%02d' | format(i) }}"
+    path: "/var/lib/longhorn-{{ item.stdout[-4:] }}"
     state: directory
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: "0755"
-  loop: "{{ eligible_drives }}"
-  loop_control:
-    index_var: i
+  loop: "{{ drive_uuids.results }}"
   when: eligible_drives | length > 0
 
 - name: Longhorn | Add mount entries to /etc/fstab
   ansible.posix.mount:
-    path: "/var/lib/longhorn-{{ '%02d' | format(i) }}"
-    src: "LABEL=longhorn{{ '%02d' | format(i) }}"
+    path: "/var/lib/longhorn-{{ item.1.stdout[-4:] }}"
+    src: "LABEL=longhorn-{{ item.1.stdout[-4:] }}"
     fstype: ext4
     state: mounted
     opts: defaults,nofail
-  loop: "{{ eligible_drives }}"
-  loop_control:
-    index_var: i
+  loop: "{{ eligible_drives | zip(drive_uuids.results) | list }}"
   when: eligible_drives | length > 0
