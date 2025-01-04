@@ -9,23 +9,21 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.4.1
+      version: 3.5.1
       interval: 30m
       sourceRef:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
-
   values:
     controllers:
-      main:
+      couchdb:
         pod:
           securityContext:
             runAsUser: "${APP_UID}"
             runAsGroup: "${APP_GID}"
             fsGroup: "${APP_GID}"
-            fsGroupChangePolicy: "OnRootMismatch"
-
+            fsGroupChangePolicy: OnRootMismatch
         initContainers:
           init-config:
             image:
@@ -36,7 +34,6 @@ spec:
               - "/bin/sh"
               - "-c"
               - "cp /tmp/config/*.ini /opt/couchdb/etc/default.d/; ls -lrt /opt/couchdb/etc/default.d;"
-
         containers:
           main:
             image:
@@ -59,28 +56,25 @@ spec:
                 memory: 150M
               limits:
                 memory: 300M
-
     service:
-      main:
+      app:
+        controller: couchdb
         ports:
           http:
             port: 5984
-
     ingress:
-      main:
-        enabled: true
-        className: "nginx-internal"
+      app:
+        className: nginx-internal
         hosts:
           - host: "${HOSTNAME}"
             paths:
               - path: /
                 service:
-                  name: main
+                  identifier: app
                   port: http
         tls:
           - hosts:
               - "${HOSTNAME}"
-
     persistence:
       config:
         enabled: true
@@ -92,7 +86,7 @@ spec:
               - path: /tmp/config
       data:
         enabled: true
-        existingClaim: "${VOLSYNC_CLAIM}"
+        existingClaim: obsidian-couchdb-data
         advancedMounts:
           main:
             main:
