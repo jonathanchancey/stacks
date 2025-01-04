@@ -35,7 +35,7 @@ spec:
               - "-c"
               - "cp /tmp/config/*.ini /opt/couchdb/etc/default.d/; ls -lrt /opt/couchdb/etc/default.d;"
         containers:
-          main:
+          app:
             image:
               repository: docker.io/library/couchdb
               tag: 3.3.3@sha256:4dce1673b2daf7b35e408e013ba5bc15b0b79230f7ba072ffa48ad10d0a51284
@@ -81,15 +81,15 @@ spec:
         type: configMap
         name: obsidian-couchdb-configmap
         advancedMounts:
-          main:
+          couchdb:
             init-config:
               - path: /tmp/config
       data:
         enabled: true
         existingClaim: obsidian-couchdb-data
         advancedMounts:
-          main:
-            main:
+          couchdb:
+            app:
               - path: /opt/couchdb/data
       config-storage:
         enabled: true
