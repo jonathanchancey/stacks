@@ -73,6 +73,10 @@ data:
               href: https://syncthing.chancey.dev/
               icon: syncthing.png
               description: File Sync
+          - Longhorn:
+              href: https://longhorn.chancey.dev/
+              icon: longhorn.png
+              description: Distributed Block Storage
         - Monitoring:
           - Grafana:
               href: https://grafana.chancey.dev/
@@ -132,6 +136,10 @@ data:
               href: https://filebrowser.chancey.dev/
               icon: filebrowser.png
               description: Music Collection Manager
+          - Gitea:
+                href: https://gitea.chancey.dev/
+                icon: gitea.png
+                description: Version Control
         - Forbidden Network:
           - Shar:
               href: https://shar.fkn.chancey.dev/
