@@ -43,12 +43,12 @@ spec:
               COUCHDB_USER:
                 valueFrom:
                   secretKeyRef:
-                    name: obsidian-couchdb-secret
+                    name: obsidian-couchdb
                     key: couchdb-user
               COUCHDB_PASSWORD:
                 valueFrom:
                   secretKeyRef:
-                    name: obsidian-couchdb-secret
+                    name: obsidian-couchdb
                     key: couchdb-password
             resources:
               requests:
