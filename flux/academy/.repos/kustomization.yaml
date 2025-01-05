@@ -11,3 +11,4 @@ resources:
   - ./node-feature-discovery.yaml
   - ./stakater.yaml
   - ./cilium.yaml
+  - ./descheduler.yaml
