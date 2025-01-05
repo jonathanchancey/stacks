@@ -79,3 +79,4 @@ k3s_version_match_override: false
 
 longhorn_install_dependencies: true
 longhorn_provision_physical_storage: false
+longhorn_force_filesystem: false

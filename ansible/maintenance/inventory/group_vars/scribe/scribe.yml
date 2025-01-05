@@ -1,4 +1,5 @@
 hostname_prefix: scribe
+hostname_override: scribe-00
 system_timezone: America/Los_Angeles
 ansible_user: ""
 ansible_become_user: ""
