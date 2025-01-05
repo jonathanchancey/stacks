@@ -175,7 +175,9 @@ spec:
     ingress:
       enabled: false
     persistence:
-      enabled: false
+      enabled: true
+      storageClassName: longhorn
+      size: 10Gi
     testFramework:
       enabled: false
     topologySpreadConstraints:
