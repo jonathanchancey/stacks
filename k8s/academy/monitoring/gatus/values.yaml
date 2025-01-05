@@ -65,7 +65,7 @@ config:
     - name: Traefik
       url: https://traefik.fkn.chancey.dev/dashboard/#/
       conditions:
-        - "[STATUS] == 401"
+        - "[STATUS] == 200"
     - name: InfluxDB
       url: https://influxdb.fkn.chancey.dev/
       conditions:
