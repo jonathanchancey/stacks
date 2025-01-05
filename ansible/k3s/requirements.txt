@@ -113,7 +113,7 @@ pyasn1-modules==0.4.1
     # via google-auth
 pycparser==2.22
     # via cffi
-pygments==2.18.0
+pygments==2.19.0
     # via rich
 pyparsing==3.2.1
     # via packaging
