@@ -18,6 +18,8 @@ spec:
     !/flux/academy
     # exclude config
     /flux/academy/.config
+    # include vars
+    !/flux/academy/.config/vars
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
