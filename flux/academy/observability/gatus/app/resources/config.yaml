@@ -14,22 +14,11 @@ connectivity:
 alerting:
   gotify:
     title: Gatus
-    server-url: "https://gotify.chancey.dev"
+    server-url: "https://gotify.fkn.chancey.dev"
     token: ${GATUS_GOTIFY_TOKEN}
-    priority: 1
+    priority: 10
     default-alert:
       description: "healthcheck failed"
       send-on-resolved: true
       failure-threshold: 3
       success-threshold: 3
-# endpoints:
-#   - name: "${APP}"
-#     group: internal
-#     url: "https://${GATUS_SUBDOMAIN:-${APP}}.${SECRET_DOMAIN}${GATUS_PATH:-/}"
-#     interval: 1m
-#     client:
-#       dns-resolver: tcp://1.1.1.1:53
-#     conditions:
-#       - "[STATUS] == ${GATUS_STATUS:-200}"
-#     alerts:
-#       - type: gotify

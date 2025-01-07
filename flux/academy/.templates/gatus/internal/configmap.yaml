@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: "${APP}-gatus-endpoint"
+  name: "${APP}-gatus-endpoint-tmpl"
   labels:
     gatus.io/enabled: "true"
 data:
@@ -10,11 +10,11 @@ data:
     endpoints:
       - name: "${APP}"
         group: internal
-        url: "https://${GATUS_SUBDOMAIN:-${APP}}.chancey.dev"
+        url: "https://${GATUS_SUBDOMAIN:-${APP}}.${SECRET_DOMAIN}${GATUS_PATH:-/}"
         interval: 1m
         client:
-          dns-resolver: tcp://9.9.9.9:53
+          dns-resolver: tcp://1.1.1.1:53
         conditions:
           - "[STATUS] == ${GATUS_STATUS:-200}"
         alerts:
-          - type: pushover
+          - type: gotify
