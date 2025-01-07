@@ -52,13 +52,13 @@ spec:
             env:
               PUID: "1000"
               PGID: "1000"
-              WEB_PORT: &port 80
+              WEB_PORT: &port 8080
               GATUS_CONFIG_PATH: /config
               GATUS_DELAY_START_SECONDS: 5
               TZ: "${TIMEZONE}"
-            envFrom:
-              - secretRef:
-                  name: gatus-secret
+            # envFrom:
+            #   - secretRef:
+            #       name: gatus-secret
             probes:
               liveness: &probes
                 enabled: true
@@ -80,34 +80,38 @@ spec:
               requests:
                 cpu: 10m
               limits:
-                memory: 256Mi
+                memory: 512Mi
     defaultPodOptions:
       securityContext:
         runAsNonRoot: true
-        runAsUser: 65534
-        runAsGroup: 65534
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
         seccompProfile: { type: RuntimeDefault }
     service:
       app:
         controller: gatus
         ports:
           http:
-            port: 80
-    ingress:
-      app:
-        className: nginx-internal
-        annotations:
-          external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
-        hosts:
-          - host: &host "gatus.${SECRET_DOMAIN}"
-            paths:
-              - path: /
-                service:
-                  identifier: app
-                  port: http
-        tls:
-          - hosts:
-              - *host
+            port: 8080
+
+    # ingress:
+    #   app:
+    #     className: nginx-internal
+    #     hosts:
+    #       - host: status.chancey.dev
+    #         paths:
+    #           - path: /
+    #             service:
+    #               identifier: app
+    #               port: http
+    #     tls:
+    #       - hosts:
+    #           - status.chancey.dev
+    serviceAccount:
+      create: true
+      name: gatus
     serviceMonitor:
       app:
         serviceName: gatus
@@ -119,11 +123,7 @@ spec:
             scrapeTimeout: 10s
     persistence:
       config:
-        existingClaim: gatus
-        # storageClassName: longhorn
-        # size: 2Gi
-        # globalMounts:
-        #   - path: /app/data
+        existingClaim: gatus-data
       config-file:
         type: configMap
         name: gatus-configmap

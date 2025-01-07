@@ -42,10 +42,6 @@ config:
       url: https://syncthing.chancey.dev/
       conditions:
         - "[STATUS] == 200"
-    - name: Rancher | chancey.dev
-      url: https://rancher.k8s.chancey.dev/
-      conditions:
-        - "[STATUS] == 200"
     - name: ZITADEL
       url: https://auth.chancey.dev/
       conditions:

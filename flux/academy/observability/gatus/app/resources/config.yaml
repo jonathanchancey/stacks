@@ -1,6 +1,6 @@
 storage:
   type: sqlite
-  path: /data/data.db
+  path: /config/data.db
   caching: true
 metrics: true
 debug: false
@@ -22,82 +22,14 @@ alerting:
       send-on-resolved: true
       failure-threshold: 3
       success-threshold: 3
-endpoints:
-  - name: Proxmox
-    url: https://proxmox.fkn.chancey.dev
-    alerts:
-      - type: gotify
-    conditions:
-      - "[STATUS] == 200"
-  - name: TrueNAS
-    url: https://truenas.k8s.chancey.dev
-    conditions:
-      - "[STATUS] == 200"
-  - name: Syncthing
-    url: https://syncthing.chancey.dev/
-    conditions:
-      - "[STATUS] == 200"
-  - name: Rancher | chancey.dev
-    url: https://rancher.k8s.chancey.dev/
-    conditions:
-      - "[STATUS] == 200"
-  - name: ZITADEL
-    url: https://auth.chancey.dev/
-    conditions:
-      - "[STATUS] == 200"
-  - name: Shar
-    url: https://shar.fkn.chancey.dev/
-    conditions:
-      - "[STATUS] == 200"
-  - name: OPNSense
-    url: https://opnsense.fkn.chancey.dev
-    conditions:
-      - "[STATUS] == 200"
-  - name: Pi-Hole
-    url: http://pit.fkn.chancey.dev/admin
-    conditions:
-      - "[STATUS] == 200"
-  - name: Traefik
-    url: https://traefik.fkn.chancey.dev/dashboard/#/
-    conditions:
-      - "[STATUS] == 401"
-  - name: InfluxDB
-    url: https://influxdb.fkn.chancey.dev/
-    conditions:
-      - "[STATUS] == 200"
-  - name: Grafana
-    url: https://grafana.chancey.dev/
-    conditions:
-      - "[STATUS] == 200"
-  - name: 10p 2.5Gb Switch
-    url: https://CRS310.k8s.chancey.dev
-    conditions:
-      - "[STATUS] == 200"
-  - name: 24p Hearth Switch
-    url: https://CSS326.k8s.chancey.dev/
-    conditions:
-      - "[STATUS] == 200"
-  - name: 24p PoE Switch
-    url: https://CRS328.k8s.chancey.dev/
-    conditions:
-      - "[STATUS] == 200"
-  - name: EAP
-    url: https://eap.k8s.chancey.dev/
-    conditions:
-      - "[STATUS] == 200"
-  - name: Gotify
-    url: https://gotify.k8s.chancey.dev/
-    conditions:
-      - "[STATUS] == 200"
-  - name: Jellyfin
-    url: https://jellyfin.chancey.dev/
-    conditions:
-      - "[STATUS] == 200"
-  - name: Navidrome
-    url: https://navidrome.chancey.dev/
-    conditions:
-      - "[STATUS] == 200"
-  - name: Immich
-    url: https://photos.chancey.dev/
-    conditions:
-      - "[STATUS] == 200"
+# endpoints:
+#   - name: "${APP}"
+#     group: internal
+#     url: "https://${GATUS_SUBDOMAIN:-${APP}}.${SECRET_DOMAIN}${GATUS_PATH:-/}"
+#     interval: 1m
+#     client:
+#       dns-resolver: tcp://1.1.1.1:53
+#     conditions:
+#       - "[STATUS] == ${GATUS_STATUS:-200}"
+#     alerts:
+#       - type: gotify
