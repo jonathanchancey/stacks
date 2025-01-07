@@ -123,7 +123,7 @@ spec:
             scrapeTimeout: 10s
     persistence:
       config:
-        existingClaim: gatus-data
+        existingClaim: gatus
       config-file:
         type: configMap
         name: gatus-configmap
