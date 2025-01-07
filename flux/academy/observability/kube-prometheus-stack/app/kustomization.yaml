@@ -6,4 +6,4 @@ resources:
   - ./helm.yaml
   - ./ingress.yaml
   - ./scrapeconfig.yaml
-  - ../../../observability/gatus/internal
+  - ../../../.templates/gatus/internal
