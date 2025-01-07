@@ -17,6 +17,7 @@ spec:
     # include dirs
     !/flux/academy
     # exclude config
+    /flux/academy/.archive
     /flux/academy/.config
     # include vars
     !/flux/academy/.config/vars

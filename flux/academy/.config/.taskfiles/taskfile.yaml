@@ -32,6 +32,13 @@ tasks:
     preconditions:
       - which flux kubectl
 
+  update-secrets:
+    desc: update cluster secrets
+    cmds:
+      - sops exec-file {{.KUBERNETES_DIR}}/.config/vars/cluster-secrets.sops.yaml "kubectl apply --server-side --filename {}"
+    preconditions:
+      - which flux kubectl sops
+
   apply-cluster-config:
     desc: Bootstrap Flux into the Talos cluster
     cmds:
