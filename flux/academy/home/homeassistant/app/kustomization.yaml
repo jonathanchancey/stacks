@@ -6,3 +6,4 @@ resources:
   - ./helm.yaml
   - ./pvc.yaml
   - ./ingress.yaml
+  - ../../../observability/gatus/internal
