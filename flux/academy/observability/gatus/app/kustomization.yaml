@@ -6,6 +6,7 @@ resources:
   - ./rbac.yaml
   - ./secrets.sops.yaml
   - ./ingress.yaml
+  - ../../../.templates/gatus/internal
 configMapGenerator:
   - name: gatus-configmap
     files:
