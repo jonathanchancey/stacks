@@ -7,3 +7,4 @@ resources:
   - ./ingress.yaml
   - ./cert.yaml
   - ./secret.sops.yaml
+  - ../../../observability/gatus/internal

@@ -8,3 +8,4 @@ resources:
   - ./ingress.yaml
   - ./postgres.yaml
   - ./secret.sops.yaml
+  - ../../../observability/gatus/internal

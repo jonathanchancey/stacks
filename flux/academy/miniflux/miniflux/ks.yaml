@@ -21,3 +21,11 @@ spec:
     provider: sops
     secretRef:
       name: sops-age
+  postBuild:
+    substitute:
+      APP: *app
+      GATUS_SUBDOMAIN: miniflux.k8s
+    substituteFrom:
+      - name: cluster-secrets
+        kind: Secret
+        optional: true
