@@ -1,0 +1,65 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app multus
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: app-template
+      version: 3.5.1
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  values:
+    controllers:
+      multus:
+        type: daemonset
+        containers:
+          multus:
+            image:
+              repository: ghcr.io/k8snetworkplumbingwg/multus-cni
+              tag: v4.1.4@sha256:09fdfb7ce090ccbf8927d2728970c3cdeb5917d48209f692de849e384f00d893
+            command:
+              - /thin_entrypoint
+            args:
+              - --multus-conf-file=/config/00-multus.conf
+              - --cni-bin-dir=/var/lib/rancher/k3s/data/cni
+              - --cni-conf-dir=/var/lib/rancher/k3s/agent/etc/cni/net.d
+              - --cleanup-config-on-exit=true
+            resources:
+              requests:
+                cpu: 10m
+              limits:
+                memory: 512Mi
+            securityContext:
+              privileged: true
+    defaultPodOptions:
+      hostNetwork: true
+    persistence:
+      config:
+        type: configMap
+        name: multus-configmap
+        globalMounts:
+          - path: /config/00-multus.conf
+            subPath: 00-multus.conf
+            readOnly: true
+      cni-conf-dir:
+        type: hostPath
+        hostPath: /var/lib/rancher/k3s/agent/etc/cni/net.d
+      cni-bin-dir:
+        type: hostPath
+        hostPath: /var/lib/rancher/k3s/data/cni
+    serviceAccount:
+      create: true
+      name: *app
