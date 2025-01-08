@@ -38,6 +38,7 @@ spec:
               - --multus-conf-file=/config/00-multus.conf
               - --cni-bin-dir=/var/lib/rancher/k3s/data/cni
               - --cni-conf-dir=/var/lib/rancher/k3s/agent/etc/cni/net.d
+              - --multus-kubeconfig-file-host=/var/lib/rancher/k3s/agent/etc/cni/net.d/multus.d/multus.kubeconfig
               - --cleanup-config-on-exit=true
             resources:
               requests:
