@@ -27,6 +27,13 @@ spec:
         type: daemonset
         pod:
           hostNetwork: true
+        initContainers:
+          cni-plugins:
+            image:
+              repository: ghcr.io/buroa/cni-plugins
+              tag: 1.6.2@sha256:b8bf519bda14762782525bb5607d852a76c4bf0da5ffbd8ca021469818ccd8f8
+            env:
+              CNI_BIN_DIR: &cni-bin-dir /var/lib/rancher/k3s/data/cni
         containers:
           multus:
             image:
@@ -60,7 +67,7 @@ spec:
         hostPath: /var/lib/rancher/k3s/agent/etc/cni/net.d
       cni-bin-dir:
         type: hostPath
-        hostPath: /var/lib/rancher/k3s/data/cni
+        hostPath: *cni-bin-dir
     serviceAccount:
       create: true
       name: *app

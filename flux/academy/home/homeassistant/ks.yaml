@@ -19,7 +19,8 @@ spec:
     name: academy
   dependsOn:
     - name: multus-networks
-  wait: true
+  # wait: false
+  # force: true
   postBuild:
     substitute:
       APP: *app
