@@ -30,13 +30,13 @@ spec:
       homeassistant:
         pod:
           annotations:
-          k8s.v1.cni.cncf.io/networks: |
-            [{
-              "name": "multus-iot",
-              "namespace": "network",
-              "mac": "c6:ae:a3:8e:7a:59",
-              "ips": ["10.10.0.32/24"]
-            }]
+            k8s.v1.cni.cncf.io/networks: |
+              [{
+                "name": "multus-iot",
+                "namespace": "network",
+                "mac": "c6:ae:a3:8e:7a:59",
+                "ips": ["10.10.0.32/24"]
+              }]
           securityContext:
             runAsNonRoot: true
             runAsUser: 65534
