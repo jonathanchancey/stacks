@@ -3,11 +3,11 @@ originRequest:
   originServerName: "external.${SECRET_DOMAIN}"
 
 ingress:
-  - hostname: "${SECRET_DOMAIN}"
+  - hostname: "clauth.${SECRET_DOMAIN}"
     service: https://ingress-nginx-external-controller.network.svc.cluster.local:443
     originRequest:
       noTLSVerify: true
-  - hostname: "*.${SECRET_DOMAIN}"
+  - hostname: "*.external.${SECRET_DOMAIN}"
     service: https://ingress-nginx-external-controller.network.svc.cluster.local:443
     originRequest:
       noTLSVerify: true
