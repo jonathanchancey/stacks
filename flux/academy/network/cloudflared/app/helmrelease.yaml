@@ -24,15 +24,6 @@ spec:
   values:
     controllers:
       cloudflared:
-        affinity:
-          nodeAffinity:
-            requiredDuringSchedulingIgnoredDuringExecution:
-              nodeSelectorTerms:
-                - matchExpressions:
-                    - key: kubernetes.io/arch
-                      operator: NotIn
-                      values:
-                        - arm64
         strategy: RollingUpdate
         annotations:
           reloader.stakater.com/auto: "true"
