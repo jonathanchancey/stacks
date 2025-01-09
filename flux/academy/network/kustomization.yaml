@@ -6,3 +6,4 @@ resources:
   - ./ns.yaml
   - ./ingress-nginx/ks.yaml
   - ./multus/ks.yaml
+  - ./cloudflared/ks.yaml
