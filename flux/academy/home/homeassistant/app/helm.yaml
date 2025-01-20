@@ -18,8 +18,8 @@ spec:
 
   values:
     defaultPodOptions:
-    nodeSelector:
-      kubernetes.io/arch: amd64
+      nodeSelector:
+        kubernetes.io/arch: amd64
     controllers:
       # affinity:
       #   nodeAffinity:
