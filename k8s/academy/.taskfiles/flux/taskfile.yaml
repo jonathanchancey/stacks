@@ -21,9 +21,11 @@ tasks:
   etcd-save:
     desc: Flux test
     cmd: ssh -i ~/.ssh/id_seki_rsa napkin@acolyte-00 -t "sudo k3s etcd-snapshot save"
-  rek:
-    desc: reconcile flux-system kustomization
-    cmd: flux reconcile kustomization -n flux-system flux-system
+  sus:
+    desc: suspend flux ks [KS=required]
+    cmd: flux suspend kustomization -n flux-system {{.KS}}
+    requires:
+      vars: [KS]
   reconcile:
     desc: Force update Flux to pull in changes from your Git repository
     cmd: flux --namespace flux-system reconcile kustomization academy-cluster --with-source
