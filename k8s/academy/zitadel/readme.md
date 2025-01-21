@@ -8,5 +8,5 @@ helm install --wait db bitnami/postgresql --version 15.1.2 --values postgres-val
 helm repo add zitadel https://charts.zitadel.com
 helm upgrade --install zitadel zitadel/zitadel --values zitadel-values.yaml --values zitadel-values-secrets.yaml
 # kubectl --namespace zitadel port-forward svc/zitadel 443:80
-
+helm upgrade zitadel zitadel/zitadel --version 8.0.0 --reuse-values
 ```
