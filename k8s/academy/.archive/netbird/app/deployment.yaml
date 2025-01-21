@@ -1,0 +1,32 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: netbird
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: netbird
+  template:
+    metadata:
+      labels:
+        app: netbird
+    spec:
+      containers:
+        - name: netbird
+          image: netbirdio/netbird:latest
+          env:
+            - name: NB_HOSTNAME
+              value: "netbird-academy-router" # name that will appear in the management UI
+            - name: NB_LOG_LEVEL
+              value: "info"
+          envFrom:
+            - secretRef:
+                name: netbird-secrets
+          securityContext:
+            capabilities:
+              add:
+                - NET_ADMIN
+                - SYS_RESOURCE
+                - SYS_ADMIN
