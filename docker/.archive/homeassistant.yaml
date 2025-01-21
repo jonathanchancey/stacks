@@ -1,0 +1,17 @@
+---
+version: "3.7"
+services:
+  homeassistant:
+    image: lscr.io/linuxserver/homeassistant
+    container_name: homeassistant
+    network_mode: host
+    environment:
+      - PUID=8123
+      - PGID=8123
+      - UMASK=002
+      - TZ=America/Los_Angeles
+    volumes:
+      - /opt/homeassistant/config:/config
+    ports:
+      - 8123:8123
+    restart: unless-stopped
