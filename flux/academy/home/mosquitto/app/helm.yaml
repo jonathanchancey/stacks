@@ -54,7 +54,7 @@ spec:
         image:
           pullPolicy: IfNotPresent
           repository: nolte/mosquitto-exporter
-          tag: v0.6.3
+          tag: 2020.10.16
         port: 9234
         resources:
           limits:
