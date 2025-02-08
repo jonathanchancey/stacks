@@ -6,7 +6,7 @@ collections:
     version: 3.13.5
 roles:
   - name: geerlingguy.docker
-    version: 7.4.4
+    version: 7.4.5
   - name: nvidia.nvidia_driver
     version: 2.3.0
   - name: geerlingguy.node_exporter
