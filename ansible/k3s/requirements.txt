@@ -169,7 +169,7 @@ urllib3==2.3.0
     # via
     #   kubernetes
     #   requests
-virtualenv==20.29.1
+virtualenv==20.29.2
     # via pre-commit
 websocket-client==1.8.0
     # via kubernetes
