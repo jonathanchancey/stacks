@@ -1,28 +1,30 @@
 # Stacks
 
-Hello and welcome to my homelab. I use this place to practice DevOps concepts and for hosting simple functional services at home.
+Hello and welcome to my waste of electricity
 
-## Structure
+I use this repo to practice DevOps concepts and for hosting services I'd rather not live without
+
+## Folder Structure
 
 ### Ansible - `ansible`
 
-Bare Metal Provisioning and Configuration management
+Bare metal provisioning and configuration
 
 ### Flux - `flux`
 
-GitOps, used to be fleet but so far flux is lovely
+My GitOps project of choice. It used to be Fleet but so far Flux is lovely
 
 ### Kubernetes Clusters - `k8s`
 
-I'm heavily invested in k3s due to Raspberry Pi and SBC compatibility but it would be nice to jump to talos when support gets better.
+I'm heavily invested in k3s due to Raspberry Pi and SBC compatibility but it would be nice to jump to Talos when support arrives
 
 #### Academy - K3s
 
-My production cluster, adopting nodes and moving towards best practices slowly but surely
+My production cluster. Moving towards home-viable best practices slowly but surely
 
-9 nodes, 44 cores (32 qemu64, 12 arm64), 144GiB RAM
-- 3 master
-- 5 workers, three of which are cm3588s for longhorn
+7 nodes, 40 cores (28 qemu64, 12 arm64), 144GiB RAM
+- ~~3 masters~~ 1 master
+- 5 workers, three of which are cm3588s primarily for longhorn
 
 #### Bastille - RKE2
 
@@ -30,13 +32,17 @@ For External Services
 
 #### Coalesce and Dichotomy - K3s
 
-Cilium Cluster Mesh and multi zone testing
+Cilium Cluster Mesh and multi-zone testing
+
+#### Ephemera - K3s
+
+Test cluster for Academy. Used to test major changes like swapping out the CNI and switching to BGP
 
 ### Terraform - `terraform`
 
-I use terraform for local/public DNS and for "Quick" VM Provisioning
+I use Terraform for DNS and "quick" VM Provisioning
 
-Proxmox really isn't suited for terraform but I'm excited to try VMs in kubernetes or maybe that popsicle operator (crossplane)
+Proxmox isn't really suited for Terraform but at least it's better than ClickOps
 
 ### Proxmox
 
@@ -96,47 +102,5 @@ Clustered Hypervisor for Kubernetes, Docker, ~~Ceph (someday we will return)~~, 
   </tr>
  </table>
 
-
-### Topology
-
-```yaml
-- forest # nas
-  - LXC/VMs
-    - reap # machinaris harvestor
-    - acolyte-00 # k3s server VM
-    - sentinel-00 # RKE2 server VM
-  - storage
-    - foxes # 1TB NVME ZFS mirror
-    - 6x8TB ext4 external drives # Chia
-    - hydra # 8TB ceph OSD
-- lich # compute
-  - LXC/VMs
-    - beholder # frigate VLAN 50 and iGPU docker host
-    - acolyte-01 # k3s server VM
-    - neophyte-01 # k3s agent VM
-    - sentinel-01 # RKE2 server VM
-    - cavalier-01 # RKE2 agent VM
-  - storage
-    - hydra # 8TB ceph OSD
-- okapi # compute and nas
-  - LXC/VMs
-    - chicken # NAS
-    - salamander # discord bot
-    - fish # primary docker node
-    - acolyte-02 # k3s server VM
-    - neophyte-02 # k3s agent VM
-    - cavalier-02 # RKE2 agent VM
-  - storage
-    - strawberry # ZFS 24TB RAIDZ1 3x12TB
-    - hydra # 8TB ceph OSD
-- shar # router
-  - LXC/VMs
-    - loss # DNS, DHCP for 10.10.0.1/24
-    - dread # OPNsense VM
-- selune # compute
-  - LXC/VMs
-    - sentinel-02 # RKE2 server VM
-    - unused # OPNsense failover
-```
 
 ![proxmox-small](https://github.com/jonathanchancey/assets/blob/main/images/proxmox-small.png?raw=true)
