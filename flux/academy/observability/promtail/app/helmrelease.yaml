@@ -28,15 +28,3 @@ spec:
         - url: http://loki-headless.observability.svc.cluster.local:3100/loki/api/v1/push
     serviceMonitor:
       enabled: true
-    # -- Configure additional ports and services. For each configured port, a corresponding service is created.
-    extraPorts:
-      syslog:
-        name: tcp-syslog
-        annotations: {}
-        labels: {}
-        containerPort: 1514
-        protocol: TCP
-        service:
-          type: LoadBalancer
-          port: 1514
-          loadBalancerIP: 10.10.0.46
