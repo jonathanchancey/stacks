@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: immich
-      version: 8.6.0
+      version: 0.8.5
       sourceRef:
         kind: HelmRepository
         name: immich
@@ -34,7 +34,7 @@ spec:
       IMMICH_MACHINE_LEARNING_URL: '{{ printf "http://%s-machine-learning:3003" .Release.Name }}'
     image:
       # https://github.com/immich-app/immich/releases
-      tag: v1.125.3
+      tag: v1.126.1
     immich:
       metrics:
         # Enabling this will create the service monitors needed to monitor immich with the prometheus operator
@@ -60,9 +60,9 @@ spec:
         storageClass: longhorn
         postgresql:
           auth:
-            username: ENC[AES256_GCM,data:LWpzGBbIBPI=,iv:CasJMBF6z5DeX5ZjQCC+zjND+4RV1xzXP3Irw4m07Og=,tag:cinQJznLv4tEK0BPokEMWg==,type:str]
+            username: ENC[AES256_GCM,data:8YFpMw0goZM=,iv:Dy+hoBy+a3KS53YTUx4X+29KTpwrakVQOMmaXLyInCM=,tag:q1RBxxujTzt0vQHRmYuHtg==,type:str]
             database: immich
-            password: ENC[AES256_GCM,data:8r0mKOykXYPBMJgJKdMNXTm+am9CYnPQ0DvMxxrmr7o=,iv:0CAyT3xYVU1rj9YwZmAcJwYNJUiwTCM+MA3lZr8R/mA=,tag:56S2uZB0VK5yNtzovWXiDA==,type:str]
+            password: ENC[AES256_GCM,data:5yZRcgEn4s7DNMXSB+AY7mg7SzgHfhNKVjj5u2XxCJs=,iv:6nzuQjstqNg+BnFNxi9lA3h8XeBd5gqBCnRMJQx5/fY=,tag:3T4UC1nfoC3tFPePgpxYYw==,type:str]
       primary:
         resourcePreset: small
         resources:
@@ -182,14 +182,14 @@ sops:
     - recipient: age1rl8s5e3al83x28ecwpn7ed3773uvyuhhvqujc47dz4chpw7xvc6qlzd8hq
       enc: |
         -----BEGIN AGE ENCRYPTED FILE-----
-        YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBWbFZJakNpdVhxNjR3a01C
-        YnVZK2I5ejJSN0RmelU2alFZWEhYQW5zSFRNCmp4OHE3Y2JiRW5qck5zaFFXMzMx
-        QlkrYUhRRk5zbnZRNFVvbEM3eUtZRGcKLS0tIG5HcUNxclk1V2NtcHhONENNTWc3
-        UXNTb1F6ZVU1M2FaUjJDZE11RlhsQ28K56JIQJBMdGyvhlDjcEiNUXcFDPboEE7J
-        MtnpnjX9zoqIjTdN/+4WsbNrDCEtaGBh8BwUjZNjFc6L933gH9PLqQ==
+        YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBCbWt1QzRLZTNQQjJzTUlI
+        bVpadFN0dkIxeHk0bXNXdmxZYXA2MmVFTkMwClFyUk9Tc1FZTkN4bzdETkV4WnA0
+        dnpaR24xMHF6R01kL0lvZzlJMnNyMjgKLS0tIFVwUXRDMHhPMUJGTG9NY3UvanR0
+        cW50eGJ5YjArL0R4RzBGQTc5T2FGSFUK1ziNmKQ+/PGK2ilbSb/IJMN15ft/5Lnu
+        UGRqsnbxNkwBttcVMThOxFCVPKYwUgpdeSn4cRcIXyw6doCtjpjbKA==
         -----END AGE ENCRYPTED FILE-----
-  lastmodified: "2025-02-19T03:12:18Z"
-  mac: ENC[AES256_GCM,data:SwgXTo3nudovsl7P1ttUb3mcAqznL0fBlLanbCUuWmoMBlZvwn5ZMGI/DVza+QEuEjuubOHDAbivulxxpk1DTNcaQxiDMJeRfEzm0ecaohNyCvyjIWtS9ntCPgsjoRPkDvjrTtO8WgOG7UfZB5slYAfUovPdQce1mDgCzwSBqGg=,iv:5Ce2vLgY0RUw8DLoHZbh/tAPcy+E72N6AlT0G2M4HH0=,tag:HAsD+O725L71QLrdBeA7Tg==,type:str]
+  lastmodified: "2025-02-19T03:29:39Z"
+  mac: ENC[AES256_GCM,data:2oj3bGUwlD4x5BXZWKvASJsrZja/gq+qQnaNyV2ItOcFkWMz5gVS+2thkqnLY0x7hGE0wrzqM6iD+1/FEdF8U9wWvzhCttDYvUhIOUXITg0Iw21Oy9ofBBEgLiPTTW3A+SY2p1mIfRpqS45zFF0l4Lpsqxy55ccHc63rapktCK4=,iv:/Zfo4CRT0Xm5NzfJ3gmI8pp51Ms7z7pdBDMN6ONlWIk=,tag:K7x3UbnPm6obfnccJ0sSyQ==,type:str]
   pgp: []
   encrypted_regex: ^(username|password|user|pass|secret|token|ca|data|stringData)$
   version: 3.9.4
