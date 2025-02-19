@@ -12,3 +12,4 @@ resources:
   - ./stakater.yaml
   - ./cilium.yaml
   - ./descheduler.yaml
+  - ./immich.yaml
