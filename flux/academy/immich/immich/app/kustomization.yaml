@@ -5,9 +5,8 @@ kind: Kustomization
 resources:
   - ./cert.yaml
   - ./cronjob.yaml
-  - ./helmrelease.yaml
+  - ./helmrelease.sops.yaml
   - ./ingress.yaml
   - ./smb.yaml
   - ./storage.yaml
-  # - ./values.sops.yaml
   - ../../../.templates/gatus/internal
