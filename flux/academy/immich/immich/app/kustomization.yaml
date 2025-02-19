@@ -1,0 +1,13 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ./cert.yaml
+  - ./cronjob.yaml
+  - ./helmrelease.yaml
+  - ./ingress.yaml
+  - ./smb.yaml
+  - ./storage.yaml
+  # - ./values.sops.yaml
+  - ../../../.templates/gatus/internal
