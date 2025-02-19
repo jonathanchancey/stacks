@@ -2,7 +2,7 @@
 creation_rules:
   - path_regex: .sops\.ya?ml
     input_type: yaml
-    encrypted_regex: "^(username|password|user|pass|id|key|secret|server|token|ca|data|stringData)$"
+    encrypted_regex: "^(username|password|user|pass|secret|token|ca|data|stringData)$"
     mac-only-encrypted: true
     key_groups:
       - age:
