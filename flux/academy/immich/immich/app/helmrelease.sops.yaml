@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: immich
-      version: 8.6.0
+      version: 0.8.5
       sourceRef:
         kind: HelmRepository
         name: immich
@@ -60,9 +60,9 @@ spec:
         storageClass: longhorn
         postgresql:
           auth:
-            username: ENC[AES256_GCM,data:LWpzGBbIBPI=,iv:CasJMBF6z5DeX5ZjQCC+zjND+4RV1xzXP3Irw4m07Og=,tag:cinQJznLv4tEK0BPokEMWg==,type:str]
+            username: ENC[AES256_GCM,data:ketCfHUwu14=,iv:aWo9eOpXz49ex9Ge92a8p6IwKil2cx8SWXEzQe9ABSI=,tag:XAtIWLzIOMpiaXzFnOQ8Ew==,type:str]
             database: immich
-            password: ENC[AES256_GCM,data:8r0mKOykXYPBMJgJKdMNXTm+am9CYnPQ0DvMxxrmr7o=,iv:0CAyT3xYVU1rj9YwZmAcJwYNJUiwTCM+MA3lZr8R/mA=,tag:56S2uZB0VK5yNtzovWXiDA==,type:str]
+            password: ENC[AES256_GCM,data:jndoAWjSA3qGegUGKiU5C6Vocx0WXNRoC68/nDwIFss=,iv:0E2R8A+ue0gJpRW9S/FDtNcdt76/+pIkLJ7uX+Hs2Gg=,tag:dzMhQlYJNw//fjX4q2Ye5A==,type:str]
       primary:
         resourcePreset: small
         resources:
@@ -182,14 +182,14 @@ sops:
     - recipient: age1rl8s5e3al83x28ecwpn7ed3773uvyuhhvqujc47dz4chpw7xvc6qlzd8hq
       enc: |
         -----BEGIN AGE ENCRYPTED FILE-----
-        YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBWbFZJakNpdVhxNjR3a01C
-        YnVZK2I5ejJSN0RmelU2alFZWEhYQW5zSFRNCmp4OHE3Y2JiRW5qck5zaFFXMzMx
-        QlkrYUhRRk5zbnZRNFVvbEM3eUtZRGcKLS0tIG5HcUNxclk1V2NtcHhONENNTWc3
-        UXNTb1F6ZVU1M2FaUjJDZE11RlhsQ28K56JIQJBMdGyvhlDjcEiNUXcFDPboEE7J
-        MtnpnjX9zoqIjTdN/+4WsbNrDCEtaGBh8BwUjZNjFc6L933gH9PLqQ==
+        YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBHNHRtcjU1MHM1TTExUVI2
+        N2JEOUdUakZ0S2lycU9taHFKNVNBOVNjcVNzCllFbzUyeXFDU3J1bC9sRlZvM0VO
+        eHZlVS9UcE0rSWZMSHNObmdqQkVoRncKLS0tIFlLZlZac3oxV2dNMkdVWDRaTjRU
+        Ty9xNEFwOGlIOVRQNkRyYXpmcTY1c2MK5sN9p0nm287J/jXZ0f+DNaBHtoXRKPSB
+        8rJUvpxmXf6IYi//BNy2On4iILMw67EBwVoqbJz+SPuQ3tCouxl/tQ==
         -----END AGE ENCRYPTED FILE-----
-  lastmodified: "2025-02-19T03:12:18Z"
-  mac: ENC[AES256_GCM,data:SwgXTo3nudovsl7P1ttUb3mcAqznL0fBlLanbCUuWmoMBlZvwn5ZMGI/DVza+QEuEjuubOHDAbivulxxpk1DTNcaQxiDMJeRfEzm0ecaohNyCvyjIWtS9ntCPgsjoRPkDvjrTtO8WgOG7UfZB5slYAfUovPdQce1mDgCzwSBqGg=,iv:5Ce2vLgY0RUw8DLoHZbh/tAPcy+E72N6AlT0G2M4HH0=,tag:HAsD+O725L71QLrdBeA7Tg==,type:str]
+  lastmodified: "2025-02-19T03:26:57Z"
+  mac: ENC[AES256_GCM,data:edKiiOT6yCnrPALNBc8lAauZeMJt98PUlW56ChVwT2gP/oaGQKUOqMIRVmuj5H4eBe8a/imLlBZalRfWlwCt27+qpR8oJbrEoXDOl0Fq4frXZek4zqTJAuZ3wDKHx8qtAnNRvauzUrbUtnzJYj7A3io5mL6Od4pAiEp8sz2OvwA=,iv:AAHqfJv0rR7ONT1NsckeUuNe3qcR8YMlNkWKYgEPKlQ=,tag:Pf72jrh7bt2nwVWDsl6tXQ==,type:str]
   pgp: []
   encrypted_regex: ^(username|password|user|pass|secret|token|ca|data|stringData)$
   version: 3.9.4

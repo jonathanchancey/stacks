@@ -11,4 +11,4 @@ spec:
     kind: ClusterIssuer
   commonName: "photos.chancey.dev"
   dnsNames:
-  - "photos.chancey.dev"
+    - "photos.chancey.dev"
