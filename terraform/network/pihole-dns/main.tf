@@ -22,3 +22,8 @@ resource "pihole_dns_record" "hubble_e_i" {
   domain = "hubble.ephemera.internal"
   ip     = "10.131.102.20"
 }
+
+resource "pihole_dns_record" "picture-frame-00" {
+  domain = "picture-frame-00.internal"
+  ip     = "192.168.192.109"
+}
