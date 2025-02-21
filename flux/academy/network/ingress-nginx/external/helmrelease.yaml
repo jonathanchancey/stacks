@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: ingress-nginx
-      version: 4.11.3
+      version: 4.12.0
       sourceRef:
         kind: HelmRepository
         name: ingress-nginx
@@ -33,6 +33,12 @@ spec:
         name: nginx-external
         default: false
         controllerValue: k8s.io/external
+      admissionWebhooks:
+        objectSelector:
+          matchExpressions:
+            - key: ingress-class
+              operator: In
+              values: ["external"]
       allowSnippetAnnotations: true
       config:
         block-user-agents: "AdsBot-Google,Amazonbot,anthropic-ai,Applebot-Extended,Bytespider,CCBot,ChatGPT-User,ClaudeBot,Claude-Web,cohere-ai,Diffbot,FacebookBot,FriendlyCrawler,Google-Extended,GoogleOther,GPTBot,img2dataset,omgili,omgilibot,peer39_crawler,peer39_crawler/1.0,PerplexityBot,YouBot," # taken from https://github.com/ai-robots-txt/ai.robots.txt
@@ -66,7 +72,10 @@ spec:
             any: true
       extraArgs:
         default-ssl-certificate: network/chancey-dev-tls
+        publish-status-address: external.${SECRET_DOMAIN}
       terminationGracePeriodSeconds: 120
+      publishService:
+        enabled: false
       resources:
         requests:
           cpu: 100m

@@ -1,9 +1,10 @@
 ---
 originRequest:
   connectTimeout: 30s
+  originServerName: "external.${SECRET_DOMAIN}"
 
 ingress:
-  - hostname: "clauth.${SECRET_DOMAIN}"
+  - hostname: "clauth.external.${SECRET_DOMAIN}"
     service: https://nginx-external-controller.network.svc.cluster.local:443
     originRequest:
       noTLSVerify: true
