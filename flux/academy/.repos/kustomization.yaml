@@ -13,3 +13,4 @@ resources:
   - ./cilium.yaml
   - ./descheduler.yaml
   - ./immich.yaml
+  - ./external-dns.yaml
