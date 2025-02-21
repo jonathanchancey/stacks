@@ -1,2 +1,10 @@
 volumePermissions:
   enabled: true
+primary:
+  resources:
+    requests:
+      cpu: 1
+      memory: 128Mi
+    limits:
+      cpu: 3
+      memory: 1024Mi

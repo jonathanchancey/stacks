@@ -1,0 +1,12 @@
+---
+creation_rules:
+  - path_regex: .sops\.ya?ml
+    input_type: yaml
+    encrypted_regex: "^(username|password|user|pass|secret|token|ca|data|stringData|auth|env)$"
+    mac-only-encrypted: true
+    key_groups:
+      - age:
+          - age1rl8s5e3al83x28ecwpn7ed3773uvyuhhvqujc47dz4chpw7xvc6qlzd8hq
+stores:
+  yaml:
+    indent: 2

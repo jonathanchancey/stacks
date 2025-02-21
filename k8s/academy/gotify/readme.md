@@ -7,8 +7,8 @@
 kubectl create ns gotify
 kubens gotify
 helm repo add bitnami https://charts.bitnami.com/bitnami
-helm install --wait db bitnami/postgresql --version 15.1.2 -n gotify --values postgres-values.yaml --values postgres-values-secrets.yaml
-kubectl apply -f deployment.yaml -f pvc.yaml -f service.yaml -f cert.yaml -f ingress.yaml
+helm install --wait db bitnami/postgresql --version 15.1.2 -n gotify --values postgres-values.yaml --values postgres-values.sops.yaml
+kubectl apply -f deployment.yaml -f deployment.sops.yaml -f pvc.yaml -f service.yaml -f cert.yaml -f ingress.yaml
 ```
 
 ## environment variables

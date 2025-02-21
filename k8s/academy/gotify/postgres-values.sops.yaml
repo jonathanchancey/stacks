@@ -1,0 +1,26 @@
+global:
+  postgresql:
+    auth:
+      database: ENC[AES256_GCM,data:CxnIzT34MvQ=,iv:Z2C5lIvlAff0eXORYjN0rkB957sFQXyo3ZWl8SEuFaY=,tag:NCR6IwCmYQbd5q+RqSZh0g==,type:str]
+      username: ENC[AES256_GCM,data:vmjquQfT,iv:BYf8mEF7iYLxr/pV5cLHDF+Coh0k+w5DpFoWuKXGpMg=,tag:HTYuttvRJmqMUCHw1n8J5g==,type:str]
+      password: ENC[AES256_GCM,data:ahWuDqjaoceOKFTdld57XWD1qZedJnzaScB7ZlwQGg==,iv:Daopq01gjwfn66H3ErGJ8y60b1HTRyu5j9GJBuLeJT4=,tag:q6+dm0abdUgRv7g+Hyhcng==,type:str]
+sops:
+  kms: []
+  gcp_kms: []
+  azure_kv: []
+  hc_vault: []
+  age:
+    - recipient: age1rl8s5e3al83x28ecwpn7ed3773uvyuhhvqujc47dz4chpw7xvc6qlzd8hq
+      enc: |
+        -----BEGIN AGE ENCRYPTED FILE-----
+        YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBQQVBSL3poTy80UzlvSm5p
+        VnVURWxTKy9iZkQrODJwWHZHUjBUUzl5OUJZCkZ3Ly8xUStBRlRyOXk0aFRmbno1
+        dllhbkpKazhLUlRWQU5uN0VuRXFmdzAKLS0tIGRYOUUzZ0VRbEZBcEVCRlkvekVJ
+        QXBxMVkyTE5PdllDQ1UvWkd4VGhRSFkKrJm3Fud5G1jlOknihzNJEIJfuSQtZF/F
+        AeRLX2XobdYvtqhN3Dun3GHBvbah0QEXxZvMNv2Fjxyz5g35IiU2hA==
+        -----END AGE ENCRYPTED FILE-----
+  lastmodified: "2025-02-21T21:55:27Z"
+  mac: ENC[AES256_GCM,data:XgeAK9xtJk2M1fa6WHGWzTwepBNVKBQUWoaiGggZef/amqFEQ42OVliLfHJjCgwudj2XyQGD5MP4TcGAvoM19IMS9eQZLO3DaftCbEyEIutvBg4NDCfWKDgsG+H+Vw0zXCoz49FknWSBaeiSDwSVHHgn51WqubvXlFQmilPIxbs=,iv:mSOIcDif9R3mAvl3CPD49R0VNCdVlMQyY8AoPdLQIW4=,tag:9i+SAJxgl/3SJQnNp99cdw==,type:str]
+  pgp: []
+  encrypted_regex: ^(username|password|user|pass|secret|token|ca|data|stringData|auth|env)$
+  version: 3.9.4
