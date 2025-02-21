@@ -15,11 +15,12 @@ services:
     volumes:
       - /slug/config/jellyseerr:/app/config
     restart: unless-stopped
-  arch-delugevpn:
-    image: binhex/arch-qbittorrentvpn:4.6.2-2-01
+  arch-qbitvpn:
+    image: binhex/arch-qbittorrentvpn:5.0.3-1-01
     container_name: qbittorentvpn
     privileged: true
     restart: unless-stopped
+    env_file: .env
     environment:
       - VPN_ENABLED=yes
       - VPN_USER=$PIA_USERNAME
@@ -29,27 +30,24 @@ services:
       - STRICT_PORT_FORWARD=yes
       - ENABLE_PRIVOXY=yes
       - WEBUI_PORT=8080
-      - LAN_NETWORK=10.10.0.0/24
+      - LAN_NETWORK=10.131.181.0/24
       - NAME_SERVERS=1.1.1.1,1.0.0.1
-      - DELUGE_DAEMON_LOG_LEVEL=info
-      - DELUGE_WEB_LOG_LEVEL=info
-      - DELUGE_ENABLE_WEBUI_PASSWORD=yes
       - DEBUG=true
       - UMASK=002
-      - PUID=8112
-      - PGID=8112
+      - PUID=8096
+      - PGID=8096
     cap_add:
-        - NET_ADMIN
+      - NET_ADMIN
     volumes:
-      # - /slug/downloads:/data
-      - /slug/config/qbittorent:/config
       - /etc/localtime:/etc/localtime:ro
-      - /media/Downloads:/downloads
+      - /opt/qbit/config:/config
+      - /mnt/media/downloads:/downloads
     ports:
       - 8080:8080
       - 8118:8118
       - 6881:6881
       - 6881:6881/udp
+
   radarr:
     image: lscr.io/linuxserver/radarr:5.2.6
     container_name: radarr
