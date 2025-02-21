@@ -23,14 +23,14 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: zitdael-ingress-external
+  name: zitadel-ingress-external
   namespace: zitadel
   # annotations:
   #   nginx.ingress.kubernetes.io/ssl-redirect: "true"
 spec:
   ingressClassName: nginx-external
   rules:
-    - host: &host clauth.chancey.dev
+    - host: &host clauth.external.chancey.dev
       http:
         paths:
           - path: /
