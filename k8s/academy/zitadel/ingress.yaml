@@ -27,12 +27,12 @@ metadata:
   namespace: zitadel
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
-    external-dns.alpha.kubernetes.io/hostname: clauth.external.chancey.dev
+    external-dns.alpha.kubernetes.io/hostname: external.chancey.dev
     external-dns.alpha.kubernetes.io/ttl: "120" #optional
 spec:
   ingressClassName: nginx-external
   rules:
-    - host: &host clauth.external.chancey.dev
+    - host: &host external.chancey.dev
       http:
         paths:
           - path: /
