@@ -1,7 +1,7 @@
 ---
 originRequest:
   connectTimeout: 30s
-  originServerName: "external.${SECRET_DOMAIN}"
+  # originServerName: "external.${SECRET_DOMAIN}"
 
 ingress:
   - hostname: "clauth.external.${SECRET_DOMAIN}"
