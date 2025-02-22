@@ -81,8 +81,8 @@ spec:
           namespaceSelector:
             any: true
       extraArgs:
-        default-ssl-certificate: network/chancey-dev-tls
-        # publish-status-address: external.${SECRET_DOMAIN}
+        default-ssl-certificate: network/external-chancey-dev-tls
+        publish-status-address: external.${SECRET_DOMAIN}
       terminationGracePeriodSeconds: 120
       publishService:
         enabled: false
