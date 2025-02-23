@@ -31,7 +31,7 @@ spec:
           app:
             image:
               repository: ghcr.io/miniflux/miniflux
-              tag: 2.2.3
+              tag: 2.2.6
             env:
               BASE_URL: https://miniflux.k8s.chancey.dev
               CREATE_ADMIN: "1"
