@@ -39,3 +39,10 @@ resource "cloudflare_record" "gitea_ssh" {
   content = var.gitea_ssh_internal_ip
   type    = "A"
 }
+
+resource "cloudflare_record" "skytxt" {
+  zone_id = var.cloudflare_zone_id
+  name    = "_atproto"
+  content = "did=did:plc:f2ablw5m3ashhpydt6u7h2rx"
+  type    = "TXT"
+}
