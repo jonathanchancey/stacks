@@ -14,3 +14,4 @@ resources:
   - ./descheduler.yaml
   - ./immich.yaml
   - ./external-dns.yaml
+  - ./jetstack.yaml
