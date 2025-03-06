@@ -8,3 +8,4 @@ resources:
   - ./multus/ks.yaml
   - ./cloudflared/ks.yaml
   - ./external-dns/ks.yaml
+  - ./cert-manager/ks.yaml
