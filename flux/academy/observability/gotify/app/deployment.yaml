@@ -37,6 +37,9 @@ spec:
               value: "1000"
             - name: TZ
               value: "Los_Angeles"
+          envFrom:
+            - secretRef:
+                name: gotify-db-secret
           ports:
             - name: http
               containerPort: 80
