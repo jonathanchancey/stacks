@@ -5,10 +5,10 @@ kind: Kustomization
 resources:
   - ./helmrelease.yaml
 configMapGenerator:
-  - name: cert-manager-values
+  - name: gotify-values
     files:
       - values.yaml=./resources/values.yaml
-  - name: cert-manager-values-secret
+  - name: gotify-secret-values
     files:
       - values-secrets.yaml=./resources/values-secret.sops.yaml
 configurations:
