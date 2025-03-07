@@ -3,14 +3,14 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app navidrome
+  name: &app syncthing
   namespace: flux-system
 spec:
-  targetNamespace: navidrome
+  targetNamespace: syncthing
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  path: ./flux/academy/media/navidrome/app
+  path: ./flux/academy/media/syncthing/app
   prune: true
   sourceRef:
     kind: GitRepository
@@ -25,7 +25,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      GATUS_SUBDOMAIN: navidrome
+      GATUS_SUBDOMAIN: syncthing
     substituteFrom:
       - name: cluster-secrets
         kind: Secret
