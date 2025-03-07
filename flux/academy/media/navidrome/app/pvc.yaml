@@ -21,7 +21,7 @@ spec:
     # make sure this value is unique for every share in the cluster
     volumeHandle: ladybug-music
     volumeAttributes:
-      source: "//10.10.0.165/ladybug/music" # SMB IP and share name
+      source: "//10.10.0.165/ladybug/music"
     nodeStageSecretRef:
       name: smbcreds-ladybug
       namespace: navidrome
