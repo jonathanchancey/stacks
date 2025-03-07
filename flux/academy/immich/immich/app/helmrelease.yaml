@@ -27,10 +27,10 @@ spec:
       IMMICH_MEDIA_LOCATION: /usr/src/app/upload
       # IMMICH_LOG_LEVEL: debug
       REDIS_HOSTNAME: '{{ printf "%s-redis-master" .Release.Name }}'
-      DB_HOSTNAME: '{{ .Release.Name }}-postgresql'
-      DB_USERNAME: '{{ .Values.postgresql.global.postgresql.auth.username }}'
-      DB_DATABASE_NAME: '{{ .Values.postgresql.global.postgresql.auth.database }}'
-      DB_PASSWORD: '{{ .Values.postgresql.global.postgresql.auth.password }}'
+      DB_HOSTNAME: "{{ .Release.Name }}-postgresql"
+      DB_USERNAME: "{{ .Values.postgresql.global.postgresql.auth.username }}"
+      DB_DATABASE_NAME: "{{ .Values.postgresql.global.postgresql.auth.database }}"
+      DB_PASSWORD: "{{ .Values.postgresql.global.postgresql.auth.password }}"
       IMMICH_MACHINE_LEARNING_URL: '{{ printf "http://%s-machine-learning:3003" .Release.Name }}'
     image:
       # https://github.com/immich-app/immich/releases
@@ -60,9 +60,9 @@ spec:
         storageClass: longhorn
         postgresql:
           auth:
-            username: ENC[AES256_GCM,data:8YFpMw0goZM=,iv:Dy+hoBy+a3KS53YTUx4X+29KTpwrakVQOMmaXLyInCM=,tag:q1RBxxujTzt0vQHRmYuHtg==,type:str]
+            username: postgres
             database: immich
-            password: ENC[AES256_GCM,data:5yZRcgEn4s7DNMXSB+AY7mg7SzgHfhNKVjj5u2XxCJs=,iv:6nzuQjstqNg+BnFNxi9lA3h8XeBd5gqBCnRMJQx5/fY=,tag:3T4UC1nfoC3tFPePgpxYYw==,type:str]
+            existingSecret: immich-db-credentials
       primary:
         resourcePreset: small
         resources:
@@ -173,23 +173,3 @@ spec:
           type: emptyDir
           accessMode: ReadWriteMany
           storageClass: local-path
-sops:
-  kms: []
-  gcp_kms: []
-  azure_kv: []
-  hc_vault: []
-  age:
-    - recipient: age1rl8s5e3al83x28ecwpn7ed3773uvyuhhvqujc47dz4chpw7xvc6qlzd8hq
-      enc: |
-        -----BEGIN AGE ENCRYPTED FILE-----
-        YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBCbWt1QzRLZTNQQjJzTUlI
-        bVpadFN0dkIxeHk0bXNXdmxZYXA2MmVFTkMwClFyUk9Tc1FZTkN4bzdETkV4WnA0
-        dnpaR24xMHF6R01kL0lvZzlJMnNyMjgKLS0tIFVwUXRDMHhPMUJGTG9NY3UvanR0
-        cW50eGJ5YjArL0R4RzBGQTc5T2FGSFUK1ziNmKQ+/PGK2ilbSb/IJMN15ft/5Lnu
-        UGRqsnbxNkwBttcVMThOxFCVPKYwUgpdeSn4cRcIXyw6doCtjpjbKA==
-        -----END AGE ENCRYPTED FILE-----
-  lastmodified: "2025-02-19T03:29:39Z"
-  mac: ENC[AES256_GCM,data:2oj3bGUwlD4x5BXZWKvASJsrZja/gq+qQnaNyV2ItOcFkWMz5gVS+2thkqnLY0x7hGE0wrzqM6iD+1/FEdF8U9wWvzhCttDYvUhIOUXITg0Iw21Oy9ofBBEgLiPTTW3A+SY2p1mIfRpqS45zFF0l4Lpsqxy55ccHc63rapktCK4=,iv:/Zfo4CRT0Xm5NzfJ3gmI8pp51Ms7z7pdBDMN6ONlWIk=,tag:K7x3UbnPm6obfnccJ0sSyQ==,type:str]
-  pgp: []
-  encrypted_regex: ^(username|password|user|pass|secret|token|ca|data|stringData)$
-  version: 3.9.4
