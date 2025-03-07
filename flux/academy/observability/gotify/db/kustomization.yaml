@@ -10,6 +10,6 @@ configMapGenerator:
       - values.yaml=./resources/values.yaml
   - name: gotify-secret-values
     files:
-      - values-secrets.yaml=./resources/values-secret.sops.yaml
+      - values.yaml=./resources/values-secret.sops.yaml
 configurations:
   - ./resources/kustomizeconfig.yaml
