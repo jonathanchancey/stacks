@@ -24,4 +24,6 @@ spec:
       retries: 3
   valuesFrom:
     - kind: ConfigMap
-      name: cert-manager-values
+      name: gotify-values
+    - kind: ConfigMap
+      name: gotify-secret-values
