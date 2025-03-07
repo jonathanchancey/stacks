@@ -27,12 +27,19 @@ spec:
       IMMICH_MEDIA_LOCATION: /usr/src/app/upload
       REDIS_HOSTNAME: '{{ printf "%s-redis-master" .Release.Name }}'
       DB_HOSTNAME: "{{ .Release.Name }}-postgresql"
+      DB_PASSWORD:
+        valueFrom:
+          secretKeyRef:
+            name: immich-creds
+            key: DB_PASSWORD
+      DB_USERNAME:
+        valueFrom:
+          secretKeyRef:
+            name: immich-creds
+            key: DB_USERNAME
       DB_DATABASE_NAME: "{{ .Values.postgresql.global.postgresql.auth.database }}"
       IMMICH_MACHINE_LEARNING_URL: '{{ printf "http://%s-machine-learning:3003" .Release.Name }}'
       # IMMICH_LOG_LEVEL: debug
-    envFrom:
-      - secretRef:
-          name: immich-creds
     image:
       # https://github.com/immich-app/immich/releases
       tag: v1.126.1
