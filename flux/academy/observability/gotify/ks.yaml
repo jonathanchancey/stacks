@@ -35,7 +35,7 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app gotify
+  name: &app gotify-db
   namespace: flux-system
 spec:
   targetNamespace: gotify
