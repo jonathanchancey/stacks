@@ -35,12 +35,12 @@ jobs:
           path: default
 
       - name: Test Resources
-        uses: docker://ghcr.io/allenporter/flux-local:v6.1.1
+        uses: docker://ghcr.io/allenporter/flux-local:v7.2.1
         with:
           args: test --path /github/workspace/pull/${{ matrix.paths }} --enable-helm --all-namespaces --verbose
 
       - name: Diff Kustomization
-        uses: docker://ghcr.io/allenporter/flux-local:v6.1.1
+        uses: docker://ghcr.io/allenporter/flux-local:v7.2.1
         with:
           args: >-
             diff kustomization
