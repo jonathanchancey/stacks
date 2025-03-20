@@ -28,14 +28,17 @@ spec:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
               - matchExpressions:
-                  - key: kubernetes.io/hostname
+                  - key: kubernetes.io/arch
                     operator: NotIn
                     values:
-                      - lich-00
+                      - arm64
       containers:
         - name: homepage
           image: "ghcr.io/gethomepage/homepage:v0.10.9"
           imagePullPolicy: Always
+          env:
+            - name: HOMEPAGE_ALLOWED_HOSTS
+              value: home.chancey.dev
           ports:
             - name: http
               containerPort: 3000
