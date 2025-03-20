@@ -20,7 +20,7 @@ jobs:
       pull-requests: write
     strategy:
       matrix:
-        paths: ["flux/academy"]
+        paths: ["flux/academy/.config"]
         # resources: ["helmrelease", "kustomization"]
     steps:
       - name: Checkout
