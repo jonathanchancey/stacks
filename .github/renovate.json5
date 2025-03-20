@@ -104,6 +104,29 @@
       matchUpdateTypes: [
         'minor',
         'patch',
+        'pin',
+        'digest',
+      ],
+    },
+    {
+      description: [
+        'Auto merge DEV pip requirements',
+      ],
+      matchManagers: [
+        'pip_requirements',
+      ],
+      automerge: true,
+      automergeType: 'branch',
+      ignoreTests: true,
+      matchDepTypes: [
+        'devDependencies',
+      ]
+      matchUpdateTypes: [
+        'major',
+        'minor',
+        'patch',
+        'pin',
+        'digest',
       ],
     },
     {
