@@ -120,7 +120,7 @@
       ignoreTests: true,
       matchDepTypes: [
         'devDependencies',
-      ]
+      ],
       matchUpdateTypes: [
         'major',
         'minor',
