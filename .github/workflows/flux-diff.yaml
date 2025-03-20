@@ -37,7 +37,7 @@ jobs:
       - name: Test Resources
         uses: docker://ghcr.io/allenporter/flux-local:v6.1.1
         with:
-          args: test --path ${{ matrix.paths }} --enable-helm --all-namespaces --verbose
+          args: test --path /github/workspace/pull/${{ matrix.paths }} --enable-helm --all-namespaces --verbose
 
       - name: Diff Resources
         uses: docker://ghcr.io/allenporter/flux-local:v6.1.1
