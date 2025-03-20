@@ -18,12 +18,13 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
+
     strategy:
       matrix:
-        paths: ["flux/academy"]
-        resources: ["helmrelease", "kustomization"]
+        paths: ["flux/academy/"]
+
     steps:
-      - name: Checkout
+      - name: Checkout Pull Request
         uses: actions/checkout@v4
         with:
           path: pull
@@ -34,34 +35,29 @@ jobs:
           ref: "${{ github.event.repository.default_branch }}"
           path: default
 
-      - name: Test Resources
-        uses: docker://ghcr.io/allenporter/flux-local:v6.1.1
-        with:
-          args: test --path ${{ matrix.paths }} --enable-helm --all-namespaces --verbose
-
-      - name: Diff Resources
-        uses: docker://ghcr.io/allenporter/flux-local:v6.1.1
+      - name: Diff Kustomization
+        uses: docker://ghcr.io/allenporter/flux-local:v7.2.1
         with:
           args: >-
-            diff ${{ matrix.resources }}
+            diff kustomization
             --unified 6
             --path /github/workspace/pull/${{ matrix.paths }}
             --path-orig /github/workspace/default/${{ matrix.paths }}
             --strip-attrs "helm.sh/chart,checksum/config,app.kubernetes.io/version,chart"
             --limit-bytes 10000
             --all-namespaces
-            --sources "flux-system"
-            --output-file diff.patch
-      - name: Generate Diff
+            --output-file diff-ks.patch
+
+      - name: Generate Diff for Comment
         id: diff
         run: |
-          cat diff.patch
+          cat diff-ks.patch
           echo "diff<<EOF" >> $GITHUB_OUTPUT
-          cat diff.patch >> $GITHUB_OUTPUT
+          cat diff-ks.patch >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
       - if: ${{ steps.diff.outputs.diff != '' }}
-        name: Add comment
+        name: Add Comment
         uses: mshick/add-pr-comment@v2
         with:
           message-id: "${{ github.event.pull_request.number }}/${{ matrix.paths }}/${{ matrix.resources }}"

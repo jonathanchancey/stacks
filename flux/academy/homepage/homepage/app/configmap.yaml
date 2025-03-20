@@ -22,9 +22,9 @@ data:
     custom.js: ""
     bookmarks.yaml: |
         - Developer:
-            - Github:
+            - Github | stacks:
                 - abbr: GH
-                  href: https://github.com/
+                  href: https://github.com/jonathanchancey/stacks
             - Claude:
                 - abbr: CL
                   href: https://claude.ai/chats/
