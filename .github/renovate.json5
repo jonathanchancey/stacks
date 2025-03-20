@@ -149,6 +149,13 @@
     },
     {
       matchDatasources: [
+        'terraform-provider',
+        'terraform-module',
+      ],
+      commitMessageTopic: 'chart {{depName}}',
+    },
+    {
+      matchDatasources: [
         'docker',
       ],
       commitMessageTopic: 'image {{depName}}',
