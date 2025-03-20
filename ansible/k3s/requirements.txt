@@ -87,7 +87,7 @@ oauthlib==3.2.2
     # via
     #   kubernetes
     #   requests-oauthlib
-packaging==23.2
+packaging==24.2
     # via
     #   ansible-compat
     #   ansible-core
