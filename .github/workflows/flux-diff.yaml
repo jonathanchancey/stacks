@@ -21,7 +21,7 @@ jobs:
     strategy:
       matrix:
         paths: ["flux/academy"]
-        resources: ["helmrelease", "kustomization"]
+        # resources: ["helmrelease", "kustomization"]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -39,23 +39,23 @@ jobs:
       #   with:
       #     args: test --path /github/workspace/pull/${{ matrix.paths }} --enable-helm --all-namespaces --verbose
 
-      - name: Diff Resources
+      - name: Diff Kustomization
         uses: docker://ghcr.io/allenporter/flux-local:v6.1.1
         with:
           args: >-
-            diff ${{ matrix.resources }}
+            diff kustomization
             --unified 6
             --path /github/workspace/pull/${{ matrix.paths }}
             --path-orig /github/workspace/default/${{ matrix.paths }}
             --strip-attrs "helm.sh/chart,checksum/config,app.kubernetes.io/version,chart"
             --limit-bytes 10000
             --all-namespaces
-            --sources "flux-system"
-            --output-file diff.patch
+            --output-file diff-ks.patch
+
       - name: Generate Diff
         id: diff
         run: |
-          cat diff.patch
+          cat diff-ks.patch
           echo "diff<<EOF" >> $GITHUB_OUTPUT
           cat diff.patch >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
