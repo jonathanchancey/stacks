@@ -34,10 +34,10 @@ jobs:
           ref: "${{ github.event.repository.default_branch }}"
           path: default
 
-      # - name: Test Resources
-      #   uses: docker://ghcr.io/allenporter/flux-local:v6.1.1
-      #   with:
-      #     args: test --path /github/workspace/pull/${{ matrix.paths }} --enable-helm --all-namespaces --verbose
+      - name: Test Resources
+        uses: docker://ghcr.io/allenporter/flux-local:v6.1.1
+        with:
+          args: test --path /github/workspace/pull/${{ matrix.paths }} --enable-helm --all-namespaces --verbose
 
       - name: Diff Kustomization
         uses: docker://ghcr.io/allenporter/flux-local:v6.1.1
@@ -57,7 +57,7 @@ jobs:
         run: |
           cat diff-ks.patch
           echo "diff<<EOF" >> $GITHUB_OUTPUT
-          cat diff.patch >> $GITHUB_OUTPUT
+          cat diff-ks.patch >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
       - if: ${{ steps.diff.outputs.diff != '' }}
