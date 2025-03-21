@@ -9,7 +9,6 @@ resources:
   - ./goldpinger.yaml
   - ./ingress-nginx.yaml
   - ./node-feature-discovery.yaml
-  - ./stakater.yaml
   - ./cilium.yaml
   - ./descheduler.yaml
   - ./immich.yaml
