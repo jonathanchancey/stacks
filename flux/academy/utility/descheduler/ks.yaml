@@ -10,7 +10,7 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  path: ./flux/academy/utility/descheduler
+  path: ./flux/academy/utility/descheduler/app
   prune: true
   sourceRef:
     kind: GitRepository
