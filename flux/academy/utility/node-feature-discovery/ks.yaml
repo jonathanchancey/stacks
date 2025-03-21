@@ -6,11 +6,11 @@ metadata:
   name: &app node-feature-discovery
   namespace: flux-system
 spec:
-  targetNamespace: kube-system
+  targetNamespace: utility
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  path: ./flux/academy/kube-system/node-feature-discovery/app
+  path: ./flux/academy/utility/node-feature-discovery/app
   prune: true
   sourceRef:
     kind: GitRepository
