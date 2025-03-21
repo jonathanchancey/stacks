@@ -95,7 +95,7 @@
       description: [
         'Disable pip updates',
       ],
-      matchManagers: [
+      managers: [
         'pip_requirements',
       ],
       "enabled": false,
