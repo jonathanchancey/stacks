@@ -72,3 +72,20 @@
     state: present
     update_cache: true
   when: longhorn_install_dependencies
+
+- name: Graphics | Install Intel GPU dependencies if applicable
+  block:
+    - name: Graphics | Detect Intel GPU
+      shell: "lspci | grep -i VGA | grep -i Intel"
+      register: intel_gpu_check
+      ignore_errors: yes
+      changed_when: false
+
+    - name: Graphics | Install Intel dependencies
+      apt:
+        name:
+          - mesa-utils
+          - intel-gpu-tools
+        state: present
+        update_cache: true
+      when: intel_gpu_check.rc == 0
