@@ -3,7 +3,7 @@ collections:
   - name: cloud.terraform
     version: 3.0.0
   - name: community.docker
-    version: 4.5.1
+    version: 4.5.2
 roles:
   - name: geerlingguy.docker
     version: 7.4.6
