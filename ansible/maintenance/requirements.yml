@@ -10,4 +10,4 @@ roles:
   - name: nvidia.nvidia_driver
     version: 2.3.0
   - name: geerlingguy.node_exporter
-    version: 2.1.0
+    version: 2.1.1
