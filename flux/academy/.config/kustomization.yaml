@@ -3,3 +3,4 @@ kind: Kustomization
 resources:
   - ./flux.yaml
   - ./cluster.yaml
+  - ./vars/cluster-secrets.sops.yaml
