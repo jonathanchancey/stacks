@@ -11,3 +11,4 @@ resources:
   - ./loki/ks.yaml
   - ./promtail/ks.yaml
   - ./gotify/ks.yaml
+  - ./mktxp/ks.yaml
