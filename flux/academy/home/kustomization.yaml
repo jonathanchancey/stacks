@@ -7,4 +7,3 @@ resources:
   - ./nginx-webserver/ks.yaml
   - ./mosquitto/ks.yaml
   - ./homeassistant/ks.yaml
-  - ./redbot/ks.yaml
