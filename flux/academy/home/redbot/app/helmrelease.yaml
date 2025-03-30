@@ -8,7 +8,7 @@ spec:
   interval: 30m
   chart:
     spec:
-      chart: app-template 
+      chart: app-template
       version: 3.7.3
       sourceRef:
         kind: HelmRepository
@@ -39,6 +39,19 @@ spec:
             envFrom:
               - secretRef:
                   name: redbot-secret
+            resources:
+              requests:
+                cpu: "100m"
+                memory: "512Mi"
+              tmp:
+                enabled: true
+                type: emptyDir
+                medium: Memory
+                globalMounts:
+                  - subPath: "tmp"
+                    path: "/tmp"
+                  - subPath: "cache"
+                    path: "/.cache"
     persistence:
       config:
         existingClaim: *app
