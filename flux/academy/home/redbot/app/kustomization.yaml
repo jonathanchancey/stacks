@@ -3,8 +3,5 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - ./ns.yaml
-  - ./nginx-webserver/ks.yaml
-  - ./mosquitto/ks.yaml
-  - ./homeassistant/ks.yaml
-  - ./redbot/ks.yaml
+  - ./helmrelease.yaml
+  - ./secret.sops.yaml
