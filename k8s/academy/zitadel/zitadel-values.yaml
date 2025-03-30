@@ -16,11 +16,11 @@ zitadel:
         User:
           Username: zitadel
           SSL:
-            Mode: verify-full
+            Mode: disable
         Admin:
           Username: postgres
           SSL:
-            Mode: verify-full
+            Mode: disable
 
   dbSslCaCrtSecret: postgres-cert
   dbSslAdminCrtSecret: postgres-cert
