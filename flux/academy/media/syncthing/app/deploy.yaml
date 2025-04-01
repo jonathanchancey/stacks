@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
         - name: syncthing
-          image: lscr.io/linuxserver/syncthing@sha256:51f086a3282bd4feb9898766b925fae36249dd48fdcec395ee73cd2c29f388ae
+          image: lscr.io/linuxserver/syncthing@sha256:62cd1e54568785afbdf49fdf7ea6851302edee2d9124dba40191301070c96e86
           resources:
             requests:
               memory: "100Mi"
