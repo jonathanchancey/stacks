@@ -6,7 +6,7 @@ metadata:
   name: &app jellyfin
   namespace: flux-system
 spec:
-  targetNamespace: jellyfin
+  targetNamespace: fkn
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
