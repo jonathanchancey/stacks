@@ -6,4 +6,4 @@ resources:
   - ./namespace.yaml
   - ./navidrome/ks.yaml
   - ./syncthing/ks.yaml
-  - ./jellyfin/external/kustomization.yaml
+  - ./jellyfin/ks.yaml
