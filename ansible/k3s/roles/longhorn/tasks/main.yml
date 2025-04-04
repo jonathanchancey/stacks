@@ -17,6 +17,6 @@
     enabled: yes
     state: started
 
-- name: Longhorn | Provision Physical Storage with LVM
+- name: Longhorn | Provision Physical Storage
   ansible.builtin.import_tasks: provision.yml
   when: longhorn_provision_physical_storage
