@@ -1,6 +1,6 @@
 # Stacks
 
-Hello and welcome to my waste of electricity
+Welcome to my personal waste of electricity
 
 I use this repo to practice DevOps concepts and for hosting services I'd rather not live without
 
