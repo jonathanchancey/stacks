@@ -1,21 +1,15 @@
----
-- hosts: all
-  name: update apt
+- name: Apt Update
+  apt:
+    update_cache: yes
+    force_apt_get: yes
+    cache_valid_time: 3600
 
-  tasks:
-  - name: apt update
-    apt:
-      update_cache: yes
-      force_apt_get: yes
-      cache_valid_time: 3600
+- name: Apt Upgrade
+  apt:
+    upgrade: dist
 
-  - name: apt upgrade
-    apt:
-      upgrade: dist
-
-  # - name: remove old packages and clean cache
-  #   apt:
-  #     autoremove: yes
-  #     autoclean: yes
-  #     clean: yes
-
+# - name: remove old packages and clean cache
+#   apt:
+#     autoremove: yes
+#     autoclean: yes
+#     clean: yes
