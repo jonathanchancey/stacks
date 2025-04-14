@@ -1,0 +1,84 @@
+---
+k3s_version: v1.32.3+k3s1
+# this is the user that has ssh access to these machines
+ansible_user: debian
+# ansible_become_user: debian
+systemd_dir: /etc/systemd/system
+
+# Set your timezone
+system_timezone: "America/Los_Angeles"
+
+# interface which will be used for flannel
+flannel_iface: "enp90s0"
+
+# apiserver_endpoint is virtual ip-address which will be configured on each master
+apiserver_endpoint: "10.131.128.39"
+
+group_name_master: master
+
+# k3s_token = ""
+
+# The IP on which the node is reachable in the cluster.
+# Here, a sensible default is provided, you can still override
+# it for each of your hosts, though.
+k3s_node_ip: '{{ ansible_facts[flannel_iface]["ipv4"]["address"] }}'
+
+# Disable the taint manually by setting: k3s_master_taint = false
+k3s_master_taint: "{{ true if groups['node'] | default([]) | length >= 1 else false }}"
+
+# these arguments are recommended for servers as well as agents:
+extra_args: >-
+  --flannel-iface={{ flannel_iface }}
+  --node-ip={{ k3s_node_ip }}
+
+log_destination: ./logs/bastille
+extra_args: >-
+  --node-ip={{ k3s_node_ip }}
+
+# change these to your liking, the only required are: --disable servicelb, --tls-san {{ apiserver_endpoint }}
+extra_server_args: >-
+  {{ extra_args }}
+  {{ '--node-taint node-role.kubernetes.io/master=true:NoSchedule' if k3s_master_taint else '' }}
+  --tls-san {{ apiserver_endpoint }}
+  --etcd-expose-metrics=true
+  --disable servicelb
+  --disable traefik
+  --disable-network-policy
+  --flannel-backend=none
+  --disable-kube-proxy
+
+server_init_args: >-
+  {% if groups[group_name_master | default('master')] | length > 1 %}
+    {% if ansible_hostname == hostvars[groups[group_name_master | default('master')][0]]['ansible_hostname'] %}
+      --cluster-init
+    {% else %}
+      --server https://{{ hostvars[groups[group_name_master | default('master')][0]].k3s_node_ip | split(",") | first | ansible.utils.ipwrap }}:6443
+    {% endif %}
+    --token {{ k3s_token }}
+  {% endif %}
+  {{ extra_server_args }}
+
+extra_agent_args: >-
+  {{ extra_args }}
+
+# image tag for kube-vip
+kube_vip_tag_version: "v0.6.4"
+
+# # metallb type frr or native
+# metal_lb_type: "native"
+
+# # metallb mode layer2 or bgp
+# metal_lb_mode: "layer2"
+
+# # image tag for metal lb
+# metal_lb_speaker_tag_version: "v0.14.8"
+# metal_lb_controller_tag_version: "v0.14.8"
+
+# # metallb ip range for load balancer
+# metal_lb_ip_range: "10.131.128.40-10.131.128.49"
+
+longhorn_lvm_drive_match_string: .*476.9G.*
+k3s_version_match_override: true
+
+longhorn_install_dependencies: true
+longhorn_provision_physical_storage: false

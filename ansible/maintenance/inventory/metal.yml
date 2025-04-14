@@ -34,3 +34,12 @@ proxmox:
 #   children:
 #     proxmox:
 #     truenas:
+
+bastille:
+  hosts:
+    muniment-00:
+      ansible_user: debian
+    muniment-01:
+      ansible_user: debian
+    muniment-02:
+      ansible_user: debian
