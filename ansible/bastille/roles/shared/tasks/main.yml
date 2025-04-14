@@ -1,4 +1,0 @@
-- name: Run openSUSE Tasks
-  ansible.builtin.import_tasks: suse.yml
-  when: ansible_os_family == 'Suse'
-  become: true

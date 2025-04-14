@@ -1,9 +1,0 @@
----
-- name: Reboot
-  hosts: "*"
-  gather_facts: true
-  tasks:
-    - name: Reboot the nodes
-      become: true
-      reboot:
-        reboot_timeout: 300

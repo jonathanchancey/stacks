@@ -1,6 +1,0 @@
-- name: ensure rke2-agent is restarted
-  become: true
-  systemd:
-    state: restarted
-    name: rke2-agent
-  listen: "rke2-agent service restart"
