@@ -23,11 +23,3 @@ tasks:
   conform:
     desc: run kubeconform
     cmd: k8s/academy/.scripts/kubeconform.sh flux/academy/
-  direnv:
-    desc: Set up direnv hooks
-    cmd: direnv allow .
-    status:
-      - '[[ $(direnv status --json | jq ".state.foundRC.allowed") == 0 ]]'
-      - '[[ $(direnv status --json | jq ".state.loadedRC.allowed") == 0 ]]'
-    preconditions:
-      - which direnv
