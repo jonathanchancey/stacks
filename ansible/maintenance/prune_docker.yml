@@ -4,7 +4,7 @@
   collections:
     - community.docker
   tasks:
-    - name: "prune docker caches"
+    - name: "Prune docker caches"
       containers: yes
       community.docker.docker_prune:
       images: yes

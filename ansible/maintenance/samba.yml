@@ -16,7 +16,7 @@
       notify: restart samba
 
   handlers:
-    - name: restart samba
+    - name: Restart samba
       service:
         name: smbd
         state: restarted

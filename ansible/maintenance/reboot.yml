@@ -1,4 +1,4 @@
-- hosts: scribe
+- hosts: all
   become: true
   tasks:
     - name: Reboot and wait for node to come back up
