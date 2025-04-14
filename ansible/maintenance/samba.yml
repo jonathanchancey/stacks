@@ -12,6 +12,7 @@
       template:
         src: smb.conf.j2
         dest: /etc/samba/smb.conf
+        mode: '0600'
       notify: restart samba
 
   handlers:

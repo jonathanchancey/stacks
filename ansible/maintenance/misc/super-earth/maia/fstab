@@ -1,4 +1,0 @@
-UUID=f1ebd3dd-4f20-4dbf-9ba8-567dedf392c8 / xfs defaults 0 1
-UUID=BE3A-349D /boot/efi vfat defaults 0 0
-UUID=c0bf8085-da06-4b1e-9633-d961a75d4236 /mnt/space ext4 defaults,nofail 0 1
-#UUID=6a508991-4a10-49da-a195-9c787879aa99 /mnt/silo ext4 defaults 0 1
