@@ -58,13 +58,13 @@
         groups: sudo
         password: "{{ service_user_pass | password_hash('sha512') }}"
 
-    - name: Set up authorized keys for ansible user
+    - name: Set up authorized keys for service user
       ansible.posix.authorized_key:
         user: "{{ service_user }}"
         state: present
         key: "{{ service_user_pass_ssh_public_key }}"
 
-    - name: Configure sudo access for ansible user
+    - name: Configure sudo access for service user
       lineinfile:
         path: /etc/sudoers.d/"{{ service_user }}"
         line: "{{ service_user }} ALL=(ALL) NOPASSWD: ALL"
@@ -74,35 +74,6 @@
         group: root
         create: yes
         validate: "/usr/sbin/visudo -cf %s"
-
-- name: Debug system information
-  debug:
-    msg: "{{ hostname_prefix }}-{{ '%02d' | format(play_hosts.index(inventory_hostname)) }}"
-
-- name: Update /etc/hosts
-  become: true
-  lineinfile:
-    path: /etc/hosts
-    regexp: |
-      "^127\.0\.1\.1"
-    line: "127.0.1.1 {{ hostname_prefix }}-{{ '%02d' | format(play_hosts.index(inventory_hostname)) }}"
-    state: present
-
-- name: Update /etc/hostname
-  copy:
-    content: "{{ hostname_prefix }}-{{ '%02d' | format(play_hosts.index(inventory_hostname)) }}\n"
-    dest: /etc/hostname
-    owner: root
-    group: root
-    mode: "0644"
-
-- name: Set hostname with padded zeros
-  become: true
-  become_user: root
-  command: "hostnamectl set-hostname {{ hostname_prefix }}-{{ '%02d' | format(play_hosts.index(inventory_hostname)) }}"
-  register: hostname_result
-  changed_when: hostname_result.rc == 0
-  failed_when: hostname_result.rc != 0
 
 - name: Harden SSH configuration
   become: true

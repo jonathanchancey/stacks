@@ -1,10 +1,14 @@
 ---
+- name: Display all variables/facts known for a host
+  ansible.builtin.debug:
+    var: ansible_architecture
+
 - name: Run Arm Tasks
   ansible.builtin.import_tasks: arm.yml
-  # when: ansible_architecture == 'arm64'
+  when: ansible_architecture == 'arm64'
   become: true
 
-# - name: Run x86 Tasks
-#   ansible.builtin.import_tasks: x86.yml
-#   # when: ansible_architecture == 'amd64'
-#   become: true
+- name: Run x86 Tasks
+  ansible.builtin.import_tasks: x86.yml
+  when: ansible_architecture == 'x86_64'
+  become: true

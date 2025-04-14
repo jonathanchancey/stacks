@@ -1,0 +1,29 @@
+- name: Set hostname with two digit prefix
+  become: true
+  become_user: root
+  block:
+    - name: Debug system information
+      debug:
+        msg: "{{ hostname_prefix }}-{{ '%02d' | format(play_hosts.index(inventory_hostname)) }}"
+
+    - name: Update /etc/hosts
+      lineinfile:
+        path: /etc/hosts
+        regexp: |
+          "^127\.0\.1\.1"
+        line: "127.0.1.1 {{ hostname_prefix }}-{{ '%02d' | format(play_hosts.index(inventory_hostname)) }}"
+        state: present
+
+    - name: Update /etc/hostname
+      copy:
+        content: "{{ hostname_prefix }}-{{ '%02d' | format(play_hosts.index(inventory_hostname)) }}\n"
+        dest: /etc/hostname
+        owner: root
+        group: root
+        mode: "0644"
+
+    - name: Set hostname with padded zeros
+      command: "hostnamectl set-hostname {{ hostname_prefix }}-{{ '%02d' | format(play_hosts.index(inventory_hostname)) }}"
+      register: hostname_result
+      changed_when: hostname_result.rc == 0
+      failed_when: hostname_result.rc != 0
