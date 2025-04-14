@@ -1,0 +1,27 @@
+services:
+  satisfactory-server:
+    container_name: "satisfactory-server"
+    hostname: "satisfactory-server"
+    image: "wolveix/satisfactory-server:latest"
+    ports:
+      - "7777:7777/tcp"
+      - "7777:7777/udp"
+      - "8888:8888/tcp"
+    volumes:
+      - "~/satisfactory-server:/config"
+    environment:
+      - MAXPLAYERS=12
+      - PGID=1006
+      - PUID=1006
+      - STEAMBETA=false
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 12G
+        reservations:
+          memory: 4G
+    logging:
+      driver: loki
+      options:
+        loki-url: https://loki-gateway.chancey.dev/loki/api/v1/push
