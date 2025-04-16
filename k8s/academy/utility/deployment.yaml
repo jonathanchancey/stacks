@@ -1,0 +1,77 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: preseed-nginx
+  namespace: network
+  labels:
+    app: preseed-nginx
+spec:
+  replicas: 3
+  progressDeadlineSeconds: 600
+  revisionHistoryLimit: 2
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: preseed-nginx
+  template:
+    metadata:
+      labels:
+        app: preseed-nginx
+    spec:
+      containers:
+        - name: preseed-nginx
+          image: nginx:latest
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "100m"
+          volumeMounts:
+            - name: preseed-config
+              mountPath: /etc/nginx/conf.d/default.conf
+              subPath: default.conf
+            - name: preseed-config
+              mountPath: /usr/share/nginx/html/resources/preseed.cfg
+              subPath: preseed.cfg
+      volumes:
+        - name: preseed-config
+          configMap:
+            name: preseed-config-d4hc5c926b
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: preseed-nginx-ingress
+  namespace: network
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  ingressClassName: nginx-internal
+  rules:
+    - host: preseed.chancey.dev
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: preseed-nginx
+                port:
+                  number: 80
+  tls:
+    - hosts:
+        - preseed.chancey.dev
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: preseed-nginx
+  namespace: network
+spec:
+  selector:
+    app: preseed-nginx
+  ports:
+    - name: http
+      targetPort: 80
+      port: 80
