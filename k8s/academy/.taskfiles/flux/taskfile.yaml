@@ -6,22 +6,30 @@ tasks:
   count:
     desc: Count kustomize config
     cmd: flux-local build ks --path flux/academy/ | kustomize cfg count
-  diff:
+  diff-ks:
     desc: Flux diff
     cmd: flux-local diff ks --path flux/academy/
-  diffhelm:
+  diff-hr:
     desc: Flux diff
     cmd: flux-local diff hr --path flux/academy/
-  test-without-helm:
+  list:
+    desc: Flux get ks
+    cmd: flux get ks
+  test:
     desc: Flux test
     cmd: flux-local test --path flux/academy/
-  test:
+  test-helmful:
     desc: Flux test
     cmd: flux-local test --enable-helm --path flux/academy/
   etcd-save:
     desc: Flux test
     cmd: ssh -i ~/.ssh/id_seki_rsa napkin@acolyte-00 -t "sudo k3s etcd-snapshot save"
-  sus:
+  resume:
+    desc: resume flux ks [KS=required]
+    cmd: flux resume kustomization -n flux-system {{.KS}}
+    requires:
+      vars: [KS]
+  suspend:
     desc: suspend flux ks [KS=required]
     cmd: flux suspend kustomization -n flux-system {{.KS}}
     requires:
