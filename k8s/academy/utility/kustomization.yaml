@@ -8,3 +8,5 @@ configMapGenerator:
     files:
       - preseed.cfg=resources/preseed.cfg
       - default.conf=resources/default.conf
+    options:
+      disableNameSuffixHash: true
