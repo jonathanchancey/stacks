@@ -12,6 +12,12 @@ tasks:
   diff-hr:
     desc: Flux diff
     cmd: flux-local diff hr --path flux/academy/
+  suspend-git:
+    desc: Flux suspend academy
+    cmd: flux suspend source git academy
+  resume-git:
+    desc: Flux resume academy
+    cmd: flux resume source git academy
   list:
     desc: Flux get ks
     cmd: flux get ks
