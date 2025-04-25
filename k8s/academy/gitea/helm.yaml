@@ -23,9 +23,6 @@ spec:
       retries: 3
   uninstall:
     keepHistory: false
-  values:
-    # moved to values.yaml
-
   valuesFrom:
     - kind: Secret
       name: &dbSecret gitea-init-db

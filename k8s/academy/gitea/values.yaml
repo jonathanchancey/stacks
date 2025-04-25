@@ -11,8 +11,8 @@ service:
 ingress:
   enabled: true
   className: nginx-internal
-  # annotations:
-  #   nginx.ingress.kubernetes.io/proxy-body-size: "8000m"
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "8000m"
   hosts:
     - host: &host gitea.chancey.dev
       paths:
