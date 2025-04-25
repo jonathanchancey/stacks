@@ -45,8 +45,6 @@ spec:
         loadBalancerIP: 10.10.0.46
         controller: main
         externalTrafficPolicy: Local
-        annotations:
-          metallb.universe.tf/allow-shared-ip: pxe-svc
         ports:
           web:
             enabled: true
