@@ -42,7 +42,7 @@ spec:
       # IMMICH_LOG_LEVEL: debug
     image:
       # https://github.com/immich-app/immich/releases
-      tag: v1.126.1
+      tag: v1.127.0
     immich:
       metrics:
         # Enabling this will create the service monitors needed to monitor immich with the prometheus operator
