@@ -31,7 +31,7 @@ spec:
           cni-plugins:
             image:
               repository: ghcr.io/home-operations/cni-plugins
-              tag: 1.6.2@sha256:cc5aca198391ecda438c4fe435fa648fb513dee92144a99a69bde344b1dffcdc
+              tag: 1.7.1@sha256:a2b59b11a9cd50b5e699d7162a899a81c9b30a9386378b1deb01c054eedb38fe
             env:
               CNI_BIN_DIR: &cni-bin-dir /var/lib/rancher/k3s/data/cni
         containers:
