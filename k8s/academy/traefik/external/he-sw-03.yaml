@@ -1,7 +1,7 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: crs328
+  name: he-sw-03
   namespace: k8s-chancey-dev
 spec:
   type: ExternalName
@@ -9,7 +9,7 @@ spec:
     - name: http
       port: 80
       targetPort: 80
-  externalName: 10.10.0.7
+  externalName: 10.10.0.8
   selector:
     app.kubernetes.io/instance: traefik
     app.kubernetes.io/name: traefik
@@ -17,7 +17,7 @@ spec:
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: crs328-ingress
+  name: he-sw-03-ingress
   namespace: k8s-chancey-dev
   annotations:
     kubernetes.io/ingress.class: traefik-external
@@ -25,11 +25,11 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`crs328.k8s.chancey.dev`)
+    - match: Host(`he-sw-03.k8s.chancey.dev`)
       kind: Rule
       priority: 1
       services:
-        - name: crs328
+        - name: he-sw-03
           kind: Service
           port: 80
   tls:
