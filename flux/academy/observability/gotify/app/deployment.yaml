@@ -28,7 +28,7 @@ spec:
                       - arm64
       containers:
         - name: gotify
-          image: "ghcr.io/gotify/server-arm64:2.6.1"
+          image: "ghcr.io/gotify/server-arm64:2.6.3"
           imagePullPolicy: IfNotPresent
           env:
             - name: PUID
