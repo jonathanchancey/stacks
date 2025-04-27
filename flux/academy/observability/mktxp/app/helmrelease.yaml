@@ -67,5 +67,6 @@ spec:
         type: secret
         name: mktxp-exporter-config
         defaultMode: 0400
+        optional: True
         globalMounts:
           - path: /mktxp
