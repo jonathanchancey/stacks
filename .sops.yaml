@@ -7,6 +7,11 @@ creation_rules:
     key_groups:
       - age:
           - age1rl8s5e3al83x28ecwpn7ed3773uvyuhhvqujc47dz4chpw7xvc6qlzd8hq
+  - path_regex: \.sops.conf$
+    input_type: binary
+    key_groups:
+      - age:
+          - age1rl8s5e3al83x28ecwpn7ed3773uvyuhhvqujc47dz4chpw7xvc6qlzd8hq
 stores:
   yaml:
     indent: 2

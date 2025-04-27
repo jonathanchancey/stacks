@@ -5,3 +5,11 @@ kind: Kustomization
 resources:
   - ./helmrelease.yaml
   - ./secrets.sops.yaml
+secretGenerator:
+  - name: mktxp-exporter-config
+    files:
+      - mktxp.conf=./resources/mktxp.sops.conf
+      - _mktxp.conf=./resources/_mktxp.conf
+    type: Opaque
+generatorOptions:
+  disableNameSuffixHash: true
