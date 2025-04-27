@@ -1,7 +1,7 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: swos
+  name: he-sw-02
   namespace: k8s-chancey-dev
 spec:
   type: ExternalName
@@ -9,7 +9,7 @@ spec:
     - name: http
       port: 80
       targetPort: 80
-  externalName: 10.10.0.54
+  externalName: 10.10.0.6
   selector:
     app.kubernetes.io/instance: traefik
     app.kubernetes.io/name: traefik
@@ -17,7 +17,7 @@ spec:
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: swos-ingress
+  name: he-sw-02-ingress
   namespace: k8s-chancey-dev
   annotations:
     kubernetes.io/ingress.class: traefik-external
@@ -25,11 +25,11 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`CSS326.k8s.chancey.dev`)
+    - match: Host(`he-sw-02.k8s.chancey.dev`)
       kind: Rule
       priority: 1
       services:
-        - name: swos
+        - name: he-sw-02
           kind: Service
           port: 80
   tls:
