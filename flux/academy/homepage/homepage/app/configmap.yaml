@@ -86,10 +86,6 @@ data:
               href: https://status.chancey.dev/
               icon: mdi-gate-#3cad4b
               description: Status
-          - Gotify:
-              href: https://gotify.k8s.chancey.dev/
-              icon: si-go-#00ADD8
-              description: Alerts
           - InfluxDB:
               href: https://influxdb.fkn.chancey.dev/
               icon: influxdb.png
@@ -99,20 +95,20 @@ data:
               icon: prometheus.png
               description: Time Series Database
         - Network:
-          - 10p 2.5Gb Switch:
-              href: https://CRS310.k8s.chancey.dev
-              icon: si-mikrotik-#CCCCCC
-              description: 2.5Gb Mikrotik Switch
-          - 24p Hearth Switch:
-              href: https://CSS326.k8s.chancey.dev/index.html
-              icon: si-mikrotik-#CCCCCC
-              description: 24p Mikrotik Switch
           - 24p PoE Switch:
-              href: https://CRS328.k8s.chancey.dev
+              href: https://he-sw-01.k8s.chancey.dev/?
               icon: si-mikrotik-#CCCCCC
               description: 24p PoE Mikrotik Switch
-          - EAP:
-              href: https://eap.k8s.chancey.dev/
+          - 8p 2.5Gb Switch:
+              href: https://he-sw-02.k8s.chancey.dev/?
+              icon: si-mikrotik-#CCCCCC
+              description: 2.5Gb Mikrotik Switch
+          - 24p SwOS Switch:
+              href: https://he-sw-03.k8s.chancey.dev/index.html
+              icon: si-mikrotik-#CCCCCC
+              description: 24p Mikrotik Switch
+          - Office Access Point:
+              href: https://he-ap-01.k8s.chancey.dev/
               icon: si-tp-link-#4ACBD6
               description: Access Point
           - Traefik:
