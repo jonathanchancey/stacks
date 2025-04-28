@@ -11,6 +11,7 @@ spec:
       app.kubernetes.io/name: *app
   path: ./flux/academy/observability/mktxp/app
   prune: true
+  wait: false
   sourceRef:
     kind: GitRepository
     name: academy
