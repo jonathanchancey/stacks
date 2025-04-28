@@ -31,5 +31,5 @@ spec:
     - he-sw-01.k8s.chancey.dev
 
   issuerRef:
-    name: letsencrypt-staging
+    name: letsencrypt-production
     kind: ClusterIssuer
