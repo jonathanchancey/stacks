@@ -2,7 +2,7 @@ terraform {
   required_providers {
     routeros = {
       source  = "terraform-routeros/routeros"
-      version = "1.78.0"
+      version = "1.83.1"
     }
     random = {
       source  = "hashicorp/random"
