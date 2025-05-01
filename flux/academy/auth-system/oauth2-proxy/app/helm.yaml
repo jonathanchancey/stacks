@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 3.7.3
+      version: 3.5.1
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -35,8 +35,8 @@ spec:
                   name: oauth2-proxy-env-secret
             env:
               OAUTH2_PROXY_PROVIDER: oidc
-              OAUTH2_PROXY_COOKIE_DOMAINS: .chancey.dev
-              OAUTH2_PROXY_WHITELIST_DOMAINS: .chancey.dev
+              OAUTH2_PROXY_COOKIE_DOMAINS: ".chancey.dev"
+              OAUTH2_PROXY_WHITELIST_DOMAINS: ".chancey.dev"
               OAUTH2_PROXY_OIDC_ISSUER_URL: https://auth.chancey.dev
               OAUTH2_PROXY_REDIRECT_URL: "https://auth.chancey.dev/oauth2/callback"
               OAUTH2_PROXY_COOKIE_CSRF_PER_REQUEST: "true"
