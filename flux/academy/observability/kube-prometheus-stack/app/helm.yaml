@@ -59,8 +59,8 @@ spec:
           - auto-gomemlimit
           - memory-snapshot-on-shutdown
           - new-service-discovery-manager
-        retention: 30d
-        retentionSize: 45GB
+        retention: 120d
+        retentionSize: 90GB
         resources:
           requests:
             cpu: 100m
