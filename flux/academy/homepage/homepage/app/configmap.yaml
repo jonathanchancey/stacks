@@ -136,6 +136,10 @@ data:
                 href: https://gitea.chancey.dev/
                 icon: gitea.png
                 description: Version Control
+          - Miniflux:
+                href: https://miniflux.k8s.chancey.dev/
+                icon: miniflux.png
+                description: RSS Reader
         - Forbidden Network:
           - Shar:
               href: https://shar.fkn.chancey.dev/
