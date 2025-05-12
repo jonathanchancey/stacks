@@ -1,0 +1,14 @@
+cluster:
+  allowSchedulingOnControlPlanes: true
+  etcd:
+    extraArgs:
+      listen-metrics-urls: http://0.0.0.0:2381
+machine:
+  kernel:
+    modules:
+      - name: thunderbolt
+      - name: thunderbolt-net
+  sysctls:
+    fs.inotify.max_user_watches: "1048576" # Watchdog
+    fs.inotify.max_user_instances: "8192" # Watchdog
+
