@@ -1,21 +1,26 @@
 ---
-apiVersion: traefik.containo.us/v1alpha1
-kind: IngressRoute
+apiVersion: networking.k8s.io/v1
+kind: Ingress
 metadata:
-  name: frigate-ingress
+  name: frigate
   namespace: frigate
   annotations:
-    kubernetes.io/ingress.class: traefik-external
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/auth-url: "https://auth.chancey.dev/oauth2/auth"
+    nginx.ingress.kubernetes.io/auth-signin: "https://auth.chancey.dev/oauth2/start?rd=$scheme%3A%2F%2F$host$escaped_request_uri"
 spec:
-  entryPoints:
-    - websecure
-  routes:
-    - match: Host(`frigate.chancey.dev`)
-      kind: Rule
-      priority: 1
-      services:
-        - name: frigate
-          kind: Service
-          port: 5000
+  ingressClassName: nginx-internal
+  rules:
+    - host: &host frigate.chancey.dev
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frigate
+                port:
+                  number: 5000
   tls:
-    secretName: frigate-cert-tls
+    - hosts:
+        - *host
