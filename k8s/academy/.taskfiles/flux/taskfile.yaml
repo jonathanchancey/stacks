@@ -95,3 +95,10 @@ tasks:
     preconditions:
       - test -f {{.REQUIREMENTS_TXT}}
       - which python3
+  cull:
+    desc: Delete pods with a Failed/Pending/Succeeded phase
+    cmds:
+      - for:
+          matrix:
+            PHASE: [Failed, Pending, Succeeded]
+        cmd: kubectl delete pods --all-namespaces --field-selector status.phase={{.ITEM.PHASE}} --ignore-not-found=true
