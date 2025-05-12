@@ -7,9 +7,3 @@
 - name: Apt Upgrade
   apt:
     upgrade: dist
-
-# - name: remove old packages and clean cache
-#   apt:
-#     autoremove: yes
-#     autoclean: yes
-#     clean: yes
