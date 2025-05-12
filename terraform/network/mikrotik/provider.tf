@@ -17,4 +17,3 @@ provider "routeros" {
   password = var.mikrotik_router_password
   insecure = var.mikrotik_router_insecure_skip_tls_verify
 }
-
