@@ -1,4 +1,0 @@
----
-# make sure this is correct, the disk will be wiped if not used by the system
-# drive labels can change on boot
-LONGHORN_DISK_IDENTIFIER: "/dev/sdb"
