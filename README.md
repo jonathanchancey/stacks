@@ -2,17 +2,17 @@
 
 Welcome to my personal waste of electricity
 
-I use this repo to practice DevOps concepts and for hosting services I'd rather not live without
+I use this repo to practice DevOps concepts for services I'd rather not live without
 
 ## Folder Structure
 
 ### Ansible - `ansible`
 
-Bare metal provisioning and configuration
+Bare metal configuration
 
 ### Flux - `flux`
-
-My GitOps project of choice. It used to be Fleet but so far Flux is lovely
+ 
+My GitOps project of choice
 
 ### Kubernetes Clusters - `k8s`
 
@@ -40,9 +40,7 @@ Test cluster for Academy. Used to test major changes like swapping out the CNI a
 
 ### Terraform - `terraform`
 
-I use Terraform for DNS and "quick" VM Provisioning
-
-Proxmox isn't really suited for Terraform but at least it's better than ClickOps
+For DNS and VM Provisioning
 
 ### Proxmox
 
