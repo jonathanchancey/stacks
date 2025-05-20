@@ -150,7 +150,7 @@
     },
     {
       "description": ["Auto merge Terraform provider and module minor/patch updates"],
-      "matchManagers": ["terraform-provider", "terraform-module"],
+      "matchManagers": ["terraform"],
       "automerge": true,
       "automergeType": "branch",
       "ignoreTests": true,
