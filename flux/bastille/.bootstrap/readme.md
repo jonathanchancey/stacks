@@ -30,3 +30,5 @@ stringData:
 
 <https://github.com/prometheus-operator/prometheus-operator/releases/download/v0.83.0/stripped-down-crds.yaml>
 kubectl apply --server-side -f stripped-down-crds.yaml
+
+kubectl label namespace rook-ceph pod-security.kubernetes.io/enforce=privileged
