@@ -42,7 +42,7 @@ spec:
       #                 - arm64
       service:
         annotations:
-          io.cilium/lb-ipam-ips: 10.10.0.44
+          io.cilium/lb-ipam-ips: 10.11.0.44
           io.cilium/lb-ipam-sharing-key: nginx-internal
       ingressClassResource:
         name: nginx-internal
