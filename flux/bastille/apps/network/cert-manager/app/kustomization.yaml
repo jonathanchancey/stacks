@@ -1,0 +1,17 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ./helmrelease.yaml
+  # - ./issuers/letsencrypt-prod.yaml
+  - ./issuers/letsencrypt-stage.yaml
+  - ./issuers/secret-cf-token.sops.yaml
+components:
+  - ../../../../components/common/
+configMapGenerator:
+  - name: cert-manager-values
+    files:
+      - values.yaml=./resources/values.yaml
+configurations:
+  - ./resources/kustomizeconfig.yaml
