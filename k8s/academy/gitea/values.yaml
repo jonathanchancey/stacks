@@ -6,9 +6,7 @@ service:
     port: 22
     annotations:
       external-dns.alpha.kubernetes.io/hostname: git.chancey.dev
-      # metallb.universe.tf/loadBalancerIPs: "10.10.0.48"
-      # metallb.universe.tf/allow-shared-ip: "true"
-      "io.cilium/lb-ipam-ips": "10.10.0.48"
+      "io.cilium/lb-ipam-ips": "10.11.0.48"
 ingress:
   enabled: true
   className: nginx-internal
