@@ -1,0 +1,21 @@
+---
+instance:
+  distribution:
+    # renovate: datasource=github-releases depName=controlplaneio-fluxcd/distribution
+    version: 2.6.1
+  cluster:
+    networkPolicy: false
+  components:
+    - source-controller
+    - kustomize-controller
+    - helm-controller
+    - notification-controller
+  sync:
+    kind: GitRepository
+    url: https://github.com/jonathanchancey/stacks
+    ref: refs/heads/main
+    path: flux/.config/ks.yaml
+    interval: 1h
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: flux
