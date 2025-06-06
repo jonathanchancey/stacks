@@ -78,9 +78,10 @@ rbac:
 service:
   enabled: true
   type: LoadBalancer
-  annotations: {}
+  annotations:
+    "io.cilium/lb-ipam-ips": "10.10.0.40"
   externalIPs: []
   labels: {}
   loadBalancerSourceRanges: []
-  spec:
-    loadBalancerIP: 10.10.0.40
+  # spec:
+  #   loadBalancerIP: 10.10.0.40
