@@ -50,3 +50,15 @@ keys
 .task/checksum/flux-venv
 .ansible/.lock
 .idea
+kubeconfig
+talosconfig
+k8s/bastille/talos/test/controlplane.yaml
+k8s/bastille/talos/test/bastille-02.yaml
+k8s/bastille/talos/test/bastille-01.yaml
+k8s/bastille/talos/test/bastille-00.yaml
+k8s/bastille/talos/test/worker.yaml
+k8s/bastille/talos/worker.yaml
+k8s/bastille/talos/controlplane.yaml
+k8s/bastille/talos/bastille-00.yaml
+k8s/bastille/talos/bastille-01.yaml
+k8s/bastille/talos/bastille-02.yaml
