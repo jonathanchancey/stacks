@@ -20,8 +20,14 @@ tunnelProtocol: vxlan
 tunnelPort: 8473
 rollOutCiliumPods: true
 
+# routingMode: native
 l2announcements:
-  enabled: true
+  enabled: false
 devices: { eth0, net0, enp2s0 }
+# directRoutingDevice: eth0
+# autoDirectNodeRoutes: true
 externalIPs:
-  enabled: true
+  enabled: false
+kubeProxyReplacement: false
+# devices: { eth0, net0, enp2s0 }
+# directRoutingDevice: enp2s0
