@@ -43,7 +43,7 @@ spec:
         primary: false
         type: LoadBalancer
         annotations:
-          io.cilium/lb-ipam-ips: 10.10.0.46
+          io.cilium/lb-ipam-ips: 10.11.0.46
           io.cilium/lb-ipam-sharing-key: netboot
         controller: main
         externalTrafficPolicy: Local
