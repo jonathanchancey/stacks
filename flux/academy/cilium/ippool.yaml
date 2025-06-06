@@ -15,6 +15,4 @@ spec:
   loadBalancerIPs: true
   interfaces:
     - enp2s0
-  nodeSelector:
-    matchLabels:
-      kubernetes.io/hostname: lich-00
+    - eth0
