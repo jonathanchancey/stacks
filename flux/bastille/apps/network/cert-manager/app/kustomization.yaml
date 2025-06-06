@@ -7,8 +7,6 @@ resources:
   # - ./issuers/letsencrypt-prod.yaml
   - ./issuers/letsencrypt-stage.yaml
   - ./issuers/secret-cf-token.sops.yaml
-components:
-  - ../../../../components/common/
 configMapGenerator:
   - name: cert-manager-values
     files:
