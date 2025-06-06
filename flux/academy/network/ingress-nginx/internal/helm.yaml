@@ -31,13 +31,19 @@ spec:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
               - matchExpressions:
-                  - key: kubernetes.io/arch
-                    operator: NotIn
+                  - key: kubernetes.io/hostname
+                    operator: In
                     values:
-                      - arm64
+                      - lich-00
+      #         - matchExpressions:
+      #             - key: kubernetes.io/arch
+      #               operator: NotIn
+      #               values:
+      #                 - arm64
       service:
         annotations:
-          metallb.universe.tf/loadBalancerIPs: 10.10.0.44
+          io.cilium/lb-ipam-ips: 10.10.0.44
+          io.cilium/lb-ipam-sharing-key: nginx-internal
       ingressClassResource:
         name: nginx-internal
         default: false
