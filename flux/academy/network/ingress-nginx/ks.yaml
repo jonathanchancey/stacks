@@ -67,38 +67,37 @@ spec:
       - name: cluster-secrets
         kind: Secret
         optional: true
-
----
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: &app nginx-external
-  namespace: flux-system
-spec:
-  targetNamespace: network
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
-  dependsOn:
-    - name: nginx-certificates
-  path: ./flux/academy/network/ingress-nginx/external
-  prune: false
-  sourceRef:
-    kind: GitRepository
-    name: academy
-  wait: false
-  interval: 30m
-  timeout: 5m
-  decryption:
-    provider: sops
-    secretRef:
-      name: sops-age
-  postBuild:
-    substitute:
-      APP: *app
-      GATUS_SUBDOMAIN: status
-    substituteFrom:
-      - name: cluster-secrets
-        kind: Secret
-        optional: true
+# ---
+# # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+# apiVersion: kustomize.toolkit.fluxcd.io/v1
+# kind: Kustomization
+# metadata:
+#   name: &app nginx-external
+#   namespace: flux-system
+# spec:
+#   targetNamespace: network
+#   commonMetadata:
+#     labels:
+#       app.kubernetes.io/name: *app
+#   dependsOn:
+#     - name: nginx-certificates
+#   path: ./flux/academy/network/ingress-nginx/external
+#   prune: false
+#   sourceRef:
+#     kind: GitRepository
+#     name: academy
+#   wait: false
+#   interval: 30m
+#   timeout: 5m
+#   decryption:
+#     provider: sops
+#     secretRef:
+#       name: sops-age
+#   postBuild:
+#     substitute:
+#       APP: *app
+#       GATUS_SUBDOMAIN: status
+#     substituteFrom:
+#       - name: cluster-secrets
+#         kind: Secret
+#         optional: true
