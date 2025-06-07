@@ -42,7 +42,7 @@ spec:
       #                 - arm64
       service:
         annotations:
-          io.cilium/lb-ipam-ips: 10.11.0.44
+          io.cilium/lb-ipam-ips: 10.11.0.110
           io.cilium/lb-ipam-sharing-key: nginx-internal
           service.kubernetes.io/load-balancer-class: "io.cilium/bgp-control-plane"
       ingressClassResource:
