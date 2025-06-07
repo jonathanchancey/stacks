@@ -79,9 +79,6 @@ service:
   enabled: true
   type: LoadBalancer
   annotations:
-    "io.cilium/lb-ipam-ips": "10.10.0.40"
-  externalIPs: []
+    "io.cilium/lb-ipam-ips": "10.11.0.40"
   labels: {}
   loadBalancerSourceRanges: []
-  # spec:
-  #   loadBalancerIP: 10.10.0.40

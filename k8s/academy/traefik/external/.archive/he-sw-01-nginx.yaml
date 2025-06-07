@@ -1,0 +1,28 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: he-sw-01-ingress
+  namespace: k8s-chancey-dev
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/upstream-vhost: "10.10.0.7"
+    nginx.ingress.kubernetes.io/service-upstream: "true"
+
+spec:
+  ingressClassName: nginx-internal
+  rules:
+    - host: he-sw-01.chancey.dev
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: he-sw-01
+                port:
+                  number: 80
+  tls:
+    - hosts:
+        - he-sw-01.chancey.dev
+      # secretName: k8s-chancey-dev-tls
