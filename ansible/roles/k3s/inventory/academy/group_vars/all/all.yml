@@ -46,8 +46,7 @@ extra_server_args: >-
   --disable-network-policy
   --flannel-backend=none
 
-# --disable-network-policy
-# --flannel-backend=none
+# --disable-kube-proxy
 extra_agent_args: >-
   {{ extra_args }}
 
