@@ -1,28 +1,38 @@
 bpf:
-  hostLegacyRouting: false
+  hostLegacyRouting: false # TODO false
+
 cluster:
   name: academy
+
 cni:
   customConf: false
   uninstall: false
+
 ipam:
   mode: cluster-pool
   operator:
     clusterPoolIPv4PodCIDRList:
       - 10.44.0.0/16
+
 operator:
   replicas: 1
   unmanagedPodWatcher:
-    restart: true
+    restart: true # TODO true
+
+kubeProxyReplacement: true
+
 bgpControlPlane:
   enabled: true
-policyEnforcementMode: default
+
+policyEnforcementMode: never # TODO default
 routingMode: tunnel
 tunnelProtocol: vxlan
 tunnelPort: 8473
 rollOutCiliumPods: true
+
 gatewayAPI:
-enabled: true
+  enabled: true
+
 hubble:
   enabled: true
   relay:
@@ -34,17 +44,19 @@ hubble:
     ingress:
       enabled: true
       hosts:
-        - hubble.ephemera.internal
-ingressController:
-  enabled: true
-  default: true
-  loadbalancerMode: shared
-  service:
-    loadBalancerIP: "10.131.102.20"
-    type: LoadBalancer
+        - hubble.chancey.dev
+
 envoy:
   enabled: true
+
 loadBalancer:
   l7:
     backend: envoy
-kubeProxyReplacement: true
+# ingressController:
+#   enabled: true
+#   default: true
+#   loadbalancerMode: shared
+#   service:
+#     loadBalancerIP: "10.131.102.20"
+#     type: LoadBalancer
+
