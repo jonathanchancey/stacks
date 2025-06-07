@@ -31,3 +31,6 @@ externalIPs:
 kubeProxyReplacement: false
 # devices: { eth0, net0, enp2s0 }
 # directRoutingDevice: enp2s0
+
+bgpControlPlane:
+  enabled: true

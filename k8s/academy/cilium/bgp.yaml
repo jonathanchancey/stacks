@@ -1,0 +1,50 @@
+---
+apiVersion: "cilium.io/v2alpha1"
+kind: CiliumBGPClusterConfig
+metadata:
+  name: bgp-cluster-config-generic
+spec:
+  nodeSelector:
+    # matchExpressions:
+    #   - key: no-bgp
+    #     operator: DoesNotExist
+    matchLabels:
+      kubernetes.io/hostname: "lich-00"
+  bgpInstances:
+    - name: "instance-64514"
+      localASN: 64514
+      peers:
+        - name: "opnsense"
+          peerASN: 64512
+          peerAddress: "10.131.128.1"
+          peerConfigRef:
+            name: "peer-config-generic"
+---
+apiVersion: "cilium.io/v2alpha1"
+kind: CiliumBGPPeerConfig
+metadata:
+  name: peer-config-generic
+spec:
+  families:
+    - afi: ipv4
+      safi: unicast
+      advertisements:
+        matchLabels:
+          advertise: "generic"
+---
+apiVersion: "cilium.io/v2alpha1"
+kind: CiliumBGPAdvertisement
+metadata:
+  name: services
+  labels:
+    advertise: generic
+spec:
+  advertisements:
+    # - advertisementType: "PodCIDR"
+    - advertisementType: "Service"
+      service:
+        addresses:
+          - LoadBalancerIP
+      selector: # <-- select all services
+        matchExpressions:
+          - { key: somekey, operator: NotIn, values: ["never-used-value"] }

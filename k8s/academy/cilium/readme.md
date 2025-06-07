@@ -1,0 +1,1 @@
+very important, enabling bgp requires deleting the operator so it can recreate the crds
