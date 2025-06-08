@@ -1,3 +1,6 @@
+cluster:
+  name: bastille
+
 bpf:
   hostLegacyRouting: false
 
