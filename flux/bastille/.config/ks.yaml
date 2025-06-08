@@ -10,7 +10,6 @@ spec:
     provider: sops
     secretRef:
       name: sops-age
-      namespace: flux-system
   interval: 1h
   path: ./flux/bastille/apps
   prune: true
@@ -33,7 +32,6 @@ spec:
             provider: sops
             secretRef:
               name: sops-age
-              namespace: flux-system
       target:
         group: kustomize.toolkit.fluxcd.io
         kind: Kustomization
