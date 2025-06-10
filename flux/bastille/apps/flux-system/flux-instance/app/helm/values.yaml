@@ -12,10 +12,11 @@ instance:
     - notification-controller
   sync:
     kind: GitRepository
-    url: https://github.com/jonathanchancey/stacks
+    url: https://github.com/jonathanchancey/mire
     ref: refs/heads/main
     path: flux/bastille/.config
     interval: 1h
+    pullSecret: "ghcr-auth"
   commonMetadata:
     labels:
       app.kubernetes.io/name: flux
