@@ -16,7 +16,7 @@ instance:
     ref: refs/heads/main
     path: flux/bastille/.config
     interval: 1h
-    pullSecret: "ghcr-auth"
+    pullSecret: github-token-auth-ro
   commonMetadata:
     labels:
       app.kubernetes.io/name: flux
