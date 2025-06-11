@@ -6,10 +6,10 @@ metadata:
   name: bastille-apps
   namespace: flux-system
 spec:
-  # decryption:
-  #   provider: sops
-  #   secretRef:
-  #     name: sops-age
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age
   interval: 1h
   path: ./flux/bastille/apps
   prune: true
