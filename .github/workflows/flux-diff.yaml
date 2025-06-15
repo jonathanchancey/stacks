@@ -36,7 +36,7 @@ jobs:
           path: default
 
       - name: Diff Kustomization
-        uses: docker://ghcr.io/allenporter/flux-local:v7.5.4
+        uses: docker://ghcr.io/allenporter/flux-local:v7.5.5
         with:
           args: >-
             diff kustomization
