@@ -1,0 +1,16 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ./helmrelease.yaml
+  - ./network.yaml
+  - ./gateway.yaml
+  - ./httproute.yaml
+  - ./certs/chancey-dev.yaml
+configMapGenerator:
+  - name: cilium-values
+    files:
+      - values.yaml=./helm/values.yaml
+generatorOptions:
+  disableNameSuffixHash: true
