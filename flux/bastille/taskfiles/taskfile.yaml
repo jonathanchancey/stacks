@@ -43,3 +43,7 @@ tasks:
       - for: { var: NODES }
         cmd: talosctl --talosconfig=.private/talosconfig apply-config --nodes {{.ITEM.ip}} --endpoints {{.ITEM.ip}} --file ./.private/rendered/{{.ITEM.name}}.yaml
 
+  ceph-toolbox:
+    desc: Access the Rook Ceph toolbox
+    cmd: kubectl -n rook-ceph exec -it deployment/rook-ceph-tools -- bash
+
