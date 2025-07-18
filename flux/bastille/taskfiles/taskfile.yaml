@@ -11,6 +11,12 @@ vars:
       ip: 10.131.128.12
 
 tasks:
+  talos-reboot:
+    desc: Reboot all Talos nodes sequentially
+    cmds:
+      - for: { var: NODES }
+        cmd: talosctl -n {{.ITEM.ip}} reboot
+
   elevated:
     desc: Run a privileged pod
     cmd: |
