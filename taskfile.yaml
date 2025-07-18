@@ -17,6 +17,7 @@ includes:
   flux: k8s/academy/.taskfiles/flux
   bootstrap: flux/academy/.config/.taskfiles
   ansible: ansible/
+  bastille: flux/bastille/taskfiles
 
 tasks:
   default: task --list
