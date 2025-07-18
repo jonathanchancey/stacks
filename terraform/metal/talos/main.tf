@@ -34,6 +34,7 @@ resource "talos_machine_configuration_apply" "controlplane" {
       install_disk = each.value.install_disk
     }),
     file("${path.module}/files/controlplane.yaml"),
+    # file("${path.module}/files/${each.value.hostname}.yaml"),
   ]
 }
 
@@ -46,27 +47,20 @@ resource "talos_machine_configuration_apply" "worker" {
     templatefile("${path.module}/templates/machine.yaml.tmpl", {
       hostname     = each.value.hostname == null ? format("%s-worker-%s", var.cluster_name, index(keys(var.node_data.workers), each.key)) : each.value.hostname
       install_disk = each.value.install_disk
-    })
+    }),
+    # file("${path.module}/files/${each.value.hostname}.yaml"),
   ]
 }
 
 data "talos_image_factory_urls" "this" {
   talos_version = var.talos_version
-  schematic_id  = talos_image_factory_schematic.this.id
+  schematic_id  = var.schematic_id
   architecture  = "amd64"
   platform      = "metal"
 }
 
 output "installer_image" {
   value = data.talos_image_factory_urls.this.urls.installer
-}
-
-resource "talos_image_factory_schematic" "this" {
-  schematic = file("${path.module}/files/controlplane.yaml")
-}
-
-output "schematic_id" {
-  value = talos_image_factory_schematic.this.id
 }
 
 resource "talos_machine_bootstrap" "this" {

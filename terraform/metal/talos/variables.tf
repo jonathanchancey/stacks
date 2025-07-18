@@ -8,6 +8,11 @@ variable "talos_version" {
   type = string
 }
 
+variable "schematic_id" {
+  description = "The schematic id for the Talos cluster"
+  type = string
+}
+
 variable "cluster_endpoint" {
   description = "The endpoint for the Talos cluster"
   type        = string
