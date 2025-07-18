@@ -11,24 +11,31 @@ I use this repo to practice DevOps concepts for services I'd rather not live wit
 Bare metal configuration
 
 ### Flux - `flux`
- 
+
 My GitOps project of choice
 
 ### Kubernetes Clusters - `k8s`
 
-I'm heavily invested in k3s due to Raspberry Pi and SBC compatibility but it would be nice to jump to Talos when support arrives
+~~I'm heavily invested in k3s due to Raspberry Pi and SBC compatibility but it would be nice to jump to Talos when support arrives~~
+
+Switched off random SBCs to mini PCs for Talos and it's been consistently amazing. Besides using CM3588s have only taught me lessons in disaster recovery
 
 #### Academy - K3s
 
-My production cluster. Moving towards home-viable best practices slowly but surely
+The cluster that started it all. Currently production but it's getting a bit creaky at 656d+
 
-7 nodes, 40 cores (28 qemu64, 12 arm64), 144GiB RAM
+7 nodes, 40 cores (28 qemu64, 12 arm64), 154GB RAM
 - ~~3 masters~~ 1 master
-- 5 workers, three of which are cm3588s primarily for longhorn
+- 5 workers, three of which are CM3588s primarily for Longhorn
+~ ☸ academy/default
 
-#### Bastille - RKE2
+#### Bastille - Talos
 
-For External Services
+Nascent production cluster with enforced best practices running on 3 MS-01s
+
+- 3 nodes, 48 cores, 96 GB DDR5 RAM
+- Thunderbolt ring networking
+- 2.5Gb connection on SERVERS vlan
 
 #### Coalesce and Dichotomy - K3s
 
@@ -36,7 +43,7 @@ Cilium Cluster Mesh and multi-zone testing
 
 #### Ephemera - K3s
 
-Test cluster for Academy. Used to test major changes like swapping out the CNI and switching to BGP
+Test cluster for major changes like swapping out the CNI and switching to BGP
 
 ### Terraform - `terraform`
 
@@ -44,7 +51,7 @@ For DNS and VM Provisioning
 
 ### Proxmox
 
-Clustered Hypervisor for Kubernetes, Docker, ~~Ceph (someday we will return)~~, LXCs, and VMs
+Hypervisor of choice
 
 ## Dec 2023
 
