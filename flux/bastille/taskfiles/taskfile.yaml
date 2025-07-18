@@ -1,0 +1,21 @@
+version: "3"
+
+vars:
+  KUBERNETES_RESOURCES_DIR: "{{.ROOT_DIR}}/flux/bastille/taskfiles/files"
+  NODES:
+    - name: sentinel-00
+      ip: 10.131.128.10
+    - name: sentinel-01
+      ip: 10.131.128.11
+    - name: sentinel-02
+      ip: 10.131.128.12
+
+tasks:
+  elevated:
+    desc: Run a privileged pod
+    cmd: |
+      kubectl run elevated-{{.node}} -i --rm --image=null \
+        --overrides="$(yq {{.KUBERNETES_RESOURCES_DIR}}/elevated-pod.tmpl.yaml -o=json | envsubst)"
+    env:
+      node: "{{.node}}"
+
