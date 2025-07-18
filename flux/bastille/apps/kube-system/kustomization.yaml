@@ -9,3 +9,4 @@ resources:
   - ./cilium/ks.yaml
   - ./descheduler/ks.yaml
   - ./reloader/ks.yaml
+  - ./spegel/ks.yaml
