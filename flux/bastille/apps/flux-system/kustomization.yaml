@@ -8,3 +8,5 @@ components:
 resources:
   - ./flux-instance/ks.yaml
   - ./flux-operator/ks.yaml
+  - ./capacitor/ks.yaml
+  - ./capacitor/route
