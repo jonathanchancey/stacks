@@ -47,3 +47,15 @@ tasks:
     desc: Access the Rook Ceph toolbox
     cmd: kubectl -n rook-ceph exec -it deployment/rook-ceph-tools -- bash
 
+  show-values:
+    desc: Show OCI Helm chart default values from cwd
+    dir: "{{.USER_WORKING_DIR}}"
+    vars:
+      CHART_URL:
+        sh: 'yq "select(.kind == \"OCIRepository\") | .spec.url" helmrelease.yaml'
+      CHART_TAG:
+        sh: 'yq "select(.kind == \"OCIRepository\") | .spec.ref.tag" helmrelease.yaml'
+    cmds:
+      - helm show values {{.CHART_URL}} --version {{.CHART_TAG}} | code -
+    preconditions:
+      - sh: "test -f ./helmrelease.yaml"
