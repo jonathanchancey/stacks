@@ -5,9 +5,6 @@ metadata:
   name: bgp-cluster-config-generic
 spec:
   nodeSelector:
-    # matchExpressions:
-    #   - key: no-bgp
-    #     operator: DoesNotExist
     matchLabels:
       kubernetes.io/hostname: "lich-00"
   bgpInstances:

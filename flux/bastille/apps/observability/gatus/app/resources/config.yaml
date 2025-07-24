@@ -1,0 +1,27 @@
+storage:
+  type: postgres
+  path: postgres://${INIT_POSTGRES_USER}:${INIT_POSTGRES_PASS}@${INIT_POSTGRES_HOST}:5432/${INIT_POSTGRES_DBNAME}?sslmode=disable
+  caching: true
+
+metrics: true
+debug: false
+
+ui:
+  title: Status | Gatus
+  header: Status
+
+connectivity:
+  checker:
+    target: 1.1.1.1:53
+    interval: 1m
+web:
+  port: ${GATUS_WEB_PORT}
+
+endpoints:
+  - name: default-ep
+    url: https://home.chancey.dev
+    interval: 1m
+    client:
+      dns-resolver: tcp://1.1.1.1:53
+    conditions:
+      - "[STATUS] == 200"

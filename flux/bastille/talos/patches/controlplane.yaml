@@ -1,0 +1,42 @@
+cluster:
+  allowSchedulingOnControlPlanes: true
+  network:
+    cni:
+      name: none
+  proxy:
+    disabled: true
+machine:
+  nodeLabels:
+    topology.kubernetes.io/region: bastille
+  install:
+    diskSelector:
+      model: "TEAM TM8FP6256G"
+    extraKernelArgs:
+      - i915.enable_guc=3
+      - intel_iommu=on
+      - iommu=pt
+      - mitigations=off
+      - net.ifnames=0
+      - -selinux # Less security, faster puter
+      - apparmor=0 # Less security, faster puter
+      - init_on_alloc=0 # Less security, faster puter
+      - init_on_free=0 # Less security, faster puter
+      - security=none # Less security, faster puter
+      - talos.auditd.disabled=1 # Less security, faster puter
+  kernel:
+    modules:
+      - name: nbd
+      - name: thunderbolt
+      - name: thunderbolt_net
+  udev:
+    rules:
+      - # Intel GPU
+        SUBSYSTEM=="drm", KERNEL=="renderD*", GROUP="44", MODE="0660"
+      - # Thunderbolt
+        ACTION=="add", SUBSYSTEM=="thunderbolt", ATTR{authorized}=="0", ATTR{authorized}="1"
+  files:
+    - path: /etc/cri/conf.d/20-customization.part
+      op: create
+      content: |
+        [plugins."io.containerd.cri.v1.images"]
+          discard_unpacked_layers = false

@@ -1,8 +1,31 @@
 machine:
+  nodeLabels:
+      topology.kubernetes.io/region: bastille
   install:
-    disk: ${install_disk}
+    diskSelector:
+      model: 'TEAM TM8FP6256G'
+    extraKernelArgs:
+      - i915.enable_guc=3
+      - intel_iommu=on
+      - iommu=pt
+      - mitigations=off
+      - net.ifnames=0
+      - -selinux                            # Less security, faster puter
+      - apparmor=0                          # Less security, faster puter
+      - init_on_alloc=0                     # Less security, faster puter
+      - init_on_free=0                      # Less security, faster puter
+      - security=none                       # Less security, faster puter
+      - talos.auditd.disabled=1             # Less security, faster puter
+  kernel:
+    modules:
+      - name: nbd
+      - name: thunderbolt
+      - name: thunderbolt_net
+  udev:
+    rules:
+      - # Intel GPU
+        SUBSYSTEM=="drm", KERNEL=="renderD*", GROUP="44", MODE="0660"
+      - # Thunderbolt
+        ACTION=="add", SUBSYSTEM=="thunderbolt", ATTR{authorized}=="0", ATTR{authorized}="1"
   network:
     hostname: ${hostname}
-  features:
-    imageCache:
-      localEnabled: true

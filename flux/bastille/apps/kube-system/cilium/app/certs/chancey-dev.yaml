@@ -1,0 +1,45 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/cert-manager.io/certificate_v1.json
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: chancey-dev
+spec:
+  secretName: chancey-dev-tls
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  commonName: "*.chancey.dev"
+  dnsNames:
+    - "chancey.dev"
+    - "*.chancey.dev"
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/cert-manager.io/certificate_v1.json
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: chancey-dev-stage
+spec:
+  secretName: chancey-dev-stage-tls
+  issuerRef:
+    name: letsencrypt-staging
+    kind: ClusterIssuer
+  commonName: "*.chancey.dev"
+  dnsNames:
+    - "chancey.dev"
+    - "*.chancey.dev"
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/cert-manager.io/certificate_v1.json
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: bastille-chancey-dev
+spec:
+  secretName: bastille-chancey-dev-tls
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  commonName: "*.bastille.chancey.dev"
+  dnsNames:
+    - "bastille.chancey.dev"
+    - "*.bastille.chancey.dev"

@@ -1,0 +1,20 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/gateway.networking.k8s.io/httproute_v1.json
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: ceph-dashboard
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: &hostname ceph.bastille.chancey.dev
+spec:
+  hostnames:
+    - *hostname
+  parentRefs:
+    - name: internal
+      kind: Gateway
+      namespace: kube-system
+      sectionName: https-bastille
+  rules:
+    - backendRefs:
+        - name: rook-ceph-mgr-dashboard
+          port: 8080

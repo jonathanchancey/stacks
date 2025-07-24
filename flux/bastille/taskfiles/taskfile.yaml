@@ -1,0 +1,61 @@
+version: "3"
+
+vars:
+  KUBERNETES_RESOURCES_DIR: "{{.ROOT_DIR}}/flux/bastille/taskfiles/files"
+  NODES:
+    - name: sentinel-00
+      ip: 10.131.128.10
+    - name: sentinel-01
+      ip: 10.131.128.11
+    - name: sentinel-02
+      ip: 10.131.128.12
+
+tasks:
+  talos-reboot:
+    desc: Reboot all Talos nodes sequentially
+    cmds:
+      - for: { var: NODES }
+        cmd: talosctl -n {{.ITEM.ip}} reboot
+
+  elevated:
+    desc: Run a privileged pod
+    cmd: |
+      kubectl run elevated-{{.node}} -i --rm --image=null \
+        --overrides="$(yq {{.KUBERNETES_RESOURCES_DIR}}/elevated-pod.tmpl.yaml -o=json | envsubst)"
+    env:
+      node: "{{.node}}"
+
+  talos-render:
+    desc: Render Talos configuration for all nodes
+    dir: "{{.ROOT_DIR}}/flux/bastille/talos"
+    preconditions:
+      - sh: test -f .private/controlplane.yaml
+      - sh: kubectl config current-context | grep -q bastille
+    cmds:
+      - for: { var: NODES }
+        cmd: talosctl --talosconfig=.private/talosconfig machineconfig patch .private/controlplane.yaml --patch @patches/controlplane.yaml --patch @patches/{{.ITEM.name}}.yaml --output .private/rendered/{{.ITEM.name}}.yaml
+
+  talos-apply:
+    desc: Apply Talos configuration to all nodes sequentially
+    dir: "{{.ROOT_DIR}}/flux/bastille/talos"
+    deps: [talos-render]
+    cmds:
+      - for: { var: NODES }
+        cmd: talosctl --talosconfig=.private/talosconfig apply-config --nodes {{.ITEM.ip}} --endpoints {{.ITEM.ip}} --file ./.private/rendered/{{.ITEM.name}}.yaml
+
+  ceph-toolbox:
+    desc: Access the Rook Ceph toolbox
+    cmd: kubectl -n rook-ceph exec -it deployment/rook-ceph-tools -- bash
+
+  show-values:
+    desc: Show OCI Helm chart default values from cwd
+    dir: "{{.USER_WORKING_DIR}}"
+    vars:
+      CHART_URL:
+        sh: 'yq "select(.kind == \"OCIRepository\") | .spec.url" helmrelease.yaml'
+      CHART_TAG:
+        sh: 'yq "select(.kind == \"OCIRepository\") | .spec.ref.tag" helmrelease.yaml'
+    cmds:
+      - helm show values {{.CHART_URL}} --version {{.CHART_TAG}} | code -
+    preconditions:
+      - sh: "test -f ./helmrelease.yaml"
