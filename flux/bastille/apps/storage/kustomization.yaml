@@ -5,5 +5,5 @@ kind: Kustomization
 namespace: storage
 components:
   - ../../components/privileged
-# resources:
-#   - ./openebs/ks.yaml
+resources:
+  - ./openebs/ks.yaml
