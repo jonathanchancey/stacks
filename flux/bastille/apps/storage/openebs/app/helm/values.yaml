@@ -1,28 +1,27 @@
 ---
-openebs:
-  zfs-localpv:
-    enabled: false
-  lvm-localpv:
-    enabled: false
-  engines:
-    local:
-      lvm:
-        enabled: false
-      zfs:
-        enabled: false
-    replicated:
-      mayastor:
-        enabled: false
-      jiva:
-        enabled: false
-      cstor:
-        enabled: false
-  loki:
-    enabled: false
-  alloy:
-    enabled: false
-  minio:
-    enabled: false
+zfs-localpv:
+  enabled: false
+lvm-localpv:
+  enabled: false
+engines:
+  local:
+    lvm:
+      enabled: false
+    zfs:
+      enabled: false
+  replicated:
+    mayastor:
+      enabled: false
+    jiva:
+      enabled: false
+    cstor:
+      enabled: false
+loki:
+  enabled: false
+alloy:
+  enabled: false
+minio:
+  enabled: false
 
 localpv-provisioner:
   enabled: true
