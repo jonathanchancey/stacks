@@ -20,3 +20,11 @@ machine:
         routes:
           - network: 169.254.255.100/32
             metric: 2048
+---
+apiVersion: v1alpha1
+kind: UserVolumeConfig
+name: local-hostpath
+provisioning:
+  diskSelector:
+    match: (disk.model == "INTEL SSDPFKNU512GZ" || disk.model == "SOLIDIGM SSDPFKNU010TZ") && !system_disk
+  minSize: 476 GiB
