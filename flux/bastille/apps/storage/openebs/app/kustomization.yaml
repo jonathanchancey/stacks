@@ -8,3 +8,5 @@ configMapGenerator:
   - name: openebs-values
     files:
       - values.yaml=helm/values.yaml
+generatorOptions:
+  disableNameSuffixHash: true
