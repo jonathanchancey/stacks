@@ -10,3 +10,4 @@ resources:
   - observability
   - rook-ceph
   - database
+  - storage

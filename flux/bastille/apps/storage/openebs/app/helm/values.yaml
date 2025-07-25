@@ -1,0 +1,35 @@
+---
+openebs:
+  engines:
+    local:
+      lvm:
+        enabled: false
+      zfs:
+        enabled: false
+    replicated:
+      mayastor:
+        enabled: false
+      jiva:
+        enabled: false
+      cstor:
+        enabled: false
+  loki:
+    enabled: true
+  alloy:
+    enabled: false
+  minio:
+    enabled: false
+
+localpv-provisioner:
+  enabled: true
+  helperPod:
+    image:
+      registry: quay.io
+      repository: openebs/linux-utils
+      tag: 4.3.2
+  hostpathClass:
+    enabled: true
+    name: openebs-hostpath
+    isDefaultClass: false
+    basePath: /var/mnt/local-hostpath
+    reclaimPolicy: Delete
