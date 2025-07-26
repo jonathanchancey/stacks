@@ -12,7 +12,7 @@ spec:
   plugins:
     - name: barman-cloud.cloudnative-pg.io
       isWALArchiver: true
-      parameters:
+      parameters: &parameters
         barmanObjectName: bastille-pg
         serverName: postgres-v2
   storage:
@@ -34,17 +34,11 @@ spec:
       memory: 4Gi
   monitoring:
     enablePodMonitor: true
-  backup:
-    retentionPolicy: 30d
-    barmanObjectName: bastille-pg
-    # Note: previousCluster needs to be set to the name of the previous
-    # cluster when recovering from an existing cnpg cluster
-  # bootstrap:
-  #   recovery:
-  #     source: &previousCluster postgres-v1
-  # # Note: externalClusters is needed when recovering from an existing cnpg cluster
-  # externalClusters:
-  #   - name: *previousCluster
-  #     barmanObjectStore:
-  #       <<: *barmanObjectStore
-  #       serverName: *previousCluster
+  bootstrap:
+    recovery:
+      source: source
+  externalClusters:
+    - name: source
+      plugin:
+        name: barman-cloud.cloudnative-pg.io
+        parameters: *parameters
