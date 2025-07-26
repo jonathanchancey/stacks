@@ -88,8 +88,6 @@ spec:
         runAsNonRoot: true
         runAsUser: 568
         runAsGroup: 568
-    serviceAccount:
-      name: *app
     persistence:
       client:
         type: secret
