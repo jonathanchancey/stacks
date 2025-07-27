@@ -6,4 +6,5 @@ resources:
   - ./cluster.yaml
   - ./objectstore.yaml
   - ./scheduledbackup.yaml
+  - ./backup.yaml
   # - ./prometheusrule.yaml
