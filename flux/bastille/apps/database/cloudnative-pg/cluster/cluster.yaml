@@ -43,7 +43,7 @@ spec:
         name: barman-cloud.cloudnative-pg.io
         parameters:
           barmanObjectName: bastille-pg
-          serverName: postgres-v3
+          serverName: postgres-v2
 ---
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
