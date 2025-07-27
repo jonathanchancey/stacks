@@ -38,7 +38,7 @@ spec:
     recovery:
       source: source
       recoveryTarget:
-        targetTime: "2025-07-27T03:04:37Z"
+        backupID: 20250727T030438
   externalClusters:
     - name: source
       plugin:
