@@ -27,7 +27,6 @@ The cluster that started it all. Currently production but it's getting a bit cre
 7 nodes, 40 cores (28 qemu64, 12 arm64), 154GB RAM
 - ~~3 masters~~ 1 master
 - 5 workers, three of which are CM3588s primarily for Longhorn
-~ ☸ academy/default
 
 #### Bastille - Talos
 

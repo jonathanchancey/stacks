@@ -5,7 +5,8 @@ metadata:
 spec:
   volumeMode: Filesystem
   # volumeMode: Block
-  storageClassName: ceph-block # replace with your storage class
+  storageClassName: openebs-hostpath # replace with your storage class
+  # storageClassName: ceph-block # replace with your storage class
   accessModes:
     - ReadWriteOnce
   resources:
