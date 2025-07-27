@@ -7,4 +7,4 @@ resources:
   - ./objectstore.yaml
   - ./scheduledbackup.yaml
   - ./backup.yaml
-  # - ./prometheusrule.yaml
+  - ./prometheusrule.yaml
