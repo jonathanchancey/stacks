@@ -116,11 +116,35 @@ spec:
         miniflux:
           url: https://raw.githubusercontent.com/miniflux/v2/main/contrib/grafana/dashboard.json
           datasource: Prometheus
-        nginx:
-          url: https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/grafana/dashboards/nginx.json
+        rook-ceph-cluster:
+          # renovate: depName="Ceph - Cluster"
+          gnetId: 2842
+          revision: 17
           datasource: Prometheus
-        nginx-request-handling-performance:
-          url: https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/grafana/dashboards/request-handling-performance.json
+        rook-ceph-osd:
+          # renovate: depName="Ceph - OSD (Single)"
+          gnetId: 5336
+          revision: 9
+          datasource: Prometheus
+        rook-ceph-pools:
+          # renovate: depName="Ceph - Pools"
+          gnetId: 5342
+          revision: 9
+          datasource: Prometheus
+        flux-cluster:
+          # renovate: depName="Flux Cluster Stats"
+          gnetId: 16714
+          revision: 1
+          datasource: Prometheus
+        flux-control-plane:
+          # renovate: depName="Flux Control Plane"
+          gnetId: 16213
+          revision: 1
+          datasource: Prometheus
+        loki-stack:
+          # renovate: depName="Loki Stack Monitoring (Promtail, Loki)"
+          gnetId: 14055
+          revision: 5
           datasource: Prometheus
     datasources:
       datasources.yaml:
