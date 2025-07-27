@@ -137,8 +137,8 @@ spec:
           revision: 1
           datasource: Prometheus
         flux-control-plane:
-          # renovate: depName="Flux Control Plane"
-          gnetId: 16213
+          # renovate: depName="Flux / Control Plane (cluster)"
+          gnetId: 21149
           revision: 1
           datasource: Prometheus
         loki-stack:
