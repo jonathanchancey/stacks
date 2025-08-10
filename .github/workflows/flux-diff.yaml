@@ -12,6 +12,23 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  test:
+    name: Flux Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@4
+
+      - name: Test Resources
+        uses: docker://ghcr.io/allenporter/flux-local:v7.8.0
+        with:
+          args: >-
+            test
+            --path /github/workspace/${{ matrix.paths }}
+            --enable-helm
+            --all-namespaces
+            --verbose
+
   flux-diff:
     name: Flux Diff
     runs-on: ubuntu-latest
@@ -66,13 +83,3 @@ jobs:
             ```diff
             ${{ steps.diff.outputs.diff }}
             ```
-
-      - name: Test Resources
-        uses: docker://ghcr.io/allenporter/flux-local:v7.8.0
-        with:
-          args: >-
-            test
-            --path /github/workspace/pull/${{ matrix.paths }}
-            --enable-helm
-            --all-namespaces
-            --verbose
