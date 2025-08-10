@@ -21,7 +21,7 @@ GitOps-driven infrastructure using Flux v2 for continuous deployment across mult
 The cluster that started it all. Currently "production" but it's getting a bit creaky at over 700 days
 - 7 nodes, 40 cores, 154GB RAM
 - running on mixed architecture
-- Scheduled for decommission
+- scheduled for decommission
 
 #### Bastille - Talos
 Nascent production cluster following strict best practices
