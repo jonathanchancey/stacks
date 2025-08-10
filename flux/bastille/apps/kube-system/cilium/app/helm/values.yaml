@@ -35,6 +35,7 @@ envoy:
   prometheus:
     serviceMonitor:
       enabled: true
+      trustCRDsExist: true
 
 cgroup:
   autoMount:
