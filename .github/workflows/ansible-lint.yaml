@@ -25,5 +25,5 @@ jobs:
       - name: Run ansible-lint
         uses: ansible/ansible-lint@v25.7.0
         with:
-          args: "--config-file ./ansible/.ansible-lint.yml"
+          args: "--config-file .ansible-lint.yml"
           working_directory: "./ansible"
