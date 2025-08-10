@@ -27,7 +27,7 @@ tasks:
 
   test:
     desc: run testing suite
-    cmds:
-      - task: conform
-      - task: flux:test-hr
-      - task: ansible:lint
+    deps:
+      - conform
+      - flux:test-hr
+      - ansible:lint
