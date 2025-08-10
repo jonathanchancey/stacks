@@ -5,7 +5,7 @@ name: "Flux Diff"
 on:
   pull_request:
     branches: ["main"]
-    paths: ["flux/academy/**"]
+    paths: ["flux/academy/**", "flux/bastille/**"]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.number || github.ref }}
@@ -21,7 +21,7 @@ jobs:
 
     strategy:
       matrix:
-        paths: ["flux/academy/"]
+        paths: ["flux/academy/", "flux/bastille/"]
 
     steps:
       - name: Checkout Pull Request
@@ -66,3 +66,8 @@ jobs:
             ```diff
             ${{ steps.diff.outputs.diff }}
             ```
+
+      - name: Test Resources
+        uses: docker://ghcr.io/allenporter/flux-local:v7.8.0
+        with:
+          args: test --path /github/workspace/pull/${{ matrix.paths }} --enable-helm --all-namespaces --verbose
