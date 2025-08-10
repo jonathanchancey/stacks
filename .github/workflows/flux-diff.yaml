@@ -27,7 +27,7 @@ jobs:
         with:
           args: >-
             test
-            --path /github/workspace/${{ matrix.paths }}
+            --path /github/workspace/flux/bastille
             --enable-helm
             --all-namespaces
             --verbose
