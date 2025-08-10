@@ -8,8 +8,8 @@
 - hosts: all
   become: yes
   vars:
-    - node_exporter_state: stopped
-    - node_exporter_enabled: false
+    node_exporter_state: stopped
+    node_exporter_enabled: false
   tasks:
     - name: Ensure node_exporter systemd state consistent with vars
       service:
