@@ -27,3 +27,4 @@ jobs:
         with:
           args: "--config-file .ansible-lint.yml"
           working_directory: "./ansible"
+          requirements_file: "requirements.yml"
