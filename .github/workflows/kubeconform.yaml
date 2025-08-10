@@ -5,7 +5,6 @@ name: "Kubeconform"
 on:
   pull_request:
     branches: ["main"]
-    paths: ["${{ env.KUBERNETES_DIR }}/**"]
 
 env:
   KUBERNETES_DIR: ./flux/academy
