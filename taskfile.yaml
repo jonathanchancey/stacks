@@ -23,4 +23,11 @@ tasks:
   default: task --list
   conform:
     desc: run kubeconform
-    cmd: tools/scripts/kubeconform.sh flux/academy/
+    cmd: tools/scripts/kubeconform.sh {{.KUBERNETES_DIR}}
+
+  test:
+    desc: run testing suite
+    cmds:
+      - task: conform
+      - task: flux:test-hr
+      - task: ansible:lint

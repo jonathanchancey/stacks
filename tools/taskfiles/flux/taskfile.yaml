@@ -2,26 +2,29 @@
 # yaml-language-server: $schema=https://taskfile.dev/schema.json
 version: "3"
 
+set: [pipefail]
+shopt: [globstar]
+
 tasks:
   count:
     desc: Count kustomize config
-    cmd: flux-local build ks --path {{.KUBERNETES_DIR}} | kustomize cfg count
+    cmd: "{{.VIRTUAL_ENV}}/bin/flux-local build ks --path {{.KUBERNETES_DIR}} | kustomize cfg count"
 
   diff-ks:
     desc: Flux diff kustomizations
-    cmd: flux-local diff ks --path {{.KUBERNETES_DIR}}
+    cmd: "{{.VIRTUAL_ENV}}/bin/flux-local diff ks --path {{.KUBERNETES_DIR}}"
 
   diff-hr:
     desc: Flux diff helmreleases
-    cmd: flux-local diff hr --path {{.KUBERNETES_DIR}}
+    cmd: "{{.VIRTUAL_ENV}}/bin/flux-local diff hr --path {{.KUBERNETES_DIR}}"
 
   test-ks:
     desc: Flux test kustomizations
-    cmd: flux-local test --path {{.KUBERNETES_DIR}}
+    cmd: "{{.VIRTUAL_ENV}}/bin/flux-local test --path {{.KUBERNETES_DIR}}"
 
   test-hr:
     desc: Flux test kustomizations and helmreleases
-    cmd: flux-local test --enable-helm --path {{.KUBERNETES_DIR}}
+    cmd: "{{.VIRTUAL_ENV}}/bin/flux-local test --enable-helm --path {{.KUBERNETES_DIR}}"
 
   resume:
     desc: resume flux ks [KS=required]
