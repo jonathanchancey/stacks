@@ -1,9 +1,0 @@
----
-machine:
-  install:
-    disk: /dev/nvme2n1
-    wipe: false # if true will wipe at installation time.
-    diskSelector:
-      model: "TEAM TM8FP6256G"
-  network:
-    hostname: bastille-00

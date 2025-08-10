@@ -1,3 +1,0 @@
-12 4 * * * /usr/sbin/syncoid --quiet strawberry/slug root@forest:toad/replication/strawberry/slug
-12 4 * * * /usr/sbin/syncoid --quiet strawberry/leech root@forest:toad/replication/strawberry/leech
-12 4 * * * /usr/sbin/syncoid --quiet strawberry/personal root@forest:toad/replication/strawberry/personal
