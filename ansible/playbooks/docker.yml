@@ -1,5 +1,0 @@
-- hosts: all
-  become: yes
-  roles:
-    - geerlingguy.node_exporter
-    - geerlingguy.docker

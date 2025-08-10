@@ -1,9 +1,0 @@
-# Sets the maximum request body to 2MB
-apiVersion: traefik.io/v1alpha1
-kind: Middleware
-metadata:
-  name: limit
-  namespace: nextcloud
-spec:
-  buffering:
-    maxRequestBodyBytes: 2000000000

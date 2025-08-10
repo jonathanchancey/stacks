@@ -5,7 +5,6 @@ name: "Kubeconform"
 on:
   pull_request:
     branches: ["main"]
-    paths: ["${{ env.KUBERNETES_DIR }}/**"]
 
 env:
   KUBERNETES_DIR: ./flux/academy
@@ -26,4 +25,4 @@ jobs:
 
       - name: Run kubeconform
         shell: bash
-        run: bash ./k8s/.scripts/kubeconform.sh ${{ env.KUBERNETES_DIR }}
+        run: bash ./tools/scripts/kubeconform.sh ${{ env.KUBERNETES_DIR }}

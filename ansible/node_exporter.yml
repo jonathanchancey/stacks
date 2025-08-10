@@ -1,0 +1,18 @@
+# - hosts: all
+#   become: yes
+#   vars:
+#     - node_exporter_state: stopped
+#     - node_exporter_enabled: false
+#   roles:
+#     - role: geerlingguy.node_exporter
+- hosts: all
+  become: yes
+  vars:
+    node_exporter_state: stopped
+    node_exporter_enabled: false
+  tasks:
+    - name: Ensure node_exporter systemd state consistent with vars
+      service:
+        name: node_exporter
+        state: "{{ node_exporter_state }}"
+        enabled: "{{ node_exporter_enabled }}"

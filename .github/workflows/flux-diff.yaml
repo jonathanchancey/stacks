@@ -5,13 +5,33 @@ name: "Flux Diff"
 on:
   pull_request:
     branches: ["main"]
-    paths: ["flux/academy/**"]
+    paths: ["flux/academy/**", "flux/bastille/**"]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.number || github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
+  test:
+    name: Flux Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Test Resources
+        uses: docker://ghcr.io/allenporter/flux-local:v7.8.0
+        with:
+          args: >-
+            test
+            --path /github/workspace/flux/bastille
+            --enable-helm
+            --all-namespaces
+            --verbose
+
   flux-diff:
     name: Flux Diff
     runs-on: ubuntu-latest
@@ -21,7 +41,7 @@ jobs:
 
     strategy:
       matrix:
-        paths: ["flux/academy/"]
+        paths: ["flux/academy/", "flux/bastille/"]
 
     steps:
       - name: Checkout Pull Request

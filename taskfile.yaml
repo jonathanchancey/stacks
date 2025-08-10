@@ -8,19 +8,19 @@ shopt: [globstar]
 env:
   PRIVATE_DIR: "{{.ROOT_DIR}}/.private"
   ANSIBLE_DIR: "{{.ROOT_DIR}}/ansible"
-  VIRTUAL_ENV: "{{.ROOT_DIR}}/k8s/academy/.venv"
+  VIRTUAL_ENV: "{{.ROOT_DIR}}/tools/.venv"
   REQUIREMENTS_TXT: "{{.ROOT_DIR}}/k8s/academy/.config/requirements.txt"
-  KUBERNETES_DIR: "{{.ROOT_DIR}}/flux/academy"
+  KUBERNETES_DIR: "{{.ROOT_DIR}}/flux/bastille"
   SOPS_AGE_KEY_FILE: "{{.PRIVATE_DIR}}/academy/academy.age"
 
 includes:
-  flux: k8s/academy/.taskfiles/flux
-  bootstrap: flux/academy/.config/.taskfiles
-  ansible: ansible/
-  bastille: flux/bastille/taskfiles
+  ansible: tools/taskfiles/ansible
+  bastille: tools/taskfiles/bastille
+  flux: tools/taskfiles/flux
+  sops: tools/taskfiles/sops
 
 tasks:
   default: task --list
   conform:
     desc: run kubeconform
-    cmd: k8s/academy/.scripts/kubeconform.sh flux/academy/
+    cmd: tools/scripts/kubeconform.sh flux/academy/
