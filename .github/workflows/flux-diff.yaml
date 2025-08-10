@@ -69,5 +69,7 @@ jobs:
 
       - name: Test Resources
         uses: docker://ghcr.io/allenporter/flux-local:v7.8.0
+        env:
+          GITHUB_WORKSPACE: /github/workspace/pull
         with:
-          args: test --path /github/workspace/pull/${{ matrix.paths }} --enable-helm --all-namespaces --verbose
+          args: test --path ${{ matrix.paths }} --enable-helm --all-namespaces --verbose
