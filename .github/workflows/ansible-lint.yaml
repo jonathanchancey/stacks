@@ -22,16 +22,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.x"
-
-      - name: Install Ansible and ansible-lint
-        run: |
-          python -m pip install --upgrade pip
-          pip install ansible ansible-lint
-
       - name: Run ansible-lint
-        run: |
-          ansible-lint --config-file ./ansible/.ansible-lint.yml ./ansible
+        uses: ansible/ansible-lint@v25.7.0
+        with:
+          args: "--config-file ./ansible/.ansible-lint.yml"
+          working_directory: "./ansible"
