@@ -6,7 +6,7 @@ metadata:
   name: &app miniflux
   namespace: &namespace media
 spec:
-  targetNamespace: miniflux
+  targetNamespace: *namespace
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
