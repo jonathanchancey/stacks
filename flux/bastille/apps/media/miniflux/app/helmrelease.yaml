@@ -1,0 +1,201 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/source.toolkit.fluxcd.io/ocirepository_v1.json
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: app-template
+spec:
+  interval: 5m
+  layerSelector:
+    mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
+    operation: copy
+  ref:
+    tag: 4.2.0
+  url: oci://ghcr.io/bjw-s-labs/helm/app-template
+  verify:
+    provider: cosign
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app miniflux
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  values:
+    controllers:
+      miniflux:
+        strategy: RollingUpdate
+        labels:
+          postgres: "true"
+        annotations:
+          reloader.stakater.com/auto: "true"
+        initContainers:
+          init-db:
+            image:
+              repository: ghcr.io/home-operations/postgres-init
+              tag: 17
+            envFrom: &envFrom
+              - secretRef:
+                  name: miniflux-secret
+        containers:
+          app:
+            image:
+              repository: ghcr.io/miniflux/miniflux
+              tag: 2.1.3-distroless
+            env:
+              BASE_URL: https://miniflux.bastille.chancey.dev
+              CREATE_ADMIN: "1"
+              LOG_DATE_TIME: "1"
+              METRICS_ALLOWED_NETWORKS: 10.42.0.0/16
+              METRICS_COLLECTOR: "1"
+              # OAUTH2_USER_CREATION: "1"
+              # OAUTH2_OIDC_DISCOVERY_ENDPOINT: https://auth.chancey.dev
+              # OAUTH2_PROVIDER: oidc
+              # OAUTH2_REDIRECT_URL: https://miniflux.bastille.chancey.dev/oauth2/oidc/callback
+              POLLING_SCHEDULER: entry_frequency
+              POLLING_FREQUENCY: "15"
+              RUN_MIGRATIONS: "1"
+            envFrom: *envFrom
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /healthcheck
+                    port: 8080
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 10m
+              limits:
+                memory: 512Mi
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+    service:
+      app:
+        ports:
+          http:
+            port: 8080
+    serviceMonitor:
+      app:
+        endpoints:
+          - port: http
+            scheme: http
+            path: /metrics
+            interval: 1m
+            scrapeTimeout: 10s
+    route:
+      main:
+        enabled: true
+        hostnames:
+          - miniflux.bastille.chancey.dev
+        parentRefs:
+          - name: internal
+            namespace: kube-system
+            sectionName: https-bastille
+# ---
+# # yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+# apiVersion: helm.toolkit.fluxcd.io/v2
+# kind: HelmRelease
+# metadata:
+#   name: &app miniflux
+#   namespace: *app
+# spec:
+#   interval: 30m
+#   chart:
+#     spec:
+#       chart: app-template
+#       version: 3.7.3
+#       sourceRef:
+#         kind: HelmRepository
+#         name: bjw-s
+#         namespace: flux-system
+#   install:
+#     remediation:
+#       retries: 3
+#   upgrade:
+#     cleanupOnFail: true
+#     remediation:
+#       strategy: rollback
+#       retries: 3
+#   values:
+#     controllers:
+#       miniflux:
+#         strategy: RollingUpdate
+#         containers:
+#           app:
+#             image:
+#               repository: ghcr.io/miniflux/miniflux
+#               tag: 2.2.11
+#             env:
+#               BASE_URL: https://miniflux.k8s.chancey.dev
+#               CREATE_ADMIN: "1"
+#               LOG_DATE_TIME: "1"
+#               METRICS_ALLOWED_NETWORKS: 10.42.0.0/16
+#               METRICS_COLLECTOR: "1"
+#               POLLING_SCHEDULER: entry_frequency
+#               POLLING_FREQUENCY: "15"
+#               PORT: &port 80
+#               RUN_MIGRATIONS: "1"
+#             envFrom:
+#               - secretRef:
+#                   name: miniflux-secret
+#             probes:
+#               liveness: &probes
+#                 enabled: true
+#                 custom: true
+#                 spec:
+#                   httpGet:
+#                     path: /healthcheck
+#                     port: *port
+#                   initialDelaySeconds: 0
+#                   periodSeconds: 10
+#                   timeoutSeconds: 1
+#                   failureThreshold: 3
+#               readiness: *probes
+#             securityContext:
+#               allowPrivilegeEscalation: false
+#               readOnlyRootFilesystem: true
+#               capabilities: { drop: ["ALL"] }
+#             resources:
+#               requests:
+#                 cpu: 10m
+#               limits:
+#                 memory: 512Mi
+#     defaultPodOptions:
+#       securityContext:
+#         runAsNonRoot: true
+#         runAsUser: 65534
+#         runAsGroup: 65534
+#         seccompProfile: { type: RuntimeDefault }
+#     service:
+#       app:
+#         controller: miniflux
+#         ports:
+#           http:
+#             port: *port
+#     serviceMonitor:
+#       app:
+#         serviceName: miniflux
+#         endpoints:
+#           - port: http
+#             scheme: http
+#             path: /metrics
+#             interval: 1m
+#             scrapeTimeout: 10s
