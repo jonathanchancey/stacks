@@ -181,7 +181,16 @@ spec:
         cpu: 50m
         memory: 128Mi
     ingress:
-      enabled: false
+      enabled: true
+      className: nginx-internal
+      hosts:
+        - host: &host grafana.chancey.dev
+          paths:
+            - path: /
+              pathType: Prefix
+      tls:
+        - hosts:
+            - *host
     persistence:
       enabled: true
       storageClassName: longhorn
