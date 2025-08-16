@@ -45,7 +45,7 @@ spec:
           app:
             image:
               repository: ghcr.io/miniflux/miniflux
-              tag: 2.1.3-distroless
+              tag: 2.2.11-distroless
             env:
               BASE_URL: https://miniflux.bastille.chancey.dev
               CREATE_ADMIN: "1"
