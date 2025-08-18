@@ -182,15 +182,13 @@ spec:
         memory: 128Mi
     ingress:
       enabled: true
-      className: nginx-internal
+      ingressClassName: nginx-internal
       hosts:
-        - host: &host grafana.chancey.dev
-          paths:
-            - path: /
-              pathType: Prefix
+        - grafana.chancey.dev
       tls:
-        - hosts:
-            - *host
+        - secretName: chancey-dev-tls
+          hosts:
+            - grafana.chancey.dev
     persistence:
       enabled: true
       storageClassName: longhorn
