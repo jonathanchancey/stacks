@@ -65,9 +65,11 @@ spec:
         certificateRefs:
           - kind: Secret
             name: fkn-chancey-dev-tls
-    - name: tcp
-      protocol: TCP
+    - name: tls-passthrough
+      protocol: TLS
       port: 8443
+      tls:
+        mode: Passthrough
       allowedRoutes:
         namespaces:
           from: All
