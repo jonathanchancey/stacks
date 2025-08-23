@@ -93,6 +93,13 @@ spec:
             namespace: kube-system
             sectionName: https
     persistence:
+      config-file:
+        type: configMap
+        name: kopia-repository-configmap
+        globalMounts:
+          - path: /config/repository.config
+            subPath: repository.config
+            readOnly: true
       repository:
         type: nfs
         server: vents.internal
