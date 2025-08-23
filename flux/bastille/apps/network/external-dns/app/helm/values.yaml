@@ -13,7 +13,7 @@ extraArgs:
   - --crd-source-apiversion=externaldns.k8s.io/v1alpha1
   - --crd-source-kind=DNSEndpoint
   - --ignore-ingress-tls-spec
-  - --ingress-class=nginx-external
+  - --log-level=debug
 triggerLoopOnEvent: true
 policy: sync
 sources:
