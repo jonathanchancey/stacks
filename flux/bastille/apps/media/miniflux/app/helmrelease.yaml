@@ -47,7 +47,7 @@ spec:
               repository: ghcr.io/miniflux/miniflux
               tag: 2.1.3-distroless
             env:
-              BASE_URL: https://miniflux.bastille.chancey.dev
+              BASE_URL: https://miniflux.chancey.dev
               CREATE_ADMIN: "1"
               LOG_DATE_TIME: "1"
               # METRICS_ALLOWED_NETWORKS: 10.42.0.0/16
@@ -55,7 +55,7 @@ spec:
               # OAUTH2_USER_CREATION: "1"
               # OAUTH2_OIDC_DISCOVERY_ENDPOINT: https://auth.chancey.dev
               # OAUTH2_PROVIDER: oidc
-              # OAUTH2_REDIRECT_URL: https://miniflux.bastille.chancey.dev/oauth2/oidc/callback
+              # OAUTH2_REDIRECT_URL: https://miniflux.chancey.dev/oauth2/oidc/callback
               # POLLING_SCHEDULER: entry_frequency
               # POLLING_FREQUENCY: "15"
               RUN_MIGRATIONS: "1"
@@ -104,8 +104,8 @@ spec:
       main:
         enabled: true
         hostnames:
-          - miniflux.bastille.chancey.dev
+          - miniflux.chancey.dev
         parentRefs:
           - name: internal
             namespace: kube-system
-            sectionName: https-bastille
+            sectionName: https
