@@ -1,0 +1,70 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: nfs-backup
+provisioner: nfs.csi.k8s.io
+parameters:
+  server: vents.internal
+  share: /mnt/scale-worm/bastille/backup
+mountOptions:
+  - nfsvers=4.2
+  - hard
+  - nconnect=16
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: backup-test
+  namespace: default
+spec:
+  accessModes: [ReadWriteMany]
+  storageClassName: nfs-backup
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nfs-test
+  namespace: default
+  labels:
+    app: nfs-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nfs-test
+  template:
+    metadata:
+      labels:
+        app: nfs-test
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1012
+        runAsGroup: 1012
+        fsGroup: 1012
+        fsGroupChangePolicy: OnRootMismatch
+      containers:
+        - name: busybox
+          image: ghcr.io/home-operations/busybox:rolling
+          command: ["/bin/sh", "-c", "--"]
+          args:
+            - |
+              echo "Writing test file to /data …";
+              date > /data/hello-from-$(hostname);
+              echo "Done. Sleeping."; tail -f /dev/null
+          volumeMounts:
+            - name: repo
+              mountPath: /data
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+      volumes:
+        - name: repo
+          persistentVolumeClaim:
+            claimName: backup-test
