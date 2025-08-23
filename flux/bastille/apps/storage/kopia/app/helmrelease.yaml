@@ -87,7 +87,7 @@ spec:
             port: *port
     route:
       app:
-        hostnames: ["kopia-status.chancey.dev"]
+        hostnames: ["kopia.chancey.dev"]
         parentRefs:
           - name: internal
             namespace: kube-system
