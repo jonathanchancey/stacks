@@ -89,8 +89,8 @@ spec:
       app:
         hostnames: ["kopia.chancey.dev"]
         parentRefs:
-          - name: internal
-            namespace: kube-system
+          - name: edge
+            namespace: network
             sectionName: https
     persistence:
       config-file:
