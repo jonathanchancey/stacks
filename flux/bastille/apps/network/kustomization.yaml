@@ -8,3 +8,4 @@ components:
 resources:
   - ./external-dns/ks.yaml
   - ./envoy-gateway/ks.yaml
+  - ./external-routes/ks.yaml
