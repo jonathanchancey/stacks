@@ -32,7 +32,7 @@ spec:
     crds: CreateReplace
     remediation:
       strategy: rollback
-      retries: 3
+      retries: 4
   valuesFrom:
     - kind: ConfigMap
       name: external-dns-values
