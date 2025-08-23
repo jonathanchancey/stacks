@@ -87,11 +87,11 @@ spec:
             port: *port
     route:
       app:
-        hostnames: ["{{ .Release.Name }}.bastille.chancey.dev"]
+        hostnames: ["kopia.chancey.dev"]
         parentRefs:
           - name: internal
             namespace: kube-system
-            sectionName: https-bastille
+            sectionName: https
     persistence:
       config-file:
         type: configMap
