@@ -52,7 +52,7 @@ spec:
     persistence:
       config:
         type: configMap
-        name: homepage-config
+        name: homepage
         globalMounts:
           - subPath: bookmarks.yaml
             path: /app/config/bookmarks.yaml
@@ -67,10 +67,10 @@ spec:
           - subPath: widgets.yaml
             path: /app/config/widgets.yaml
           # - mountPath: /app/config/custom.js
-          #   name: homepage-config
+          #   name: homepage
           #   subPath: custom.js
           # - mountPath: /app/config/custom.css
-          #   name: homepage-config
+          #   name: homepage
           #   subPath: custom.css
       # assets:
       #   type: persistentVolumeClaim
