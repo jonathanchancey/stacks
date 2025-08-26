@@ -42,7 +42,7 @@ spec:
       # IMMICH_LOG_LEVEL: debug
     image:
       # https://github.com/immich-app/immich/releases
-      tag: v1.133.1
+      tag: v1.132.3
     immich:
       metrics:
         enabled: true
@@ -57,8 +57,8 @@ spec:
     postgresql:
       enabled: true
       image:
-        repository: immich-app/postgres
-        tag: 14-vectorchord0.4.3-pgvectors0.2.0
+        repository: tensorchord/pgvecto-rs
+        tag: pg14-v0.2.0
       global:
         storageClass: longhorn
         postgresql:
@@ -76,12 +76,6 @@ spec:
           limits:
             memory: 2048Mi
             ephemeral-storage: 2Gi
-        # initdb:
-        #   scripts:
-        #     create-extensions.sql: |
-        #       CREATE EXTENSION cube;
-        #       CREATE EXTENSION earthdistance;
-        #       CREATE EXTENSION vectors;
     redis:
       enabled: true
       architecture: standalone
