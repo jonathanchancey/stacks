@@ -1,0 +1,18 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: immich-postgres-lb
+  annotations:
+    io.cilium/lb-ipam-ips: 10.12.0.12
+    external-dns.alpha.kubernetes.io/hostname: immich-db.chancey.dev
+spec:
+  type: LoadBalancer
+  selector:
+    cnpg.io/cluster: immich-postgres
+    role: primary
+  ports:
+    - name: postgres
+      port: 5432
+      targetPort: 5432
+      protocol: TCP
