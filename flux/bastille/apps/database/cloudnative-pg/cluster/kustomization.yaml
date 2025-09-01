@@ -8,5 +8,5 @@ resources:
   - ./scheduledbackup.yaml
   - ./backup.yaml
   - ./prometheusrule.yaml
-  - ./immich-cluster.yaml
+  # - ./immich-cluster.yaml
   - ./secrets.sops.yaml
