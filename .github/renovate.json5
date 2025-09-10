@@ -23,38 +23,38 @@
     '**/.archive/**',
   ],
   flux: {
-    fileMatch: [
-      '(^|/)flux/.+\\.ya?ml(?:\\.j2)?$',
+    managerFilePatterns: [
+      '/(^|/)flux/.+\\.ya?ml(?:\\.j2)?$/',
     ],
   },
   'helm-values': {
-    fileMatch: [
-      '(^|/)flux/.+\\.ya?ml(?:\\.j2)?$',
+    managerFilePatterns: [
+      '/(^|/)flux/.+\\.ya?ml(?:\\.j2)?$/',
     ],
   },
   helmfile: {
-    fileMatch: [
-      '(^|/)helm\\.ya?ml(?:\\.j2)?$',
+    managerFilePatterns: [
+      '/(^|/)helm\\.ya?ml(?:\\.j2)?$/',
     ],
   },
   kubernetes: {
-    fileMatch: [
-      '(^|/)flux/.+\\.ya?ml(?:\\.j2)?$',
+    managerFilePatterns: [
+      '/(^|/)flux/.+\\.ya?ml(?:\\.j2)?$/',
     ],
   },
   kustomize: {
-    fileMatch: [
-      '(^|/)kustomization\\.ya?ml(?:\\.j2)?$',
+    managerFilePatterns: [
+      '/(^|/)kustomization\\.ya?ml(?:\\.j2)?$/',
     ],
   },
   pip_requirements: {
-    fileMatch: [
-      '(^|/)[\\w-]*requirements(-\\w+)?\\.(txt|pip)(?:\\.j2)?$',
+    managerFilePatterns: [
+      '/(^|/)[\\w-]*requirements(-\\w+)?\\.(txt|pip)(?:\\.j2)?$/',
     ],
   },
   'ansible-galaxy': {
-    fileMatch: [
-      '(^|/)(galaxy|requirements)(\\.ansible)?\\.ya?ml(?:\\.j2)?$',
+    managerFilePatterns: [
+      '/(^|/)(galaxy|requirements)(\\.ansible)?\\.ya?ml(?:\\.j2)?$/',
     ],
   },
   commitMessageTopic: '{{depName}}',
@@ -95,10 +95,10 @@
       description: [
         'Disable pip updates',
       ],
-      managers: [
+      matchManagers: [
         'pip_requirements',
       ],
-      "enabled": false,
+      enabled: false,
     },
     {
       description: [
@@ -149,12 +149,19 @@
       commitMessageTopic: 'chart {{depName}}',
     },
     {
-      "description": ["Auto merge Terraform provider and module minor/patch updates"],
-      "matchManagers": ["terraform"],
-      "automerge": true,
-      "automergeType": "branch",
-      "ignoreTests": true,
-      "matchUpdateTypes": ["minor", "patch"]
+      description: [
+        'Auto merge Terraform provider and module minor/patch updates',
+      ],
+      matchManagers: [
+        'terraform',
+      ],
+      automerge: true,
+      automergeType: 'branch',
+      ignoreTests: true,
+      matchUpdateTypes: [
+        'minor',
+        'patch',
+      ],
     },
     {
       matchDatasources: [
@@ -355,8 +362,8 @@
       description: [
         'Process custom dependencies',
       ],
-      fileMatch: [
-        '(^|/)flux/.+\\.ya?ml(?:\\.j2)?$',
+      managerFilePatterns: [
+        '/(^|/)flux/.+\\.ya?ml(?:\\.j2)?$/',
       ],
       matchStrings: [
         'datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)( repository=(?<registryUrl>\\S+))?\\n.+: (&\\S+\\s)?(?<currentValue>\\S+)',
