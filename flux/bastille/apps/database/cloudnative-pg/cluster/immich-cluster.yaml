@@ -9,7 +9,8 @@ spec:
   instances: 3
   imageName: ghcr.io/tensorchord/cloudnative-vectorchord:16.9-0.4.3
   primaryUpdateStrategy: unsupervised
-  primaryUpdateMethod: restart # cannot use switchover with 1 instance
+  # primaryUpdateMethod: restart # cannot use switchover with 1 instance
+  primaryUpdateMethod: switchover # filenames too long for pgbasebackup
   startDelay: 30
   stopDelay: 100
   plugins:
