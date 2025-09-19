@@ -39,7 +39,7 @@ spec:
             key: DB_USERNAME
       DB_DATABASE_NAME: "{{ .Values.postgresql.global.postgresql.auth.database }}"
       IMMICH_MACHINE_LEARNING_URL: '{{ printf "http://%s-machine-learning:3003" .Release.Name }}'
-      IMMICH_LOG_LEVEL: debug
+      # IMMICH_LOG_LEVEL: debug
     image:
       # https://github.com/immich-app/immich/releases
       tag: v1.142.0
