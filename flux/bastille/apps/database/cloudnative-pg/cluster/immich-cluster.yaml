@@ -6,15 +6,9 @@ metadata:
   annotations:
     cnpg.io/skipEmptyWalArchiveCheck: "enabled"
 spec:
-  instances: 3
+  instances: 1
   imageName: ghcr.io/tensorchord/cloudnative-pgvecto.rs:16.5-v0.3.0@sha256:be3f025d79aa1b747817f478e07e71be43236e14d00d8a9eb3914146245035ba
   primaryUpdateStrategy: unsupervised
-  plugins:
-    - name: barman-cloud.cloudnative-pg.io
-      isWALArchiver: true
-      parameters: # &parameters
-        barmanObjectName: bastille-pg
-        serverName: immich-postgres-v1
   storage:
     size: 50Gi
     storageClass: openebs-hostpath
@@ -31,6 +25,7 @@ spec:
   postgresql:
     shared_preload_libraries:
       - "vectors.so"
+      - "vchord.so"
     parameters:
       max_connections: "200"
       shared_buffers: 256MB
