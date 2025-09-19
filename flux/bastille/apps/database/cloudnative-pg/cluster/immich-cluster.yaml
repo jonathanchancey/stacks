@@ -7,7 +7,7 @@ metadata:
     cnpg.io/skipEmptyWalArchiveCheck: "enabled"
 spec:
   instances: 1
-  imageName: ghcr.io/tensorchord/cloudnative-pgvecto.rs:16.5-v0.3.0@sha256:be3f025d79aa1b747817f478e07e71be43236e14d00d8a9eb3914146245035ba
+  imageName: ghcr.io/tensorchord/cloudnative-vectorchord:15-0.3.0
   primaryUpdateStrategy: unsupervised
   storage:
     size: 50Gi
@@ -25,6 +25,7 @@ spec:
   postgresql:
     shared_preload_libraries:
       - "vectors.so"
+      - "vchord.so"
     parameters:
       max_connections: "200"
       shared_buffers: 256MB
@@ -52,4 +53,4 @@ spec:
         - GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO "immich";
         - CREATE EXTENSION IF NOT EXISTS cube;
         - CREATE EXTENSION IF NOT EXISTS earthdistance;
-
+        - CREATE EXTENSION IF NOT EXISTS vchord CASCADE;
