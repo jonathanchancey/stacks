@@ -12,6 +12,12 @@ spec:
   primaryUpdateMethod: restart # cannot use switchover with 1 instance
   startDelay: 30
   stopDelay: 100
+  plugins:
+    - name: barman-cloud.cloudnative-pg.io
+      isWALArchiver: true
+      parameters: # &parameters
+        barmanObjectName: bastille-pg
+        serverName: immich-postgres-v1
   storage:
     size: 50Gi
     storageClass: openebs-hostpath
@@ -27,7 +33,6 @@ spec:
           name: immich-postgres-secret
   postgresql:
     shared_preload_libraries:
-      # - "vectors.so"
       - "vchord.so"
     parameters:
       max_connections: "200"
