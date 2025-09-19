@@ -9,6 +9,9 @@ spec:
   instances: 1
   imageName: ghcr.io/tensorchord/cloudnative-vectorchord:15-0.3.0
   primaryUpdateStrategy: unsupervised
+  primaryUpdateMethod: restart # cannot use switchover with 1 instance
+  startDelay: 30
+  stopDelay: 100
   storage:
     size: 50Gi
     storageClass: openebs-hostpath
@@ -24,7 +27,7 @@ spec:
           name: immich-postgres-secret
   postgresql:
     shared_preload_libraries:
-      - "vectors.so"
+      # - "vectors.so"
       - "vchord.so"
     parameters:
       max_connections: "200"
