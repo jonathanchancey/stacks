@@ -30,6 +30,7 @@ metadata:
   name: he-sw-01
   namespace: network
 spec:
+  clusterIP: None
   ports:
     - name: http
       port: 80
