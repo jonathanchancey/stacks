@@ -7,7 +7,7 @@ metadata:
     cnpg.io/skipEmptyWalArchiveCheck: "enabled"
 spec:
   instances: 1
-  imageName: ghcr.io/tensorchord/cloudnative-vectorchord:16.9-0.4.3
+  imageName: ghcr.io/tensorchord/cloudnative-pgvecto.rs:16.5-v0.3.0@sha256:be3f025d79aa1b747817f478e07e71be43236e14d00d8a9eb3914146245035ba
   primaryUpdateStrategy: unsupervised
   primaryUpdateMethod: restart # cannot use switchover with 1 instance
   startDelay: 30
@@ -27,8 +27,8 @@ spec:
           name: immich-postgres-secret
   postgresql:
     shared_preload_libraries:
-      # - "vectors.so"
-      - "vchord.so"
+      - "vectors.so"
+      # - "vchord.so"
     parameters:
       max_connections: "200"
       shared_buffers: 256MB
@@ -56,4 +56,4 @@ spec:
         - GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO "immich";
         - CREATE EXTENSION IF NOT EXISTS cube;
         - CREATE EXTENSION IF NOT EXISTS earthdistance;
-        - CREATE EXTENSION IF NOT EXISTS vchord CASCADE;
+        # - CREATE EXTENSION IF NOT EXISTS vchord CASCADE;
