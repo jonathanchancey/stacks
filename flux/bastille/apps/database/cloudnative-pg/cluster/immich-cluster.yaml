@@ -25,7 +25,7 @@ spec:
   postgresql:
     shared_preload_libraries:
       - "vectors.so"
-      - "vchord.so"
+      # - "vchord.so"
     parameters:
       max_connections: "200"
       shared_buffers: 256MB
@@ -53,5 +53,5 @@ spec:
         - GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO "immich";
         - CREATE EXTENSION IF NOT EXISTS cube;
         - CREATE EXTENSION IF NOT EXISTS earthdistance;
-        - CREATE EXTENSION IF NOT EXISTS vchord CASCADE;
+        # - CREATE EXTENSION IF NOT EXISTS vchord CASCADE;
 
