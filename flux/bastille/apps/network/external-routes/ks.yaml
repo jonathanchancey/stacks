@@ -13,6 +13,7 @@ spec:
   interval: 1h
   retryInterval: 2m
   timeout: 15m
+  force: true
   path: ./flux/bastille/apps/network/external-routes/routes
   postBuild:
     substitute:
