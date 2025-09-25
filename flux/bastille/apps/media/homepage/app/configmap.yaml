@@ -53,11 +53,11 @@ data:
     services.yaml: |
         - Management:
           - Proxmox:
-              href: https://proxmox.fkn.chancey.dev
+              href: https://proxmox.chancey.dev
               icon: proxmox.png
               description: Hypervisor
           - TrueNAS:
-              href: https://truenas.k8s.chancey.dev
+              href: https://truenas.chancey.dev
               icon: si-truenas-#0095D5
               description: Baremetal NAS
           - ZITADEL:
@@ -76,9 +76,17 @@ data:
               href: https://longhorn.chancey.dev/
               icon: longhorn.png
               description: Distributed Block Storage
+          - Shar:
+              href: https://shar.fkn.chancey.dev/
+              icon: proxmox.png
+              description: Forbidden Hypervisor
         - Monitoring:
-          - Grafana:
+          - Grafana | Academy:
               href: https://grafana.chancey.dev/
+              icon: grafana.png
+              description: Observability Platform
+          - Grafana | Bastille:
+              href: https://grafana.bastille.chancey.dev/
               icon: grafana.png
               description: Observability Platform
           - Gatus:
@@ -94,22 +102,22 @@ data:
               icon: prometheus.png
               description: Time Series Database
         - Network:
+          - Unifi Dream Machine:
+              href: https://intrepid.chancey.dev
+              icon: opnsense.png
+              description: Forbidden Router
           - 24p PoE Switch:
-              href: https://he-sw-01.k8s.chancey.dev/?
+              href: https://he-sw-01.chancey.dev/?
               icon: si-mikrotik-#CCCCCC
               description: 24p PoE Mikrotik Switch
           - 8p 2.5Gb Switch:
-              href: https://he-sw-02.k8s.chancey.dev/?
+              href: https://he-sw-02.chancey.dev/?
               icon: si-mikrotik-#CCCCCC
               description: 2.5Gb Mikrotik Switch
           - 24p SwOS Switch:
-              href: https://he-sw-03.k8s.chancey.dev/index.html
+              href: https://he-sw-03.chancey.dev/index.html
               icon: si-mikrotik-#CCCCCC
               description: 24p Mikrotik Switch
-          - Office Access Point:
-              href: https://he-ap-01.k8s.chancey.dev/
-              icon: si-tp-link-#4ACBD6
-              description: Access Point
           - Traefik:
               href: https://traefik.fkn.chancey.dev/dashboard/#/
               icon: traefik.png
@@ -139,19 +147,10 @@ data:
                 href: https://miniflux.k8s.chancey.dev/
                 icon: miniflux.png
                 description: RSS Reader
-        - Forbidden Network:
-          - Shar:
-              href: https://shar.fkn.chancey.dev/
-              icon: proxmox.png
-              description: Forbidden Hypervisor
-          - OPNSense:
-              href: https://opnsense.fkn.chancey.dev
-              icon: opnsense.png
-              description: Forbidden Router
-          - Pi-Hole:
-              href: http://pit.fkn.chancey.dev/admin
-              icon: pi-hole.png
-              description: Forbidden DNS
+          - Miniflux | Bastille:
+                href: https://miniflux.chancey.dev/
+                icon: miniflux.png
+                description: RSS Reader
 
     widgets.yaml: |
         - kubernetes:
