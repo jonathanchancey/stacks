@@ -10,6 +10,7 @@ resources:
   - truenas.yaml
   - pihole.yaml
   - opnsense.yaml
+  - intrepid.yaml
   - certificates/opnsense.yaml
   - certificates/proxmox.yaml
   - certificates/truenas.yaml
