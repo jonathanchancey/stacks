@@ -7,4 +7,4 @@ resources:
   - ./descheduler/ks.yaml
   - ./reloader/ks.yaml
   - ./node-feature-discovery/ks.yaml
-  - ./netboot/ks.yaml
+  # - ./netboot/ks.yaml
