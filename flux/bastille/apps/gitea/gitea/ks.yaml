@@ -18,6 +18,8 @@ spec:
   path: ./flux/bastille/apps/gitea/gitea/app
   postBuild:
     substitute:
+      # renovate: datasource=docker depName=ghcr.io/cloudnative-pg/postgresql
+      POSTGRESQL_VERSION: 16-bookworm
       APP: *app
       VOLSYNC_CAPACITY: 5Gi
   prune: true
