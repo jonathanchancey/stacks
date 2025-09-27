@@ -5,9 +5,9 @@ kind: Kustomization
 resources:
   - ./namespace.yaml
   - ./cert.yaml
-  - ./prometheus-operator-crds/ks.yaml
-  - ./kube-prometheus-stack/ks.yaml
-  - ./grafana/ks.yaml
+  # - ./prometheus-operator-crds/ks.yaml
+  # - ./kube-prometheus-stack/ks.yaml
+  # - ./grafana/ks.yaml
   # - ./loki/ks.yaml
   # - ./promtail/ks.yaml
   # - ./mktxp/ks.yaml
