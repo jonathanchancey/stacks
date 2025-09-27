@@ -4,7 +4,7 @@ kind: ScheduledBackup
 metadata:
   name: immich-daily
 spec:
-  schedule: "0 10 * * *" # 10:00 UTC is 03:00 PDT
+  schedule: "@daily"
   immediate: true
   backupOwnerReference: self
   cluster:
