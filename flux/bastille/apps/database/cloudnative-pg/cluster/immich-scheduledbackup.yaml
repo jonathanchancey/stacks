@@ -5,7 +5,6 @@ metadata:
   name: immich-daily
 spec:
   schedule: "@daily"
-  immediate: true
   backupOwnerReference: self
   cluster:
     name: immich-postgres
