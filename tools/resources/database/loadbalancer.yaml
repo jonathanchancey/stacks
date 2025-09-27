@@ -16,3 +16,21 @@ spec:
       port: 5432
       targetPort: 5432
       protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bastille-pg-lb
+  annotations:
+    io.cilium/lb-ipam-ips: 10.12.0.13
+    external-dns.alpha.kubernetes.io/hostname: bastille-pg-lb.chancey.dev
+spec:
+  type: LoadBalancer
+  selector:
+    cnpg.io/cluster: bastille-pg
+    role: primary
+  ports:
+    - name: postgres
+      port: 5432
+      targetPort: 5432
+      protocol: TCP
