@@ -9,5 +9,6 @@ resources:
   - ./backup.yaml
   - ./prometheusrule.yaml
   - ./immich-cluster.yaml
+  - ./gitea-cluster.yaml
   - ./immich-scheduledbackup.yaml
   - ./secrets.sops.yaml
