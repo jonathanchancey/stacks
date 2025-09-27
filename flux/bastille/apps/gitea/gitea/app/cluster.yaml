@@ -9,10 +9,6 @@ spec:
   instances: 3
   imageName: ghcr.io/cloudnative-pg/postgresql:${POSTGRESQL_VERSION}
   primaryUpdateStrategy: unsupervised
-  securityContext:
-    runAsUser: 1001
-    runAsGroup: 1001
-    fsGroup: 1001
   plugins:
     - name: barman-cloud.cloudnative-pg.io
       isWALArchiver: true
