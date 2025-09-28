@@ -20,6 +20,7 @@ spec:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 1Gi
+      VOLSYNC_SNAPSHOTCLASS: ceph-block
   prune: true
   sourceRef:
     kind: GitRepository
