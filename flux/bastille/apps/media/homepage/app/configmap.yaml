@@ -76,6 +76,10 @@ data:
               href: https://longhorn.chancey.dev/
               icon: longhorn.png
               description: Distributed Block Storage
+          - Kopia:
+              href: https://kopia.chancey.dev/
+              icon: si-kubernetes-#326CE5
+              description: Bastille Backup
           - Shar:
               href: https://shar.fkn.chancey.dev/
               icon: proxmox.png
