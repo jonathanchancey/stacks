@@ -31,3 +31,11 @@ tasks:
       - conform
       - flux:test-hr
       - ansible:lint
+
+  backlog:
+    desc: Commit and sync backlog
+    dir: "{{.BACKLOG_REPO}}"
+    cmds:
+      - git add backlog
+      - "git commit -m sync: backlog from {{.USER_WORKING_DIR | base}}"
+      - git push
