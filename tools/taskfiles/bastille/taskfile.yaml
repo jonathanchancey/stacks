@@ -59,3 +59,20 @@ tasks:
       - helm show values {{.CHART_URL}} --version {{.CHART_TAG}} | code -
     preconditions:
       - sh: "test -f ./helmrelease.yaml"
+
+  template-ks:
+    desc: Generate new Bastille app deployment using app-template
+    dir: "{{.ROOT_DIR}}"
+    cmd: uv run tools/templates/bastille-app/generate.py {{.CLI_ARGS}}
+
+  test-template-ks:
+    dir: "{{.ROOT_DIR}}"
+    cmds:
+      - |
+        uv run tools/templates/bastille-app/generate.py \
+          --app-name nginx-test \
+          --namespace nginx-test \
+          --image-repo nginx/nginx \
+          --image-tag latest \
+          --service-port 80
+      - tools/scripts/kubeconform.sh flux/bastille/apps/web/nginx-test/
