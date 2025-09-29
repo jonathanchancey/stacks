@@ -24,7 +24,7 @@ spec:
       valuesKey: postgres-user-password
       targetPath: zitadel.secretConfig.Database.Postgres.User.Password
     - kind: Secret
-      name: zitadel-secret
+      name: zitadel-init-db-secret
       valuesKey: INIT_POSTGRES_SUPER_PASS
       targetPath: zitadel.secretConfig.Database.Postgres.Admin.Password
     - kind: Secret
