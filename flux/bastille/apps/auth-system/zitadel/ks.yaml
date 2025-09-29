@@ -30,7 +30,7 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: zitadel-repo
-      namespace: flux-system
+      namespace: auth-system
   interval: 1h
   retryInterval: 2m
   timeout: 15m
