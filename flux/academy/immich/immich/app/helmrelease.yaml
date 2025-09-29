@@ -42,7 +42,7 @@ spec:
       # IMMICH_LOG_LEVEL: debug
     image:
       # https://github.com/immich-app/immich/releases
-      tag: v1.142.1
+      tag: v1.143.1
     immich:
       metrics:
         enabled: true
