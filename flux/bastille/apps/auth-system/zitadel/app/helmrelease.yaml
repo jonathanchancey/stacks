@@ -1,5 +1,5 @@
-# CREATE ROLE zitadel LOGIN;
 ---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -7,9 +7,12 @@ metadata:
 spec:
   interval: 1h
   install:
-    replace: true
+    remediation:
+      retries: -1
   upgrade:
-    force: true
+    cleanupOnFail: true
+    remediation:
+      retries: 3
   chart:
     spec:
       chart: zitadel
@@ -45,6 +48,11 @@ spec:
       enabled: false
     zitadel:
       configmapConfig:
+        ServicePing:
+          Enabled: false
+          Telemetry:
+            ResourceCounts:
+              Enabled: false
         SMTPConfiguration:
           From: admin@chancey.dev
           FromName: admin@chancey.dev

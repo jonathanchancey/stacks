@@ -31,6 +31,8 @@ spec:
   dependsOn:
     - name: zitadel-repo
       namespace: auth-system
+    - name: cloudnative-pg-cluster
+      namespace: database
   interval: 1h
   retryInterval: 2m
   timeout: 15m
