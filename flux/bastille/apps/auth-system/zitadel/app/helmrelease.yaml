@@ -18,7 +18,7 @@ spec:
     - kind: Secret
       name: zitadel-secret
       valuesKey: postgres-user-password
-      targetPath: zitadel.secretConfig.Database.postgres.User.Password
+      targetPath: zitadel.secretConfig.Database.Postgres.User.Password
     - kind: Secret
       name: zitadel-secret
       valuesKey: masterkey
