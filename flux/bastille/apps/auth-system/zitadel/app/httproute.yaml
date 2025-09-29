@@ -15,6 +15,14 @@ spec:
       namespace: network
       sectionName: https
   rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /debug
+      filters:
+        - type: RequestRedirect
+          requestRedirect:
+            statusCode: 404
     - backendRefs:
         - name: zitadel
           port: 8080
