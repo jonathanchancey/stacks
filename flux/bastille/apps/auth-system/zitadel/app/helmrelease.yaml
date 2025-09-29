@@ -59,7 +59,7 @@ spec:
           Enabled: false
         Database:
           Postgres:
-            Host: bastille-pg.database.svc.cluster.local
+            Host: bastille-pg-rw.database.svc.cluster.local
             Port: 5432
             Database: zitadel
             MaxOpenConns: 20
