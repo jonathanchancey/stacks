@@ -3,6 +3,24 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
+  name: zitadel-repo
+  namespace: flux-system
+spec:
+  interval: 1h
+  retryInterval: 2m
+  timeout: 15m
+  path: ./flux/bastille/apps/auth-system/zitadel/repo
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  wait: true
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
   name: &app zitadel
   namespace: &namespace auth-system
 spec:
@@ -10,9 +28,9 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  # dependsOn:
-  #   - name: cloudnative-pg-cluster
-  #     namespace: database
+  dependsOn:
+    - name: zitadel-repo
+      namespace: flux-system
   interval: 1h
   retryInterval: 2m
   timeout: 15m
