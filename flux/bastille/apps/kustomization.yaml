@@ -13,3 +13,4 @@ resources:
   - database
   - storage
   - gitea
+  - auth-system

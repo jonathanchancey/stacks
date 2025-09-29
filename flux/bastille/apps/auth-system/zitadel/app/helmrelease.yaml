@@ -1,0 +1,68 @@
+# CREATE ROLE zitadel LOGIN;
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: zitadel
+spec:
+  interval: 1h
+  chart:
+    spec:
+      chart: zitadel
+      version: 8.0.0
+      sourceRef:
+        kind: HelmRepository
+        name: zitadel
+        namespace: flux-system
+  valuesFrom:
+    - kind: Secret
+      name: zitadel-secret
+      valuesKey: postgres-user-password
+      targetPath: zitadel.secretConfig.Database.postgres.User.Password
+    - kind: Secret
+      name: zitadel-secret
+      valuesKey: masterkey
+      targetPath: zitadel.masterkey
+    - kind: Secret
+      name: zitadel-secret
+      valuesKey: smtp-host
+      targetPath: zitadel.configmapConfig.SMTPConfiguration.SMTP.Host
+    - kind: Secret
+      name: zitadel-secret
+      valuesKey: smtp-password
+      targetPath: zitadel.configmapConfig.SMTPConfiguration.SMTP.Password
+  values:
+    initContainers:
+      - name: init-db
+        image: ghcr.io/home-operations/postgres-init:17
+        envVarsSecret: zitadel-init-db-secret
+    replicaCount: 1
+    login:
+      enabled: false
+    zitadel:
+      configmapConfig:
+        SMTPConfiguration:
+          From: admin@chancey.dev
+          FromName: admin@chancey.dev
+          ReplyToAddress: admin@chancey.dev
+          SMTP:
+            User: admin@chancey.dev
+          TLS: true
+        ExternalSecure: true
+        ExternalPort: 443
+        ExternalDomain: auth.chancey.dev
+        TLS:
+          Enabled: false
+        Database:
+          Postgres:
+            Host: bastille-pg.database.svc.cluster.local
+            Port: 5432
+            Database: zitadel
+            MaxOpenConns: 20
+            MaxIdleConns: 10
+            MaxConnLifetime: 30m
+            MaxConnIdleTime: 5m
+            User:
+              Username: zitadel
+              SSL:
+                Mode: disable
