@@ -6,6 +6,7 @@ metadata:
   name: zitadel
 spec:
   interval: 1h
+  force: true
   chart:
     spec:
       chart: zitadel
