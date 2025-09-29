@@ -46,6 +46,10 @@ spec:
     replicaCount: 1
     login:
       enabled: false
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
     zitadel:
       configmapConfig:
         ServicePing:
