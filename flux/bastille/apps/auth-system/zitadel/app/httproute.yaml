@@ -26,4 +26,3 @@ spec:
     - backendRefs:
         - name: zitadel
           port: 8080
-
