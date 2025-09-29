@@ -21,6 +21,10 @@ spec:
       targetPath: zitadel.secretConfig.Database.Postgres.User.Password
     - kind: Secret
       name: zitadel-secret
+      valuesKey: postgres-user-password
+      targetPath: zitadel.secretConfig.Database.Postgres.Admin.Password
+    - kind: Secret
+      name: zitadel-secret
       valuesKey: masterkey
       targetPath: zitadel.masterkey
     - kind: Secret
@@ -63,6 +67,10 @@ spec:
             MaxConnLifetime: 30m
             MaxConnIdleTime: 5m
             User:
+              Username: zitadel
+              SSL:
+                Mode: disable
+            Admin:
               Username: zitadel
               SSL:
                 Mode: disable
