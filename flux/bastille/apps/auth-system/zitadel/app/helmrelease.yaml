@@ -25,7 +25,7 @@ spec:
       targetPath: zitadel.secretConfig.Database.Postgres.User.Password
     - kind: Secret
       name: zitadel-secret
-      valuesKey: postgres-user-password
+      valuesKey: INIT_POSTGRES_SUPER_PASS
       targetPath: zitadel.secretConfig.Database.Postgres.Admin.Password
     - kind: Secret
       name: zitadel-secret
@@ -40,10 +40,6 @@ spec:
       valuesKey: smtp-password
       targetPath: zitadel.configmapConfig.SMTPConfiguration.SMTP.Password
   values:
-    initContainers:
-      - name: init-db
-        image: ghcr.io/home-operations/postgres-init:17
-        envVarsSecret: zitadel-init-db-secret
     replicaCount: 1
     login:
       enabled: false
@@ -74,4 +70,7 @@ spec:
               Username: zitadel
               SSL:
                 Mode: disable
-            Admin: []
+            Admin:
+              Username: postgres
+              SSL:
+                Mode: disable
