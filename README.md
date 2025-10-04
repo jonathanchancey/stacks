@@ -2,32 +2,37 @@
 
 Welcome to my personal waste of electricity
 
-I use this repo to practice DevOps concepts for services I'd rather not live without
+I use this repo to practice GitOps concepts for services I'd rather not live without
 
-## Architecture
+## Clusters
 
-GitOps-driven infrastructure using Flux v2 for continuous deployment across multiple Kubernetes clusters.
+### Academy - K3s/Ansible/Terraform
 
-### Components
+The cluster that started it all
 
-- **Ansible** (`ansible/`) - Bare metal configuration and provisioning
-- **Flux** (`flux/`) - GitOps manifests organized by cluster
-- **Terraform** (`terraform/`) - VM provisioning and DNS management
-- **Tools** -(`tools/`) Scripts and taskfiles
+> though it's getting a bit creaky at over 730 days
 
-### Clusters
-
-#### Academy - K3s
-The cluster that started it all. Currently "production" but it's getting a bit creaky at over 700 days
 - 7 nodes, 40 cores, 154GB RAM
 - running on mixed architecture
 - scheduled for decommission
 
-#### Bastille - Talos
-Nascent production cluster following strict best practices
-- 3 nodes, 48 cores, 96GB DDR5
-- ceph storage, cloudnative-pg on NVME, Cilium CNI
-- thunderbolt networking ~23Gbps and 2.5Gb networking
+### Bastille - Talos/Bare Metal
+
+Nascent production cluster following best practices (slightly more than what's sensible)
+
+> if it's not in flux, if it ain't real
+
+- 3 nodes, 48 cores, 96GB DDR5 (non ecc)
+- ceph block storage with thunderbolt networking ~23Gbps
+- cloudnative-pg with openEBS localpv on NVME, streaming WAL to b2
+- Cilium CNI, BGP, 2.5Gb networking (10Gb soon)
+
+## Folder Structure
+
+- **Ansible** (`ansible/`) - Maintenance and Configuration
+- **Flux** (`flux/`) - GitOps manifests organized by cluster
+- **Terraform** (`terraform/`) - VM provisioning and DNS management
+- **Tools** (`tools/`) - Scripts, templates, taskfiles
 
 ## Dec 2023
 
@@ -39,7 +44,7 @@ Nascent production cluster following strict best practices
   <td>Explanation</td>
   </tr>
   <tr>
-    <td><img src="https://github.com/jonathanchancey/assets/blob/main/images/rack2.jpg?raw=true" width=330></td>
+    <td><img src="https://github.com/jonathanchancey/assets/blob/main/images/rack2.jpg?raw=true" width=330 alt="A 16U server rack"></td>
     <td>
     <table align="center">
   <tr>
@@ -82,6 +87,5 @@ Nascent production cluster following strict best practices
     </td>
   </tr>
  </table>
-
 
 ![proxmox-small](https://github.com/jonathanchancey/assets/blob/main/images/proxmox-small.png?raw=true)
