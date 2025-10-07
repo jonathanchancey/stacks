@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app immich
+  name: immich
 spec:
   interval: 1h
   chartRef:
@@ -22,7 +22,7 @@ spec:
           main:
             image:
               repository: ghcr.io/immich-app/immich-server
-              tag: v1.142.1@sha256:06bc7715fa4c4a1641bd0b566c949cd7327f420632b480389fd4d1e70665d046
+              tag: &release v2.0.1
             env:
               IMMICH_MEDIA_LOCATION: &mediaLocation /usr/src/app/upload
               DB_HOSTNAME: "immich-postgres-rw.database.svc.cluster.local"
@@ -38,11 +38,9 @@ spec:
                   secretKeyRef:
                     name: immich-secret
                     key: DB_PASSWORD
-
             envFrom:
               - configMapRef:
                   name: immich-configmap
-
             resources:
               requests:
                 cpu: 400m
@@ -56,12 +54,11 @@ spec:
         strategy: RollingUpdate
         annotations:
           reloader.stakater.com/auto: "true"
-
         containers:
           main:
             image:
               repository: ghcr.io/immich-app/immich-machine-learning
-              tag: v1.142.1@sha256:9855f6a0a998db508ca97894997b17f3a0a61e9388b204d861110c19c42814eb
+              tag: *release
             envFrom:
               - secretRef:
                   name: immich-secret
@@ -69,6 +66,7 @@ spec:
                   name: immich-configmap
             env:
               MPLCONFIGDIR: "/cache/matplotlib"
+              TRANSFORMERS_CACHE: "/cache"
               IMMICH_MEDIA_LOCATION: *mediaLocation
             resources:
               requests:
@@ -103,17 +101,10 @@ spec:
 
     route:
       server:
-        annotations:
-          gethomepage.dev/enabled: "true"
-          gethomepage.dev/description: Photo management
-          gethomepage.dev/group: Apps
-          gethomepage.dev/icon: sh-immich.svg
-          gethomepage.dev/name: Immich
-          gethomepage.dev/app: immich
         hostnames: ["photos.chancey.dev"]
         parentRefs:
-          - name: internal
-            namespace: internal
+          - name: edge
+            namespace: network
             sectionName: https
         rules:
           - backendRefs:
@@ -121,19 +112,18 @@ spec:
                 port: *port
 
     persistence:
-      matplotlib:
-        type: emptyDir
-        advancedMounts:
-          server:
-            main:
-              - path: /config/matplotlib
-
       library:
-        type: persistentVolumeClaim
-        existingClaim: immich-media
+        type: nfs
+        server: vents.internal
+        path: /mnt/scale-worm/strawberry/personal/upload
         globalMounts:
           - path: *mediaLocation
-
+      external:
+        type: nfs
+        server: vents.internal
+        path: /mnt/scale-worm/strawberry/personal/external-library
+        globalMounts:
+          - path: /external
       machine-learning-cache:
         type: persistentVolumeClaim
         existingClaim: immich-machine-learning-cache
@@ -142,7 +132,6 @@ spec:
             subPath: cache
           - path: /.cache
             subPath: dotCache
-
       tmpfs:
         type: emptyDir
         advancedMounts:
