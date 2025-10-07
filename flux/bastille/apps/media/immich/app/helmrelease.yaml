@@ -25,6 +25,7 @@ spec:
               tag: &release v2.0.1
             env:
               IMMICH_MEDIA_LOCATION: &mediaLocation /usr/src/app/upload
+              IMMICH_TELEMETRY_INCLUDE: all
               DB_HOSTNAME: "immich-postgres-rw.database.svc.cluster.local"
               DB_PORT: 5432
               DB_DATABASE_NAME: "immich"
@@ -94,6 +95,10 @@ spec:
         ports:
           http:
             port: &port 2283
+          metrics:
+            port: 8081
+          microservice-metrics:
+            port: 8082
       machine-learning:
         controller: machine-learning
         ports:
