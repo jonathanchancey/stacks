@@ -125,7 +125,7 @@ spec:
         globalMounts:
           - path: /external
       machine-learning-cache:
-        type: emptyDir
+        type: persistentVolumeClaim
         size: 15Gi
         accessMode: ReadWriteMany
         storageClassName: openebs-hostpath
