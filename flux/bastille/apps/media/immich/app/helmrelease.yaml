@@ -110,6 +110,15 @@ spec:
           http:
             port: 6379
 
+    serviceMonitor:
+      server:
+        serviceName: server
+        endpoints:
+          - port: metrics
+            path: /metrics
+          - port: microservice-metrics
+            path: /metrics
+
     route:
       server:
         hostnames: ["photos.chancey.dev"]
