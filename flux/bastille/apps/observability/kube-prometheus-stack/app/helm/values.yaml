@@ -14,7 +14,7 @@ prometheus:
   route:
     main:
       enabled: true
-      hostnames: ["prometheus.bastille.chancey.dev"]
+      hostnames: ["prometheus.chancey.dev"]
       parentRefs:
         - name: internal
           namespace: kube-system
@@ -73,7 +73,7 @@ kube-state-metrics:
           targetLabel: kubernetes_node
 grafana:
   enabled: false
-  forceDeployDashboards: true
+  forceDeployDashboards: false
 additionalPrometheusRulesMap:
   dockerhub-rules:
     groups:
