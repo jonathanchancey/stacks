@@ -30,7 +30,7 @@ spec:
       source: "//vents.internal/coop"
     nodeStageSecretRef:
       name: smbcreds-scale-worm
-      namespace: kube-system
+      namespace: media
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
