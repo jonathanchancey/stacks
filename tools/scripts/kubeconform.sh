@@ -32,6 +32,10 @@ done
 echo "=== Validating kustomizations in ${KUBERNETES_DIR} ==="
 find "${KUBERNETES_DIR}" -type f -name $kustomize_config -print0 | while IFS= read -r -d $'\0' file;
 do
+    # Skip component templates that contain variable placeholders
+    if [[ "${file}" == *"/components/"* ]]; then
+        continue
+    fi
     echo "=== Validating kustomizations in ${file/%$kustomize_config} ==="
     kustomize build "${file/%$kustomize_config}" "${kustomize_args[@]}" | kubeconform "${kubeconform_args[@]}"
     if [[ ${PIPESTATUS[0]} != 0 ]]; then
