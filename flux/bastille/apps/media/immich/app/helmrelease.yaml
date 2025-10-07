@@ -112,7 +112,7 @@ spec:
 
     serviceMonitor:
       server:
-        serviceName: server
+        serviceName: immich-server
         endpoints:
           - port: metrics
             path: /metrics
