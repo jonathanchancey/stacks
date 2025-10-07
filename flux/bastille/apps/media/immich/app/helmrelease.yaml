@@ -124,16 +124,6 @@ spec:
         path: /mnt/scale-worm/strawberry/personal/external-library
         globalMounts:
           - path: /external
-      machine-learning-cache:
-        type: persistentVolumeClaim
-        size: 15Gi
-        accessMode: ReadWriteMany
-        storageClassName: openebs-hostpath
-        globalMounts:
-          - path: /cache
-            subPath: cache
-          - path: /.cache
-            subPath: dotCache
       tmpfs:
         type: emptyDir
         advancedMounts:
