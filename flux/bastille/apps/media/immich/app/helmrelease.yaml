@@ -125,8 +125,8 @@ spec:
         globalMounts:
           - path: /external
       machine-learning-cache:
-        type: persistentVolumeClaim
-        existingClaim: immich-machine-learning-cache
+        type: emptyDir
+        size: 15Gi
         globalMounts:
           - path: /cache
             subPath: cache
