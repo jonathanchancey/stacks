@@ -22,3 +22,6 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
+  dependsOn:
+    - name: csi-driver-smb
+      namespace: kube-system

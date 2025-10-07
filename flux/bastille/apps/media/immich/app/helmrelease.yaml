@@ -130,6 +130,13 @@ spec:
         path: /mnt/scale-worm/strawberry/personal/external-library
         globalMounts:
           - path: /external
+            readOnly: true
+      external-coop:
+        type: persistentVolumeClaim
+        existingClaim: pvc-immich-external-coop-smb
+        globalMounts:
+          - path: /external-coop
+            readOnly: true
       tmpfs:
         type: emptyDir
         advancedMounts:
