@@ -24,6 +24,10 @@ tasks:
 
   test-hr:
     desc: Flux test kustomizations and helmreleases
+    cmd: "{{.VIRTUAL_ENV}}/bin/flux-local test --enable-helm --all-namespaces --path {{.KUBERNETES_DIR}}"
+
+  test-quick:
+    desc: Flux test kustomizations and helmreleases in current namespace
     cmd: "{{.VIRTUAL_ENV}}/bin/flux-local test --enable-helm --path {{.KUBERNETES_DIR}}"
 
   resume:
