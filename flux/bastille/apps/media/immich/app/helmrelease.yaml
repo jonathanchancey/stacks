@@ -81,6 +81,12 @@ spec:
             image:
               repository: ghcr.io/ahinko/valkey
               tag: 8.1.3
+            resources:
+              requests:
+                cpu: 50m
+                memory: 128Mi
+              limits:
+                memory: 1024Mi
 
     service:
       server:
@@ -131,5 +137,12 @@ spec:
             main:
               - path: /usr/src/app/.reverse-geocoding-dump
                 subPath: geocoding
-              - path: /usr/src/app/.transformers_cache
-                subPath: transformers
+      machine-learning-cache:
+        type: persistentVolumeClaim
+        accessMode: ReadWriteOnce
+        storageClass: ceph-block
+        size: 15Gi
+        advancedMounts:
+          machine-learning:
+            main:
+              - path: /cache
