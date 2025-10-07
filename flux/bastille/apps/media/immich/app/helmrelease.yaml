@@ -127,6 +127,8 @@ spec:
       machine-learning-cache:
         type: emptyDir
         size: 15Gi
+        accessMode: ReadWriteMany
+        storageClassName: openebs-hostpath
         globalMounts:
           - path: /cache
             subPath: cache
