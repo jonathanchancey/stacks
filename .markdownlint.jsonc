@@ -1,0 +1,31 @@
+{
+    // DISABLED RULES
+    "MD013": false, // allow long lines
+    "MD025": false, // allow multiple H1s
+    "MD026": false, // allow punctuation
+    "MD028": false, // allow blank lines
+    "MD029": false, // allow inconsistent numbering
+    "MD033": false, // allow HTML tags
+    "MD034": false, // allow URLs without angle brackets
+    "MD036": false, // allow bold as pseudo-heading
+    "MD041": false, // don't require H1 as first line
+    "MD049": false, // allow mixed */_
+    "MD050": false, // allow mixed **/__
+
+    // ENABLED RULES
+    "MD009": true, // no trailing spaces
+    "MD012": true, // no multiple consecutive blank lines
+    "MD022": { // headings surrounded by blank lines
+        "lines_above": 1,
+        "lines_below": 1
+    },
+    "MD023": true, // headings must start at the beginning of the line
+    "MD030": true, // spaces after list markers
+    "MD031": true, // fenced code blocks surrounded by blank lines
+    "MD032": true, // lists surrounded by blank lines
+    "MD037": true, // no spaces inside emphasis markers
+    "MD038": true, // no spaces inside code span elements
+    "MD039": true, // no spaces inside link text
+    "MD046": true, // code block style consistency
+    "MD047": true // files should end with a single newline
+}
