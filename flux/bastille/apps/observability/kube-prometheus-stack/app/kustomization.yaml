@@ -10,3 +10,11 @@ configMapGenerator:
       - values.yaml=./helm/values.yaml
 generatorOptions:
   disableNameSuffixHash: true
+patches:
+  - target:
+      kind: PersistentVolumeClaim
+      name: prometheus-kube-prometheus-stack-db-prometheus-kube-prometheus-stack-0
+    patch: |-
+      - op: replace
+        path: /spec/resources/requests/storage
+        value: 90Gi
