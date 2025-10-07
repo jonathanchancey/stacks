@@ -16,9 +16,9 @@ prometheus:
       enabled: true
       hostnames: ["prometheus.chancey.dev"]
       parentRefs:
-        - name: internal
-          namespace: kube-system
-          sectionName: https-bastille
+        - name: edge
+          namespace: network
+          sectionName: https
   prometheusSpec:
     scrapeInterval: 1m # Must match interval in Grafana Helm chart
     podMonitorSelectorNilUsesHelmValues: false
