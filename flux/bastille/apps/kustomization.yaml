@@ -12,5 +12,5 @@ resources:
   - rook-ceph
   - database
   - storage
-  - gitea
+  # - gitea
   - auth-system
