@@ -21,6 +21,7 @@
   ignorePaths: [
     '**/*.sops.*',
     '**/.archive/**',
+    '**/flux/academy/**',
   ],
   flux: {
     managerFilePatterns: [
@@ -34,6 +35,7 @@
   },
   helmfile: {
     managerFilePatterns: [
+      '/(^|/)helmfile\\.ya?ml(?:\\.j2)?$/',
       '/(^|/)helm\\.ya?ml(?:\\.j2)?$/',
     ],
   },
@@ -146,7 +148,7 @@
         'terraform-provider',
         'terraform-module',
       ],
-      commitMessageTopic: 'chart {{depName}}',
+      commitMessageTopic: 'terraform {{depName}}',
     },
     {
       description: [
