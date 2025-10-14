@@ -2,7 +2,7 @@
 
 Welcome to my personal waste of electricity
 
-I use this repo to practice GitOps concepts for services I'd rather not live without
+I use this repo to define services I'd rather not live without
 
 ## Clusters
 
