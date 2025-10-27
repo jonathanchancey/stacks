@@ -36,7 +36,7 @@ spec:
     manageCRDs: true
     image: &image
       repository: ghcr.io/perfectra1n/volsync
-      tag: v0.15.38
+      tag: v0.16.13
     kopia: *image
     rclone: *image
     restic: *image
