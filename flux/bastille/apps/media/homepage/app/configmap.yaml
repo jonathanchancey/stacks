@@ -108,8 +108,8 @@ data:
     - Network:
       - Unifi Dream Machine:
           href: https://intrepid.chancey.dev
-          icon: opnsense.png
-          description: Forbidden Router
+          icon: unifi.png
+          description: Unforbidden Router
       - 24p PoE Switch:
           href: https://he-sw-01.chancey.dev/?
           icon: si-mikrotik-#CCCCCC
@@ -144,17 +144,17 @@ data:
           icon: filebrowser.png
           description: Music Collection Manager
       - Gitea:
-            href: https://gitea.chancey.dev/
-            icon: gitea.png
-            description: Version Control
+          href: https://gitea.chancey.dev/
+          icon: gitea.png
+          description: Version Control
       - Miniflux:
-            href: https://miniflux.k8s.chancey.dev/
-            icon: miniflux.png
-            description: RSS Reader
+          href: https://miniflux.k8s.chancey.dev/
+          icon: miniflux.png
+          description: RSS Reader
       - Miniflux | Bastille:
-            href: https://miniflux.chancey.dev/
-            icon: miniflux.png
-            description: RSS Reader
+          href: https://miniflux.chancey.dev/
+          icon: miniflux.png
+          description: RSS Reader
 
   widgets.yaml: |
     - kubernetes:
