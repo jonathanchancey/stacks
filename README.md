@@ -1,6 +1,6 @@
 # Stacks
 
-Welcome to my personal waste of electricity
+Welcome to my waste of electricity
 
 I use this repo to define services I'd rather not live without
 
@@ -10,29 +10,30 @@ I use this repo to define services I'd rather not live without
 
 The cluster that started it all
 
-> though it's getting a bit creaky at over 730 days
+> though it's getting a bit creaky at over 750 days
 
 - 7 nodes, 40 cores, 154GB RAM
 - running on mixed architecture
 - scheduled for decommission
+- will rise again as ~~chaos~~ dev cluster
 
 ### Bastille - Talos/Bare Metal
 
 Nascent production cluster following best practices (slightly more than what's sensible)
 
-> if it's not in flux, if it ain't real
+> not in flux == not real
 
 - 3 nodes, 48 cores, 96GB DDR5 (non ecc)
-- ceph block storage with thunderbolt networking ~23Gbps
-- cloudnative-pg with openEBS localpv on NVME, streaming WAL to b2
+- Ceph block storage with Thunderbolt networking ~23Gbps
+- CloudNative-PG with openEBS localpv on NVME, streaming WAL to B2
 - Cilium CNI, BGP, 2.5Gb networking (10Gb soon)
 
 ## Folder Structure
 
-- **Ansible** (`ansible/`) - Maintenance and Configuration
-- **Flux** (`flux/`) - GitOps manifests organized by cluster
-- **Terraform** (`terraform/`) - VM provisioning and DNS management
-- **Tools** (`tools/`) - Scripts, templates, taskfiles
+- `ansible/` - maintenance and configuration
+- `flux/` - Talos configs and everything kubernetes
+- `terraform/` - VM provisioning and DNS management
+- `tools/` - scripts, templates, taskfiles
 
 ## Dec 2023
 
