@@ -1,3 +1,5 @@
+---
+# code: language-ansible
 - hosts: all
   roles:
     - rockchip_kernel
