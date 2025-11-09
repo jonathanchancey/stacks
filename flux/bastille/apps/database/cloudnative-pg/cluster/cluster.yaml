@@ -3,11 +3,12 @@ apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
   name: bastille-pg
-  annotations:
-    cnpg.io/skipEmptyWalArchiveCheck: "enabled"
+  # annotations:
+  #   cnpg.io/skipEmptyWalArchiveCheck: "enabled"
 spec:
-  instances: 2
+  instances: 1
   imageName: ghcr.io/cloudnative-pg/postgresql:${POSTGRESQL_VERSION}
+  primaryUpdateMethod: restart # cannot use switchover with 1 instance
   primaryUpdateStrategy: unsupervised
   plugins:
     - name: barman-cloud.cloudnative-pg.io
@@ -17,7 +18,6 @@ spec:
         serverName: postgres-v4
   storage:
     size: 20Gi
-    # storageClass: ceph-block
     storageClass: openebs-hostpath
   superuserSecret:
     name: cloudnative-pg-secret
@@ -45,7 +45,7 @@ spec:
   #       name: barman-cloud.cloudnative-pg.io
   #       parameters:
   #         barmanObjectName: bastille-pg
-  #         serverName: postgres-v3
+  #         serverName: postgres-v4
 ---
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
