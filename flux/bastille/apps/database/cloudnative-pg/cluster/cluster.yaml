@@ -13,7 +13,7 @@ spec:
     - name: barman-cloud.cloudnative-pg.io
       isWALArchiver: true
       parameters: &parameters
-        barmanObjectName: bastille-pg
+        barmanObjectName: bastille-pg-garage
         serverName: postgres-v4
   storage:
     size: 20Gi
@@ -34,18 +34,18 @@ spec:
       memory: 4Gi
   monitoring:
     enablePodMonitor: true
-  bootstrap:
-    recovery:
-      source: source
-      recoveryTarget:
-        backupID: 20250727T030438
-  externalClusters:
-    - name: source
-      plugin:
-        name: barman-cloud.cloudnative-pg.io
-        parameters:
-          barmanObjectName: bastille-pg
-          serverName: postgres-v3
+  # bootstrap:
+  #   recovery:
+  #     source: source
+  #     recoveryTarget:
+  #       backupID: 20250727T030438
+  # externalClusters:
+  #   - name: source
+  #     plugin:
+  #       name: barman-cloud.cloudnative-pg.io
+  #       parameters:
+  #         barmanObjectName: bastille-pg
+  #         serverName: postgres-v3
 ---
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
