@@ -13,7 +13,7 @@ spec:
     - name: barman-cloud.cloudnative-pg.io
       isWALArchiver: true
       parameters: &parameters
-        barmanObjectName: bastille-pg-garage
+        barmanObjectName: bastille-pg
         serverName: postgres-v4
   storage:
     size: 20Gi
