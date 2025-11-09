@@ -11,6 +11,8 @@ resources:
   - pihole.yaml
   - opnsense.yaml
   - intrepid.yaml
+  - garage-s3.yaml
+  - garage-web.yaml
   - certificates/opnsense.yaml
   - certificates/proxmox.yaml
   - certificates/truenas.yaml

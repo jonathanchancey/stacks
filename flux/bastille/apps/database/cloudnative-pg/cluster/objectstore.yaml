@@ -20,3 +20,25 @@ spec:
       compression: bzip2
       maxParallel: 1
   retentionPolicy: 30d
+---
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: bastille-pg-garage
+spec:
+  configuration:
+    data:
+      compression: bzip2
+    destinationPath: s3://bastille-pg/
+    endpointURL: https://s3.chancey.dev
+    s3Credentials:
+      accessKeyId:
+        name: bastille-pg-s3-garage-keys
+        key: AWS_ACCESS_KEY_ID
+      secretAccessKey:
+        name: bastille-pg-s3-garage-keys
+        key: AWS_SECRET_ACCESS_KEY
+    wal:
+      compression: bzip2
+      maxParallel: 8
+  retentionPolicy: 30d
