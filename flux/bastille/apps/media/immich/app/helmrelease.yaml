@@ -22,7 +22,7 @@ spec:
           main:
             image:
               repository: ghcr.io/immich-app/immich-server
-              tag: &release v2.0.1
+              tag: &release v2.3.1
             env:
               IMMICH_MEDIA_LOCATION: &mediaLocation /usr/src/app/upload
               IMMICH_TELEMETRY_INCLUDE: all
