@@ -41,7 +41,7 @@ spec:
           app:
             image:
               repository: ghcr.io/home-operations/kopia
-              tag: 0.21.1@sha256:f666b5f2c1ea4649cd2bd703507d4b81c2b515782e8476ba4a145b091a704a53
+              tag: 0.22.2@sha256:a98ea95290b1f2146c4b48644a6cfe3e7f6413dc2ae84c3bebc54a1137496927
             env:
               KOPIA_WEB_ENABLED: true
               KOPIA_WEB_PORT: &port 80
