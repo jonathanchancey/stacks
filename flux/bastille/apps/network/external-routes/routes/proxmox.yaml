@@ -59,7 +59,7 @@ metadata:
 addressType: IPv4
 endpoints:
   - addresses:
-      - 10.10.0.23
+      - 10.131.128.23
     conditions:
       ready: true
 ports:
