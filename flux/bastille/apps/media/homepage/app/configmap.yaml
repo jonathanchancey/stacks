@@ -65,30 +65,14 @@ data:
           icon: zitadel.png
           description: Identity Provider
       - Home Assistant:
-          href: https://ha.fkn.chancey.dev
+          href: https://hub.chancey.dev
           icon: home-assistant.png
           description: Home Automation
-      - Syncthing:
-          href: https://syncthing.chancey.dev/
-          icon: syncthing.png
-          description: File Sync
-      - Longhorn:
-          href: https://longhorn.chancey.dev/
-          icon: longhorn.png
-          description: Distributed Block Storage
       - Kopia:
           href: https://kopia.chancey.dev/
           icon: si-kubernetes-#326CE5
           description: Bastille Backup
-      - Shar:
-          href: https://shar.fkn.chancey.dev/
-          icon: proxmox.png
-          description: Forbidden Hypervisor
     - Monitoring:
-      - Grafana | Academy:
-          href: https://grafana.chancey.dev/
-          icon: grafana.png
-          description: Observability Platform
       - Grafana | Bastille:
           href: https://grafana.bastille.chancey.dev/
           icon: grafana.png
@@ -97,12 +81,8 @@ data:
           href: https://status.chancey.dev/
           icon: mdi-gate-#3cad4b
           description: Status
-      - InfluxDB:
-          href: https://influxdb.fkn.chancey.dev/
-          icon: influxdb.png
-          description: Time Series Database
       - Prometheus:
-          href: https://prometheus.k8s.chancey.dev/
+          href: https://prometheus.chancey.dev/
           icon: prometheus.png
           description: Time Series Database
     - Network:
@@ -122,10 +102,6 @@ data:
           href: https://he-sw-03.chancey.dev/index.html
           icon: si-mikrotik-#CCCCCC
           description: 24p Mikrotik Switch
-      - Traefik:
-          href: https://traefik.fkn.chancey.dev/dashboard/#/
-          icon: traefik.png
-          description: Reverse Proxy
     - Media:
       - Immich:
           href: https://photos.chancey.dev/
