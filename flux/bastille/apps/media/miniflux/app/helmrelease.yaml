@@ -28,7 +28,7 @@ spec:
   values:
     controllers:
       miniflux:
-        strategy: Recreate
+        strategy: RollingUpdate
         labels:
           postgres: "true"
         annotations:
