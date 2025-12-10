@@ -29,7 +29,7 @@ localpv-provisioner:
     image:
       registry: quay.io
       repository: openebs/linux-utils
-      tag: 4.2.0
+      tag: 4.3.0
   hostpathClass:
     enabled: true
     name: openebs-hostpath
