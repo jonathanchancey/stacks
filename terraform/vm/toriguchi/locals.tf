@@ -12,10 +12,10 @@ locals {
     description                    = "Managed by Terraform"
     tags                           = ["debian", "terraform"]
     ansible_groups                 = ["debian"]
-    node_name                      = "selune"
-    cloud_image_node_name          = "selune"
-    datastore_id                   = "local-lvm"
-    cloud_image_datastore_id       = "local"
+    node_name                      = "TARS"
+    cloud_image_node_name          = "TARS"
+    datastore_id                   = "cornfield"
+    cloud_image_datastore_id       = "cornfield"
     dns_domain                     = "internal"
     reboot                         = false
     cloud_image_url                = "https://cloud.debian.org/images/cloud/bookworm/20240717-1811/debian-12-generic-amd64-20240717-1811.qcow2"
@@ -26,7 +26,7 @@ locals {
     virtual_environment_endpoint   = var.virtual_environment_endpoint
     virtual_environment_password   = var.virtual_environment_password
     virtual_environment_username   = var.virtual_environment_username
-    tpm_state_datastore_id         = "local"
+    tpm_state_datastore_id         = "cornfield"
     memory_dedicated               = 4096
     cpu_cores                      = 4
     disk_size                      = 10
