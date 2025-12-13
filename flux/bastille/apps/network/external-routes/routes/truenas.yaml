@@ -24,7 +24,7 @@ spec:
             type: PathPrefix
             value: /
 ---
-apiVersion: gateway.networking.k8s.io/v1alpha3
+apiVersion: gateway.networking.k8s.io/v1
 kind: BackendTLSPolicy
 metadata:
   name: truenas-upstream-tls
@@ -37,6 +37,20 @@ spec:
   validation:
     hostname: truenas.chancey.dev
     wellKnownCACertificates: System
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: BackendTrafficPolicy
+metadata:
+  name: truenas-websocket
+  namespace: network
+spec:
+  targetRefs:
+    - group: ""
+      kind: Service
+      name: truenas
+  timeout:
+    http:
+      requestTimeout: 0s
 ---
 apiVersion: v1
 kind: Service
