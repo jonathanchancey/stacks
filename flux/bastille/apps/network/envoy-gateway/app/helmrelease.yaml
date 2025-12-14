@@ -42,6 +42,8 @@ spec:
           cluster: true
         gateway:
           controllerName: gateway.envoyproxy.io/gatewayclass-controller
+        extensionApis:
+          enableBackend: true
       logging:
         level:
           default: debug
