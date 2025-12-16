@@ -5,12 +5,15 @@ version: "3"
 set: [pipefail]
 shopt: [globstar]
 
+vars:
+  CLUSTER:
+    sh: kubectl config current-context
+
 env:
   PRIVATE_DIR: "{{.ROOT_DIR}}/.private"
   ANSIBLE_DIR: "{{.ROOT_DIR}}/ansible"
   VIRTUAL_ENV: "{{.ROOT_DIR}}/tools/.venv"
-  REQUIREMENTS_TXT: "{{.ROOT_DIR}}/k8s/academy/.config/requirements.txt"
-  KUBERNETES_DIR: "{{.ROOT_DIR}}/flux/bastille"
+  KUBERNETES_DIR: "{{.ROOT_DIR}}/flux/{{.CLUSTER}}"
   SOPS_AGE_KEY_FILE: "{{.PRIVATE_DIR}}/academy/academy.age"
 
 includes:
@@ -31,6 +34,10 @@ tasks:
       - conform
       - flux:test-hr
       - ansible:lint
+
+  netshoot:
+    desc: run a netshoot pod, for example netshoot -- nslookup cloudflare.com
+    cmd: kubectl run -it --rm netshoot-debug --image=nicolaka/netshoot --restart=Never -- {{.CLI_ARGS}}
 
   backlog:
     desc: Commit and sync backlog
