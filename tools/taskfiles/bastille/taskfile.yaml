@@ -65,6 +65,12 @@ tasks:
     dir: "{{.ROOT_DIR}}"
     cmd: uv run tools/templates/bastille-app/generate.py {{.CLI_ARGS}}
 
+  cilium-rollout:
+    desc: Restart Cilium Deployment and Daemonset to apply changes
+    cmds:
+      - kubectl -n kube-system rollout restart deployment/cilium-operator
+      - kubectl -n kube-system rollout restart ds/cilium
+
   test-template-ks:
     dir: "{{.ROOT_DIR}}"
     cmds:
