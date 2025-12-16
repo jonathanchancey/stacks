@@ -6,10 +6,6 @@ set: [pipefail]
 shopt: [globstar]
 
 tasks:
-  count:
-    desc: Count kustomize config
-    cmd: "{{.VIRTUAL_ENV}}/bin/flux-local build ks --path {{.KUBERNETES_DIR}} | kustomize cfg count"
-
   diff-ks:
     desc: Flux diff kustomizations
     cmd: "{{.VIRTUAL_ENV}}/bin/flux-local diff ks --path {{.KUBERNETES_DIR}}"
@@ -18,36 +14,13 @@ tasks:
     desc: Flux diff helmreleases
     cmd: "{{.VIRTUAL_ENV}}/bin/flux-local diff hr --path {{.KUBERNETES_DIR}}"
 
-  test-ks:
-    desc: Flux test kustomizations
-    cmd: "{{.VIRTUAL_ENV}}/bin/flux-local test --path {{.KUBERNETES_DIR}}"
-
-  test-hr:
+  test:
     desc: Flux test kustomizations and helmreleases
     cmd: "{{.VIRTUAL_ENV}}/bin/flux-local test --enable-helm --all-namespaces --path {{.KUBERNETES_DIR}}"
 
-  test-quick:
+  test-ns:
     desc: Flux test kustomizations and helmreleases in current namespace
     cmd: "{{.VIRTUAL_ENV}}/bin/flux-local test --enable-helm --path {{.KUBERNETES_DIR}}"
-
-  resume:
-    desc: resume flux ks [KS=required]
-    cmd: flux resume kustomization -n flux-system {{.KS}}
-    requires:
-      vars: [KS]
-
-  suspend:
-    desc: suspend flux ks [KS=required]
-    cmd: flux suspend kustomization -n flux-system {{.KS}}
-    requires:
-      vars: [KS]
-
-  reconcile:
-    desc: Force update Flux to pull in changes from your Git repository
-    cmd: flux --namespace flux-system reconcile kustomization academy-cluster --with-source
-    preconditions:
-      - test -f {{.KUBECONFIG}}
-      - which flux
 
   ks-*:
     desc: Apply a Flux KS [PATH=required]
@@ -65,29 +38,8 @@ tasks:
         sh: flux --namespace flux-system get kustomizations {{base .PATH}}
     preconditions:
       - test -f {{.KUBERNETES_DIR}}/{{.PATH}}/ks.yaml
-      - which flux kubectl yq
 
-  resources:
-    desc: Gather common resources in your cluster
-    cmds:
-      - for: { var: RESOURCE }
-        cmd: KUBECONFIG={{.KUBECONFIG}} kubectl get {{.ITEM}} {{.CLI_ARGS | default "-A"}}
-    vars:
-      RESOURCE: >-
-        nodes
-        gitrepositories
-        kustomizations
-        helmrepositories
-        helmreleases
-        certificates
-        certificaterequests
-        ingresses
-        pods
-    preconditions:
-      - test -f {{.KUBECONFIG}}
-      - which kubectl
-
-  cull:
+  cleanse:
     desc: Delete pods with a Failed/Pending/Succeeded phase
     cmds:
       - for:
