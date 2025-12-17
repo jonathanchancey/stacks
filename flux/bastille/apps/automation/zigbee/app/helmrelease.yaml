@@ -27,6 +27,7 @@ spec:
     controllers:
       zigbee:
         annotations:
+          external-dns.alpha.kubernetes.io/hostname: zigbee.chancey.dev
           reloader.stakater.com/auto: "true"
         containers:
           app:
@@ -99,6 +100,7 @@ spec:
         parentRefs:
           - name: internal
             namespace: network
+            sectionName: https
     persistence:
       config:
         existingClaim: "{{ .Release.Name }}"
