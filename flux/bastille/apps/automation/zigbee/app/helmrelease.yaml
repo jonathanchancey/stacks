@@ -60,9 +60,6 @@ spec:
               ZIGBEE2MQTT_CONFIG_SERIAL_PORT: tcp://10.131.128.240:6638
               ZIGBEE2MQTT_CONFIG_SERIAL_ADAPTER: ember
               # DEBUG: "zigbee-herdsman*"
-            envFrom:
-              - secretRef:
-                  name: "{{ .Release.Name }}-secret"
             probes:
               liveness:
                 enabled: true
