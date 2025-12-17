@@ -36,9 +36,6 @@ spec:
               tag: 2025.12.2@sha256:9ced4c27950c4b5f94537fc853bbf82c4e59537f6aba0081a6eecc449b57f198
             env:
               TZ: America/Los_Angeles
-              HASS_HTTP_TRUSTED_PROXY_1: 10.131.128.0/18 # native l2
-              HASS_HTTP_TRUSTED_PROXY_2: 10.12.0.0/25 # bgp lb ip pool
-              HASS_HTTP_TRUSTED_PROXY_3: 10.244.0.0/16 # pod cidr
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
@@ -49,6 +46,14 @@ spec:
               limits:
                 memory: 2Gi
     defaultPodOptions:
+      annotations:
+        k8s.v1.cni.cncf.io/networks: |
+          [{
+            "name": "multus-iot",
+            "namespace": "network",
+            "mac": "c6:ae:a3:8e:7a:59",
+            "ips": ["10.10.0.32/24", "10.20.0.32/24"]
+          }]
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
