@@ -32,7 +32,7 @@ tasks:
     desc: run testing suite
     deps:
       - conform
-      - flux:test-hr
+      - flux:test
       - ansible:lint
 
   netshoot:

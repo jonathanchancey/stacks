@@ -33,7 +33,7 @@ tasks:
       - sh: kubectl config current-context | grep -q bastille
     cmds:
       - for: { var: NODES }
-        cmd: talosctl --talosconfig=.private/talosconfig machineconfig patch .private/controlplane.yaml --patch @patches/controlplane.yaml --patch @patches/{{.ITEM.name}}.yaml --output .private/rendered/{{.ITEM.name}}.yaml
+        cmd: talosctl machineconfig patch .private/controlplane.yaml --patch @patches/controlplane.yaml --patch @patches/{{.ITEM.name}}.yaml --output .private/rendered/{{.ITEM.name}}.yaml
 
   talos-apply:
     desc: Apply Talos configuration to all nodes sequentially
@@ -41,7 +41,7 @@ tasks:
     deps: [talos-render]
     cmds:
       - for: { var: NODES }
-        cmd: talosctl --talosconfig=.private/talosconfig apply-config --nodes {{.ITEM.ip}} --endpoints {{.ITEM.ip}} --file ./.private/rendered/{{.ITEM.name}}.yaml
+        cmd: talosctl apply-config --nodes {{.ITEM.ip}} --endpoints {{.ITEM.ip}} --file ./.private/rendered/{{.ITEM.name}}.yaml
 
   ceph-toolbox:
     desc: Access the Rook Ceph toolbox
