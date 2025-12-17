@@ -12,7 +12,7 @@ spec:
   interval: 30m
   retryInterval: 1m
   timeout: 5m
-  path: ./flux/bastille/network/multus/app
+  path: ./flux/bastille/apps/network/multus/app
   postBuild:
     substitute:
       APP: *app
@@ -38,7 +38,7 @@ spec:
   timeout: 15m
   dependsOn:
     - name: multus
-  path: ./flux/bastille/network/multus/networks
+  path: ./flux/bastille/apps/network/multus/networks
   postBuild:
     substitute:
       APP: *app
