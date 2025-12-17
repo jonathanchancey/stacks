@@ -3,22 +3,22 @@
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
-  name: garage-s3
+  name: sw-01
   namespace: network
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: s3.chancey.dev
+    external-dns.alpha.kubernetes.io/hostname: sw-01.chancey.dev
 spec:
   hostnames:
-    - s3.chancey.dev
+    - sw-01.chancey.dev
   parentRefs:
-    - name: edge
+    - name: internal
       kind: Gateway
-      namespace: network
+      namespace: kube-system
       sectionName: https
   rules:
     - backendRefs:
-        - name: garage-s3
-          port: 30188
+        - name: sw-01
+          port: 80
       matches:
         - path:
             type: PathPrefix
@@ -27,28 +27,29 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: garage-s3
+  name: sw-01
   namespace: network
 spec:
+  clusterIP: None
   ports:
     - name: http
-      port: 30188
-      targetPort: 30188
+      port: 80
+      targetPort: 80
 ---
 apiVersion: discovery.k8s.io/v1
 kind: EndpointSlice
 metadata:
-  name: garage-s3
+  name: sw-01
   namespace: network
   labels:
-    kubernetes.io/service-name: garage-s3
+    kubernetes.io/service-name: sw-01
 addressType: IPv4
 endpoints:
   - addresses:
-      - 10.10.0.165
+      - 10.10.0.7
     conditions:
       ready: true
 ports:
   - name: http
-    port: 30188
+    port: 80
     protocol: TCP

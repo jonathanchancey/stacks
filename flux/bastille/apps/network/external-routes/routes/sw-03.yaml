@@ -3,13 +3,13 @@
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
-  name: he-sw-01
+  name: sw-03
   namespace: network
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: he-sw-01.chancey.dev
+    external-dns.alpha.kubernetes.io/hostname: sw-03.chancey.dev
 spec:
   hostnames:
-    - he-sw-01.chancey.dev
+    - sw-03.chancey.dev
   parentRefs:
     - name: internal
       kind: Gateway
@@ -17,7 +17,7 @@ spec:
       sectionName: https
   rules:
     - backendRefs:
-        - name: he-sw-01
+        - name: sw-03
           port: 80
       matches:
         - path:
@@ -27,10 +27,9 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: he-sw-01
+  name: sw-03
   namespace: network
 spec:
-  clusterIP: None
   ports:
     - name: http
       port: 80
@@ -39,14 +38,14 @@ spec:
 apiVersion: discovery.k8s.io/v1
 kind: EndpointSlice
 metadata:
-  name: he-sw-01
+  name: sw-03
   namespace: network
   labels:
-    kubernetes.io/service-name: he-sw-01
+    kubernetes.io/service-name: sw-03
 addressType: IPv4
 endpoints:
   - addresses:
-      - 10.10.0.7
+      - 10.173.179.8
     conditions:
       ready: true
 ports:

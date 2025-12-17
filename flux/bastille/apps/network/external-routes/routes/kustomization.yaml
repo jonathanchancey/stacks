@@ -1,18 +1,10 @@
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.config.k8s.io/kustomization_v1beta1.json
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - he-sw-01.yaml
-  - he-sw-02.yaml
-  - he-sw-03.yaml
+  - sw-01.yaml
+  - sw-02.yaml
+  - sw-03.yaml
   - proxmox.yaml
-  - truenas.yaml
-  - pihole.yaml
-  - opnsense.yaml
-  - intrepid.yaml
-  - garage-s3.yaml
-  - garage-web.yaml
-  - certificates/opnsense.yaml
   - certificates/proxmox.yaml
-  - certificates/truenas.yaml
