@@ -1,4 +1,0 @@
-vms:
-  hosts:
-    winston:
-      ansible_host: winston

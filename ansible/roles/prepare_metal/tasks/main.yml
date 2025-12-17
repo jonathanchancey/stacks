@@ -3,12 +3,122 @@
   ansible.builtin.debug:
     var: ansible_architecture
 
-- name: Run Arm Tasks
-  ansible.builtin.import_tasks: arm.yml
-  when: ansible_architecture == 'arm64'
+- name: Check and create ansible user
   become: true
+  become_user: root
+  block:
+    - name: Create ansible user
+      user:
+        name: ansible
+        state: present
+        shell: /bin/bash
+        system: true
+        create_home: true
+        groups: sudo
+        password: "!"
 
-- name: Run x86 Tasks
-  ansible.builtin.import_tasks: x86.yml
-  when: ansible_architecture == 'x86_64'
+    - name: Set up authorized keys for ansible user
+      ansible.posix.authorized_key:
+        user: ansible
+        state: present
+        key: "{{ ansible_ssh_public_key }}"
+
+    - name: Configure sudo access for ansible user
+      lineinfile:
+        path: /etc/sudoers.d/ansible
+        line: "ansible ALL=(ALL) NOPASSWD: ALL"
+        state: present
+        mode: "0440"
+        owner: root
+        group: root
+        create: yes
+        validate: "/usr/sbin/visudo -cf %s"
+
+- name: Test ansible user sudo access
+  command: whoami
   become: true
+  become_user: ansible
+  register: sudo_test
+  changed_when: false
+  failed_when: sudo_test.stdout != 'root'
+
+- name: Update ansible_user for subsequent tasks
+  set_fact:
+    ansible_user: ansible
+    ansible_become_user: root
+
+- name: Reconnect as ansible user
+  meta: reset_connection
+
+- name: Check and create service user
+  become: true
+  block:
+    - name: Create service user
+      user:
+        name: "{{ service_user }}"
+        state: present
+        shell: /bin/bash
+        system: true
+        create_home: true
+        groups: sudo
+        password: "{{ service_user_pass | password_hash('sha512') }}"
+
+    - name: Set up authorized keys for service user
+      ansible.posix.authorized_key:
+        user: "{{ service_user }}"
+        state: present
+        key: "{{ service_user_pass_ssh_public_key }}"
+
+    - name: Configure sudo access for service user
+      lineinfile:
+        path: /etc/sudoers.d/"{{ service_user }}"
+        line: "{{ service_user }} ALL=(ALL) NOPASSWD: ALL"
+        state: present
+        mode: "0440"
+        owner: root
+        group: root
+        create: yes
+        validate: "/usr/sbin/visudo -cf %s"
+
+- name: Harden sshd configuration
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    validate: "/usr/sbin/sshd -t -f %s" # -t test, -f config
+  loop:
+    - regexp: "^#?PermitRootLogin"
+      line: "PermitRootLogin no"
+    - regexp: "^#?PasswordAuthentication"
+      line: "PasswordAuthentication no"
+    - regexp: "^#?PubkeyAuthentication"
+      line: "PubkeyAuthentication yes"
+    - regexp: "^#?PermitEmptyPasswords"
+      line: "PermitEmptyPasswords no"
+    - regexp: "^#?X11Forwarding"
+      line: "X11Forwarding no"
+    - regexp: "^#?MaxAuthTries"
+      line: "MaxAuthTries 7"
+  notify: Restart sshd
+
+- name: Set same timezone
+  community.general.timezone:
+    name: "{{ system_timezone }}"
+  when: system_timezone is defined
+
+- name: Perform dist-upgrade
+  apt:
+    upgrade: dist
+    force_apt_get: yes
+    update_cache: true
+    autoclean: yes
+    autoremove: yes
+  register: upgrade_output
+
+- name: Reboot system
+  reboot:
+    msg: "Rebooting due to ansible automation"
+    connect_timeout: 5
+    reboot_timeout: 300
+    pre_reboot_delay: 0
+    post_reboot_delay: 30
