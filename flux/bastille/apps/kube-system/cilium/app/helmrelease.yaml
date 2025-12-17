@@ -49,6 +49,9 @@ spec:
 
     localRedirectPolicy: true
 
+    endpointRoutes:
+      enabled: true
+
     cni-exclusive: false
 
     securityContext:
