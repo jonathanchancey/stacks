@@ -65,7 +65,7 @@ data:
           icon: zitadel.png
           description: Identity Provider
       - Home Assistant:
-          href: https://hub.chancey.dev
+          href: https://home-assistant.chancey.dev
           icon: home-assistant.png
           description: Home Automation
       - Kopia:
@@ -73,7 +73,7 @@ data:
           icon: si-kubernetes-#326CE5
           description: Bastille Backup
     - Monitoring:
-      - Grafana | Bastille:
+      - Grafana:
           href: https://grafana.bastille.chancey.dev/
           icon: grafana.png
           description: Observability Platform
@@ -91,15 +91,15 @@ data:
           icon: unifi.png
           description: Unforbidden Router
       - 24p PoE Switch:
-          href: https://he-sw-01.chancey.dev/?
+          href: https://sw-01.chancey.dev/?
           icon: si-mikrotik-#CCCCCC
           description: 24p PoE Mikrotik Switch
       - 8p 2.5Gb Switch:
-          href: https://he-sw-02.chancey.dev/?
+          href: https://sw-02.chancey.dev/?
           icon: si-mikrotik-#CCCCCC
           description: 2.5Gb Mikrotik Switch
-      - 24p SwOS Switch:
-          href: https://he-sw-03.chancey.dev/index.html
+      - 24p Switch:
+          href: https://sw-03.chancey.dev/index.html
           icon: si-mikrotik-#CCCCCC
           description: 24p Mikrotik Switch
     - Media:
@@ -123,10 +123,6 @@ data:
           href: https://gitea.chancey.dev/
           icon: gitea.png
           description: Version Control
-      - Miniflux:
-          href: https://miniflux.k8s.chancey.dev/
-          icon: miniflux.png
-          description: RSS Reader
       - Miniflux | Bastille:
           href: https://miniflux.chancey.dev/
           icon: miniflux.png
