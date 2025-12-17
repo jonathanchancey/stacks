@@ -78,6 +78,9 @@ spec:
           enabled: true
           trustCRDsExist: true
 
+    dashboards:
+      enabled: true
+
     prometheus:
       enabled: true
       serviceMonitor:
@@ -109,6 +112,8 @@ spec:
         create: auto
 
     operator:
+      dashboards:
+        enabled: true
       prometheus:
         enabled: true
         serviceMonitor:
