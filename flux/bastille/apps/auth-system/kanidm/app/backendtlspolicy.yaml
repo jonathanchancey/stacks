@@ -9,5 +9,8 @@ spec:
       name: kanidm
       group: ""
   validation:
-    wellKnownCACertificates: System
+    caCertificateRefs:
+      - kind: "Secret"
+        group: ""
+        name: "kanidm-tls"
     hostname: idm.chancey.dev
