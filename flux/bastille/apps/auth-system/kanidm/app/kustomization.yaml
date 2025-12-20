@@ -9,6 +9,6 @@ resources:
 configMapGenerator:
   - name: kanidm-configmap
     files:
-      - config.toml=resources/config.toml
+      - server.toml=resources/server.toml
     options:
       disableNameSuffixHash: true
