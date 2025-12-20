@@ -11,8 +11,8 @@ spec:
     kind: ClusterIssuer
     name: letsencrypt-production
   privateKey:
-    algorithm: ECDSA
-    size: 384
+    algorithm: RSA
+    size: 2048
   secretName: *name
   usages:
     - digital signature
