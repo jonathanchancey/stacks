@@ -6,3 +6,9 @@ resources:
   - helmrelease.yaml
   - certificate.yaml
   - pvc.yaml
+configMapGenerator:
+  - name: kanidm-configmap
+    files:
+      - config.toml=resources/config.toml
+    options:
+      disableNameSuffixHash: true
