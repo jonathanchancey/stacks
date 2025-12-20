@@ -1,7 +1,7 @@
 version = "2"
 
 domain = "idm.chancey.dev"
-origin = "https://idm.chancey.dev""
+origin = "https://idm.chancey.dev"
 
 bindaddress = "0.0.0.0:8443"
 ldapbindaddress = "0.0.0.0:3636"
