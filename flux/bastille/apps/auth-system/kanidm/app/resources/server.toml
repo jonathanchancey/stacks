@@ -12,7 +12,7 @@ tls_chain = "/certs/tls.crt"
 tls_key = "/certs/tls.key"
 
 [http_client_address_info]
-x-forward-for = ["10.131.128.10/29", "10.244.0.0/16"]
+x-forward-for = ["10.131.128.8/29", "10.244.0.0/16"]
 
 [online_backup]
 path = "/data/backups"
