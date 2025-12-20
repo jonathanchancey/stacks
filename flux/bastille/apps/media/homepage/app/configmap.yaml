@@ -57,9 +57,13 @@ data:
           icon: proxmox.png
           description: Hypervisor
       - TrueNAS:
-          href: https://truenas.chancey.dev
+          href: https://vents.chancey.dev
           icon: si-truenas-#0095D5
           description: Baremetal NAS
+      - Kanidm:
+          href: https://idm.chancey.dev/
+          icon: kanidm.png
+          description: Identity Provider
       - ZITADEL:
           href: https://auth.chancey.dev/
           icon: zitadel.png
@@ -71,7 +75,7 @@ data:
       - Kopia:
           href: https://kopia.chancey.dev/
           icon: si-kubernetes-#326CE5
-          description: Bastille Backup
+          description: PVC Backup
     - Monitoring:
       - Grafana:
           href: https://grafana.bastille.chancey.dev/
@@ -102,11 +106,19 @@ data:
           href: https://sw-03.chancey.dev/index.html
           icon: si-mikrotik-#CCCCCC
           description: 24p Mikrotik Switch
+      - Nginx:
+          href: https://nginx.vents.chancey.dev/
+          icon: nginx.png
+          description: Decoupled Reverse Proxy
     - Media:
       - Immich:
           href: https://photos.chancey.dev/
           icon: immich.png
           description: Photo Collection Manager
+      - Garage:
+          href: https://garage.vents.chancey.dev/
+          icon: garage.png
+          description: S3 storage
       - Jellyfin:
           href: https://jellyfin.chancey.dev/
           icon: jellyfin.png
@@ -123,7 +135,7 @@ data:
           href: https://gitea.chancey.dev/
           icon: gitea.png
           description: Version Control
-      - Miniflux | Bastille:
+      - Miniflux:
           href: https://miniflux.chancey.dev/
           icon: miniflux.png
           description: RSS Reader
