@@ -87,7 +87,7 @@ spec:
             sectionName: https
     persistence:
       data:
-        existingClaim: "{{ .Release.Name }}"
+        existingClaim: "kanidm"
 
       config:
         type: configMap
@@ -110,15 +110,6 @@ spec:
         type: emptyDir
         globalMounts:
           - path: /var/run
-
-      icon-cache:
-        suffix: "icon-cache"
-        size: 1Gi
-        accessMode: ReadWriteOnce
-        advancedMounts:
-          provision:
-            app:
-              - path: /data/icons
 
     rbac:
       roles:
