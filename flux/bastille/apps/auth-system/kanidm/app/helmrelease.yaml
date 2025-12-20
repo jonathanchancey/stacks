@@ -1,0 +1,152 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/source.toolkit.fluxcd.io/ocirepository_v1.json
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: kanidm
+spec:
+  interval: 15m
+  layerSelector:
+    mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
+    operation: copy
+  ref:
+    tag: 4.5.0
+  url: oci://ghcr.io/bjw-s-labs/helm/app-template
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app kanidm
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: kanidm
+  interval: 1h
+  values:
+    controllers:
+      kanidm:
+        type: statefulset
+        annotations:
+          external-dns.alpha.kubernetes.io/hostname: idm.chancey.dev
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: docker.io/kanidm/server
+              tag: 1.8.0@sha256:bac174bc0e2e05004c00d51f1bab49c3a8327c01a16607b71e097ee4365a39f8
+            env:
+              TZ: America/Los_Angeles
+              KANIDM_ADMIN_BIND_PATH: "/var/run/kanidmd.sock"
+            probes:
+              liveness: &probe
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /status
+                    port: 8443
+                    scheme: HTTPS
+                  # initialDelaySeconds: 0
+                  # periodSeconds: 10
+                  # timeoutSeconds: 1
+                  # failureThreshold: 3
+              readiness: *probe
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 10m
+              limits:
+                memory: 1Gi
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+    service:
+      app:
+        ports:
+          http:
+            port: 443
+            targetPort: 8443
+          ldaps:
+            port: 636
+            targetPort: 3636
+    route:
+      app:
+        hostnames:
+          - "idm.chancey.dev"
+        parentRefs:
+          - name: internal
+            namespace: network
+            sectionName: https
+    persistence:
+      data:
+        existingClaim: "{{ .Release.Name }}"
+
+      config:
+        type: configMap
+        name: kanidm-configmap
+        advancedMounts:
+          *app :
+            app:
+              - path: /data/server.toml
+                subPath: server.toml
+      certs:
+        type: secret
+        name: kanidm-tls
+        defaultMode: 0400
+        advancedMounts:
+          *app :
+            app:
+              - path: /certs
+
+      empty:
+        type: emptyDir
+        globalMounts:
+          - path: /var/run
+
+      icon-cache:
+        suffix: "icon-cache"
+        size: 1Gi
+        accessMode: ReadWriteOnce
+        advancedMounts:
+          provision:
+            app:
+              - path: /data/icons
+
+    rbac:
+      roles:
+        kanidm-write-secret:
+          type: ClusterRole
+          rules:
+            - apiGroups: [""]
+              resources: ["secrets"]
+              verbs: ["create", "patch"]
+        kanidm-read-cm:
+          type: Role
+          rules:
+            - apiGroups: [""]
+              resources: ["configmaps"]
+              verbs: ["get", "list", "watch"]
+      bindings:
+        kanidm-write-secret:
+          type: ClusterRoleBinding
+          roleRef:
+            identifier: kanidm-write-secret
+          subjects:
+            - identifier: *app
+        kanidm-read-cm:
+          type: RoleBinding
+          roleRef:
+            identifier: kanidm-read-cm
+          subjects:
+            - identifier: *app
+
+    serviceAccount:
+      *app : {}

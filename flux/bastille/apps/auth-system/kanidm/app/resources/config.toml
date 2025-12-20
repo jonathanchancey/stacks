@@ -1,0 +1,19 @@
+version = "2"
+
+domain = "idm.chancey.dev"
+origin = "https://idm.chancey.dev""
+
+bindaddress = "0.0.0.0:8443"
+ldapbindaddress = "0.0.0.0:3636"
+
+db_path = "/data/kanidm.db"
+
+tls_chain = "/certs/tls.crt"
+tls_key = "/certs/tls.key"
+
+[http_client_address_info]
+x-forward-for = ["10.131.128.10/29", "10.244.0.0/16"]
+
+[online_backup]
+path = "/data/backups"
+schedule = "03 02 * * *"
