@@ -85,6 +85,10 @@ spec:
           - name: edge
             namespace: network
             sectionName: https
+        rules:
+          - backendRefs:
+              - identifier: app
+                port: 443
     persistence:
       data:
         existingClaim: "kanidm"
