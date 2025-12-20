@@ -82,7 +82,7 @@ spec:
         hostnames:
           - "idm.chancey.dev"
         parentRefs:
-          - name: internal
+          - name: edge
             namespace: network
             sectionName: https
     persistence:
