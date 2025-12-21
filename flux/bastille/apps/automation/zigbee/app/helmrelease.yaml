@@ -38,7 +38,7 @@ spec:
               TZ: America/Los_Angeles
               ZIGBEE2MQTT_DATA: /config
               ZIGBEE2MQTT_CONFIG_ADVANCED_LAST_SEEN: ISO_8601
-              ZIGBEE2MQTT_CONFIG_ADVANCED_LOG_LEVEL: debug
+              ZIGBEE2MQTT_CONFIG_ADVANCED_LOG_LEVEL: info
               ZIGBEE2MQTT_CONFIG_ADVANCED_LOG_OUTPUT: '["console"]'
               ZIGBEE2MQTT_CONFIG_AVAILABILITY_ACTIVE_TIMEOUT: 60
               ZIGBEE2MQTT_CONFIG_AVAILABILITY_PASSIVE_TIMEOUT: 2000
@@ -59,7 +59,6 @@ spec:
               ZIGBEE2MQTT_CONFIG_SERIAL_DISABLE_LED: "false"
               ZIGBEE2MQTT_CONFIG_SERIAL_PORT: tcp://10.131.128.240:6638
               ZIGBEE2MQTT_CONFIG_SERIAL_ADAPTER: ember
-              # DEBUG: "zigbee-herdsman*"
             probes:
               liveness:
                 enabled: true
@@ -96,7 +95,7 @@ spec:
         hostnames:
           - "{{ .Release.Name }}.chancey.dev"
         parentRefs:
-          - name: internal
+          - name: edge
             namespace: network
             sectionName: https
     persistence:
