@@ -23,6 +23,8 @@ alloy:
 minio:
   enabled: false
 
+preUpgradeHook:
+  enabled: false
 localpv-provisioner:
   enabled: true
   helperPod:
@@ -41,5 +43,3 @@ localpv-provisioner:
       volumeSnapshots:
         enabled: false
         keep: false
-  preUpgradeHook:
-    enabled: false
