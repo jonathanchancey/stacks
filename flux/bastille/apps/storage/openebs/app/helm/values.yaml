@@ -24,15 +24,23 @@ minio:
   enabled: false
 
 localpv-provisioner:
+  analytics: false
   enabled: true
   helperPod:
     image:
       registry: quay.io
-      repository: openebs/linux-utils
-      tag: 4.2.0
   hostpathClass:
     enabled: true
     name: openebs-hostpath
     isDefaultClass: false
     basePath: /var/mnt/local-hostpath
     reclaimPolicy: Delete
+    rbac:
+      create: true
+  openebs-crds:
+    csi:
+      volumeSnapshots:
+        enabled: false
+        keep: false
+  preUpgradeHook:
+    enabled: false
