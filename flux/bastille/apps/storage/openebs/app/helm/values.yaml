@@ -24,7 +24,6 @@ minio:
   enabled: false
 
 localpv-provisioner:
-  analytics: false
   enabled: true
   helperPod:
     image:
