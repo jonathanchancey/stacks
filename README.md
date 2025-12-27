@@ -1,37 +1,35 @@
 # Stacks
 
-Welcome to my waste of electricity
-
-I use this repo to define services I'd rather not live without
+Welcome to my *contemplection*
 
 ## Clusters
 
-### Academy - K3s/Ansible/Terraform
-
-The cluster that started it all
-
-> though it's getting a bit creaky at over 750 days
-
-- 7 nodes, 40 cores, 154GB RAM
-- running on mixed architecture
-- scheduled for decommission
-- will rise again as ~~chaos~~ dev cluster
-
 ### Bastille - Talos/Bare Metal
 
-Nascent production cluster following best practices (slightly more than what's sensible)
+Production cluster following best practices (slightly more than what's sensible)
 
 > not in flux == not real
 
 - 3 nodes, 48 cores, 96GB DDR5 (non ecc)
 - Ceph block storage with Thunderbolt networking ~23Gbps
 - CloudNative-PG with openEBS localpv on NVME, streaming WAL to B2
-- Cilium CNI, BGP, 2.5Gb networking (10Gb soon)
+- Cilium CNI, BGP, 2.5Gb networking
+
+### Academy - K3s/Ansible/Terraform
+
+The cluster that started it all
+
+> though it's getting a bit creaky at over 800 days
+
+- 7 nodes, 40 cores, 154GB RAM
+- mixed architecture
+- scheduled for decommission
+- ~~will rise again~~ it most certainly will not
 
 ## Folder Structure
 
 - `ansible/` - maintenance and configuration
-- `flux/` - Talos configs and everything kubernetes
+- `flux/` - Talos configs and everything Kubernetes
 - `terraform/` - VM provisioning and DNS management
 - `tools/` - scripts, templates, taskfiles
 
