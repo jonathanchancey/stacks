@@ -52,12 +52,12 @@ spec:
               LOG_DATE_TIME: "1"
               METRICS_ALLOWED_NETWORKS: 10.0.0.0/8
               METRICS_COLLECTOR: "1"
-              # OAUTH2_USER_CREATION: "1"
-              # OAUTH2_OIDC_DISCOVERY_ENDPOINT: https://auth.chancey.dev
-              # OAUTH2_PROVIDER: oidc
-              # OAUTH2_REDIRECT_URL: https://miniflux.chancey.dev/oauth2/oidc/callback
-              # POLLING_SCHEDULER: entry_frequency
-              # POLLING_FREQUENCY: "15"
+              OAUTH2_USER_CREATION: "1"
+              OAUTH2_PROVIDER: oidc
+              OAUTH2_REDIRECT_URL: https://miniflux.chancey.dev/oauth2/oidc/callback
+              OAUTH2_OIDC_DISCOVERY_ENDPOINT: https://idm.chancey.dev/oauth2/openid/miniflux
+              POLLING_SCHEDULER: entry_frequency
+              POLLING_FREQUENCY: "15"
               RUN_MIGRATIONS: "1"
             envFrom: *envFrom
             probes:
