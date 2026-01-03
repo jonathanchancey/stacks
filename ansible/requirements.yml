@@ -3,6 +3,6 @@ collections:
   - name: cloud.terraform
     version: 4.0.0
   - name: community.docker
-    version: 5.0.4
+    version: 5.0.5
   - name: community.general
   - name: ansible.posix
