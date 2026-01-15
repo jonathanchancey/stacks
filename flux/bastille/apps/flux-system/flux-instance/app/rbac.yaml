@@ -1,0 +1,166 @@
+# yaml-language-server: $schema=https://kubernetesjsonschema.dev/v1.14.0-standalone/serviceaccount-v1.json
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: flux-ro
+---
+# yaml-language-server: $schema=https://kubernetesjsonschema.dev/v1.14.0-standalone/clusterrole-rbac.authorization.k8s.io-v1.json
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: flux-ro
+rules:
+  - apiGroups: [""]
+    resources:
+      - configmaps
+      - endpoints
+      - events
+      - limitranges
+      - namespaces
+      - nodes
+      - persistentvolumeclaims
+      - persistentvolumes
+      - pods
+      - pods/log
+      - replicationcontrollers
+      - resourcequotas
+      - services
+    verbs: [get, list, watch]
+  - apiGroups: [apps]
+    resources:
+      - daemonsets
+      - deployments
+      - replicasets
+      - statefulsets
+    verbs: [get, list, watch]
+  - apiGroups: [batch]
+    resources:
+      - cronjobs
+      - jobs
+    verbs: [get, list, watch]
+  - apiGroups: [networking.k8s.io]
+    resources:
+      - ingresses
+      - networkpolicies
+    verbs: [get, list, watch]
+  - apiGroups: [gateway.networking.k8s.io]
+    resources:
+      - gateways
+      - httproutes
+      - grpcroutes
+    verbs: [get, list, watch]
+  - apiGroups:
+      - source.toolkit.fluxcd.io
+      - kustomize.toolkit.fluxcd.io
+      - helm.toolkit.fluxcd.io
+      - notification.toolkit.fluxcd.io
+      - image.toolkit.fluxcd.io
+    resources: ["*"]
+    verbs: [get, list, watch]
+  - apiGroups: [storage.k8s.io]
+    resources:
+      - storageclasses
+      - volumeattachments
+    verbs: [get, list, watch]
+  - apiGroups: [apiextensions.k8s.io]
+    resources:
+      - customresourcedefinitions
+    verbs: [get, list, watch]
+  - apiGroups: [metrics.k8s.io]
+    resources:
+      - nodes
+      - pods
+    verbs: [get, list]
+  - apiGroups: [ceph.rook.io]
+    resources:
+      - cephblockpools
+      - cephclients
+      - cephclusters
+      - cephfilesystemmirrors
+      - cephfilesystems
+      - cephnfses
+      - cephobjectrealms
+      - cephobjectstores
+      - cephobjectstoreusers
+      - cephobjectzonegroups
+      - cephobjectzones
+      - cephrbdmirrors
+    verbs: [get, list, watch]
+  - apiGroups: [cert-manager.io]
+    resources:
+      - certificaterequests
+      - certificates
+      - challenges
+      - clusterissuers
+      - issuers
+      - orders
+    verbs: [get, list, watch]
+  - apiGroups: [cilium.io]
+    resources:
+      - ciliumbgpadvertisements
+      - ciliumbgpclusterconfigs
+      - ciliumbgpnodeconfigs
+      - ciliumbgppeerconfigs
+      - ciliumbgppeeringpolicies
+      - ciliumcidrgroups
+      - ciliumclusterwidenetworkpolicies
+      - ciliumegressgatewaypolicies
+      - ciliumendpoints
+      - ciliumenvoyconfigs
+      - ciliumexternalworkloads
+      - ciliumidentities
+      - ciliuml2announcementpolicies
+      - ciliumloadbalancerippool
+      - ciliumnetworkpolicies
+      - ciliumnodes
+      - ciliumnodeconfigs
+      - ciliumpodippools
+    verbs: [get, list, watch]
+  - apiGroups: [volsync.backube]
+    resources:
+      - replicationdestinations
+      - replicationsources
+    verbs: [get, list, watch]
+  - apiGroups: [postgresql.cnpg.io]
+    resources:
+      - backups
+      - clusters
+      - poolers
+      - scheduledbackups
+    verbs: [get, list, watch]
+  - apiGroups: [snapshot.storage.k8s.io]
+    resources:
+      - volumesnapshotclasses
+      - volumesnapshotcontents
+      - volumesnapshots
+    verbs: [get, list, watch]
+  - apiGroups: [rbac.authorization.k8s.io]
+    resources:
+      - clusterrolebindings
+      - clusterroles
+      - rolebindings
+      - roles
+    verbs: [get, list, watch]
+  - apiGroups: [coordination.k8s.io]
+    resources:
+      - leases
+    verbs: [get, list, watch]
+  - apiGroups: [autoscaling]
+    resources:
+      - horizontalpodautoscalers
+    verbs: [get, list, watch]
+---
+# yaml-language-server: $schema=https://kubernetesjsonschema.dev/v1.14.0-standalone/clusterrolebinding-rbac.authorization.k8s.io-v1.json
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: flux-ro
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: flux-ro
+subjects:
+  - kind: ServiceAccount
+    name: flux-ro
+    namespace: flux-system
