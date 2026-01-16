@@ -14,13 +14,21 @@ tasks:
     desc: Flux diff helmreleases
     cmd: "{{.VIRTUAL_ENV}}/bin/flux-local diff hr --path {{.KUBERNETES_DIR}}"
 
-  test:
+  test-all:
     desc: Flux test kustomizations and helmreleases
     cmd: "{{.VIRTUAL_ENV}}/bin/flux-local test --enable-helm --all-namespaces --path {{.KUBERNETES_DIR}}"
 
-  test-cwd:
-    desc: Flux test kustomizations and helmreleases in current working directory
-    cmd: "{{.VIRTUAL_ENV}}/bin/flux-local test --enable-helm --path {{.USER_WORKING_DIR}}"
+  test:
+    desc: Flux test kustomizations and helmreleases in current namespace
+    cmd: "{{.VIRTUAL_ENV}}/bin/flux-local test --enable-helm --path {{.KUBERNETES_DIR}}"
+
+  test-ns:
+    desc: Flux test kustomizations and helmreleases in USER_WORKING_DIR or override with NAMESPACE
+    cmd: "{{.VIRTUAL_ENV}}/bin/flux-local test --enable-helm --namespace {{.NAMESPACE}} --path {{.KUBERNETES_DIR}}"
+    vars:
+      NAMESPACE: "{{.NAMESPACE | default .CWD_NAMESPACE}}"
+    preconditions:
+      - sh: test -n "{{.CWD_NAMESPACE}}"
 
   ks-*:
     desc: Apply a Flux KS [PATH=required]
