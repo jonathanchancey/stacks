@@ -8,12 +8,17 @@ shopt: [globstar]
 vars:
   CLUSTER:
     sh: kubectl config current-context
+  NAMESPACE:
+    sh: kubectl config view --minify --output 'jsonpath={..namespace}'
+  CWD_NAMESPACE:
+    sh: echo "{{.USER_WORKING_DIR}}" | sed -n 's|.*/apps/\([^/]*\).*|\1|p'
+  KUBERNETES_DIR: "{{.ROOT_DIR}}/flux/{{.CLUSTER}}"
+  KUBERNETES_WORKING_DIR: "{{if .USER_WORKING_DIR | hasPrefix .KUBERNETES_DIR}}{{.USER_WORKING_DIR}}{{else}}{{.KUBERNETES_DIR}}{{end}}"
 
 env:
   PRIVATE_DIR: "{{.ROOT_DIR}}/.private"
   ANSIBLE_DIR: "{{.ROOT_DIR}}/ansible"
   VIRTUAL_ENV: "{{.ROOT_DIR}}/tools/.venv"
-  KUBERNETES_DIR: "{{.ROOT_DIR}}/flux/{{.CLUSTER}}"
   SOPS_AGE_KEY_FILE: "{{.PRIVATE_DIR}}/academy/academy.age"
 
 includes:
@@ -24,16 +29,27 @@ includes:
 
 tasks:
   default: task --list
+
   conform:
     desc: run kubeconform
-    cmd: tools/scripts/kubeconform.sh {{.KUBERNETES_DIR}}
+    vars:
+      KUBECONFORM_DIR: "{{.KUBECONFORM_DIR | default .KUBERNETES_DIR}}"
+    cmd: tools/scripts/kubeconform.sh "{{.KUBECONFORM_DIR}}"
 
-  test:
+  test-all:
     desc: run testing suite
     deps:
       - conform
-      - flux:test
+      - flux:test-all
       - ansible:lint
+
+  test:
+    desc: run quick test
+    deps:
+      - task: flux:test
+      - task: conform
+        vars:
+          KUBECONFORM_DIR: "{{.KUBERNETES_WORKING_DIR}}"
 
   netshoot:
     desc: run a netshoot pod, for example netshoot -- nslookup cloudflare.com
