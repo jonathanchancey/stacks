@@ -40,6 +40,15 @@ data:
         - Kagi:
             - abbr: K
               href: https://kagi.com/
+        - Wanikani:
+            - abbr: Wa
+              href: https://wanikani.com/dashboard
+        - Monarch:
+            - abbr: Mo
+              href: https://monarch.com/dashboard
+        - Spotify:
+            - abbr: Mo
+              href: https://spotify.com/
     - Professional:
         - Google Drive:
             - abbr: DOC
