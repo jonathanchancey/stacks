@@ -38,7 +38,7 @@ spec:
             env:
               TZ: America/Los_Angeles
               KANIDM_ADMIN_BIND_PATH: "/var/run/kanidmd.sock"
-              KANIDM_LOG_LEVEL: debug
+              KANIDM_LOG_LEVEL: info
             probes:
               liveness: &probe
                 enabled: true
