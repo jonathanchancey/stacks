@@ -1,27 +1,28 @@
 # Stacks
 
-Welcome to my *contemplection*
+Welcome to my *contemplection*[^1]
 
 ## Clusters
 
-### Bastille - Talos/Bare Metal
+### Bastille - Production
 
-Production cluster following best practices (slightly more than what's sensible)
+Talos on Bare Metal strictly following GitOps best practices (more than what's sensible)
 
 > not in flux == not real
 
-- 3 nodes, 48 cores, 96GB DDR5 (non ecc)
+- 3 nodes, 48 cores, 96GB DDR5
 - Ceph block storage with Thunderbolt networking ~23Gbps
 - CloudNative-PG with openEBS localpv on NVME, streaming WAL to B2
 - Cilium CNI, BGP, 2.5Gb networking
 
-### Academy - K3s/Ansible/Terraform
+### Academy - Test
 
 The cluster that started it all
 
 > though it's getting a bit creaky at over 800 days
 
-- 7 nodes, 40 cores, 154GB RAM
+- K3s/Ansible/Terraform
+- 7 nodes, 40 cores, 154GB DDR4 
 - mixed architecture
 - scheduled for decommission
 - ~~will rise again~~ it most certainly will not
@@ -34,8 +35,6 @@ The cluster that started it all
 - `tools/` - scripts, templates, taskfiles
 
 ## Dec 2023
-
-### Proxmox Cluster
 
 <table align="center">
   <tr>
@@ -88,3 +87,8 @@ The cluster that started it all
  </table>
 
 ![proxmox-small](https://github.com/jonathanchancey/assets/blob/main/images/proxmox-small.png?raw=true)
+
+[^1]: **contemplection**, a portmanteau of *contemplation* and *complection* (see complect[^2])
+[^2]: **complect**, woven together or interwoven [Simple Made Easy (Rich Hickey)](https://www.infoq.com/presentations/Simple-Made-Easy/)
+
+
