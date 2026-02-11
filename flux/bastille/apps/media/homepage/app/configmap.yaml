@@ -103,10 +103,6 @@ data:
           href: https://intrepid.chancey.dev
           icon: unifi.png
           description: Unforbidden Router
-      - 24p PoE Switch:
-          href: https://sw-01.chancey.dev/?
-          icon: si-mikrotik-#CCCCCC
-          description: 24p PoE Mikrotik Switch
       - 8p 2.5Gb Switch:
           href: https://sw-02.chancey.dev/?
           icon: si-mikrotik-#CCCCCC
@@ -140,9 +136,9 @@ data:
           href: https://filebrowser.chancey.dev/
           icon: filebrowser.png
           description: Music Collection Manager
-      - Gitea:
-          href: https://gitea.chancey.dev/
-          icon: gitea.png
+      - Forge:
+          href: https://forge.chancey.dev/
+          icon: forgejo.png
           description: Version Control
       - Miniflux:
           href: https://miniflux.chancey.dev/
