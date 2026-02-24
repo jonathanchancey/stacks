@@ -7,7 +7,7 @@ on:
     branches: ["main"]
 
 env:
-  KUBERNETES_DIR: ./flux/academy
+  KUBERNETES_DIR: ./flux/bastille
 
 jobs:
   kubeconform:

@@ -1,5 +1,0 @@
-skip_list:
-  - fqcn-builtins
-  - "name[play]"
-  - "yaml[truthy]"
-  - "var-naming[no-role-prefix]"

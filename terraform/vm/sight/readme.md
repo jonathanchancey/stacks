@@ -1,3 +1,0 @@
-# sight
-
-little testing vm
