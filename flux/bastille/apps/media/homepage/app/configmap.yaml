@@ -132,10 +132,6 @@ data:
           href: https://navidrome.chancey.dev/
           icon: navidrome.png
           description: Music Collection Manager
-      - Filebrowser:
-          href: https://filebrowser.chancey.dev/
-          icon: filebrowser.png
-          description: Music Collection Manager
       - Forge:
           href: https://forge.chancey.dev/
           icon: forgejo.png
