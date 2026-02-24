@@ -5,7 +5,7 @@ name: "Flux Diff"
 on:
   pull_request:
     branches: ["main"]
-    paths: ["flux/academy/**", "flux/bastille/**"]
+    paths: ["flux/bastille/**"]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.number || github.ref }}
@@ -41,7 +41,7 @@ jobs:
 
     strategy:
       matrix:
-        paths: ["flux/academy/", "flux/bastille/"]
+        paths: ["flux/bastille/"]
 
     steps:
       - name: Checkout Pull Request
