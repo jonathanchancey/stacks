@@ -17,12 +17,10 @@ vars:
 
 env:
   PRIVATE_DIR: "{{.ROOT_DIR}}/.private"
-  ANSIBLE_DIR: "{{.ROOT_DIR}}/ansible"
   VIRTUAL_ENV: "{{.ROOT_DIR}}/tools/.venv"
   SOPS_AGE_KEY_FILE: "{{.PRIVATE_DIR}}/academy/academy.age"
 
 includes:
-  ansible: tools/taskfiles/ansible
   bastille: tools/taskfiles/bastille
   flux: tools/taskfiles/flux
   sops: tools/taskfiles/sops
@@ -41,7 +39,6 @@ tasks:
     deps:
       - conform
       - flux:test-all
-      - ansible:lint
 
   test:
     desc: run quick test

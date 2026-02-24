@@ -2,9 +2,7 @@
 
 Welcome to my *contemplection*[^1]
 
-## Clusters
-
-### Bastille - Production
+## Bastille - HomeProd Cluster
 
 Talos on Bare Metal strictly following GitOps best practices (more than what's sensible)
 
@@ -15,21 +13,8 @@ Talos on Bare Metal strictly following GitOps best practices (more than what's s
 - CloudNative-PG with openEBS localpv on NVME, streaming WAL to B2
 - Cilium CNI, BGP, 2.5Gb networking
 
-### Academy - Test
-
-The cluster that started it all
-
-> though it's getting a bit creaky at over 800 days
-
-- K3s/Ansible/Terraform
-- 7 nodes, 40 cores, 154GB DDR4 
-- mixed architecture
-- scheduled for decommission
-- ~~will rise again~~ it most certainly will not
-
 ## Folder Structure
 
-- `ansible/` - maintenance and configuration
 - `flux/` - Talos configs and everything Kubernetes
 - `terraform/` - VM provisioning and DNS management
 - `tools/` - scripts, templates, taskfiles
@@ -90,5 +75,3 @@ The cluster that started it all
 
 [^1]: **contemplection**, a portmanteau of *contemplation* and *complection* (see complect[^2])
 [^2]: **complect**, woven together or interwoven [Simple Made Easy (Rich Hickey)](https://www.infoq.com/presentations/Simple-Made-Easy/)
-
-

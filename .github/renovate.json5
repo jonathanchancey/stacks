@@ -54,11 +54,6 @@
       '/(^|/)[\\w-]*requirements(-\\w+)?\\.(txt|pip)(?:\\.j2)?$/',
     ],
   },
-  'ansible-galaxy': {
-    managerFilePatterns: [
-      '/(^|/)(galaxy|requirements)(\\.ansible)?\\.ya?ml(?:\\.j2)?$/',
-    ],
-  },
   commitMessageTopic: '{{depName}}',
   commitMessageExtra: 'to {{newVersion}}',
   commitMessageSuffix: '',
@@ -69,21 +64,6 @@
       ],
       matchManagers: [
         'github-actions',
-      ],
-      automerge: true,
-      automergeType: 'branch',
-      ignoreTests: true,
-      matchUpdateTypes: [
-        'minor',
-        'patch',
-      ],
-    },
-    {
-      description: [
-        'Auto merge Ansible Galaxy',
-      ],
-      matchManagers: [
-        'ansible-galaxy',
       ],
       automerge: true,
       automergeType: 'branch',
