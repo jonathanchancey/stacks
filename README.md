@@ -4,7 +4,7 @@ Welcome to my *contemplection*[^1]
 
 ## Bastille - HomeProd Cluster
 
-Talos on Bare Metal strictly following GitOps best practices (more than what's sensible)
+Talos on Bare Metal
 
 > not in flux == not real
 
@@ -15,11 +15,10 @@ Talos on Bare Metal strictly following GitOps best practices (more than what's s
 
 ## Folder Structure
 
-- `flux/` - Talos configs and everything Kubernetes
-- `terraform/` - VM provisioning and DNS management
-- `tools/` - scripts, templates, taskfiles
+- `flux/` - Kubernetes resources, Talos and Flux configs
+- `tools/` - scripts, taskfiles, archive
 
-## Dec 2023
+## The Humble Rack
 
 <table align="center">
   <tr>
@@ -34,37 +33,37 @@ Talos on Bare Metal strictly following GitOps best practices (more than what's s
     <td>24p patch panel</td>
   </tr>
   <tr>
-    <td>Mikrotik 24p switch</td>
+    <td>24p Mikrotik switch</td>
   </tr>
   <tr>
-    <td>Shelf w/ 2.5g switch & EQ12</td>
+    <td>2.5g unmanaged switch & EQ12</td>
   </tr>
   <tr>
     <td>Cable Brush</td>
   </tr>
   <tr>
-    <td>PDU 6+6 outlet</td>
+    <td>12p PDU</td>
   </tr>
   <tr>
-    <td>3u shelf w/</td>
+    <td>6x 8TB Drives</td>
   </tr>
   <tr>
-    <td>6x8TB external HDDs</td>
+    <td>EQ12 & NA7B</td>
   </tr>
   <tr>
-    <td>EQ12 and NA7B</td>
+    <td>-</td>
   </tr>
   <tr>
-    <td>Sliger CX3701 NAS w/</td>
+    <td>Sliger CX3701 N100 NAS</td>
   </tr>
   <tr>
-    <td>2x8TB, 12TB, and 14TB HDDs</td>
+    <td>-</td>
   </tr>
   <tr>
-    <td>1TB NVME ZFS mirror</td>
+    <td>-</td>
   </tr>
   <tr>
-    <td>1u 2xE5645 Supermicro </td>
+    <td>Dual Socket E5645 Supermicro</td>
   </tr>
 </table>
     </td>
