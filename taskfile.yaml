@@ -37,8 +37,8 @@ tasks:
   test-all:
     desc: run testing suite
     deps:
-      - conform
       - flux:test-all
+      - conform
 
   test:
     desc: run quick test
@@ -51,17 +51,3 @@ tasks:
   netshoot:
     desc: run a netshoot pod, for example netshoot -- nslookup cloudflare.com
     cmd: kubectl run -it --rm netshoot-debug --image=nicolaka/netshoot --restart=Never -- {{.CLI_ARGS}}
-
-  user-info:
-    desc: prints git info
-    cmds:
-      - gh api user | yq .login
-      - git config get user.name
-
-  backlog:
-    desc: Commit and sync backlog
-    dir: "{{.BACKLOG_REPO}}"
-    cmds:
-      - git add backlog
-      - "git commit -m sync: backlog from {{.USER_WORKING_DIR | base}}"
-      - git push
