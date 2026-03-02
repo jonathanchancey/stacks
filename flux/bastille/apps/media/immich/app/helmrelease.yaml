@@ -93,7 +93,7 @@ spec:
         containers:
           app:
             env:
-              IMMICH_URL: https://immich-server:2283
+              IMMICH_URL: http://immich-server:2283
             image:
               repository: alangrainger/immich-public-proxy
               tag: 1.15.3
