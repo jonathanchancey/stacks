@@ -89,6 +89,21 @@ spec:
               limits:
                 memory: 1024Mi
 
+      public-proxy:
+        containers:
+          app:
+            env:
+              IMMICH_URL: https://immich-server:2283
+            image:
+              repository: alangrainger/immich-public-proxy
+              tag: 1.15.3
+            resources:
+              requests:
+                cpu: 50m
+                memory: 128Mi
+              limits:
+                memory: 1024Mi
+
     service:
       server:
         controller: server
@@ -109,6 +124,11 @@ spec:
         ports:
           http:
             port: 6379
+      public-proxy:
+        controller: public-proxy
+        ports:
+          http:
+            port: 3000
 
     serviceMonitor:
       server:
@@ -130,6 +150,16 @@ spec:
           - backendRefs:
               - identifier: server
                 port: *port
+      public-proxy:
+        hostnames: ["pics.chancey.dev"]
+        parentRefs:
+          - name: edge
+            namespace: network
+            sectionName: https
+        rules:
+          - backendRefs:
+              - identifier: public-proxy
+                port: 3000
 
     persistence:
       library:
