@@ -158,7 +158,7 @@ spec:
             sectionName: https
         rules:
           - backendRefs:
-              - identifier: immich-public-proxy
+              - identifier: public-proxy
                 port: 3000
 
     persistence:
