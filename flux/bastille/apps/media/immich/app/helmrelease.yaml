@@ -48,8 +48,8 @@ spec:
                 memory: 512Mi
                 ephemeral-storage: 50Mi
               limits:
-                memory: 4096Mi
-                ephemeral-storage: 2Gi
+                memory: 8Gi
+                ephemeral-storage: 4Gi
 
       machine-learning:
         strategy: RollingUpdate
