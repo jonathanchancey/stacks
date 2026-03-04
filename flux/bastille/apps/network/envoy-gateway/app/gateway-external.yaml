@@ -7,13 +7,10 @@ metadata:
   namespace: network
   annotations:
     external-dns.alpha.kubernetes.io/target: &hostname external.chancey.dev
-    external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
 spec:
   gatewayClassName: envoy
   infrastructure:
     annotations:
-      external-dns.alpha.kubernetes.io/hostname: *hostname
-      external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
       lbipam.cilium.io/ips: 10.12.0.30
   listeners:
     - name: https
