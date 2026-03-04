@@ -1,4 +1,5 @@
 ---
+credentials-file: /etc/cloudflared/credentials.json
 ingress:
   - hostname: "*.chancey.dev"
     service: https://envoy-external.network.svc.cluster.local
