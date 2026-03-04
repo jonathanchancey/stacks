@@ -6,4 +6,5 @@ resources:
   - ./helmrelease.yaml
   - ./gatewayclass.yaml
   - ./gateway.yaml
+  - ./gateway-external.yaml
   - ./certificate.yaml

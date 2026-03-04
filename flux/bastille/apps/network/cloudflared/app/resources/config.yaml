@@ -1,0 +1,8 @@
+---
+ingress:
+  - hostname: "*.chancey.dev"
+    service: https://envoy-external.network.svc.cluster.local
+    originRequest:
+      http2Origin: true
+      originServerName: external.chancey.dev
+  - service: http_status:404
