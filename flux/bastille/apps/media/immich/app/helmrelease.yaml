@@ -96,7 +96,7 @@ spec:
               IMMICH_URL: http://immich-server:2283
             image:
               repository: alangrainger/immich-public-proxy
-              tag: 1.15.3
+              tag: 1.15.4
             resources:
               requests:
                 cpu: 50m
