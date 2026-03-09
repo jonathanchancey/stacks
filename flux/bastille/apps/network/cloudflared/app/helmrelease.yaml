@@ -35,11 +35,7 @@ spec:
             image:
               repository: mirror.gcr.io/cloudflare/cloudflared
               tag: 2026.2.0@sha256:404528c1cd63c3eb882c257ae524919e4376115e6fe57befca8d603656a91a4c
-            args:
-              - tunnel
-              - --config
-              - /etc/cloudflared/config.yaml
-              - run
+            args: ["tunnel", "run"]
             env:
               NO_AUTOUPDATE: true
               TUNNEL_METRICS: 0.0.0.0:8080
