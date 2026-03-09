@@ -5,6 +5,8 @@ kind: Gateway
 metadata:
   name: envoy-external
   namespace: network
+  annotations:
+    external-dns.alpha.kubernetes.io/target: external.chancey.dev
 spec:
   gatewayClassName: envoy
   infrastructure:
