@@ -1,5 +1,4 @@
 ---
-tunnel: ${TUNNEL_ID}
 credentials-file: /etc/cloudflared/credentials.json
 ingress:
   - hostname: "*.chancey.dev"
