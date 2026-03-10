@@ -151,6 +151,8 @@ spec:
               - identifier: server
                 port: *port
       public-proxy:
+        annotations:
+          external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
         hostnames: ["pics.chancey.dev"]
         parentRefs:
           - name: envoy-external
