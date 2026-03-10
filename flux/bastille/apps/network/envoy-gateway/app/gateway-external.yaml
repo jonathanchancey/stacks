@@ -3,7 +3,7 @@
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: EnvoyProxy
 metadata:
-  name: envoy-external
+  name: envoy-proxy-external
   namespace: network
 spec:
   provider:
@@ -11,6 +11,8 @@ spec:
     kubernetes:
       envoyDeployment:
         replicas: 2
+      envoyService:
+        name: envoy-external
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/gateway.networking.k8s.io/gateway_v1.json
 apiVersion: gateway.networking.k8s.io/v1
@@ -26,7 +28,7 @@ spec:
     parametersRef:
       group: gateway.envoyproxy.io
       kind: EnvoyProxy
-      name: envoy-external
+      name: envoy-proxy-external
     annotations:
       lbipam.cilium.io/ips: 10.12.0.30
   listeners:
