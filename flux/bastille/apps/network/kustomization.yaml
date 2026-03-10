@@ -10,4 +10,3 @@ resources:
   - ./envoy-gateway/ks.yaml
   - ./external-routes/ks.yaml
   - ./multus/ks.yaml
-  - ./cloudflared/ks.yaml
