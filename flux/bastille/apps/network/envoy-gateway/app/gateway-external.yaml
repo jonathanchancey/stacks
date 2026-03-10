@@ -9,8 +9,6 @@ spec:
   provider:
     type: Kubernetes
     kubernetes:
-      envoyService:
-        name: envoy-external
       envoyDeployment:
         replicas: 2
 ---
