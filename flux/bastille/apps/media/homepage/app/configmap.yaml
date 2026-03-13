@@ -91,7 +91,7 @@ data:
           icon: grafana.png
           description: Observability Platform
       - Gatus:
-          href: https://status.chancey.dev/
+          href: https://status.bastille.chancey.dev/
           icon: mdi-gate-#3cad4b
           description: Status
       - Prometheus:
