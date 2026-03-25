@@ -112,7 +112,6 @@ spec:
     route:
       app:
         hostnames:
-          - "{{ .Release.Name }}.chancey.dev"
           - status.bastille.chancey.dev
         parentRefs:
           - name: internal

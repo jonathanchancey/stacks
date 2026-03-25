@@ -16,10 +16,3 @@ connectivity:
     interval: 1m
 web:
   port: ${GATUS_WEB_PORT}
-
-endpoints:
-  - name: default-ep
-    url: https://home.chancey.dev
-    interval: 1m
-    conditions:
-      - "[STATUS] == 200"
