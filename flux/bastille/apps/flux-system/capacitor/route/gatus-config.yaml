@@ -1,0 +1,7 @@
+---
+endpoints:
+  - name: capacitor
+    url: "https://capacitor.chancey.dev"
+    interval: 1m
+    conditions:
+      - "[STATUS] == 200"
