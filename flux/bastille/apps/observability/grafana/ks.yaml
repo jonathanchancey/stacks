@@ -9,10 +9,16 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  components:
+    - ../../../../components/gatus
   dependsOn:
     - name: kube-prometheus-stack
       namespace: observability
   path: ./flux/bastille/apps/observability/grafana/app
+  postBuild:
+    substitute:
+      APP: *app
+      GATUS_DOMAIN: bastille.chancey.dev
   sourceRef:
     kind: GitRepository
     name: flux-system

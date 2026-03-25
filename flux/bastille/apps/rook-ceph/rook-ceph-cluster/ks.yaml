@@ -12,6 +12,8 @@ spec:
   dependsOn:
     - name: rook-ceph-operator
       namespace: *namespace
+  components:
+    - ../../../../components/gatus
   interval: 1h
   # healthChecks:
   #   - apiVersion: helm.toolkit.fluxcd.io/v2
@@ -31,7 +33,8 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      GATUS_SUBDOMAIN: rook
+      GATUS_SUBDOMAIN: ceph
+      GATUS_DOMAIN: bastille.chancey.dev
   prune: true
   retryInterval: 2m
   sourceRef:

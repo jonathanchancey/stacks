@@ -11,6 +11,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   components:
+    - ../../../../components/gatus
     - ../../../../components/volsync
   interval: 1h
   retryInterval: 2m
@@ -19,6 +20,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      GATUS_SUBDOMAIN: home
       VOLSYNC_CAPACITY: 1Gi
   prune: true
   sourceRef:

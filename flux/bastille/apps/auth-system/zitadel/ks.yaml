@@ -28,6 +28,8 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  components:
+    - ../../../../components/gatus
   dependsOn:
     - name: zitadel-repo
       namespace: auth-system
@@ -40,6 +42,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      GATUS_SUBDOMAIN: auth
   prune: true
   sourceRef:
     kind: GitRepository

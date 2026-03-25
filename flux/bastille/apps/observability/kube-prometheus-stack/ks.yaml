@@ -10,7 +10,13 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  components:
+    - ../../../../components/gatus
   path: ./flux/bastille/apps/observability/kube-prometheus-stack/app
+  postBuild:
+    substitute:
+      APP: *app
+      GATUS_SUBDOMAIN: prometheus
   sourceRef:
     kind: GitRepository
     name: flux-system
