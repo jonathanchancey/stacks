@@ -20,7 +20,7 @@ spec:
     substitute:
       APP: *app
       GATUS_PATH: /health
-      GATUS_DOMAIN: bastille.chancey.dev
+      GATUS_SUBDOMAIN: status.bastille
   prune: true
   retryInterval: 2m
   sourceRef:
