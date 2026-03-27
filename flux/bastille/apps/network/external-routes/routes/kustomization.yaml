@@ -7,4 +7,5 @@ resources:
   - sw-02.yaml
   - sw-03.yaml
   - proxmox.yaml
+  - intrepid.yaml
   - certificates/proxmox.yaml
