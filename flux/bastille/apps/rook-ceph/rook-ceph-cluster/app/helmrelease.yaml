@@ -70,7 +70,7 @@ spec:
       storage:
         useAllNodes: true
         useAllDevices: false
-        devicePathFilter: /dev/disk/by-id/nvme-KINGSTON_OM8PGP41024N.*
+        devicePathFilter: /dev/disk/by-id/nvme-KINGSTON_OM8PGP41024.*
         config:
           osdsPerDevice: "1"
     cephBlockPools:
