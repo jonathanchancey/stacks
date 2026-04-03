@@ -19,7 +19,7 @@ spec:
           name: efivars
         - mountPath: /run/containerd
           name: containerd
-  dnsPolicy: ClusterFirstWithHostNet
+  dnsPolicy: Default
   hostIPC: true
   hostNetwork: true
   hostPID: true

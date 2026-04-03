@@ -20,7 +20,7 @@ tasks:
   elevated:
     desc: Run a privileged pod
     cmd: |
-      kubectl run elevated-{{.node}} -i --rm --image=null \
+      kubectl run elevated-{{.node}} -n kube-system -i --rm --image=null \
         --overrides="$(yq {{.ROOT_DIR}}/tools/taskfiles/bastille/files/elevated-pod.tmpl.yaml -o=json | envsubst)"
     env:
       node: "{{.node}}"
