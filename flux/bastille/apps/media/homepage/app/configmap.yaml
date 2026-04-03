@@ -103,14 +103,10 @@ data:
           href: https://intrepid.chancey.dev
           icon: unifi.png
           description: Unforbidden Router
-      - 8p 2.5Gb Switch:
-          href: https://sw-02.chancey.dev/?
-          icon: si-mikrotik-#CCCCCC
-          description: 2.5Gb Mikrotik Switch
-      - 24p Switch:
-          href: https://sw-03.chancey.dev/index.html
-          icon: si-mikrotik-#CCCCCC
-          description: 24p Mikrotik Switch
+      - Hubble:
+          href: https://hubble.chancey.dev
+          icon: unifi.png
+          description: Unforbidden Router
       - Nginx:
           href: https://nginx.vents.chancey.dev/
           icon: nginx.png
@@ -124,14 +120,6 @@ data:
           href: https://garage.vents.chancey.dev/
           icon: garage.png
           description: S3 storage
-      - Jellyfin:
-          href: https://jellyfin.chancey.dev/
-          icon: jellyfin.png
-          description: Media Server
-      - Navidrome:
-          href: https://navidrome.chancey.dev/
-          icon: navidrome.png
-          description: Music Collection Manager
       - Forge:
           href: https://forge.chancey.dev/
           icon: forgejo.png
