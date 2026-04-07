@@ -3,7 +3,7 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app flux-operator
+  name: &app flux-operator-mcp
   namespace: &namespace flux-system
 spec:
   targetNamespace: *namespace
@@ -18,7 +18,7 @@ spec:
   interval: 1h
   retryInterval: 2m
   timeout: 15m
-  path: ./flux/bastille/apps/flux-system/flux-operator/app
+  path: ./flux/bastille/apps/flux-system/flux-operator-mcp/app
   prune: true
   sourceRef:
     kind: GitRepository
