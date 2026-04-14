@@ -3,8 +3,7 @@
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
-  name: flux-operator
-  namespace: flux-system
+  name: flux-web
   annotations:
     external-dns.alpha.kubernetes.io/hostname: &hostname flux.chancey.dev
 spec:
@@ -18,6 +17,7 @@ spec:
   rules:
     - backendRefs:
         - name: flux-operator
+          namespace: flux-system
           port: 9080
       matches:
         - path:
