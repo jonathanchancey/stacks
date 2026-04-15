@@ -35,3 +35,5 @@ spec:
   values:
     transport: http
     readonly: true
+    networkPolicy:
+      create: false
