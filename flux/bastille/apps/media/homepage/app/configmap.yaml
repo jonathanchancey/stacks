@@ -25,15 +25,12 @@ data:
             - abbr: GH
               href: https://github.com/jonathanchancey/stacks
         - Claude:
-            - abbr: CL
+            - abbr: CLA
               href: https://claude.ai/chats/
         - Google Cloud:
             - abbr: GCP
               href: https://console.cloud.google.com/
     - Personal:
-        - Email:
-            - abbr: PR
-              href: https://mail.proton.me/u/0/inbox
         - Calendar:
             - abbr: CAL
               href: https://calendar.proton.me/u/0
@@ -41,15 +38,18 @@ data:
             - abbr: K
               href: https://kagi.com/
         - Wanikani:
-            - abbr: Wa
+            - abbr: WA
               href: https://wanikani.com/dashboard
         - Monarch:
-            - abbr: Mo
+            - abbr: \$
               href: https://monarch.com/dashboard
         - Spotify:
-            - abbr: Mo
+            - abbr: SPO
               href: https://spotify.com/
     - Professional:
+        - Email:
+            - abbr: MA
+              href: https://mail.proton.me/u/0/inbox
         - Google Drive:
             - abbr: DOC
               href: https://drive.google.com/drive/u/0/home
@@ -60,7 +60,24 @@ data:
             - abbr: ONS
               href: https://cad.onshape.com/documents
   services.yaml: |
-    - Management:
+    - Services:
+      - Immich:
+          href: https://photos.chancey.dev/
+          icon: immich.png
+          description: Photo Collection Manager
+      - Forge:
+          href: https://forge.chancey.dev/
+          icon: forgejo.png
+          description: Version Control
+      - Home Assistant:
+          href: https://home-assistant.chancey.dev
+          icon: home-assistant.png
+          description: Home Automation
+      - Miniflux:
+          href: https://miniflux.chancey.dev/
+          icon: miniflux.png
+          description: RSS Reader
+    - Manage:
       - Proxmox:
           href: https://proxmox.chancey.dev
           icon: proxmox.png
@@ -77,14 +94,6 @@ data:
           href: https://auth.chancey.dev/
           icon: zitadel.png
           description: Identity Provider
-      - Home Assistant:
-          href: https://home-assistant.chancey.dev
-          icon: home-assistant.png
-          description: Home Automation
-      - Kopia:
-          href: https://kopia.chancey.dev/
-          icon: si-kubernetes-#326CE5
-          description: PVC Backup
     - Monitoring:
       - Grafana:
           href: https://grafana.bastille.chancey.dev/
@@ -98,6 +107,15 @@ data:
           href: https://prometheus.chancey.dev/
           icon: prometheus.png
           description: Time Series Database
+    - Storage:
+      - Garage:
+          href: https://garage.vents.chancey.dev/
+          icon: garage.png
+          description: S3 storage
+      - Kopia:
+          href: https://kopia.chancey.dev/
+          icon: si-kubernetes-#326CE5
+          description: PVC Backup
     - Network:
       - Unifi Dream Machine:
           href: https://intrepid.chancey.dev
@@ -105,29 +123,12 @@ data:
           description: Unforbidden Router
       - Hubble:
           href: https://hubble.chancey.dev
-          icon: unifi.png
+          icon: cilium.png
           description: Unforbidden Router
       - Nginx:
           href: https://nginx.vents.chancey.dev/
           icon: nginx.png
           description: Decoupled Reverse Proxy
-    - Media:
-      - Immich:
-          href: https://photos.chancey.dev/
-          icon: immich.png
-          description: Photo Collection Manager
-      - Garage:
-          href: https://garage.vents.chancey.dev/
-          icon: garage.png
-          description: S3 storage
-      - Forge:
-          href: https://forge.chancey.dev/
-          icon: forgejo.png
-          description: Version Control
-      - Miniflux:
-          href: https://miniflux.chancey.dev/
-          icon: miniflux.png
-          description: RSS Reader
 
   widgets.yaml: |
     - kubernetes:
