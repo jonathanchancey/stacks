@@ -41,14 +41,14 @@ data:
             - abbr: WA
               href: https://wanikani.com/dashboard
         - Monarch:
-            - abbr: \$
+            - abbr: MON
               href: https://monarch.com/dashboard
         - Spotify:
             - abbr: SPO
               href: https://spotify.com/
     - Professional:
         - Email:
-            - abbr: MA
+            - abbr: PRO
               href: https://mail.proton.me/u/0/inbox
         - Google Drive:
             - abbr: DOC
