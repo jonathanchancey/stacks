@@ -34,7 +34,7 @@ spec:
           app:
             image:
               repository: docker.io/kanidm/server
-              tag: 1.8.0@sha256:bac174bc0e2e05004c00d51f1bab49c3a8327c01a16607b71e097ee4365a39f8
+              tag: 1.10.0@sha256:accd09b39511385b79e4318f238f197dce15ee828c853e63164a1f7826184327
             env:
               TZ: America/Los_Angeles
               KANIDM_ADMIN_BIND_PATH: "/var/run/kanidmd.sock"
