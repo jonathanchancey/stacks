@@ -31,9 +31,6 @@ data:
             - abbr: GCP
               href: https://console.cloud.google.com/
     - Personal:
-        - Calendar:
-            - abbr: CAL
-              href: https://calendar.proton.me/u/0
         - Kagi:
             - abbr: K
               href: https://kagi.com/
@@ -48,11 +45,11 @@ data:
               href: https://spotify.com/
     - Professional:
         - Email:
-            - abbr: PRO
+            - abbr: MA
               href: https://mail.proton.me/u/0/inbox
-        - Google Drive:
-            - abbr: DOC
-              href: https://drive.google.com/drive/u/0/home
+        - Calendar:
+            - abbr: CAL
+              href: https://calendar.proton.me/u/0
         - Prusa Connect:
             - abbr: PRU
               href: https://connect.prusa3d.com
@@ -64,7 +61,7 @@ data:
       - Immich:
           href: https://photos.chancey.dev/
           icon: immich.png
-          description: Photo Collection Manager
+          description: Photos
       - Forge:
           href: https://forge.chancey.dev/
           icon: forgejo.png
@@ -85,7 +82,7 @@ data:
       - TrueNAS:
           href: https://vents.chancey.dev
           icon: si-truenas-#0095D5
-          description: Baremetal NAS
+          description: Baremetal Storage
       - Kanidm:
           href: https://idm.chancey.dev/
           icon: kanidm.png
@@ -98,11 +95,11 @@ data:
       - Grafana:
           href: https://grafana.bastille.chancey.dev/
           icon: grafana.png
-          description: Observability Platform
+          description: Observability
       - Gatus:
           href: https://status.bastille.chancey.dev/
           icon: mdi-gate-#3cad4b
-          description: Status
+          description: Up/Down
       - Prometheus:
           href: https://prometheus.chancey.dev/
           icon: prometheus.png
@@ -124,7 +121,7 @@ data:
       - Hubble:
           href: https://hubble.chancey.dev
           icon: cilium.png
-          description: Unforbidden Router
+          description: eBPF Visibility
       - Nginx:
           href: https://nginx.vents.chancey.dev/
           icon: nginx.png
