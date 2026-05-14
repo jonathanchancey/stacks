@@ -1,13 +1,13 @@
 {
-    "MD013": false, // allow long lines
-    "MD025": false, // allow multiple H1s
-    "MD026": false, // allow punctuation
-    "MD028": false, // allow blank lines
-    "MD029": false, // allow inconsistent numbering
-    "MD033": false, // allow HTML tags
-    "MD034": false, // allow URLs without angle brackets
-    "MD036": false, // allow bold as pseudo-heading
-    "MD041": false, // don't require H1 as first line
-    "MD049": false, // allow mixed */_
-    "MD050": false, // allow mixed **/__
+  "MD013": false, // allow long lines
+  "MD025": false, // allow multiple H1s
+  "MD026": false, // allow punctuation
+  "MD028": false, // allow blank lines
+  "MD029": false, // allow inconsistent numbering
+  "MD033": false, // allow HTML tags
+  "MD034": false, // allow URLs without angle brackets
+  "MD036": false, // allow bold as pseudo-heading
+  "MD041": false, // allow anything on first line
+  "MD049": false, // allow mixed */_
+  "MD050": false, // allow mixed **/__
 }
