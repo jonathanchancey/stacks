@@ -2,4 +2,4 @@
 serviceMonitor:
   create: true
 web:
-  enabled: true
+  enabled: false
