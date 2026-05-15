@@ -1,5 +1,0 @@
----
-serviceMonitor:
-  create: true
-web:
-  enabled: false
