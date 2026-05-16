@@ -36,3 +36,5 @@ spec:
             sectionName: https
         hostnames:
           - flux.chancey.dev
+      networkPolicy:
+        create: false
