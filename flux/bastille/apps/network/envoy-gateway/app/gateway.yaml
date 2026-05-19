@@ -1,4 +1,28 @@
 ---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/gateway.envoyproxy.io/envoyproxy_v1alpha1.json
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: EnvoyProxy
+metadata:
+  name: envoy-proxy-edge
+  namespace: network
+spec:
+  provider:
+    type: Kubernetes
+    kubernetes:
+      envoyDeployment:
+        replicas: 3
+        pod:
+          topologySpreadConstraints:
+            - maxSkew: 1
+              topologyKey: kubernetes.io/hostname
+              whenUnsatisfiable: DoNotSchedule
+              labelSelector:
+                matchLabels:
+                  gateway.envoyproxy.io/owning-gateway-name: edge
+                  gateway.envoyproxy.io/owning-gateway-namespace: network
+      envoyService:
+        externalTrafficPolicy: Local
+---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/gateway.networking.k8s.io/gateway_v1.json
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
@@ -11,6 +35,10 @@ metadata:
 spec:
   gatewayClassName: envoy
   infrastructure:
+    parametersRef:
+      group: gateway.envoyproxy.io
+      kind: EnvoyProxy
+      name: envoy-proxy-edge
     annotations:
       external-dns.alpha.kubernetes.io/hostname: *hostname
   listeners:
