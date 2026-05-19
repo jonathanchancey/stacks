@@ -1,0 +1,20 @@
+---
+serviceMonitor:
+  create: true
+web:
+  enabled: true
+  config:
+    baseURL: https://flux.chancey.dev
+  httpRoute:
+    enabled: true
+    annotations:
+      external-dns.alpha.kubernetes.io/hostname: flux.chancey.dev
+    parentRefs:
+      - name: internal
+        kind: Gateway
+        namespace: kube-system
+        sectionName: https
+    hostnames:
+      - flux.chancey.dev
+  networkPolicy:
+    create: false
