@@ -91,6 +91,10 @@ data:
           href: https://auth.chancey.dev/
           icon: zitadel.png
           description: Identity Provider
+      - Flux:
+          href: https://flux.chancey.dev/
+          icon: flux-cd.png
+          description: GitOps
     - Monitoring:
       - Grafana:
           href: https://grafana.bastille.chancey.dev/
