@@ -27,7 +27,7 @@ spec:
     readOnly: true
     volumeHandle: coop-bastille
     volumeAttributes:
-      source: "//vents.internal/coop"
+      source: "//10.10.0.165/coop"
     nodeStageSecretRef:
       name: smbcreds-scale-worm
       namespace: kube-system
