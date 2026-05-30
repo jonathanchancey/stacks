@@ -21,6 +21,7 @@ spec:
       APP: *app
       GATUS_PATH: /health
       GATUS_SUBDOMAIN: status.bastille
+      POSTGRESQL_MAJOR_VERSION: "17"
   prune: true
   retryInterval: 2m
   sourceRef:
