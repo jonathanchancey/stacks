@@ -23,13 +23,6 @@ spec:
   chartRef:
     kind: OCIRepository
     name: openebs
-  install:
-    remediation:
-      retries: -1
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      retries: 3
   valuesFrom:
     - kind: ConfigMap
       name: openebs-values

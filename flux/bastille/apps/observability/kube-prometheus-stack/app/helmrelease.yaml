@@ -24,16 +24,6 @@ spec:
   chartRef:
     kind: OCIRepository
     name: kube-prometheus-stack
-  install:
-    createNamespace: true
-    remediation:
-      retries: -1
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      ignoreTestFailures: true
-      strategy: rollback
-      retries: 3
   valuesFrom:
     - kind: ConfigMap
       name: kube-prometheus-stack-values

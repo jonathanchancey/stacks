@@ -25,15 +25,6 @@ spec:
     name: *app
   driftDetection:
     mode: warn
-  install:
-    remediation:
-      retries: -1
-    crds: CreateReplace
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      retries: 3
-    crds: CreateReplace
   values:
     deployment:
       replicas: 2
