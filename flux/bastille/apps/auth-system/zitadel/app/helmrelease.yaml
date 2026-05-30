@@ -6,13 +6,6 @@ metadata:
   name: zitadel
 spec:
   interval: 1h
-  install:
-    remediation:
-      retries: -1
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      retries: 3
   chart:
     spec:
       chart: zitadel

@@ -23,15 +23,6 @@ spec:
   chartRef:
     kind: OCIRepository
     name: flux-operator-mcp
-  install:
-    crds: CreateReplace
-    remediation:
-      retries: -1
-  upgrade:
-    crds: CreateReplace
-    cleanupOnFail: true
-    remediation:
-      retries: 3
   values:
     transport: http
     readonly: true
