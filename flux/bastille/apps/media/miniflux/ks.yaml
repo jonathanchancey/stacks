@@ -19,6 +19,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      POSTGRESQL_MAJOR_VERSION: "17"
   prune: true
   sourceRef:
     kind: GitRepository
