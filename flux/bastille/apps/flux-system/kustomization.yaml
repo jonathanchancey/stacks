@@ -9,5 +9,3 @@ resources:
   - ./flux-instance/ks.yaml
   - ./flux-operator/ks.yaml
   - ./flux-operator-mcp/ks.yaml
-  - ./capacitor/ks.yaml
-  - ./capacitor/route
