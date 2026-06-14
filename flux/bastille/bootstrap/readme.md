@@ -4,10 +4,16 @@ after tofu apply task to:
 
 - fetch talosconfig output and merge kubeconfig
 - apply crds, ns, and secrets
+
 ```bash
 kubectl apply -f namespace.yaml
 kubectl create secret generic sops-age --namespace flux-system --from-literal=age.agekey=(keepassxc-cli show $VAULT_DIR/Passwords.kdbx stacks-age-key -a Password)
-kubectl create secret generic github-token-auth-ro --namespace flux-system --from-literal=username=jonathanchancey --from-literal=password=(keepassxc-cli show $VAULT_DIR/Passwords.kdbx "github pat flux-readonly-exp-06-2026" -a Password)
+kubectl create secret generic github-token-auth-ro \
+        --namespace flux-system \
+        --from-literal=username=jonathanchancey \
+        --from-literal=password=(bw get password "flux-stacks-github-pat") \
+        --dry-run=client \
+        -o yaml | kubectl apply -f -
 # renovate: datasource=github-releases depName=kubernetes-sigs/gateway-api
 kubectl apply --server-side -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.3.0/experimental-install.yaml
 
@@ -20,6 +26,7 @@ kubectl label namespace kube-system pod-security.kubernetes.io/enforce=privilege
 ```
 
 # cilium note
+
 before reloader, ensure changes propagated with
 
 ```bash
@@ -28,7 +35,9 @@ kubectl -n kube-system rollout restart ds/cilium
 ```
 
 # cloudflare
+
 cloudflare-tunnel-id-secret
+
 ```yaml
 ---
 apiVersion: v1
