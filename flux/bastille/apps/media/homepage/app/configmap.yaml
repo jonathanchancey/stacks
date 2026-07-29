@@ -74,7 +74,7 @@ data:
           href: https://miniflux.chancey.dev/
           icon: miniflux.png
           description: RSS Reader
-    - Manage:
+    - Management:
       - Proxmox:
           href: https://proxmox.chancey.dev
           icon: proxmox.png
@@ -91,10 +91,6 @@ data:
           href: https://auth.chancey.dev/
           icon: zitadel.png
           description: Identity Provider
-      - Flux:
-          href: https://flux.chancey.dev/
-          icon: flux-cd.png
-          description: GitOps
     - Monitoring:
       - Grafana:
           href: https://grafana.bastille.chancey.dev/
@@ -108,6 +104,10 @@ data:
           href: https://prometheus.chancey.dev/
           icon: prometheus.png
           description: Time Series Database
+      - Flux:
+          href: https://flux.chancey.dev/
+          icon: flux-cd.png
+          description: GitOps Dashboard
     - Storage:
       - Garage:
           href: https://garage.vents.chancey.dev/
@@ -129,7 +129,7 @@ data:
       - Nginx:
           href: https://nginx.vents.chancey.dev/
           icon: nginx.png
-          description: Decoupled Reverse Proxy
+          description: Standalone Reverse Proxy
 
   widgets.yaml: |
     - kubernetes:
