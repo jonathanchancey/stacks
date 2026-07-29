@@ -59,16 +59,7 @@ spec:
             path: /app/config/settings.yaml
           - subPath: widgets.yaml
             path: /app/config/widgets.yaml
-          # - mountPath: /app/config/custom.js
-          #   name: homepage
-          #   subPath: custom.js
-          # - mountPath: /app/config/custom.css
-          #   name: homepage
-          #   subPath: custom.css
-      # assets:
-      #   type: persistentVolumeClaim
-      #   name: homepage
-      #     - mountPath: "/images/"
-      #       name: homepage
+    defaultPodOptions:
+      automountServiceAccountToken: true
     serviceAccount:
       homepage: {}
