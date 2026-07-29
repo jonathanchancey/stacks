@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
 version: "3"
 
 vars:
@@ -42,6 +43,25 @@ tasks:
     cmds:
       - for: { var: NODES }
         cmd: talosctl apply-config --nodes {{.ITEM.ip}} --endpoints {{.ITEM.ip}} --file ./.private/rendered/{{.ITEM.name}}.yaml
+
+  talos-rotate-talosconfig:
+    desc: Regenerate the Talos client configuration
+    dir: "{{.ROOT_DIR}}/flux/bastille/talos/.private"
+    preconditions:
+      - sh: test -f controlplane.yaml
+    cmds:
+      - talosctl gen secrets --from-controlplane-config controlplane.yaml --output-file secrets.yaml --force
+      - talosctl gen config bastille https://kube.bastille.chancey.dev:6443 --with-secrets secrets.yaml --output-types talosconfig --output talosconfig --force
+      - talosctl --talosconfig=talosconfig config endpoint {{range .NODES}}{{.ip}} {{end}}
+      - for: { var: NODES }
+        cmd: talosctl --talosconfig=talosconfig --nodes {{.ITEM.ip}} version
+
+  talos-kubeconfig:
+    desc: Talos client configuration
+    dir: "{{.ROOT_DIR}}/flux/bastille/talos/.private"
+    preconditions:
+      - sh: test -f controlplane.yaml
+    cmd: talosctl --talosconfig=.private/talosconfig -n 10.131.128.10 kubeconfig
 
   ceph-toolbox:
     desc: Access the Rook Ceph toolbox
