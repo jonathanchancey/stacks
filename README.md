@@ -2,7 +2,7 @@
 
 Welcome to my *contemplection*[^1]
 
-## Bastille - HomeProd Cluster
+## Bastille Cluster
 
 Talos on Bare Metal
 
@@ -18,7 +18,11 @@ Talos on Bare Metal
 - `flux/` - Kubernetes resources, Talos and Flux configs
 - `tools/` - scripts, taskfiles, archive
 
-## The Humble Rack
+## Screenshots
+
+![homepage](https://github.com/jonathanchancey/assets/blob/main/images/home-chancey-dev-2026-07-29-1704.png?raw=true)
+
+### The Humble Rack
 
 <table align="center">
   <tr>
