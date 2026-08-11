@@ -11,9 +11,9 @@ spec:
   hostnames:
     - intrepid.chancey.dev
   parentRefs:
-    - name: internal
+    - name: edge
       kind: Gateway
-      namespace: kube-system
+      namespace: network
       sectionName: https
   rules:
     - backendRefs:
@@ -24,15 +24,29 @@ spec:
             type: PathPrefix
             value: /
 ---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/gateway.networking.k8s.io/backendtlspolicy_v1.json
+apiVersion: gateway.networking.k8s.io/v1
+kind: BackendTLSPolicy
+metadata:
+  name: intrepid-upstream-tls
+  namespace: network
+spec:
+  targetRefs:
+    - group: ""
+      kind: Service
+      name: intrepid
+  validation:
+    hostname: intrepid.chancey.dev
+    wellKnownCACertificates: System
+---
 apiVersion: v1
 kind: Service
 metadata:
   name: intrepid
   namespace: network
 spec:
-  clusterIP: None
   ports:
-    - name: http
+    - name: https
       port: 443
       targetPort: 443
 ---
