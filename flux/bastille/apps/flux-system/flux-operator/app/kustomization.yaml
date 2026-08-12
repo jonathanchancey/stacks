@@ -6,3 +6,4 @@ resources:
   - ./ocirepository.yaml
   - ./helmrelease.yaml
   - ./securitypolicy.yaml
+  - ./secrets.sops.yaml
