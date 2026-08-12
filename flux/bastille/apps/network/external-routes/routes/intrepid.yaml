@@ -47,6 +47,7 @@ metadata:
 spec:
   ports:
     - name: https
+      appProtocol: kubernetes.io/wss
       port: 443
       targetPort: 443
 ---
