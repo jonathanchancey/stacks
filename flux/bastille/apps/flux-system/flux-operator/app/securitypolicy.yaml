@@ -1,0 +1,23 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/gateway.envoyproxy.io/securitypolicy_v1alpha1.json
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: SecurityPolicy
+metadata:
+  name: flux-operator-oidc
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: flux-operator
+  oidc:
+    provider:
+      issuer: https://idm.chancey.dev/oauth2/openid/flux
+    clientID: flux
+    clientSecret:
+      name: flux-operator-oidc-client
+    redirectURL: https://flux.chancey.dev/oauth2/callback
+    logoutPath: /logout
+    scopes:
+      - openid
+      - profile
+      - email
