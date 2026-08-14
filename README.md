@@ -1,6 +1,6 @@
 # Stacks
 
-Welcome to my *contemplection*[^1]
+Welcome to my _contemplection_[^1]
 
 ## Bastille Cluster
 
@@ -76,5 +76,6 @@ Talos on Bare Metal
 
 ![proxmox-small](https://github.com/jonathanchancey/assets/blob/main/images/proxmox-small.png?raw=true)
 
-[^1]: **contemplection**, a portmanteau of *contemplation* and *complection* (see complect[^2])
+[^1]: **contemplection**, a portmanteau of _contemplation_ and _complection_ (see complect[^2])
+
 [^2]: **complect**, woven together or interwoven [Simple Made Easy (Rich Hickey)](https://www.infoq.com/presentations/Simple-Made-Easy/)
