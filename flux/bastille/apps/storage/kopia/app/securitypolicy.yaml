@@ -1,0 +1,23 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/gateway.envoyproxy.io/securitypolicy_v1alpha1.json
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: SecurityPolicy
+metadata:
+  name: kopia-oidc
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: kopia
+  oidc:
+    provider:
+      issuer: https://idm.chancey.dev/oauth2/openid/kopia
+    clientID: kopia
+    clientSecret:
+      name: kopia-oidc-client
+    redirectURL: https://kopia.chancey.dev/oauth2/callback
+    logoutPath: /logout
+    scopes:
+      - openid
+      - profile
+      - email
