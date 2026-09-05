@@ -1,0 +1,10 @@
+{
+  "groups": [
+    {"name": "kopia_users", "description": "Access to Kopia"},
+    {"name": "basic_users", "description": "Access to low risk services"},
+    {"name": "trusted_users", "description": "Access to high trust services"}
+  ],
+  "clients": [
+    {"namespace": "storage", "configMap": "kopia-oidc-config"}
+  ]
+}
