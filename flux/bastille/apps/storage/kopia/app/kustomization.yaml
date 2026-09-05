@@ -5,6 +5,7 @@ kind: Kustomization
 resources:
   - ./secret.sops.yaml
   - ./helmrelease.yaml
+  - ./securitypolicy.yaml
   - ./kopiamaintenance.yaml
   - ./verification.yaml
 configMapGenerator:
