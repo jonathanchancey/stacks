@@ -1,0 +1,39 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/volsync.backube/replicationsource_v1alpha1.json
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: "${APP}"
+spec:
+  sourcePVC: "${VOLSYNC_SOURCE_PVC:=${APP}}"
+  trigger:
+    schedule: "${VOLSYNC_SCHEDULE:=5 * * * *}"
+  kopia:
+    copyMethod: Snapshot
+    storageClassName: ceph-block
+    volumeSnapshotClassName: ceph-block
+    accessModes: [ReadWriteOnce]
+    cacheAccessModes: [ReadWriteOnce]
+    cacheCapacity: 1Gi
+    cacheStorageClassName: openebs-hostpath
+    compression: zstd-fastest
+    repository: "${APP}-volsync-secret"
+    # The namespace opts into VolSync's limited file-access capabilities.
+    # No fsGroup: preserve ownership metadata on the temporary snapshot clone.
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 1012
+      runAsNonRoot: false
+      seccompProfile:
+        type: RuntimeDefault
+    moverResources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        memory: 1Gi
+    retain:
+      hourly: 24
+      daily: 14
+      weekly: 8
+      monthly: 12

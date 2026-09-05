@@ -13,6 +13,7 @@ kind: MutatingAdmissionPolicy
 metadata:
   name: volsync-mover-jitter
 spec:
+  # VolSync rebuilds Job templates on UPDATE; preserve injected fields there too.
   matchConstraints:
     resourceRules:
       - apiGroups: ["batch"]
@@ -25,18 +26,25 @@ spec:
         object.metadata.name.startsWith("volsync-src-")
     - name: has-volsync-created-by-labels
       expression: >
+        has(object.metadata.labels) &&
+        "app.kubernetes.io/created-by" in object.metadata.labels &&
         object.metadata.labels["app.kubernetes.io/created-by"] == "volsync"
+    - name: jitter-does-not-exist
+      expression: >
+        !has(object.spec.template.spec.initContainers) ||
+        !object.spec.template.spec.initContainers.exists(item, item.name == "jitter")
   failurePolicy: Fail
   reinvocationPolicy: IfNeeded
   mutations:
     - patchType: JSONPatch
       jsonPatch:
         expression: >
-          [
+          (has(object.spec.template.spec.initContainers) ? [] : [
             JSONPatch{
               op: "add", path: "/spec/template/spec/initContainers",
               value: []
-            },
+            }
+          ]) + [
             JSONPatch{
               op: "add", path: "/spec/template/spec/initContainers/-",
               value: Object.spec.template.spec.initContainers{
@@ -62,6 +70,7 @@ kind: MutatingAdmissionPolicy
 metadata:
   name: volsync-mover-nfs
 spec:
+  # VolSync rebuilds Job templates on UPDATE; preserve injected fields there too.
   matchConstraints:
     resourceRules:
       - apiGroups: ["batch"]
@@ -69,12 +78,17 @@ spec:
         operations: ["CREATE", "UPDATE"]
         resources: ["jobs"]
   matchConditions:
-    - name: has-volsync-job-name-prefix
+    # Maintenance CronJobs use a different prefix and label from data movers.
+    - name: is-volsync-mover-or-maintenance
       expression: >
-        object.metadata.name.startsWith("volsync-")
-    - name: has-volsync-created-by-labels
-      expression: >
-        object.metadata.labels["app.kubernetes.io/created-by"] == "volsync"
+        (object.metadata.name.startsWith("volsync-") &&
+          has(object.metadata.labels) &&
+          "app.kubernetes.io/created-by" in object.metadata.labels &&
+          object.metadata.labels["app.kubernetes.io/created-by"] == "volsync") ||
+        (object.metadata.name.startsWith("kopia-maint-") &&
+          has(object.spec.template.metadata.labels) &&
+          "volsync.backube/kopia-maintenance" in object.spec.template.metadata.labels &&
+          object.spec.template.metadata.labels["volsync.backube/kopia-maintenance"] == "true")
     - name: repository-volume-does-not-exist
       expression: >
         !object.spec.template.spec.volumes.exists(item, item.name == "repository")

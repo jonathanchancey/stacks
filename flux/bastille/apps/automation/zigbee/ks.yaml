@@ -11,7 +11,11 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   components:
+    - ../../../../components/volsync/backup
     - ../../../../components/gatus
+  dependsOn:
+    - name: volsync
+      namespace: storage
   interval: 1h
   retryInterval: 2m
   timeout: 15m
@@ -19,6 +23,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      VOLSYNC_SCHEDULE: "15 * * * *"
   prune: true
   sourceRef:
     kind: GitRepository

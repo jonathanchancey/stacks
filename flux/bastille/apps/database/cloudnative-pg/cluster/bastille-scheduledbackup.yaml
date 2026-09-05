@@ -1,0 +1,14 @@
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: ScheduledBackup
+metadata:
+  name: bastille-pg-daily
+spec:
+  schedule: "0 30 0 * * *"
+  immediate: true
+  backupOwnerReference: self
+  cluster:
+    name: bastille-pg
+  method: plugin
+  pluginConfiguration:
+    name: barman-cloud.cloudnative-pg.io

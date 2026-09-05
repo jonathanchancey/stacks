@@ -1,0 +1,7 @@
+---
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+# Attach backups to existing PVCs without taking ownership or creating restores.
+resources:
+  - ../secret.sops.yaml
+  - ./replicationsource.yaml
