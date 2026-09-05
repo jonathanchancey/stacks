@@ -7,7 +7,6 @@ components:
   - ../../components/common
 resources:
   - ./kanidm/ks.yaml
-  - ./kanidm-client-reconciler/ks.yaml
   - ./roles/ks.yaml
   - ./zitadel/ks.yaml
 patches:

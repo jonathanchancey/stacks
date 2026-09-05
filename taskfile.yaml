@@ -34,15 +34,10 @@ tasks:
       KUBECONFORM_DIR: "{{.KUBECONFORM_DIR | default .KUBERNETES_DIR}}"
     cmd: tools/scripts/kubeconform.sh "{{.KUBECONFORM_DIR}}"
 
-  test-identity:
-    desc: test kanidm reconciliation and credential handling
-    cmd: python3 -W error -m unittest discover -s tools/tests -v
-
   test-all:
     desc: run testing suite
     deps:
       - flux:test-all
-      - test-identity
       - conform
 
   test:

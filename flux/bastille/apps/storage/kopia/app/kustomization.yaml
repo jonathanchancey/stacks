@@ -6,13 +6,10 @@ resources:
   - ./secret.sops.yaml
   - ./helmrelease.yaml
   - ./securitypolicy.yaml
-  - ./oidc-client.yaml
+  - ./oidc-secret.sops.yaml
   - ./kopiamaintenance.yaml
   - ./verification.yaml
 configMapGenerator:
-  - name: kopia-oidc-config
-    files:
-      - client.json=./resources/oidc-client.json
   - name: kopia-repository-configmap
     files:
       - repository.config=./resources/repository.config
