@@ -6,6 +6,7 @@ resources:
   - ./secret.sops.yaml
   - ./helmrelease.yaml
   - ./securitypolicy.yaml
+  - ./oidc-secret.sops.yaml
   - ./kopiamaintenance.yaml
   - ./verification.yaml
 configMapGenerator:
