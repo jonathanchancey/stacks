@@ -4,6 +4,8 @@ apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaDashboard
 metadata:
   name: immich
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled
 spec:
   allowCrossNamespaceImport: true
   instanceSelector:
@@ -12,16 +14,52 @@ spec:
   uid: f11aa6cfa291454bb32b335a6657a94b
   resyncPeriod: 10m
   folder: General
-  grafanaCom:
-    id: 22555
-    revision: 1
-  datasources:
-    - inputName: DS_LOKI
-      datasourceName: loki
-    - inputName: DS_PROMETHEUS
-      datasourceName: prometheus
-  variables:
-    - name: DS_PROMETHEUS
-      value: prometheus
-    - name: DS_LOKI
-      value: loki
+  jsonnet: |
+    local source = { type: 'prometheus', uid: 'prometheus' };
+    local selector = 'job="immich",namespace="$namespace"';
+    local panel(id, title, expr, unit, x, y, legend='', stat=false) = {
+      id: id,
+      title: title,
+      type: if stat then 'stat' else 'timeseries',
+      datasource: source,
+      gridPos: { x: x, y: y, w: if stat then 8 else 12, h: if stat then 4 else 8 },
+      fieldConfig: { defaults: { unit: unit }, overrides: [] },
+      targets: [{ refId: 'A', expr: expr, legendFormat: legend, range: !stat, instant: stat }],
+      options: if stat then { reduceOptions: { calcs: ['lastNotNull'], values: false } }
+               else { legend: { displayMode: 'list', placement: 'bottom' } },
+    };
+    // Preserve the metric name as a label before rate removes it.
+    local jobs(outcome) = 'sum by (operation) (rate(label_replace({__name__=~"immich_jobs_.*_' + outcome + '_total",' + selector + '}, "operation", "$1", "__name__", "immich_jobs_(.*)_' + outcome + '_total")[$__rate_interval:]))';
+    {
+      title: 'Immich',
+      uid: 'f11aa6cfa291454bb32b335a6657a94b',
+      schemaVersion: 39,
+      editable: false,
+      tags: ['immich'],
+      timezone: 'browser',
+      refresh: '1m',
+      time: { from: 'now-6h', to: 'now' },
+      templating: { list: [{
+        name: 'namespace',
+        type: 'query',
+        datasource: source,
+        query: 'label_values(up{job="immich"}, namespace)',
+        refresh: 1,
+        current: { text: 'media', value: 'media' },
+      }] },
+      panels: [
+        panel(1, 'Metrics endpoints up', 'min(up{' + selector + '})', 'none', 0, 0, stat=true),
+        panel(2, 'Users', 'max(immich_users_total{' + selector + '})', 'none', 8, 0, stat=true),
+        panel(3, 'PostgreSQL collector up', 'min(cnpg_collector_up{namespace="database",cluster="immich-postgres"})', 'none', 16, 0, stat=true),
+        panel(4, 'Process memory', 'process_memory_usage{' + selector + '}', 'bytes', 0, 4, '{{pod}} / {{endpoint}}'),
+        panel(5, 'Process CPU utilization', 'sum by (pod, endpoint) (process_cpu_utilization{' + selector + '})', 'percentunit', 12, 4, '{{pod}} / {{endpoint}}'),
+        panel(6, 'Active jobs by queue', 'sum by (queue) (label_replace({__name__=~"immich_queues_.*_active",' + selector + '}, "queue", "$1", "__name__", "immich_queues_(.*)_active"))', 'none', 0, 12, '{{queue}}'),
+        panel(7, 'Successful jobs', jobs('success'), 'ops', 12, 12, '{{operation}}'),
+        panel(8, 'Failed jobs', jobs('failed'), 'ops', 0, 20, '{{operation}}') {
+          description: 'Counters appear after a failure has occurred; an absent series is not a scrape failure.',
+        },
+        panel(9, 'Skipped jobs', jobs('skipped'), 'ops', 12, 20, '{{operation}}') {
+          description: 'Counters appear after a job has been skipped.',
+        },
+      ],
+    }
