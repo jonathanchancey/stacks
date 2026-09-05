@@ -10,14 +10,18 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   components:
+    - ../../../../components/volsync/backup
     - ../../../../components/gatus
   dependsOn:
+    - name: volsync
+      namespace: storage
     - name: kube-prometheus-stack
       namespace: observability
   path: ./flux/bastille/apps/observability/grafana/app
   postBuild:
     substitute:
       APP: *app
+      VOLSYNC_SCHEDULE: "45 * * * *"
       GATUS_DOMAIN: bastille.chancey.dev
   sourceRef:
     kind: GitRepository

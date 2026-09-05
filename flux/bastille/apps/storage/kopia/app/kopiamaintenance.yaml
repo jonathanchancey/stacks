@@ -1,0 +1,35 @@
+---
+apiVersion: volsync.backube/v1alpha1
+kind: KopiaMaintenance
+metadata:
+  name: kopia
+spec:
+  repository:
+    repository: kopia-secret
+    repositoryType: filesystem
+  trigger:
+    # The controller runs in UTC; keep maintenance away from the hourly backup start.
+    schedule: "30 9 * * *"
+  enabled: true
+  activeDeadlineSeconds: 10800
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  cacheCapacity: 2Gi
+  cacheStorageClassName: openebs-hostpath
+  cacheAccessModes: [ReadWriteOnce]
+  podSecurityContext:
+    runAsNonRoot: true
+    runAsUser: 1012
+    runAsGroup: 1012
+    fsGroup: 1012
+    fsGroupChangePolicy: OnRootMismatch
+    seccompProfile:
+      type: RuntimeDefault
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      memory: 2Gi
+  # The VolSync NFS admission policy also mounts /repository in maintenance jobs.
+  # Keep this path aligned with the existing encrypted repository configuration.

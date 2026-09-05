@@ -25,8 +25,22 @@ spec:
         namespace: storage
   interval: 30m
   timeout: 15m
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              group: monitoring.coreos.com
+              version: v1
+              kind: ServiceMonitor
+              name: volsync
+            patch: |-
+              - op: add
+                path: /spec/endpoints/0/bearerTokenFile
+                value: /var/run/secrets/kubernetes.io/serviceaccount/token
   values:
     manageCRDs: true
+    metrics:
+      disableAuth: false
     image: &image
       repository: ghcr.io/perfectra1n/volsync
       tag: v0.17.11

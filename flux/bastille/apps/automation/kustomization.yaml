@@ -9,3 +9,13 @@ resources:
   - ./home-assistant/ks.yaml
   - ./mosquitto/ks.yaml
   - ./zigbee/ks.yaml
+patches:
+  - target:
+      kind: Namespace
+    patch: |-
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: unused
+        annotations:
+          volsync.backube/privileged-movers: "true"

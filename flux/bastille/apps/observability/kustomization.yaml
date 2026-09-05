@@ -11,3 +11,13 @@ resources:
   - ./loki/ks.yaml
   - ./promtail/ks.yaml
   - ./gatus/ks.yaml
+patches:
+  - target:
+      kind: Namespace
+    patch: |-
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: unused
+        annotations:
+          volsync.backube/privileged-movers: "true"

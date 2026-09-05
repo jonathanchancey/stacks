@@ -1,0 +1,103 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/batch/cronjob_v1.json
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: kopia-verification
+spec:
+  # Leave at least two hours before daily maintenance, even at the full deadline.
+  schedule: "30 1 * * 0"
+  timeZone: Etc/UTC
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 600
+  successfulJobsHistoryLimit: 2
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      activeDeadlineSeconds: 21600
+      backoffLimit: 0
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/name: kopia-verification
+        spec:
+          restartPolicy: Never
+          automountServiceAccountToken: false
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1012
+            runAsGroup: 1012
+            fsGroup: 1012
+            fsGroupChangePolicy: OnRootMismatch
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+            - name: verify
+              image: ghcr.io/home-operations/kopia:0.23.1@sha256:27da0a33b44e1b902150a6c963514237217464bb13118a95bb056667be93cda5
+              command: [kopia]
+              args:
+                - --config-file=/config/repository.config
+                - --log-dir=/logs
+                - --no-auto-maintenance
+                - --disable-repository-log
+                - --error-notifications=never
+                - snapshot
+                - verify
+                - --verify-files-percent=100
+                - --parallel=2
+                - --file-parallelism=2
+              # The image's cache environment overrides the repository JSON path.
+              env:
+                - name: KOPIA_CONFIG_PATH
+                  value: /config/repository.config
+                - name: KOPIA_CACHE_DIRECTORY
+                  value: /cache
+                - name: KOPIA_LOG_DIR
+                  value: /logs
+              envFrom:
+                - secretRef:
+                    name: kopia-secret
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities:
+                  drop: [ALL]
+              resources:
+                requests:
+                  cpu: 100m
+                  memory: 256Mi
+                  ephemeral-storage: 1Gi
+                limits:
+                  memory: 2Gi
+                  ephemeral-storage: 4Gi
+              volumeMounts:
+                - name: config
+                  mountPath: /config
+                  readOnly: true
+                - name: repository
+                  mountPath: /repository
+                  readOnly: true
+                - name: cache
+                  mountPath: /cache
+                - name: logs
+                  mountPath: /logs
+                - name: tmp
+                  mountPath: /tmp
+          volumes:
+            - name: config
+              configMap:
+                name: kopia-verification-configmap
+            - name: repository
+              nfs:
+                server: vents.internal
+                path: /mnt/scale-worm/bastille/backup
+                readOnly: true
+            - name: cache
+              emptyDir:
+                sizeLimit: 2Gi
+            - name: logs
+              emptyDir:
+                sizeLimit: 128Mi
+            - name: tmp
+              emptyDir:
+                sizeLimit: 512Mi

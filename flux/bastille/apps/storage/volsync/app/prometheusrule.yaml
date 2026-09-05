@@ -1,0 +1,226 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/monitoring.coreos.com/prometheusrule_v1.json
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: volsync
+spec:
+  groups:
+    - name: volsync.expected-backups
+      rules:
+        # Keep this inventory in step with the applications using volsync/backup.
+        # Explicit expectations let missing ReplicationSources alert as well.
+        - record: volsync:expected_backup_source
+          expr: vector(1)
+          labels:
+            obj_namespace: automation
+            obj_name: home-assistant
+        - record: volsync:expected_backup_source
+          expr: vector(1)
+          labels:
+            obj_namespace: automation
+            obj_name: zigbee
+        - record: volsync:expected_backup_source
+          expr: vector(1)
+          labels:
+            obj_namespace: automation
+            obj_name: mosquitto
+        - record: volsync:expected_backup_source
+          expr: vector(1)
+          labels:
+            obj_namespace: auth-system
+            obj_name: kanidm
+        - record: volsync:expected_backup_source
+          expr: vector(1)
+          labels:
+            obj_namespace: observability
+            obj_name: grafana
+    - name: volsync.rules
+      rules:
+        - alert: VolSyncMetricsUnavailable
+          expr: |-
+            up{namespace="storage",service="volsync-metrics"} == 0
+            or absent(up{namespace="storage",service="volsync-metrics"})
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: VolSync backup monitoring is unavailable
+            description: Prometheus cannot scrape VolSync, or its metrics target is missing. Backup health cannot be determined.
+        - alert: VolSyncExpectedSourceMissing
+          expr: |-
+            volsync:expected_backup_source
+            unless on (obj_namespace, obj_name)
+              volsync_volume_out_of_sync{role="source",method="kopia"}
+          for: 15m
+          labels:
+            severity: critical
+          annotations:
+            summary: '{{ $labels.obj_namespace }}/{{ $labels.obj_name }} backup source is missing'
+            description: An expected Kopia ReplicationSource is absent from VolSync metrics. Check its Flux Kustomization and the VolSync controller.
+        - alert: VolSyncVolumeOutOfSync
+          expr: |-
+            (volsync_volume_out_of_sync{role="source",method="kopia"} == 1)
+            and on (obj_namespace, obj_name) volsync:expected_backup_source
+          for: 15m
+          labels:
+            severity: critical
+          annotations:
+            summary: '{{ $labels.obj_namespace }}/{{ $labels.obj_name }} backup is out of sync'
+            description: VolSync reports that this volume is not synchronized. Inspect the ReplicationSource and mover Job before considering the volume protected.
+        - alert: VolSyncBackupMissedSchedules
+          expr: |-
+            (increase(volsync_missed_intervals_total{role="source",method="kopia"}[3h]) >= 2)
+            and on (obj_namespace, obj_name) volsync:expected_backup_source
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: '{{ $labels.obj_namespace }}/{{ $labels.obj_name }} has missed backup schedules'
+            description: At least two scheduled backup intervals were missed in the last three hours. Check for a stuck snapshot, mover, unavailable NAS, or insufficient capacity.
+        - alert: VolSyncBackupNotRecent
+          # The fork exposes a success counter, not a last-success timestamp.
+          # A newly appearing positive counter also proves a recent success;
+          # checking offset 3h prevents an unchanged old counter from doing so.
+          expr: |-
+            volsync:expected_backup_source
+            unless on (obj_namespace, obj_name)
+            (
+              sum by (obj_namespace, obj_name) (
+                increase(volsync_kopia_operation_success_total{role="source",operation="backup"}[3h])
+              ) > 0
+              or
+              sum by (obj_namespace, obj_name) (
+                (volsync_kopia_operation_success_total{role="source",operation="backup"} > 0)
+                unless
+                volsync_kopia_operation_success_total{role="source",operation="backup"} offset 3h
+              ) > 0
+            )
+          for: 15m
+          labels:
+            severity: critical
+          annotations:
+            summary: '{{ $labels.obj_namespace }}/{{ $labels.obj_name }} has no recent successful backup'
+            description: No successful Kopia backup has been observed within three hours. Check ReplicationSource lastSyncTime and repository snapshots; a healthy application or available PVC does not establish backup health.
+    - name: kopia.verification
+      rules:
+        - alert: KopiaVerificationMissing
+          expr: absent(kube_cronjob_info{namespace="storage",cronjob="kopia-verification"})
+          for: 15m
+          labels:
+            severity: critical
+          annotations:
+            summary: Scheduled Kopia repository verification is missing
+            description: The weekly verification CronJob is absent from kube-state-metrics. Check its Flux Kustomization and metrics collection.
+        - alert: KopiaVerificationFailed
+          # Ignore retained failures after a newer scheduled verification succeeds.
+          expr: |-
+            (kube_job_failed{namespace="storage",job_name=~"kopia-verification-.*",condition="true"} == 1)
+            and on (namespace, job_name)
+            (
+              kube_job_status_start_time{namespace="storage",job_name=~"kopia-verification-.*"}
+              > on (namespace) group_left()
+              (
+                max by (namespace) (
+                  kube_cronjob_status_last_successful_time{namespace="storage",cronjob="kopia-verification"}
+                )
+                or
+                max by (namespace) (
+                  kube_cronjob_created{namespace="storage",cronjob="kopia-verification"}
+                ) * 0
+              )
+            )
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: 'Kopia repository verification failed: {{ $labels.job_name }}'
+            description: Full file verification failed or exceeded its six-hour deadline. Inspect the Job logs and repository integrity. This alert clears after a newer scheduled verification succeeds.
+        - alert: KopiaVerificationStale
+          expr: |-
+            (time() - kube_cronjob_status_last_successful_time{namespace="storage",cronjob="kopia-verification"} > 8 * 24 * 60 * 60)
+            and
+            (kube_cronjob_status_last_successful_time{namespace="storage",cronjob="kopia-verification"} > 0)
+          for: 15m
+          labels:
+            severity: critical
+          annotations:
+            summary: Kopia repository verification is overdue
+            description: The weekly full verification has not succeeded in more than eight days. Check for a suspended CronJob, missed schedule, unavailable NAS, or failed verification.
+        - alert: KopiaVerificationNeverSucceeded
+          # A new weekly CronJob needs up to seven days plus its six-hour deadline.
+          expr: |-
+            (time() - kube_cronjob_created{namespace="storage",cronjob="kopia-verification"} > 8 * 24 * 60 * 60)
+            unless on (namespace, cronjob)
+            (kube_cronjob_status_last_successful_time{namespace="storage",cronjob="kopia-verification"} > 0)
+          for: 15m
+          labels:
+            severity: critical
+          annotations:
+            summary: Scheduled Kopia repository verification has never succeeded
+            description: The weekly verification CronJob is more than eight days old without a recorded success. Backup completion alone does not establish that all stored files are readable.
+    - name: kopia.maintenance
+      rules:
+        - alert: KopiaMaintenanceMissing
+          expr: absent(kube_cronjob_info{namespace="storage",cronjob=~"^kopia-maint-kopia-[0-9a-f]{16}$"})
+          for: 15m
+          labels:
+            severity: critical
+          annotations:
+            summary: Daily Kopia repository maintenance is missing
+            description: The VolSync-generated CronJob for the kopia maintenance resource is absent from kube-state-metrics. Check the KopiaMaintenance resource, controller, and metrics collection.
+        - alert: KopiaMaintenanceSuspended
+          expr: kube_cronjob_spec_suspend{namespace="storage",cronjob=~"^kopia-maint-kopia-[0-9a-f]{16}$"} == 1
+          for: 15m
+          labels:
+            severity: critical
+          annotations:
+            summary: Daily Kopia repository maintenance is suspended
+            description: Scheduled repository maintenance is suspended. Check the KopiaMaintenance and generated CronJob before expecting daily cleanup and repository checks to run.
+        - alert: KopiaMaintenanceFailed
+          # Ignore retained failures once a newer maintenance run has succeeded.
+          expr: |-
+            (kube_job_failed{namespace="storage",job_name=~"^kopia-maint-kopia-[0-9a-f]{16}-.+$",condition="true"} == 1)
+            and on (namespace, job_name)
+            (
+              kube_job_status_start_time{namespace="storage",job_name=~"^kopia-maint-kopia-[0-9a-f]{16}-.+$"}
+              > on (namespace) group_left()
+              (
+                max by (namespace) (
+                  kube_cronjob_status_last_successful_time{namespace="storage",cronjob=~"^kopia-maint-kopia-[0-9a-f]{16}$"}
+                )
+                or
+                max by (namespace) (
+                  kube_cronjob_created{namespace="storage",cronjob=~"^kopia-maint-kopia-[0-9a-f]{16}$"}
+                ) * 0
+              )
+            )
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: 'Kopia repository maintenance failed: {{ $labels.job_name }}'
+            description: Maintenance failed after the latest successful run. Inspect the Job logs, repository maintenance ownership, NAS availability, and free space. A newer successful scheduled run clears this alert.
+        - alert: KopiaMaintenanceStale
+          expr: |-
+            (time() - kube_cronjob_status_last_successful_time{namespace="storage",cronjob=~"^kopia-maint-kopia-[0-9a-f]{16}$"} > 36 * 60 * 60)
+            and
+            (kube_cronjob_status_last_successful_time{namespace="storage",cronjob=~"^kopia-maint-kopia-[0-9a-f]{16}$"} > 0)
+          for: 15m
+          labels:
+            severity: critical
+          annotations:
+            summary: Daily Kopia repository maintenance is overdue
+            description: Repository maintenance has not succeeded in more than 36 hours. Check maintenance ownership, generated Jobs, NAS availability, and scheduling.
+        - alert: KopiaMaintenanceNeverSucceeded
+          # Allow the first daily schedule and its deadline before reporting no success.
+          expr: |-
+            (time() - kube_cronjob_created{namespace="storage",cronjob=~"^kopia-maint-kopia-[0-9a-f]{16}$"} > 36 * 60 * 60)
+            unless on (namespace, cronjob)
+            (kube_cronjob_status_last_successful_time{namespace="storage",cronjob=~"^kopia-maint-kopia-[0-9a-f]{16}$"} > 0)
+          for: 15m
+          labels:
+            severity: critical
+          annotations:
+            summary: Daily Kopia repository maintenance has never succeeded
+            description: The maintenance CronJob is more than 36 hours old without a valid success timestamp. Inspect repository maintenance ownership and the first scheduled Job; completed backups do not establish maintenance health.

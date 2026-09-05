@@ -77,3 +77,84 @@ spec:
               Replica {{ $labels.pod }} is failing to replicate
           labels:
             severity: critical
+
+    - name: cloudnative-pg.barman-backups
+      rules:
+        # Only production sources are expected to archive; recovery drills are excluded.
+        - record: cnpg:expected_backup_cluster
+          expr: vector(1)
+          labels:
+            namespace: database
+            cluster: bastille-pg
+        - record: cnpg:expected_backup_cluster
+          expr: vector(1)
+          labels:
+            namespace: database
+            cluster: postgres
+        - record: cnpg:expected_backup_cluster
+          expr: vector(1)
+          labels:
+            namespace: database
+            cluster: immich-postgres
+        # Actual plugin metrics identify the cluster using job="database/<name>".
+        # Aggregate replicas and expose that verified identity as a cluster label.
+        - record: cnpg:barman_last_available_backup_timestamp
+          expr: |-
+            max by (namespace, cluster) (
+              label_replace(
+                barman_cloud_cloudnative_pg_io_last_available_backup_timestamp{
+                  namespace="database",job=~"database/(bastille-pg|postgres|immich-postgres)"
+                },
+                "cluster", "$1", "job", "database/(.*)"
+              )
+            )
+        - record: cnpg:barman_last_failed_backup_timestamp
+          expr: |-
+            max by (namespace, cluster) (
+              label_replace(
+                barman_cloud_cloudnative_pg_io_last_failed_backup_timestamp{
+                  namespace="database",job=~"database/(bastille-pg|postgres|immich-postgres)"
+                },
+                "cluster", "$1", "job", "database/(.*)"
+              )
+            )
+        - alert: CNPGBackupTimestampMissing
+          expr: |-
+            cnpg:expected_backup_cluster
+            unless on (namespace, cluster)
+            (cnpg:barman_last_available_backup_timestamp > 0)
+          for: 15m
+          labels:
+            severity: critical
+          annotations:
+            summary: '{{ $labels.namespace }}/{{ $labels.cluster }} has no valid B2 backup timestamp'
+            description: The Barman plugin backup timestamp is missing or zero. Check source metrics, completed Backup resources, and the ObjectStore status schema. A healthy database does not establish backup health.
+        - alert: CNPGBackupStale
+          expr: |-
+            (time() - cnpg:barman_last_available_backup_timestamp > 36 * 60 * 60)
+            and
+            (cnpg:barman_last_available_backup_timestamp > 0)
+          for: 15m
+          labels:
+            severity: critical
+          annotations:
+            summary: '{{ $labels.namespace }}/{{ $labels.cluster }} B2 base backup is overdue'
+            description: The latest available base backup is more than 36 hours old. Check the daily ScheduledBackup, Barman plugin, and B2 access; WAL archiving alone is insufficient.
+        - alert: CNPGBackupFailed
+          expr: |-
+            (cnpg:barman_last_failed_backup_timestamp > 0)
+            and on (namespace, cluster)
+            (
+              cnpg:barman_last_failed_backup_timestamp
+              > on (namespace, cluster)
+              (
+                cnpg:barman_last_available_backup_timestamp
+                or cnpg:expected_backup_cluster * 0
+              )
+            )
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: '{{ $labels.namespace }}/{{ $labels.cluster }} B2 backup failed'
+            description: The Barman plugin reports a backup failure newer than the latest successful backup. Inspect the Backup resource and plugin logs, then verify a newer backup completes.
