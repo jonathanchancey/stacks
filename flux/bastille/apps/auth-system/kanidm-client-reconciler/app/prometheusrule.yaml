@@ -1,0 +1,22 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: kanidm-client-reconciler
+spec:
+  groups:
+    - name: kanidm-client-reconciler
+      rules:
+        - alert: KanidmClientReconciliationStale
+          expr: |
+            (time() - kube_cronjob_status_last_successful_time{namespace="auth-system", cronjob="kanidm-client-reconciler"} > 1800)
+            or
+            ((time() - kube_cronjob_created{namespace="auth-system", cronjob="kanidm-client-reconciler"} > 1800)
+              unless on(namespace, cronjob) kube_cronjob_status_last_successful_time{namespace="auth-system", cronjob="kanidm-client-reconciler"})
+            or absent(kube_cronjob_info{namespace="auth-system", cronjob="kanidm-client-reconciler"})
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: Kanidm client reconciliation is overdue
+            description: Check the reconciler job, bootstrap credential, and declared clients.

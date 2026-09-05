@@ -1,0 +1,8 @@
+{
+  "name": "kopia",
+  "displayName": "Kopia",
+  "origin": "https://kopia.chancey.dev/",
+  "redirectURLs": ["https://kopia.chancey.dev/oauth2/callback"],
+  "scopeMap": {"kopia_users": ["openid", "profile", "email"]},
+  "secretName": "kopia-oidc-client"
+}

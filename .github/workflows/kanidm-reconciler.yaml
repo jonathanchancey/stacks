@@ -1,0 +1,27 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: Kanidm Reconciler
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - flux/bastille/apps/auth-system/kanidm-client-reconciler/**
+      - flux/bastille/apps/storage/kopia/app/**
+      - tools/tests/**
+      - tools/scripts/install-kanidm-reconciler-token.py
+      - .github/workflows/kanidm-reconciler.yaml
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Kanidm Reconciler
+    runs-on: ubuntu-latest
+    container: docker.io/library/python:3.13.12-slim-bookworm@sha256:a58daefb915e1e03ad48f3ca4df8832065412c5c35cacb9d39f4229184de12b6
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Test reconciliation and credential handling
+        run: python3 -W error -m unittest discover -s tools/tests -v
