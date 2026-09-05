@@ -14,9 +14,9 @@ kubeconform_args=(
   "-skip"
   "Secret"
   "-schema-location"
-  "default"
+  "https://k8s-schemas.home-operations.com/{{if .Group}}{{.Group}}{{else}}core{{end}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json"
   "-schema-location"
-  "https://kubernetes-schemas.pages.dev/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json"
+  "default"
   # "-verbose"
 )
 

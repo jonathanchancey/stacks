@@ -1,5 +1,5 @@
 ---
-# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kustomize.config.k8s.io/kustomization_v1beta1.json
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: observability
@@ -7,6 +7,7 @@ components:
   - ../../components/privileged
 resources:
   - ./kube-prometheus-stack/ks.yaml
+  - ./grafana-operator/ks.yaml
   - ./grafana/ks.yaml
   - ./loki/ks.yaml
   - ./promtail/ks.yaml

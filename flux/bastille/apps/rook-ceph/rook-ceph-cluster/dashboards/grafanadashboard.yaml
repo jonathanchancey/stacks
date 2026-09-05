@@ -1,0 +1,63 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: rook-ceph-cluster
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  uid: tbO9LAiZK
+  resyncPeriod: 10m
+  grafanaCom:
+    id: 2842
+    revision: 17
+  variables:
+    - name: DS_PROMETHEUS
+      value: prometheus
+  datasources:
+    - inputName: DS_PROMETHEUS
+      datasourceName: prometheus
+  folder: General
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: rook-ceph-osd
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  uid: Fj5fAfzik
+  resyncPeriod: 10m
+  configMapRef:
+    name: rook-ceph-osd-dashboard
+    key: rook-ceph-osd.json
+  folder: General
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: rook-ceph-pools
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  uid: -gtf0Bzik
+  resyncPeriod: 10m
+  grafanaCom:
+    id: 5342
+    revision: 9
+  variables:
+    - name: DS_PROMETHEUS
+      value: prometheus
+  datasources:
+    - inputName: DS_PROMETHEUS
+      datasourceName: prometheus
+  folder: General

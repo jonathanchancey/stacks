@@ -1,5 +1,5 @@
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
@@ -28,3 +28,26 @@ spec:
   dependsOn:
     - name: csi-driver-smb
       namespace: kube-system
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: immich-dashboards
+  namespace: media
+spec:
+  targetNamespace: media
+  dependsOn:
+    - name: grafana-dashboards
+      namespace: observability
+    - name: immich
+      namespace: media
+  path: ./flux/bastille/apps/media/immich/dashboards
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  interval: 1h
+  retryInterval: 2m
+  timeout: 5m

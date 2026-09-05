@@ -1,0 +1,744 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: alertmanager-overview
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  uid: alertmanager-overview
+  resyncPeriod: 10m
+  configMapRef:
+    name: kube-prometheus-stack-alertmanager-overview
+    key: alertmanager-overview.json
+  variables:
+    - name: datasource
+      value: prometheus
+  folder: General
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: apiserver
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  uid: 09ec8aa1e996d6ffcd6817bbaff4db1b
+  resyncPeriod: 10m
+  configMapRef:
+    name: kube-prometheus-stack-apiserver
+    key: apiserver.json
+  variables:
+    - name: datasource
+      value: prometheus
+  folder: General
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: cluster-total
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  uid: ff635a025bcfea7bc3dd4f508990a3e9
+  resyncPeriod: 10m
+  configMapRef:
+    name: kube-prometheus-stack-cluster-total
+    key: cluster-total.json
+  variables:
+    - name: datasource
+      value: prometheus
+  folder: General
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: controller-manager
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  uid: 72e0e05bef5099e5f049b05fdc429ed4
+  resyncPeriod: 10m
+  configMapRef:
+    name: kube-prometheus-stack-controller-manager
+    key: controller-manager.json
+  variables:
+    - name: datasource
+      value: prometheus
+  folder: General
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: etcd
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  uid: c2f4e12cdf69feb95caa41a5a1b423d9
+  resyncPeriod: 10m
+  configMapRef:
+    name: kube-prometheus-stack-etcd
+    key: etcd.json
+  variables:
+    - name: datasource
+      value: prometheus
+  folder: General
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: grafana-overview
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  uid: 6be0s85Mk
+  resyncPeriod: 10m
+  configMapRef:
+    name: kube-prometheus-stack-grafana-overview
+    key: grafana-overview.json
+  variables:
+    - name: datasource
+      value: prometheus
+  folder: General
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: k8s-coredns
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  uid: vkQ0UHxik
+  resyncPeriod: 10m
+  configMapRef:
+    name: kube-prometheus-stack-k8s-coredns
+    key: k8s-coredns.json
+  variables:
+    - name: datasource
+      value: prometheus
+  folder: General
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: k8s-resources-cluster
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  uid: efa86fd1d0c121a26444b636a3f509a8
+  resyncPeriod: 10m
+  configMapRef:
+    name: kube-prometheus-stack-k8s-resources-cluster
+    key: k8s-resources-cluster.json
+  variables:
+    - name: datasource
+      value: prometheus
+  folder: General
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: k8s-resources-multicluster
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  uid: b59e6c9f2fcbe2e16d77fc492374cc4f
+  resyncPeriod: 10m
+  configMapRef:
+    name: kube-prometheus-stack-k8s-resources-multicluster
+    key: k8s-resources-multicluster.json
+  variables:
+    - name: datasource
+      value: prometheus
+  folder: General
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: k8s-resources-namespace
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  uid: 85a562078cdf77779eaa1add43ccec1e
+  resyncPeriod: 10m
+  configMapRef:
+    name: kube-prometheus-stack-k8s-resources-namespace
+    key: k8s-resources-namespace.json
+  variables:
+    - name: datasource
+      value: prometheus
+  folder: General
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: k8s-resources-node
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  uid: 200ac8fdbfbb74b39aff88118e4d1c2c
+  resyncPeriod: 10m
+  configMapRef:
+    name: kube-prometheus-stack-k8s-resources-node
+    key: k8s-resources-node.json
+  variables:
+    - name: datasource
+      value: prometheus
+  folder: General
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: k8s-resources-pod
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  uid: 6581e46e4e5c7ba40a07646395ef7b23
+  resyncPeriod: 10m
+  configMapRef:
+    name: kube-prometheus-stack-k8s-resources-pod
+    key: k8s-resources-pod.json
+  variables:
+    - name: datasource
+      value: prometheus
+  folder: General
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: k8s-resources-workload
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  uid: a164a7f0339f99e89cea5cb47e9be617
+  resyncPeriod: 10m
+  configMapRef:
+    name: kube-prometheus-stack-k8s-resources-workload
+    key: k8s-resources-workload.json
+  variables:
+    - name: datasource
+      value: prometheus
+  folder: General
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: k8s-resources-workloads-namespace
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  uid: a87fb0d919ec0ea5f6543124e16c42a5
+  resyncPeriod: 10m
+  configMapRef:
+    name: kube-prometheus-stack-k8s-resources-workloads-namespace
+    key: k8s-resources-workloads-namespace.json
+  variables:
+    - name: datasource
+      value: prometheus
+  folder: General
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: kubelet
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  uid: 3138fa155d5915769fbded898ac09fd9
+  resyncPeriod: 10m
+  configMapRef:
+    name: kube-prometheus-stack-kubelet
+    key: kubelet.json
+  variables:
+    - name: datasource
+      value: prometheus
+  folder: General
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: namespace-by-pod
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  uid: 8b7a8b326d7a6f1f04244066368c67af
+  resyncPeriod: 10m
+  configMapRef:
+    name: kube-prometheus-stack-namespace-by-pod
+    key: namespace-by-pod.json
+  variables:
+    - name: datasource
+      value: prometheus
+  folder: General
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: namespace-by-workload
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  uid: bbb2a765a623ae38130206c7d94a160f
+  resyncPeriod: 10m
+  configMapRef:
+    name: kube-prometheus-stack-namespace-by-workload
+    key: namespace-by-workload.json
+  variables:
+    - name: datasource
+      value: prometheus
+  folder: General
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: node-cluster-rsrc-use
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  uid: 3e97d1d02672cdd0861f4c97c64f89b2
+  resyncPeriod: 10m
+  configMapRef:
+    name: kube-prometheus-stack-node-cluster-rsrc-use
+    key: node-cluster-rsrc-use.json
+  variables:
+    - name: datasource
+      value: prometheus
+  folder: General
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: node-rsrc-use
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  uid: fac67cfbe174d3ef53eb473d73d9212f
+  resyncPeriod: 10m
+  configMapRef:
+    name: kube-prometheus-stack-node-rsrc-use
+    key: node-rsrc-use.json
+  variables:
+    - name: datasource
+      value: prometheus
+  folder: General
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: nodes-aix
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  uid: 7e0a61e486f727d763fb1d86fdd629c2
+  resyncPeriod: 10m
+  configMapRef:
+    name: kube-prometheus-stack-nodes-aix
+    key: nodes-aix.json
+  variables:
+    - name: datasource
+      value: prometheus
+  folder: General
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: nodes-darwin
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  uid: 629701ea43bf69291922ea45f4a87d37
+  resyncPeriod: 10m
+  configMapRef:
+    name: kube-prometheus-stack-nodes-darwin
+    key: nodes-darwin.json
+  variables:
+    - name: datasource
+      value: prometheus
+  folder: General
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: nodes
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  uid: 7d57716318ee0dddbac5a7f451fb7753
+  resyncPeriod: 10m
+  configMapRef:
+    name: kube-prometheus-stack-nodes
+    key: nodes.json
+  variables:
+    - name: datasource
+      value: prometheus
+  folder: General
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: persistentvolumesusage
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  uid: 919b92a8e8041bd567af9edab12c840c
+  resyncPeriod: 10m
+  configMapRef:
+    name: kube-prometheus-stack-persistentvolumesusage
+    key: persistentvolumesusage.json
+  variables:
+    - name: datasource
+      value: prometheus
+  folder: General
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: pod-total
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  uid: 7a18067ce943a40ae25454675c19ff5c
+  resyncPeriod: 10m
+  configMapRef:
+    name: kube-prometheus-stack-pod-total
+    key: pod-total.json
+  variables:
+    - name: datasource
+      value: prometheus
+  folder: General
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: prometheus-overview
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  uid: 9fa0d141-d019-4ad7-8bc5-42196ee308bd
+  resyncPeriod: 10m
+  configMapRef:
+    name: kube-prometheus-stack-prometheus
+    key: prometheus.json
+  variables:
+    - name: datasource
+      value: prometheus
+  folder: General
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: scheduler
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  uid: 2e6b6a3b4bddf1427b3a55aa1311c656
+  resyncPeriod: 10m
+  configMapRef:
+    name: kube-prometheus-stack-scheduler
+    key: scheduler.json
+  variables:
+    - name: datasource
+      value: prometheus
+  folder: General
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: workload-total
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  uid: 728bf77cc1166d2f3133bf25846876cc
+  resyncPeriod: 10m
+  configMapRef:
+    name: kube-prometheus-stack-workload-total
+    key: workload-total.json
+  variables:
+    - name: datasource
+      value: prometheus
+  folder: General
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: kubernetes-api-server
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  uid: k8s_system_apisrv
+  resyncPeriod: 10m
+  grafanaCom:
+    id: 15761
+    revision: 18
+  variables:
+    - name: datasource
+      value: prometheus
+  datasources:
+    - inputName: DS_PROMETHEUS
+      datasourceName: prometheus
+  folder: General
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: kubernetes-coredns
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  uid: k8s_system_coredns
+  resyncPeriod: 10m
+  grafanaCom:
+    id: 15762
+    revision: 18
+  variables:
+    - name: datasource
+      value: prometheus
+  datasources:
+    - inputName: DS_PROMETHEUS
+      datasourceName: prometheus
+  folder: General
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: kubernetes-global
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  uid: k8s_views_global
+  resyncPeriod: 10m
+  grafanaCom:
+    id: 15757
+    revision: 42
+  variables:
+    - name: datasource
+      value: prometheus
+  datasources:
+    - inputName: DS_PROMETHEUS
+      datasourceName: prometheus
+  folder: General
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: kubernetes-namespaces
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  uid: k8s_views_ns
+  resyncPeriod: 10m
+  grafanaCom:
+    id: 15758
+    revision: 40
+  variables:
+    - name: datasource
+      value: prometheus
+  datasources:
+    - inputName: DS_PROMETHEUS
+      datasourceName: prometheus
+  folder: General
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: kubernetes-nodes
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  uid: k8s_views_nodes
+  resyncPeriod: 10m
+  grafanaCom:
+    id: 15759
+    revision: 32
+  variables:
+    - name: datasource
+      value: prometheus
+  datasources:
+    - inputName: DS_PROMETHEUS
+      datasourceName: prometheus
+  folder: General
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: kubernetes-pods
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  uid: k8s_views_pods
+  resyncPeriod: 10m
+  grafanaCom:
+    id: 15760
+    revision: 32
+  variables:
+    - name: datasource
+      value: prometheus
+  datasources:
+    - inputName: DS_PROMETHEUS
+      datasourceName: prometheus
+  folder: General
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: kubernetes-volumes
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  uid: fepo6jdlm251cd
+  resyncPeriod: 10m
+  grafanaCom:
+    id: 11454
+    revision: 14
+  variables:
+    - name: DS_OPENSHIFT_PROMETHEUS
+      value: prometheus
+  datasources:
+    - inputName: DS_OPENSHIFT_PROMETHEUS
+      datasourceName: prometheus
+  folder: General
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: node-exporter-full
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  uid: rYdddlPWk
+  resyncPeriod: 10m
+  folder: General
+  grafanaCom:
+    id: 1860
+    revision: 45
+  variables:
+    - name: ds_prometheus
+      value: prometheus
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: prometheus
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  uid: k8s_addons_prometheus
+  resyncPeriod: 10m
+  grafanaCom:
+    id: 19105
+    revision: 5
+  variables:
+    - name: datasource
+      value: prometheus
+  datasources:
+    - inputName: DS_PROMETHEUS
+      datasourceName: prometheus
+  folder: General

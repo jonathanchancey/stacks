@@ -1,0 +1,17 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafana_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: Grafana
+metadata:
+  name: grafana
+  labels:
+    dashboards: grafana
+spec:
+  external:
+    url: http://grafana.observability.svc.cluster.local:80
+    adminUser:
+      name: grafana-admin-secret
+      key: admin-user
+    adminPassword:
+      name: grafana-admin-secret
+      key: admin-password

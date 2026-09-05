@@ -1,0 +1,35 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: envoy-gateway
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  uid: bdn8lriao7myoa
+  resyncPeriod: 10m
+  configMapRef:
+    name: envoy-gateway-dashboard
+    key: envoy-gateway.json
+  folder: General
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: envoy-proxy
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  uid: heHhNSFf6Na8vIZWRs8H
+  resyncPeriod: 10m
+  url: https://raw.githubusercontent.com/envoyproxy/gateway/513b5112e3ed63c18d275de723dae037f9914376/charts/gateway-addons-helm/dashboards/envoy-proxy-global.json
+  variables:
+    - name: datasource
+      value: prometheus
+  folder: General

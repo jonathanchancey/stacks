@@ -1,5 +1,5 @@
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
@@ -18,4 +18,27 @@ spec:
     namespace: flux-system
   interval: 1h
   retryInterval: 1h
+  timeout: 5m
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: cert-manager-dashboards
+  namespace: cert-manager
+spec:
+  targetNamespace: cert-manager
+  dependsOn:
+    - name: grafana-dashboards
+      namespace: observability
+    - name: cert-manager
+      namespace: cert-manager
+  path: ./flux/bastille/apps/cert-manager/cert-manager/dashboards
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  interval: 1h
+  retryInterval: 2m
   timeout: 5m

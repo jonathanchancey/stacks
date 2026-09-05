@@ -1,0 +1,17 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: cert-manager
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  uid: TvuRo2iMk
+  resyncPeriod: 10m
+  configMapRef:
+    name: cert-manager-dashboard
+    key: cert-manager.json
+  folder: General

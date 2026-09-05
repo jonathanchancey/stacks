@@ -1,0 +1,27 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: immich
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  uid: f11aa6cfa291454bb32b335a6657a94b
+  resyncPeriod: 10m
+  folder: General
+  grafanaCom:
+    id: 22555
+    revision: 1
+  datasources:
+    - inputName: DS_LOKI
+      datasourceName: loki
+    - inputName: DS_PROMETHEUS
+      datasourceName: prometheus
+  variables:
+    - name: DS_PROMETHEUS
+      value: prometheus
+    - name: DS_LOKI
+      value: loki
