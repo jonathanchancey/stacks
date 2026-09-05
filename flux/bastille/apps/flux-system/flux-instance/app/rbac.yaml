@@ -1,11 +1,11 @@
-# yaml-language-server: $schema=https://kubernetesjsonschema.dev/v1.14.0-standalone/serviceaccount-v1.json
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/core/serviceaccount_v1.json
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: flux-ro
 ---
-# yaml-language-server: $schema=https://kubernetesjsonschema.dev/v1.14.0-standalone/clusterrole-rbac.authorization.k8s.io-v1.json
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/rbac.authorization.k8s.io/clusterrole_v1.json
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -151,7 +151,7 @@ rules:
       - horizontalpodautoscalers
     verbs: [get, list, watch]
 ---
-# yaml-language-server: $schema=https://kubernetesjsonschema.dev/v1.14.0-standalone/clusterrolebinding-rbac.authorization.k8s.io-v1.json
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/rbac.authorization.k8s.io/clusterrolebinding_v1.json
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
