@@ -16,7 +16,7 @@ kubeconform_args=(
   "-schema-location"
   "default"
   "-schema-location"
-  "https://kubernetes-schemas.pages.dev/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json"
+  'https://{{if eq .Group "grafana.integreatly.org"}}k8s-schemas.home-operations.com{{else}}kubernetes-schemas.pages.dev{{end}}/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json'
   # "-verbose"
 )
 

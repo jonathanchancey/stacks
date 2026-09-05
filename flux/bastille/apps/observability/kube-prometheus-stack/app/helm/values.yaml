@@ -73,7 +73,7 @@ kube-state-metrics:
           targetLabel: kubernetes_node
 grafana:
   enabled: false
-  forceDeployDashboards: false
+  forceDeployDashboards: true
 additionalPrometheusRulesMap:
   dockerhub-rules:
     groups:

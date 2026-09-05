@@ -88,3 +88,26 @@ spec:
   targetNamespace: *namespace
   timeout: 5m
   wait: true
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: cloudnative-pg-dashboards
+  namespace: database
+spec:
+  targetNamespace: database
+  dependsOn:
+    - name: grafana-dashboards
+      namespace: observability
+    - name: cloudnative-pg
+      namespace: database
+  path: ./flux/bastille/apps/database/cloudnative-pg/dashboards
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  interval: 1h
+  retryInterval: 2m
+  timeout: 5m

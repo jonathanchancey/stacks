@@ -7,6 +7,7 @@ components:
   - ../../components/privileged
 resources:
   - ./kube-prometheus-stack/ks.yaml
+  - ./grafana-operator/ks.yaml
   - ./grafana/ks.yaml
   - ./loki/ks.yaml
   - ./promtail/ks.yaml

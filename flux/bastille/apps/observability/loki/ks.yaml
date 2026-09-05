@@ -20,3 +20,26 @@ spec:
   interval: 1h
   retryInterval: 2m
   timeout: 5m
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: loki-dashboards
+  namespace: observability
+spec:
+  targetNamespace: observability
+  dependsOn:
+    - name: grafana-dashboards
+      namespace: observability
+    - name: loki
+      namespace: observability
+  path: ./flux/bastille/apps/observability/loki/dashboards
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  interval: 1h
+  retryInterval: 2m
+  timeout: 5m
