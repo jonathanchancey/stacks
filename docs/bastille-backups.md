@@ -33,7 +33,7 @@ The NFS admission policy must match both Job `CREATE` and `UPDATE`: VolSync rebu
 ## Routine checks
 
 - Check Flux, the ReplicationSource status, actual Kopia snapshots, and alerts together. A healthy application or bound PVC does not prove that a backup exists.
-- Prometheus scrapes VolSync using its rotating service-account token and the metrics-reader RBAC binding. The dashboard depends on a healthy authenticated scrape.
+- Prometheus scrapes VolSync using its rotating service-account token and the metrics-reader RBAC binding. The dashboard depends on a healthy authenticated scrape and uses the datasource UID `prometheus` (the datasource display name is `Prometheus`).
 - CloudNativePG alerts cover missing backup timestamps, failed backups, and base backups older than **36 hours**. The ObjectStore CRD must match the Barman operator: both now use v0.12.0. The old v0.5.0 CRD pruned the correctly spelled success/failure status timestamps, causing false zero-valued age metrics.
 - `storage/kopia-verification` runs Sundays at 01:30 UTC. It reads the NAS mount read-only and verifies 100% of stored file contents, with two workers, a six-hour deadline, and no maintenance or snapshot creation. Failed, missing, overdue, and never-successful verification has alert coverage. Explicit `KOPIA_CACHE_DIRECTORY=/cache` is required because the image environment overrides the JSON cache path; logs use `/logs`.
 - `storage/kopia` KopiaMaintenance runs daily at 09:30 UTC, owns maintenance as `maintenance@volsync`, and uses the existing repository Secret. Its timeout is three hours. Full maintenance checks repository structures; it does not replace full-file verification or restore testing.
@@ -51,7 +51,7 @@ For an initial maintenance run, identify the CronJob from `KopiaMaintenance.stat
 
 ## Safe isolated application restore
 
-First confirm the expected repository, source identity, and an eligible stored snapshot. Choose a new PVC name and a new manual trigger for every attempt. The example restores the latest available Home Assistant snapshot into a separate claim; replace the example names before applying it. If selecting an older point, add `restoreAsOf` only after verifying the desired snapshot timestamp. The destination namespace must permit VolSync's file-access capabilities.
+First confirm the expected repository, source identity, and an eligible, complete stored snapshot with no reported file errors. A failed backup attempt can still leave an incomplete snapshot in Kopia; do not assume the latest entry is a usable recovery point. Choose a new PVC name and a new manual trigger for every attempt. The example restores the latest available Home Assistant snapshot into a separate claim; replace the example names before applying it. If any later snapshot is incomplete, add `restoreAsOf` using the timestamp of a verified successful snapshot before applying the destination. The destination namespace must permit VolSync's file-access capabilities.
 
 ```yaml
 apiVersion: v1
@@ -124,7 +124,7 @@ Evidence recorded on 2026-09-05: all five new application backups completed with
 
 Repository validation passed all 80 tests and Kubeconform. Admission regression checks against the real Kubernetes API confirmed that unrelated init containers survive, repeated mutation does not duplicate injected fields, and Job updates retain the original immutable template. Prometheus rule checks passed, including 11 maintenance-alert scenarios.
 
-Deploy these resources through `main` and verify that the affected Flux Kustomizations report the merged revision with `Ready=True`. Keep the successful maintenance and verification Job records. Temporary restore destinations, inspection Jobs, PVCs, and the isolated recovery cluster can be removed after comparing their identities with the original-volume inventory.
+Deploy these resources through `main` and verify that the affected Flux Kustomizations report the merged revision with `Ready=True`. Keep the successful maintenance and verification Job records. The temporary restore destinations, inspection Jobs, PVCs, and isolated recovery cluster were removed after comparing their identities with the original-volume inventory. A subsequent audit confirmed all 24 original PVC identities, specifications, and owner references still match.
 
 ## Credentials and source references
 

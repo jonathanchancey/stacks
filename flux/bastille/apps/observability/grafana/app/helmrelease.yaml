@@ -174,7 +174,7 @@ spec:
           gnetId: 21356
           revision: 3
           datasource:
-            - { name: DS_PROMETHEUS, value: Prometheus }
+            - { name: DS_PROMETHEUS, value: prometheus }
             - { name: VAR_REPLICATIONDESTNAME, value: .*-dst }
     datasources:
       datasources.yaml:
