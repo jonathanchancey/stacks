@@ -4,6 +4,8 @@ apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaDashboard
 metadata:
   name: spegel
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled
 spec:
   allowCrossNamespaceImport: true
   instanceSelector:
@@ -12,9 +14,27 @@ spec:
   uid: 1iY4QMJVk-psee
   resyncPeriod: 10m
   folder: General
-  grafanaCom:
-    id: 18089
-    revision: 1
+  envs:
+    - name: dashboard
+      valueFrom:
+        configMapKeyRef:
+          name: spegel-dashboard
+          key: spegel.json
+  jsonnet: |
+    local dashboard = std.parseJson(std.extVar('dashboard'));
+    dashboard {
+      panels: [
+        if panel.id == 11 then panel {
+          title: 'Spegel Instances',
+          targets: [target { expr: 'count(count by (pod) (spegel_advertised_content_digests{job="spegel",pod=~"$pod"}))' } for target in panel.targets],
+        } else if panel.id == 12 then panel {
+          title: 'P99 Request Duration',
+          fieldConfig+: { defaults+: { unit: 's' } },
+          targets: [target { expr: 'histogram_quantile(0.99, sum by (le) (rate(http_request_duration_seconds_bucket{job="spegel",pod=~"$pod"}[$__rate_interval])))' } for target in panel.targets],
+        } else panel
+        for panel in dashboard.panels
+      ],
+    }
   datasources:
     - inputName: DS_PROMETHEUS
       datasourceName: prometheus
