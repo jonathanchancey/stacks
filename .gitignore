@@ -37,5 +37,3 @@ kubeconfig
 talosconfig
 flux/bastille/.bootstrap/stripped-down-crds.yaml
 *.png
-
-__pycache__/
