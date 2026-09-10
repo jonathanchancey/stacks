@@ -36,7 +36,7 @@ spec:
           app:
             image:
               repository: forge.chancey.dev/coruscar/wunbot
-              tag: v0.3.0@sha256:2909e2aebe3710dbcbef69b742c2f0f34f5741b8c91a096da1213f360a25da20
+              tag: v0.4.0@sha256:34c8f02fc2348e77247100e5c7b8aae16b62d6f9f1c4b6ee4663da49aa5da85a
             env:
               WUNBOT_LISTEN_ADDR: 0.0.0.0:8080
             envFrom:
