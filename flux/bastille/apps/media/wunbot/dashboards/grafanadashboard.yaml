@@ -1,0 +1,114 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: wunbot
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  uid: wunbot
+  resyncPeriod: 10m
+  folder: General
+  jsonnet: |
+    local source = { type: 'prometheus', uid: 'prometheus' };
+    local selector = '{job="wunbot",namespace="media"}';
+    local metric(name) = 'wunbot_' + name + selector;
+    local rate(name) = 'sum(rate(' + metric(name) + '[$__rate_interval]))';
+    local total(name) = 'sum(increase(' + metric(name) + '[$__range]))';
+    local target(expr, legend) = { expr: expr, legendFormat: legend };
+    local panel(id, title, targets, unit, x, y, w=12, stat=false, description='') = {
+      id: id,
+      title: title,
+      description: description,
+      type: if stat then 'stat' else 'timeseries',
+      datasource: source,
+      gridPos: { x: x, y: y, w: w, h: if stat then 4 else 8 },
+      fieldConfig: {
+        defaults: {
+          unit: unit,
+          min: 0,
+          noValue: 'No data',
+          color: { mode: if stat then 'fixed' else 'palette-classic', fixedColor: 'blue' },
+        } + (if stat then {} else {
+          custom: { drawStyle: 'line', lineWidth: 2, fillOpacity: 8, showPoints: 'never', spanNulls: false },
+        }),
+        overrides: [],
+      },
+      targets: [t + { refId: std.char(65 + i), range: !stat, instant: stat } for i in std.range(0, std.length(targets) - 1) for t in [targets[i]]],
+      options: if stat then {
+        reduceOptions: { calcs: ['lastNotNull'], values: false },
+        colorMode: 'value', graphMode: 'none', textMode: 'value',
+      } else {
+        legend: { displayMode: 'list', placement: 'bottom' },
+        tooltip: { mode: 'multi', sort: 'desc' },
+      },
+    };
+    local status(id, title, expr, x, off, on, description) =
+      panel(id, title, [target(expr, '')], 'none', x, 0, w=6, stat=true, description=description) {
+        fieldConfig+: { defaults+: { mappings: [{ type: 'value', options: {
+          '0': { text: off, color: 'red', index: 0 },
+          '1': { text: on, color: 'green', index: 1 },
+        } }] } },
+      };
+    local buckets = 'sum by (le) (rate(' + metric('haiku_analysis_duration_seconds_bucket') + '[$__rate_interval]))';
+    {
+      title: 'Wunbot',
+      uid: 'wunbot',
+      schemaVersion: 39,
+      editable: false,
+      tags: ['wunbot', 'discord'],
+      timezone: 'browser',
+      refresh: '1m',
+      time: { from: 'now-6h', to: 'now' },
+      panels: [
+        status(1, 'Metrics endpoint', 'min(up' + selector + ')', 0, 'Down', 'Up',
+               'Prometheus scrape health. No data means the target is missing or has no samples.'),
+        status(2, 'Discord gateway', 'min(' + metric('ready') + ')', 6, 'Disconnected', 'Connected',
+               'Ready after Discord READY or RESUMED; clears during reconnects and shutdown. Independent of scrape health.'),
+        panel(3, 'Reply errors · selected range', [target(total('reply_errors_total'), '')], 'short', 12, 0, w=6, stat=true,
+              description='Estimated failed replies in the selected time range. Includes message and interaction response failures.') {
+          fieldConfig+: { defaults+: {
+            decimals: 0,
+            color: { mode: 'thresholds' },
+            thresholds: { mode: 'absolute', steps: [{ color: 'green', value: null }, { color: 'red', value: 0.001 }] },
+          } },
+        },
+        panel(4, 'Process uptime', [target('max(' + metric('uptime_seconds') + ')', '')], 's', 18, 0, w=6, stat=true),
+        panel(5, 'Messages · selected range', [target(total('messages_total'), '')], 'short', 0, 4, w=8, stat=true,
+              description='Estimated eligible messages after bot, webhook, message-type and scope filters; includes prefix commands.'),
+        panel(6, 'Haikus detected · selected range', [target(total('haiku_detected_total'), '')], 'short', 8, 4, w=8, stat=true,
+              description='Estimated automatic matches before cooldown filtering; excludes manual checks. Not a count of posted haikus.'),
+        panel(7, 'Replies sent · selected range', [target(total('replies_total'), '')], 'short', 16, 4, w=8, stat=true,
+              description='Estimated successful message and interaction responses, including help and unavailable commands. Range totals account for counter resets.'),
+        panel(8, 'Conversation activity', [
+          target(rate('messages_total') + ' * 60', 'Eligible messages'),
+          target(rate('commands_total') + ' * 60', 'Slash commands'),
+          target(rate('replies_total') + ' * 60', 'Replies sent'),
+        ], 'suffix:/min', 0, 8, description='Rates per minute. Slash commands count allowed commands dispatched to handlers; prefix checks are included in messages.'),
+        panel(9, 'Reply failures', [target(rate('reply_errors_total') + ' * 60', 'Failed replies')], 'suffix:/min', 12, 8) {
+          fieldConfig+: { defaults+: { color: { mode: 'fixed', fixedColor: 'red' } } },
+        },
+        panel(10, 'Haiku activity', [
+          target(rate('haiku_detected_total') + ' * 60', 'Automatic matches'),
+          target(rate('haiku_cooldowns_total') + ' * 60', 'Cooldowns'),
+        ], 'suffix:/min', 0, 16, description='Cooldowns include automatic and manual prefix checks, so subtracting them from automatic matches does not give posted haikus. Zero is expected when the feature is disabled.'),
+        panel(11, 'Haiku analysis latency', [
+          target('histogram_quantile(0.50, ' + buckets + ')', 'p50'),
+          target('histogram_quantile(0.95, ' + buckets + ')', 'p95'),
+          target('histogram_quantile(0.99, ' + buckets + ')', 'p99'),
+        ], 's', 12, 16, description='Histogram estimates for automatic and manual Discord analysis. No value is expected when no analyses occur in the rate window.'),
+        panel(12, 'Gateway heartbeat latency', [target('max(' + metric('gateway_heartbeat_latency_seconds') + ')', 'Heartbeat')], 's', 0, 24,
+              description='Latest heartbeat round-trip latency, maximum across shards. Absent until measured and while disconnected.'),
+        panel(13, 'Connection history', [
+          target('min(' + metric('ready') + ')', 'Ready'),
+          target('sum(' + metric('gateway_connected_shards') + ')', 'Connected shards'),
+        ], 'none', 12, 24, description='Normally one connected shard. Readiness clears during startup, reconnects and shutdown; gaps indicate missing samples.') {
+          fieldConfig+: { defaults+: { decimals: 0, custom+: { lineInterpolation: 'stepAfter' } } },
+        },
+      ],
+    }
