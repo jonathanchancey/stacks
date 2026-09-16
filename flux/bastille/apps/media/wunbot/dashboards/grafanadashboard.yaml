@@ -110,5 +110,28 @@ spec:
         ], 'none', 12, 24, description='Normally one connected shard. Readiness clears during startup, reconnects and shutdown; gaps indicate missing samples.') {
           fieldConfig+: { defaults+: { decimals: 0, custom+: { lineInterpolation: 'stepAfter' } } },
         },
+        {
+          id: 14,
+          title: 'Logs',
+          description: 'Wunbot container logs'
+          type: 'logs',
+          datasource: { type: 'loki', uid: 'loki' },
+          gridPos: { x: 0, y: 32, w: 24, h: 12 },
+          targets: [{
+            refId: 'A',
+            expr: '{namespace="media",app="wunbot"}',
+            queryType: 'range',
+          }],
+          options: {
+            showTime: true,
+            showLabels: false,
+            showCommonLabels: false,
+            wrapLogMessage: true,
+            prettifyLogMessage: false,
+            enableLogDetails: true,
+            sortOrder: 'Descending',
+            dedupStrategy: 'none',
+          },
+        },
       ],
     }
