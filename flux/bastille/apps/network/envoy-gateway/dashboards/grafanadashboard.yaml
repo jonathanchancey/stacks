@@ -28,8 +28,68 @@ spec:
       dashboards: grafana
   uid: heHhNSFf6Na8vIZWRs8H
   resyncPeriod: 10m
-  url: https://raw.githubusercontent.com/envoyproxy/gateway/513b5112e3ed63c18d275de723dae037f9914376/charts/gateway-addons-helm/dashboards/envoy-proxy-global.json
+  grafanaCom:
+    id: 24459
+    revision: 3
   variables:
     - name: datasource
       value: prometheus
+    - name: cluster
+      value: bastille
+    - name: namespace
+      value: network
+    - name: job
+      value: envoy-proxy
+  folder: General
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: envoy-upstream
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  uid: envoy-upstream-skj2
+  resyncPeriod: 10m
+  grafanaCom:
+    id: 24457
+    revision: 4
+  variables:
+    - name: datasource
+      value: prometheus
+    - name: cluster
+      value: bastille
+    - name: namespace
+      value: network
+    - name: job
+      value: envoy-proxy
+  folder: General
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: envoy-downstream
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  uid: envoy-downstream-skj2
+  resyncPeriod: 10m
+  grafanaCom:
+    id: 24458
+    revision: 3
+  variables:
+    - name: datasource
+      value: prometheus
+    - name: cluster
+      value: bastille
+    - name: namespace
+      value: network
+    - name: job
+      value: envoy-proxy
   folder: General
