@@ -1,0 +1,156 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: envoy-requests
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  uid: envoy-requests
+  resyncPeriod: 10m
+  folder: General
+  jsonnet: |
+    local source = { type: 'loki', uid: 'loki' };
+    local selector = '{namespace="network",app="envoy",container="envoy",pod=~"envoy-network-${gateway:regex}-.+"}';
+    // Encode input before interpolation, then decode for literal comparison; blank includes all values.
+    local exact(label, variable) = ' | label_format filter_match=`{{ or (eq "${' + variable + ':percentencode}" "")'
+      + ' (eq .' + label + ' (urldecode "${' + variable + ':percentencode}")) }}` | filter_match="true"';
+    local requests = selector
+      + ' | json host=`[":authority"]`, path=`["x-envoy-origin-path"]`, route="route_name", method="method", status="response_code"'
+      + ' | __error__="" | method!=""'
+      + exact('host', 'hostname') + exact('route', 'route') + exact('path', 'path')
+      + exact('method', 'method') + exact('status', 'status');
+    local count(window='$__range', filter='', labels='app') =
+      'count_over_time(' + requests + filter + ' | keep ' + labels + ' [' + window + '])';
+    local total(filter='') = 'sum(' + count(filter=filter) + ')';
+    local subset(filter) = total(filter) + ' or (0 * ' + total() + ')';
+    local unwrap(field) = requests + ' | json value="' + field + '" | keep app, value | unwrap value | __error__=""';
+    local bytes(field, window='$__range') = 'sum(sum_over_time(' + unwrap(field) + ' [' + window + ']))';
+    local target(expr, legend='') = { expr: expr, legendFormat: legend };
+    local panel(id, title, targets, unit, x, y, w=12, stat=false, description='') = {
+      id: id,
+      title: title,
+      description: description,
+      type: if stat then 'stat' else 'timeseries',
+      datasource: source,
+      gridPos: { x: x, y: y, w: w, h: if stat then 4 else 8 },
+      fieldConfig: {
+        defaults: {
+          unit: unit,
+          min: 0,
+          noValue: 'No data',
+          color: { mode: if stat then 'fixed' else 'palette-classic', fixedColor: 'blue' },
+        } + (if stat then {} else {
+          custom: { drawStyle: 'line', lineWidth: 2, fillOpacity: 8, showPoints: 'never', spanNulls: false },
+        }),
+        overrides: [],
+      },
+      targets: [t + { refId: std.char(65 + i), queryType: if stat then 'instant' else 'range' }
+                for i in std.range(0, std.length(targets) - 1) for t in [targets[i]]],
+      options: if stat then {
+        reduceOptions: { calcs: ['lastNotNull'], values: false },
+        colorMode: 'value', graphMode: 'none', textMode: 'value',
+      } else {
+        legend: { displayMode: 'list', placement: 'bottom' },
+        tooltip: { mode: 'multi', sort: 'desc' },
+      },
+    };
+    local ranking(id, title, labels, legend, x, filter='', description='') =
+      panel(id, title, [target('topk(15, sum by (' + labels + ') (' + count(filter=filter, labels=labels) + '))', legend)],
+            'short', x, 16, w=8, stat=true, description=description) {
+        type: 'bargauge',
+        gridPos+: { h: 8 },
+        fieldConfig+: { defaults+: { decimals: 0 } },
+        options: {
+          orientation: 'horizontal', displayMode: 'basic', showUnfilled: false,
+          reduceOptions: { calcs: ['lastNotNull'], values: false },
+        },
+      };
+    local textbox(name, label, description) = {
+      name: name, label: label, description: description, type: 'textbox',
+      query: '', current: { text: '', value: '' }, options: [],
+      skipUrlSync: true,
+    };
+    {
+      title: 'Envoy / Requests',
+      uid: 'envoy-requests',
+      description: 'Origin HTTP requests from retained Envoy access logs. Requests include bots, previews, assets and retries; they are not unique visitors. Cloudflare cache hits and blocked requests do not reach Envoy. No data means no matching retained logs or unavailable collection. Filters are exact and case-sensitive; leave blank for all.',
+      schemaVersion: 39,
+      editable: false,
+      tags: ['envoy', 'network', 'logs'],
+      timezone: 'browser',
+      refresh: '5m',
+      time: { from: 'now-6h', to: 'now' },
+      links: [
+        { title: 'Overview', type: 'link', url: '/d/heHhNSFf6Na8vIZWRs8H', keepTime: true },
+        { title: 'Upstream', type: 'link', url: '/d/envoy-upstream-skj2', keepTime: true },
+        { title: 'Downstream', type: 'link', url: '/d/envoy-downstream-skj2', keepTime: true },
+      ],
+      templating: { list: [
+        {
+          name: 'gateway', label: 'Gateway', type: 'custom', query: 'edge,envoy-external',
+          multi: true, includeAll: true, allValue: '(edge|envoy-external)',
+          current: { text: 'All', value: '$__all' },
+          options: [
+            { text: 'All', value: '$__all', selected: true },
+            { text: 'edge', value: 'edge', selected: false },
+            { text: 'envoy-external', value: 'envoy-external', selected: false },
+          ],
+        },
+        textbox('hostname', 'Hostname', 'Exact hostname from :authority; blank includes all hosts.'),
+        textbox('route', 'Route', 'Exact Envoy route_name; copy from request details. Blank includes all routes.'),
+        textbox('path', 'Path', 'Exact request path, including any query string. Enter the path only, not the full URL. Blank includes all paths. Kept out of dashboard URLs.'),
+        textbox('method', 'Method', 'Exact HTTP method, such as GET or POST; blank includes all methods.'),
+        textbox('status', 'Status', 'Exact response code, such as 404 or 429; blank includes all codes.'),
+      ] },
+      panels: [
+        panel(1, 'Requests', [target(total())], 'short', 0, 0, w=4, stat=true,
+              description='Matching access-log entries in the selected time range, including page, API and asset requests. Not a count of human clicks.'),
+        panel(2, 'Response bytes', [target(bytes('bytes_sent'))], 'bytes', 4, 0, w=4, stat=true,
+              description='Response body bytes reported by Envoy for matching requests in the selected range; excludes protocol overhead.'),
+        panel(3, '4xx responses', [target(subset(' | status=~"4.."'))], 'short', 8, 0, w=4, stat=true),
+        panel(4, '5xx responses', [target(subset(' | status=~"5.."'))], 'short', 12, 0, w=4, stat=true),
+        panel(5, 'Not found · 404', [target(subset(' | status="404"'))], 'short', 16, 0, w=4, stat=true),
+        panel(6, 'Rate limited · 429', [target(subset(' | status="429"'))], 'short', 20, 0, w=4, stat=true),
+        panel(7, 'Request duration · p50', [target('quantile_over_time(0.50, ' + unwrap('duration') + ' [$__range]) by ()')], 'ms', 0, 4, w=8, stat=true,
+              description='Median logged end-to-end request duration in the selected range. Long-lived streams are logged only when they close.'),
+        panel(8, 'Request duration · p95', [target('quantile_over_time(0.95, ' + unwrap('duration') + ' [$__range]) by ()')], 'ms', 8, 4, w=8, stat=true),
+        panel(9, 'Request duration · p99', [target('quantile_over_time(0.99, ' + unwrap('duration') + ' [$__range]) by ()')], 'ms', 16, 4, w=8, stat=true),
+        panel(10, 'Requests by status', [target('sum by (status) (' + count(window='$__interval', labels='status') + ')', '{{status}}')], 'short', 0, 8,
+              description='Request count per display interval. Empty intervals remain gaps when there are no logs.'),
+        panel(11, 'Transferred bytes', [
+          target(bytes('bytes_sent', '$__interval'), 'Response'),
+          target(bytes('bytes_received', '$__interval'), 'Request'),
+        ], 'bytes', 12, 8, description='Body bytes per display interval, from completed request logs.'),
+        ranking(12, 'Busiest hosts · selected range', 'host', '{{host}}', 0),
+        ranking(13, 'Busiest routes · selected range', 'route', '{{route}}', 8,
+                description='Route names identify Gateway API HTTPRoutes and rules; unmatched requests may have an empty route.'),
+        ranking(14, 'Busiest path families · selected range', 'host, path_family', '{{host}} {{path_family}}', 16,
+                filter=' | label_format path_family=`{{ regexReplaceAll "^(/[^/?]*).*" .path "$1" }}`',
+                description='Groups paths by their first segment, such as /api or /share, to reduce series from asset IDs and share tokens. Narrow the hostname or time range if Loki reaches its series limit. Use the exact path filter and request details to investigate a specific URL.'),
+        {
+          id: 15,
+          title: 'Requests',
+          description: 'Newest 500 matching requests. Expand a line for parsed fields, including forwarded addresses. Forwarded addresses are unverified and must not be treated as authenticated client identities. No deduplication: repeated requests remain visible.',
+          type: 'logs',
+          datasource: source,
+          gridPos: { x: 0, y: 24, w: 24, h: 14 },
+          targets: [{
+            refId: 'A', queryType: 'range', maxLines: 500,
+            expr: requests
+              + ' | json elapsed="duration", sent="bytes_sent", agent=`["user-agent"]`, request_id=`["x-request-id"]` | json'
+              + ' | line_format `{{.status}} {{.method}} {{.host}}{{.path}} | {{.elapsed}} ms | {{.sent}} B | route={{.route}} | agent={{printf "%q" .agent}} | request_id={{.request_id}}`',
+          }],
+          options: {
+            showTime: true, showLabels: false, showCommonLabels: false,
+            wrapLogMessage: true, prettifyLogMessage: false, enableLogDetails: true,
+            sortOrder: 'Descending', dedupStrategy: 'none',
+          },
+        },
+      ],
+    }

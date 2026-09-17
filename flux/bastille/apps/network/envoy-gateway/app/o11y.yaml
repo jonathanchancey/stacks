@@ -1,0 +1,66 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/monitoring.coreos.com/podmonitor_v1.json
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: envoy-proxy
+spec:
+  namespaceSelector:
+    matchNames:
+      - network
+  podMetricsEndpoints:
+    - port: metrics
+      path: /stats/prometheus
+      honorLabels: true
+      relabelings:
+        - targetLabel: job
+          replacement: envoy-proxy
+        - targetLabel: cluster
+          replacement: bastille
+        - sourceLabels: [__meta_kubernetes_pod_label_gateway_envoyproxy_io_owning_gateway_name]
+          targetLabel: gateway
+        - sourceLabels: [__meta_kubernetes_pod_label_gateway_envoyproxy_io_owning_gateway_namespace]
+          targetLabel: gateway_namespace
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: proxy
+      app.kubernetes.io/name: envoy
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/monitoring.coreos.com/servicemonitor_v1.json
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: envoy-gateway
+spec:
+  endpoints:
+    - port: metrics
+      path: /metrics
+      honorLabels: true
+      relabelings:
+        - targetLabel: job
+          replacement: envoy-gateway
+        - targetLabel: cluster
+          replacement: bastille
+  namespaceSelector:
+    matchNames:
+      - network
+  selector:
+    matchLabels:
+      control-plane: envoy-gateway
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/monitoring.coreos.com/prometheusrule_v1.json
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: envoy-proxy
+spec:
+  groups:
+    - name: envoy-proxy.rules
+      rules:
+        # Dashboard 24457 revision 4 predates Envoy's priority label extraction.
+        - record: envoy_cluster_circuit_breakers_default_cx_open
+          expr: envoy_cluster_circuit_breakers_cx_open{job="envoy-proxy", priority="default"}
+        - record: envoy_cluster_circuit_breakers_default_cx_pool_open
+          expr: envoy_cluster_circuit_breakers_cx_pool_open{job="envoy-proxy", priority="default"}
+        - record: envoy_cluster_circuit_breakers_default_rq_open
+          expr: envoy_cluster_circuit_breakers_rq_open{job="envoy-proxy", priority="default"}
