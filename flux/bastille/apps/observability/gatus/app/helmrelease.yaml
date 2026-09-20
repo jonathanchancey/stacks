@@ -35,7 +35,7 @@ spec:
             image:
               repository: ghcr.io/home-operations/postgres-init
               tag: ${POSTGRESQL_MAJOR_VERSION}
-            envFrom: &envFrom
+            envFrom:
               - secretRef:
                   name: gatus-secret
           init-config:
@@ -65,8 +65,27 @@ spec:
               GATUS_WEB_PORT: &port 80
               GATUS_CONFIG_PATH: /config
               GATUS_DELAY_START_SECONDS: 5
+              INIT_POSTGRES_DBNAME:
+                valueFrom:
+                  secretKeyRef:
+                    name: gatus-secret
+                    key: INIT_POSTGRES_DBNAME
+              INIT_POSTGRES_HOST:
+                valueFrom:
+                  secretKeyRef:
+                    name: gatus-secret
+                    key: INIT_POSTGRES_HOST
+              INIT_POSTGRES_PASS:
+                valueFrom:
+                  secretKeyRef:
+                    name: gatus-secret
+                    key: INIT_POSTGRES_PASS
+              INIT_POSTGRES_USER:
+                valueFrom:
+                  secretKeyRef:
+                    name: gatus-secret
+                    key: INIT_POSTGRES_USER
               TZ: America/Los_Angeles
-            envFrom: *envFrom
             probes:
               liveness: &probes
                 enabled: true
