@@ -27,6 +27,8 @@ may need to download or build them.
 
 Add tools to the shell's `packages` list in [flake.nix](flake.nix). For tools
 outside nixpkgs, follow the [git-of-theseus package](tools/nix/git-of-theseus.nix).
+The package owns its smoke tests; [checks](tools/nix/checks.nix) cover Nix
+formatting and repository task integration.
 Use `nix fmt` to format the Nix files and `nix flake check` to build and check
 the tools. Update nixpkgs with `nix flake update nixpkgs`, then check and commit
 `flake.lock`.

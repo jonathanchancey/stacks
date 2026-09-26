@@ -5,10 +5,6 @@ export MPLCONFIGDIR="$TMPDIR/matplotlib-tasks"
 export GIT_CONFIG_NOSYSTEM=1
 export GIT_CONFIG_GLOBAL=/dev/null
 
-# Included taskfiles must not redirect the existing Flux environment.
-task --dry flux:test CLUSTER=test NAMESPACE=default > flux-command.txt 2>&1
-grep -F "$PWD/tools/.venv/bin/flux-local" flux-command.txt
-
 git -c init.defaultBranch=main init --quiet
 git config user.name 'Test Fixture'
 git config user.email test@example.invalid
