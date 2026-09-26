@@ -49,6 +49,16 @@
       '/(^|/)kustomization\\.ya?ml(?:\\.j2)?$/',
     ],
   },
+  nix: {
+    enabled: true,
+    semanticCommitScope: 'nix',
+    lockFileMaintenance: {
+      enabled: true,
+      schedule: [
+        'every weekend',
+      ],
+    },
+  },
   pip_requirements: {
     managerFilePatterns: [
       '/(^|/)[\\w-]*requirements(-\\w+)?\\.(txt|pip)(?:\\.j2)?$/',
@@ -72,6 +82,18 @@
         'minor',
         'patch',
       ],
+    },
+    {
+      description: [
+        'Review Nix workflow dependencies',
+      ],
+      matchManagers: [
+        'github-actions',
+      ],
+      matchFileNames: [
+        '.github/workflows/nix.yaml',
+      ],
+      automerge: false,
     },
     {
       description: [

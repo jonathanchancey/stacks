@@ -18,45 +18,6 @@ Talos on Bare Metal
 - `flux/` - Kubernetes resources, Talos and Flux configs
 - `tools/` - scripts, taskfiles, archive
 
-## Development shell
-
-With Nix and flakes enabled, run `nix develop` from any repository directory.
-The [flake](flake.nix) provides Git, Task, and git-of-theseus on Apple Silicon
-macOS and ARM/x86 Linux. Dependencies are pinned by `flake.lock`; the first run
-may need to download or build them.
-
-Add tools to the shell's `packages` list in [flake.nix](flake.nix). For tools
-outside nixpkgs, follow the [git-of-theseus package](tools/nix/git-of-theseus.nix).
-The package owns its smoke tests; [checks](tools/nix/checks.nix) cover Nix
-formatting and repository task integration.
-Use `nix fmt` to format the Nix files and `nix flake check` to build and check
-the tools. Update nixpkgs with `nix flake update nixpkgs`, then check and commit
-`flake.lock`.
-
-The shell's toolset grows incrementally. Other repository tasks still need their
-existing dependencies; Flux tasks continue to use `tools/.venv`.
-
-### Repository history
-
-[git-of-theseus](https://github.com/erikbern/git-of-theseus) analyzes committed
-history and plots how much code survives from each year:
-
-```sh
-task theseus:all                 # Analyze all filetypes, then plot
-task theseus:analyze-all         # Analyze all filetypes only
-task theseus:analyze-extensions  # Analyze yaml,yml,sh,py,tf,j2,json5,toml,cfg
-task theseus:analyze             # Analyze upstream's default code filetypes
-task theseus:plot                # Plot existing cohorts.json
-```
-
-Results go to ignored `.theseus/`, including `cohorts.json` and `stack_plot.png`.
-Each analysis overwrites the previous results; set `OUTDIR=.theseus/all` (or
-another directory) on both the analysis and plot tasks to keep separate runs.
-Pass extra options after `--`, for example `task theseus:analyze-all -- --procs 4`.
-
-The default filetypes exclude YAML; use `analyze-all` or `analyze-extensions` to
-include it.
-
 ## Screenshots
 
 ![homepage](https://github.com/jonathanchancey/assets/blob/main/images/home-chancey-dev-2026-07-29-1704.png?raw=true)
