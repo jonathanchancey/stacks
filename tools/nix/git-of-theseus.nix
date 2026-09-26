@@ -13,6 +13,7 @@ python3Packages.buildPythonApplication rec {
   src = fetchPypi {
     pname = "git_of_theseus";
     inherit version format;
+    dist = "py3";
     python = "py3";
     hash = "sha256-ZuxG6o+mE/CpY7x1ONv8ek7Luj+bKT2Y8aHwz87Xay0=";
   };
