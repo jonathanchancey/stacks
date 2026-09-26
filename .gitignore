@@ -37,3 +37,8 @@ kubeconfig
 talosconfig
 flux/bastille/.bootstrap/stripped-down-crds.yaml
 *.png
+
+# Nix builds and repository history analysis
+/result
+/result-*
+/.theseus/

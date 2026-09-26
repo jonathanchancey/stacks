@@ -1,0 +1,40 @@
+---
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+version: "3"
+
+dir: "{{.ROOT_DIR}}"
+
+vars:
+  OUTDIR: "{{.ROOT_DIR}}/.theseus"
+
+tasks:
+  analyze:
+    desc: Analyze repository history using default code filetypes
+    cmd: git-of-theseus-analyze . --outdir "{{.OUTDIR}}" {{.CLI_ARGS}}
+
+  analyze-all:
+    desc: Analyze repository history for all filetypes
+    cmd: git-of-theseus-analyze . --all-filetypes --outdir "{{.OUTDIR}}" {{.CLI_ARGS}}
+
+  analyze-extensions:
+    desc: Analyze yaml, yml, sh, py, tf, j2, json5, toml, and cfg history
+    cmd: >-
+      git-of-theseus-analyze . --all-filetypes
+      --only '*.yaml' --only '*.yml' --only '*.sh' --only '*.py'
+      --only '*.tf' --only '*.j2' --only '*.json5' --only '*.toml' --only '*.cfg'
+      --outdir "{{.OUTDIR}}" {{.CLI_ARGS}}
+
+  plot:
+    desc: Plot the analyzed cohorts without rerunning analysis
+    preconditions:
+      - sh: test -f "{{.OUTDIR}}/cohorts.json"
+        msg: Run a theseus analysis task first, using the same OUTDIR.
+    cmd: git-of-theseus-stack-plot "{{.OUTDIR}}/cohorts.json" --outfile "{{.OUTDIR}}/stack_plot.png" {{.CLI_ARGS}}
+
+  all:
+    desc: Analyze all filetypes and plot cohorts
+    cmds:
+      - task: analyze-all
+      - task: plot
+        vars:
+          CLI_ARGS: ""
