@@ -24,6 +24,7 @@ includes:
   bastille: tools/taskfiles/bastille
   flux: tools/taskfiles/flux
   sops: tools/taskfiles/sops
+  theseus: tools/taskfiles/theseus
 
 tasks:
   default: task --list
