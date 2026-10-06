@@ -1,0 +1,17 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/externaldns.k8s.io/dnsendpoint_v1alpha1.json
+apiVersion: externaldns.k8s.io/v1alpha1
+kind: DNSEndpoint
+metadata:
+  name: amp-orbs
+  namespace: network
+spec:
+  endpoints:
+    - dnsName: _amp-challenge.orbs.chancey.dev
+      recordType: TXT
+      targets:
+        - amp-domain-verification=2f12ab4b3af34059bbf1f5143a6b0c0a19009ded584e4ce6871f5de8aa7b350e
+    - dnsName: "*.orbs.chancey.dev"
+      recordType: CNAME
+      targets:
+        - custom-domain.ampcode.com

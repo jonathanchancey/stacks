@@ -13,6 +13,8 @@ extraArgs:
   - --crd-source-apiversion=externaldns.k8s.io/v1alpha1
   - --crd-source-kind=DNSEndpoint
   - --ignore-ingress-tls-spec
+  - --txt-wildcard-replacement=wildcard
+managedRecordTypes: ["A", "AAAA", "CNAME", "TXT"]
 triggerLoopOnEvent: true
 logLevel: debug
 policy: sync
