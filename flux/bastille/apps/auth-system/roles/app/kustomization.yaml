@@ -5,3 +5,4 @@ kind: Kustomization
 resources:
   - ./serviceaccount.yaml
   - ./clusterrolebinding.yaml
+  - ./amp-clusterrolebinding.yaml
