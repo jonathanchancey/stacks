@@ -10,12 +10,10 @@ spec:
     name: tofu-controller
   interval: 1h
   values:
-    # Terraform objects in app namespaces reference the flux-system GitRepository
     allowCrossNamespaceRefs: true
     awsPackage:
       install: false
     runner:
       serviceAccount:
-        # runner pods run in the Terraform object's namespace
         allowedNamespaces:
           - network

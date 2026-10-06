@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-# Prepares an Amp orb: Nix + the flake dev shell, orb-only CLIs pinned to
-# flake.lock's nixpkgs, and the flux-local venv used by tools/taskfiles/flux.
 set -euo pipefail
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -20,7 +18,6 @@ tools_profile="$HOME/.local/state/stacks/orb-tools"
 venv="$repo_root/tools/.venv"
 dev_env="$HOME/.local/state/stacks/dev-env.sh"
 
-# Replaces the block between "$marker begin" and "$marker end" in a file.
 write_block() {
   local file="$1" marker="$2" content="$3"
   mkdir -p "$(dirname "$file")"
@@ -40,16 +37,12 @@ install_nix() {
     echo "experimental-features = nix-command flakes" >>"$conf"
 }
 
-# Builds the default dev shell (git, go-task, git-of-theseus) and caches its
-# environment so login shells skip a ~2s flake evaluation.
 build_dev_shell() {
   mkdir -p "$(dirname "$dev_env")"
   nix print-dev-env --no-update-lock-file "$repo_root" >"$dev_env.tmp"
   mv "$dev_env.tmp" "$dev_env"
 }
 
-# CLIs used by taskfiles, CI, and tools/scripts that the dev shell omits.
-# Uses flake.lock's nixpkgs so versions follow renovate updates of the lock.
 build_orb_tools() {
   mkdir -p "$(dirname "$tools_profile")"
   nix build --impure --no-update-lock-file --profile "$tools_profile" --expr "
@@ -73,7 +66,6 @@ build_orb_tools() {
     }"
 }
 
-# Matches the flux-local version CI runs, so renovate bumps carry over.
 install_flux_local() {
   local version
   version="$(sed -n 's|.*ghcr.io/allenporter/flux-local:v\([0-9.]*\).*|\1|p' .github/workflows/flux-diff.yaml | head -n1)"
@@ -82,7 +74,6 @@ install_flux_local() {
 }
 
 persist_environment() {
-  # Sourcing the dev env creates a fresh $TMPDIR; remove it and keep the caller's.
   write_block "$HOME/.bash_profile" "# stacks orb development environment" "\
 if [[ -e \"$nix_profile/etc/profile.d/nix.sh\" ]]; then
   . \"$nix_profile/etc/profile.d/nix.sh\"
@@ -109,7 +100,6 @@ write_agent_guidance() {
 }
 
 step "install nix" install_nix
-# The installer cannot update this running script's environment.
 # shellcheck disable=SC1091
 source "$nix_profile/etc/profile.d/nix.sh"
 step "build dev shell" build_dev_shell

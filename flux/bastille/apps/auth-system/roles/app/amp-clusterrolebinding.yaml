@@ -1,6 +1,4 @@
 ---
-# amp orbs in the stacks project authenticate via amp workload identity (oidc);
-# the apiserver AuthenticationConfiguration maps them to the amp:stacks group
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
