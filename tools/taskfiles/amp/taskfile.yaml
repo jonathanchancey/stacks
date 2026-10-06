@@ -11,6 +11,6 @@ tasks:
     cmds:
       - for: [TUNNEL_SERVICE_TOKEN_ID, TUNNEL_SERVICE_TOKEN_SECRET]
         cmd: >-
-          kubectl --namespace network get secret cloudflare-access-amp-stacks --output 'jsonpath={.data.{{.ITEM}}}'
+          kubectl --namespace network get secret cloudflare-amp-stacks --output 'jsonpath={.data.{{.ITEM}}}'
           | base64 --decode
           | amp secrets set --project {{.AMP_PROJECT}} --secret --data-file - {{.ITEM}}

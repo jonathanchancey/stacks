@@ -3,7 +3,7 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app cloudflare-access
+  name: &app cloudflare
   namespace: &namespace network
 spec:
   targetNamespace: *namespace
@@ -16,7 +16,7 @@ spec:
   interval: 1h
   retryInterval: 2m
   timeout: 5m
-  path: ./flux/bastille/apps/network/cloudflare-access/app
+  path: ./flux/bastille/apps/network/cloudflare/app
   postBuild:
     substitute:
       APP: *app

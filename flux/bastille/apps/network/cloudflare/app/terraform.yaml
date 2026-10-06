@@ -1,0 +1,42 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/infra.contrib.fluxcd.io/terraform_v1alpha2.json
+apiVersion: infra.contrib.fluxcd.io/v1alpha2
+kind: Terraform
+metadata:
+  name: cloudflare
+spec:
+  interval: 1h
+  approvePlan: auto
+  path: ./flux/bastille/apps/network/cloudflare/terraform
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  backendConfig:
+    disable: true
+  backendConfigsFrom:
+    - kind: Secret
+      name: cloudflare-secret
+      keys:
+        - bucket
+        - access_key
+        - secret_key
+  varsFrom:
+    - kind: Secret
+      name: cloudflare-secret
+      varsKeys:
+        - cloudflare_api_token
+        - cloudflare_account_id
+  runnerPodTemplate:
+    spec:
+      env:
+        - name: TF_VAR_state_passphrase
+          valueFrom:
+            secretKeyRef:
+              name: cloudflare-secret
+              key: state_passphrase
+  writeOutputsToSecret:
+    name: cloudflare-amp-stacks
+    outputs:
+      - amp_stacks_client_id:TUNNEL_SERVICE_TOKEN_ID
+      - amp_stacks_client_secret:TUNNEL_SERVICE_TOKEN_SECRET

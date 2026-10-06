@@ -1,27 +1,3 @@
-terraform {
-  required_providers {
-    cloudflare = {
-      source  = "cloudflare/cloudflare"
-      version = "5.27.0"
-    }
-  }
-}
-
-variable "cloudflare_api_token" {
-  description = "Access: Apps and Policies Edit, Access: Service Tokens Edit"
-  type        = string
-  sensitive   = true
-}
-
-variable "cloudflare_account_id" {
-  type = string
-}
-
-provider "cloudflare" {
-  api_token = var.cloudflare_api_token
-}
-
-# kube-apiserver via cloudflared tcp ingress, see network/cloudflared
 resource "cloudflare_zero_trust_access_application" "kube_bastille" {
   account_id           = var.cloudflare_account_id
   name                 = "kube-bastille"
@@ -35,7 +11,6 @@ resource "cloudflare_zero_trust_access_application" "kube_bastille" {
   ]
 }
 
-# amp orbs in the stacks project; the apiserver still requires amp oidc + rbac
 resource "cloudflare_zero_trust_access_service_token" "amp_stacks" {
   account_id = var.cloudflare_account_id
   name       = "amp-stacks"
