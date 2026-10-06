@@ -27,14 +27,7 @@ spec:
       varsKeys:
         - cloudflare_api_token
         - cloudflare_account_id
-  runnerPodTemplate:
-    spec:
-      env:
-        - name: TF_VAR_state_passphrase
-          valueFrom:
-            secretKeyRef:
-              name: cloudflare-secret
-              key: state_passphrase
+        - state_passphrase
   writeOutputsToSecret:
     name: cloudflare-amp-stacks
     outputs:
