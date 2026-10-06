@@ -11,6 +11,10 @@ spec:
       recordType: TXT
       targets:
         - amp-domain-verification=2f12ab4b3af34059bbf1f5143a6b0c0a19009ded584e4ce6871f5de8aa7b350e
+    - dnsName: _acme-challenge_g7k2v6l6lx7vbw24.orbs.chancey.dev
+      recordType: CNAME
+      targets:
+        - 67c6824c-32c8-4e7e-aa5a-b3f48a2f1ad1.1.authorize.certificatemanager.goog
     - dnsName: "*.orbs.chancey.dev"
       recordType: CNAME
       targets:
