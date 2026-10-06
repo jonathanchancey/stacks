@@ -15,6 +15,10 @@ spec:
       recordType: CNAME
       targets:
         - 67c6824c-32c8-4e7e-aa5a-b3f48a2f1ad1.1.authorize.certificatemanager.goog
+    - dnsName: orbs.chancey.dev
+      recordType: CNAME
+      targets:
+        - custom-domain.ampcode.com
     - dnsName: "*.orbs.chancey.dev"
       recordType: CNAME
       targets:
