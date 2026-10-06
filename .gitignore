@@ -42,3 +42,9 @@ flux/bastille/.bootstrap/stripped-down-crds.yaml
 /result
 /result-*
 /.theseus/
+
+# flux-local virtualenv used by tools/taskfiles/flux
+/tools/.venv/
+
+# amp orb portals
+.amp/portals/*

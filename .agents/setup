@@ -1,0 +1,119 @@
+#!/usr/bin/env bash
+# Prepares an Amp orb: Nix + the flake dev shell, orb-only CLIs pinned to
+# flake.lock's nixpkgs, and the flux-local venv used by tools/taskfiles/flux.
+set -euo pipefail
+
+repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$repo_root"
+
+step() {
+  local name="$1"
+  shift
+  local start=$SECONDS
+  echo "==> $name"
+  "$@"
+  echo "<== $name ($((SECONDS - start))s)"
+}
+
+nix_profile="$HOME/.nix-profile"
+tools_profile="$HOME/.local/state/stacks/orb-tools"
+venv="$repo_root/tools/.venv"
+dev_env="$HOME/.local/state/stacks/dev-env.sh"
+
+# Replaces the block between "$marker begin" and "$marker end" in a file.
+write_block() {
+  local file="$1" marker="$2" content="$3"
+  mkdir -p "$(dirname "$file")"
+  touch "$file"
+  sed -i "/^$marker begin\$/,/^$marker end\$/d" "$file"
+  printf '%s begin\n%s\n%s end\n' "$marker" "$content" "$marker" >>"$file"
+}
+
+install_nix() {
+  if [[ ! -x "$nix_profile/bin/nix" ]]; then
+    sudo install -d -o "$(id -u)" -g "$(id -g)" /nix
+    curl -fsSL https://nixos.org/nix/install | sh -s -- --no-daemon --no-modify-profile --yes
+  fi
+  mkdir -p "$HOME/.config/nix"
+  local conf="$HOME/.config/nix/nix.conf"
+  grep -Fqx "experimental-features = nix-command flakes" "$conf" 2>/dev/null ||
+    echo "experimental-features = nix-command flakes" >>"$conf"
+}
+
+# Builds the default dev shell (git, go-task, git-of-theseus) and caches its
+# environment so login shells skip a ~2s flake evaluation.
+build_dev_shell() {
+  mkdir -p "$(dirname "$dev_env")"
+  nix print-dev-env --no-update-lock-file "$repo_root" >"$dev_env.tmp"
+  mv "$dev_env.tmp" "$dev_env"
+}
+
+# CLIs used by taskfiles, CI, and tools/scripts that the dev shell omits.
+# Uses flake.lock's nixpkgs so versions follow renovate updates of the lock.
+build_orb_tools() {
+  mkdir -p "$(dirname "$tools_profile")"
+  nix build --impure --no-update-lock-file --profile "$tools_profile" --expr "
+    let
+      flake = builtins.getFlake \"git+file://$repo_root\";
+      pkgs = flake.inputs.nixpkgs.legacyPackages.\${builtins.currentSystem};
+    in
+    pkgs.buildEnv {
+      name = \"stacks-orb-tools\";
+      paths = with pkgs; [
+        age
+        fluxcd
+        kubeconform
+        kubectl
+        kubernetes-helm
+        kustomize
+        sops
+        talosctl
+        yq-go
+      ];
+    }"
+}
+
+# Matches the flux-local version CI runs, so renovate bumps carry over.
+install_flux_local() {
+  local version
+  version="$(sed -n 's|.*ghcr.io/allenporter/flux-local:v\([0-9.]*\).*|\1|p' .github/workflows/flux-diff.yaml | head -n1)"
+  [[ -x "$venv/bin/python" ]] || uv venv --quiet --python 3.13 "$venv"
+  uv pip install --quiet --python "$venv/bin/python" "flux-local==$version"
+}
+
+persist_environment() {
+  # Sourcing the dev env creates a fresh $TMPDIR; remove it and keep the caller's.
+  write_block "$HOME/.bash_profile" "# stacks orb development environment" "\
+if [[ -e \"$nix_profile/etc/profile.d/nix.sh\" ]]; then
+  . \"$nix_profile/etc/profile.d/nix.sh\"
+fi
+if [[ -z \"\${IN_NIX_SHELL:-}\" && -r \"$dev_env\" && ( \"\$PWD\" == \"$repo_root\" || \"\$PWD\" == \"$repo_root\"/* ) ]]; then
+  __stacks_tmpdir=\"\${TMPDIR-}\"
+  . \"$dev_env\"
+  rm -rf -- \"\$NIX_BUILD_TOP\"
+  unset NIX_BUILD_TOP TMP TEMP TEMPDIR
+  if [[ -n \"\$__stacks_tmpdir\" ]]; then export TMPDIR=\"\$__stacks_tmpdir\"; else unset TMPDIR; fi
+  unset __stacks_tmpdir
+  export PATH=\"$tools_profile/bin:\$PATH\"
+fi"
+}
+
+write_agent_guidance() {
+  write_block "$HOME/.config/amp/AGENTS.md" "<!-- stacks orb toolchain -->" "\
+# Stacks orb toolchain
+
+- Login shells in the repository load the Nix dev shell (task, git-of-theseus) plus flux, kubectl, kustomize, kubeconform, helm, sops, age, yq, and talosctl.
+- The dev shell environment is cached; rerun \`.agents/setup\` after editing \`flake.nix\` or \`flake.lock\`.
+- flux-local is installed in \`tools/.venv\`, matching the version in \`.github/workflows/flux-diff.yaml\`.
+- There is no kubeconfig in the orb; pass \`CLUSTER=bastille NAMESPACE=default\` to \`task\`, for example \`task conform CLUSTER=bastille NAMESPACE=default\`."
+}
+
+step "install nix" install_nix
+# The installer cannot update this running script's environment.
+# shellcheck disable=SC1091
+source "$nix_profile/etc/profile.d/nix.sh"
+step "build dev shell" build_dev_shell
+step "build orb tools" build_orb_tools
+step "install flux-local" install_flux_local
+step "persist environment" persist_environment
+step "write agent guidance" write_agent_guidance
