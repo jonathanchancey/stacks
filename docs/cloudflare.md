@@ -15,7 +15,7 @@ created by hand once, stored in `flux/bastille/apps/network/cloudflare/app/secre
 | `access_key`, `secret_key` | b2 application key restricted to that bucket |
 | `state_passphrase` | random, at least 16 characters; encrypts state and plans client-side |
 
-state lives in `s3://<bucket>/cloudflare.tfstate`, encrypted by opentofu, so a cluster rebuild reuses it.
+state lives in `s3://<bucket>/bastille/apps/network/cloudflare/terraform.tfstate`, encrypted by opentofu, so a cluster rebuild reuses it.
 
 ## break-glass
 

@@ -7,7 +7,7 @@ terraform {
   }
 
   backend "s3" {
-    key                         = "cloudflare.tfstate"
+    key                         = "bastille/apps/network/cloudflare/terraform.tfstate"
     region                      = "us-east-005"
     endpoints                   = { s3 = "https://s3.us-east-005.backblazeb2.com" }
     use_path_style              = true
