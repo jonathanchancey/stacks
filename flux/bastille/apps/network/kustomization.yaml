@@ -11,3 +11,4 @@ resources:
   - ./external-routes/ks.yaml
   - ./multus/ks.yaml
   - ./cloudflared/ks.yaml
+  - ./cloudflare-access/ks.yaml

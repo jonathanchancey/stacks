@@ -13,3 +13,10 @@ spec:
       providerSpecific:
         - name: external-dns.alpha.kubernetes.io/cloudflare-proxied
           value: "true"
+    - dnsName: kube-bastille.chancey.dev
+      recordType: CNAME
+      targets:
+        - ${TUNNEL_ID}.cfargotunnel.com
+      providerSpecific:
+        - name: external-dns.alpha.kubernetes.io/cloudflare-proxied
+          value: "true"

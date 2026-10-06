@@ -1,0 +1,23 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/infra.contrib.fluxcd.io/terraform_v1alpha2.json
+apiVersion: infra.contrib.fluxcd.io/v1alpha2
+kind: Terraform
+metadata:
+  name: cloudflare-access
+spec:
+  interval: 1h
+  approvePlan: auto
+  path: ./flux/bastille/apps/network/cloudflare-access/terraform
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  varsFrom:
+    - kind: Secret
+      name: cloudflare-access-secret
+  # amp orbs read these as env vars via amp project secrets; see task amp:sync-access-token
+  writeOutputsToSecret:
+    name: cloudflare-access-amp-stacks
+    outputs:
+      - amp_stacks_client_id:TUNNEL_SERVICE_TOKEN_ID
+      - amp_stacks_client_secret:TUNNEL_SERVICE_TOKEN_SECRET

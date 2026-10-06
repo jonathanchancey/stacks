@@ -1,0 +1,16 @@
+---
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+version: "3"
+
+vars:
+  AMP_PROJECT: user_01KH22Z1QJAJZ250F0GVD723GX/stacks
+
+tasks:
+  sync-access-token:
+    desc: Copy the kube-bastille cloudflare access service token into amp stacks project secrets
+    cmds:
+      - for: [TUNNEL_SERVICE_TOKEN_ID, TUNNEL_SERVICE_TOKEN_SECRET]
+        cmd: >-
+          kubectl --namespace network get secret cloudflare-access-amp-stacks --output 'jsonpath={.data.{{.ITEM}}}'
+          | base64 --decode
+          | amp secrets set --project {{.AMP_PROJECT}} --secret --data-file - {{.ITEM}}

@@ -21,6 +21,7 @@ env:
   SOPS_AGE_KEY_FILE: "{{.PRIVATE_DIR}}/academy/academy.age"
 
 includes:
+  amp: tools/taskfiles/amp
   bastille: tools/taskfiles/bastille
   flux: tools/taskfiles/flux
   sops: tools/taskfiles/sops

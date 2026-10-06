@@ -1,5 +1,8 @@
 ---
 ingress:
+  - # kube-apiserver, gated by the kube-bastille access app (network/cloudflare-access)
+    hostname: kube-bastille.chancey.dev
+    service: tcp://kubernetes.default.svc.cluster.local:443
   - hostname: "*.chancey.dev"
     service: https://envoy-external.network.svc.cluster.local
     originRequest:
