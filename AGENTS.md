@@ -3,7 +3,6 @@
 for commits, use lowercase conventional commits matching git history
 for branch names, use conventional branch v1.0.0 like fix, chore, and feat/add-login-page
 use lowercase in all prose and artifacts, preserve case-sensitive literals
-do not document explanations of a change, simply describe it
 do not use emoji in responses or code
 do not edit the main project readme without explicit consent
 you may edit readme files in subdirectories to prevent drift
@@ -13,7 +12,7 @@ you may edit readme files in subdirectories to prevent drift
 - write for someone learning how the feature works in this repo and maintaining it later, including future agents. explain where to look and how to make changes. avoid writing in the context of the current task
 - a detailed first draft is fine, always make a second pass to reduce it to the minimum needed to use or maintain the feature later
 - keep essential setup, usage, recovery steps, and caveats. link to configuration instead of duplicating it
-- omit implementation history, explanations, rollout logs, and validation results
+- omit change rationale, implementation history, rollout logs, and validation results
 - this is a public repo, keep private operational details such as database sizes/counts and internal inventories out of docs and pr descriptions
 
 ## common development commands
@@ -35,7 +34,7 @@ task test-all
 ## implementation notes
 
 - use `https://k8s-schemas.home-operations.com` for kubernetes and kustomize yaml schemas. upstream schemas remain appropriate for unpublished api versions, tool configuration, and chart values
-- always use ocirepository when possible over helmrepository
+- always use ocirepository over helmrepository
 
 ## file patterns
 
