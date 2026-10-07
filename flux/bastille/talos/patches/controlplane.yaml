@@ -4,6 +4,11 @@ cluster:
     extraArgs:
       feature-gates: MutatingAdmissionPolicy=true
       runtime-config: admissionregistration.k8s.io/v1alpha1=true
+      authentication-config: /var/lib/kubernetes/amp-authentication.yaml
+    extraVolumes:
+      - hostPath: /var/lib/kubernetes/amp-authentication.yaml
+        mountPath: /var/lib/kubernetes/amp-authentication.yaml
+        readonly: true
   network:
     cni:
       name: none
@@ -48,3 +53,27 @@ machine:
       content: |
         [plugins."io.containerd.cri.v1.images"]
           discard_unpacked_layers = false
+    - path: /var/lib/kubernetes/amp-authentication.yaml
+      permissions: 420
+      op: create
+      content: |
+        apiVersion: apiserver.config.k8s.io/v1beta1
+        kind: AuthenticationConfiguration
+        jwt:
+          - issuer:
+              url: https://ampcode.com/api/workload-identity
+              audiences:
+                - https://kube-bastille.chancey.dev
+              audienceMatchPolicy: MatchAny
+            claimValidationRules:
+              - expression: "claims.project_id == 'e75b009b-c969-40a8-abfd-bf0eb70b3d7b'"
+                message: only the amp stacks project
+              - expression: "claims.token_use == 'exchanged'"
+                message: only exchanged amp workload identity tokens
+            claimMappings:
+              username:
+                expression: "'amp:' + claims.thread_id"
+              groups:
+                expression: "['amp:stacks']"
+              uid:
+                expression: "claims.sub"
