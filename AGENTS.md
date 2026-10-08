@@ -1,6 +1,6 @@
 # agents.md
 
-for commits, use lowercase conventional commits matching git history
+for commits, use lowercase conventional commits matching git history. do not add a commit description.
 for branch names, use conventional branch v1.0.0 like fix, chore, and feat/add-login-page
 use lowercase in all prose and artifacts, preserve case-sensitive literals
 do not use emoji in responses or code
