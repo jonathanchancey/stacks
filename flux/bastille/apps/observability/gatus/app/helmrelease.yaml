@@ -42,7 +42,7 @@ spec:
             dependsOn: init-db
             image:
               repository: ghcr.io/home-operations/k8s-sidecar
-              tag: 2.11.1@sha256:2dce54e06b1a79d1abed2089933551dd2c02a6e3d45fb5ab1ee1bc6bb6cc5834
+              tag: 2.14.1@sha256:6daa733e73ffb67be9f33ca6fd4b46aad2b0c937ed8085cf51e2709f9848a923
             env:
               FOLDER: /config
               LABEL: gatus.io/enabled
