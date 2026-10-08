@@ -32,3 +32,18 @@ suspend the `Terraform` object first (`flux suspend` does not cover it; use `kub
 ## amp
 
 the `amp-stacks` service token is written to `network/cloudflare-amp-stacks`; copy it into amp project secrets with `task amp:sync-access-token`.
+
+set `KUBE_CA_DATA` in amp project environment variables to the base64 cluster ca from your kubeconfig:
+
+```sh
+kubectl config view --raw --minify --flatten -o jsonpath='{.clusters[0].cluster.certificate-authority-data}'
+```
+
+`.agents/setup` installs cloudflared; `.agents/resume` writes the orb kubeconfig and ensures the private `bastille-api` service in `.amp/services.yaml` is running.
+login shells in this repository select that kubeconfig. `.agents/kube-token` supplies expiring thread-scoped workload identity tokens on demand.
+the tunnel checks the cloudflare service token; kubernetes checks the workload identity against the [controlplane patch](../flux/bastille/talos/patches/controlplane.yaml) and grants the `amp:stacks` group read-only access through the built-in `view` role.
+this does not grant talos api access or kubernetes secret access.
+
+after changing project credentials, run `amp orb restart-processes` in an existing orb to refresh its environment, then `.agents/resume` if needed.
+check `kubectl auth whoami`, `kubectl get pods -A`, and `kubectl auth can-i list secrets -A` (expected: `no`).
+for connection failures, inspect `amp orb service logs bastille-api`; never expose this service through a portal or disable kubernetes tls verification.

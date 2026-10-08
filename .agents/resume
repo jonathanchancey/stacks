@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$repo_root"
+
+if [[ -z "${KUBE_CA_DATA:-}${TUNNEL_SERVICE_TOKEN_ID:-}${TUNNEL_SERVICE_TOKEN_SECRET:-}" ]]; then
+  echo "bastille access not configured; skipping private tunnel"
+  exit 0
+fi
+: "${KUBE_CA_DATA:?set KUBE_CA_DATA in amp project environment variables}"
+: "${TUNNEL_SERVICE_TOKEN_ID:?set TUNNEL_SERVICE_TOKEN_ID in amp project secrets}"
+: "${TUNNEL_SERVICE_TOKEN_SECRET:?set TUNNEL_SERVICE_TOKEN_SECRET in amp project secrets}"
+
+umask 077
+export KUBECONFIG="$HOME/.kube/stacks-orb.json"
+python3 - "$repo_root" <<'PY'
+import base64
+import json
+import os
+from pathlib import Path
+import ssl
+import sys
+
+ca_data = os.environ["KUBE_CA_DATA"].strip()
+ssl.create_default_context(cadata=base64.b64decode(ca_data, validate=True).decode())
+config = {
+    "apiVersion": "v1",
+    "kind": "Config",
+    "clusters": [{"name": "bastille", "cluster": {
+        "server": "https://127.0.0.1:6443",
+        "tls-server-name": "kube.bastille.chancey.dev",
+        "certificate-authority-data": ca_data,
+    }}],
+    "users": [{"name": "amp", "user": {"exec": {
+        "apiVersion": "client.authentication.k8s.io/v1",
+        "command": str(Path(sys.argv[1]) / ".agents/kube-token"),
+        "interactiveMode": "Never",
+    }}}],
+    "contexts": [{"name": "bastille", "context": {
+        "cluster": "bastille", "user": "amp", "namespace": "default",
+    }}],
+    "current-context": "bastille",
+}
+path = Path(os.environ["KUBECONFIG"])
+path.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
+temporary = path.with_suffix(".tmp")
+temporary.write_text(json.dumps(config) + "\n")
+temporary.replace(path)
+PY
+
+amp orb services ensure

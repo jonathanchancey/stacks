@@ -1,0 +1,4 @@
+services:
+  bastille-api:
+    command: cloudflared access tcp --hostname kube-bastille.chancey.dev --url "127.0.0.1:$PORT"
+    port: 6443

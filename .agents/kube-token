@@ -1,0 +1,21 @@
+#!/usr/bin/env python3
+"""return a fresh thread-scoped workload identity as a kubectl exec credential."""
+
+import base64
+from datetime import datetime, timezone
+import json
+import subprocess
+
+token = subprocess.check_output([
+    "amp", "orb", "id-token",
+    "--audience", "https://kube-bastille.chancey.dev",
+    "--subject-scope", "thread",
+], text=True).strip()
+payload = token.split(".")[1]
+claims = json.loads(base64.urlsafe_b64decode(payload + "=" * (-len(payload) % 4)))
+expiration = datetime.fromtimestamp(claims["exp"], timezone.utc).isoformat().replace("+00:00", "Z")
+print(json.dumps({
+    "apiVersion": "client.authentication.k8s.io/v1",
+    "kind": "ExecCredential",
+    "status": {"token": token, "expirationTimestamp": expiration},
+}))

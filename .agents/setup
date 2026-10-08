@@ -54,6 +54,7 @@ build_orb_tools() {
       name = \"stacks-orb-tools\";
       paths = with pkgs; [
         age
+        cloudflared
         fluxcd
         kubeconform
         kubectl
@@ -86,17 +87,21 @@ if [[ -z \"\${IN_NIX_SHELL:-}\" && -r \"$dev_env\" && ( \"\$PWD\" == \"$repo_roo
   if [[ -n \"\$__stacks_tmpdir\" ]]; then export TMPDIR=\"\$__stacks_tmpdir\"; else unset TMPDIR; fi
   unset __stacks_tmpdir
   export PATH=\"$tools_profile/bin:\$PATH\"
+  if [[ -r \"\$HOME/.kube/stacks-orb.json\" ]]; then
+    export KUBECONFIG=\"\$HOME/.kube/stacks-orb.json\"
+  fi
 fi"
 }
 
 write_agent_guidance() {
   write_block "$HOME/.config/amp/AGENTS.md" "<!-- stacks orb toolchain -->" "\
-# Stacks orb toolchain
+# stacks orb toolchain
 
-- Login shells in the repository load the Nix dev shell (task, git-of-theseus) plus flux, kubectl, kustomize, kubeconform, helm, sops, age, yq, and talosctl.
-- The dev shell environment is cached; rerun \`.agents/setup\` after editing \`flake.nix\` or \`flake.lock\`.
+- login shells in the repository load the nix dev shell and orb tools, including cloudflared and kubectl.
+- the dev shell environment is cached; rerun \`.agents/setup\` after editing \`flake.nix\` or \`flake.lock\`.
 - flux-local is installed in \`tools/.venv\`, matching the version in \`.github/workflows/flux-diff.yaml\`.
-- There is no kubeconfig in the orb; pass \`CLUSTER=bastille NAMESPACE=default\` to \`task\`, for example \`task conform CLUSTER=bastille NAMESPACE=default\`."
+- \`.agents/resume\` configures read-only bastille access through a private cloudflare tunnel when project credentials are present. kubectl refreshes thread-scoped workload identity tokens automatically; no talos api access is granted.
+- without project credentials, pass \`CLUSTER=bastille NAMESPACE=default\` to offline tasks."
 }
 
 step "install nix" install_nix
