@@ -49,4 +49,5 @@ temporary.write_text(json.dumps(config) + "\n")
 temporary.replace(path)
 PY
 
-amp orb services ensure
+amp orb service start bastille-api --port 6443 \
+  --command 'cloudflared access tcp --hostname kube-bastille.chancey.dev --url "127.0.0.1:$PORT"'
