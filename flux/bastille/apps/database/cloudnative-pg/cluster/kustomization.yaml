@@ -12,3 +12,5 @@ resources:
   - ./immich-cluster.yaml
   - ./immich-scheduledbackup.yaml
   - ./secrets.sops.yaml
+  - ./shlink-database.yaml
+  - ./shlink-secret.sops.yaml
