@@ -1,4 +1,9 @@
-{ pkgs, git-of-theseus }:
+{
+  pkgs,
+  git-of-theseus,
+  flux-local,
+  toolchain,
+}:
 let
   inherit (pkgs) lib;
   nixSource = lib.fileset.toSource {
@@ -10,7 +15,19 @@ let
   };
 in
 {
-  inherit git-of-theseus;
+  inherit git-of-theseus flux-local toolchain;
+
+  flux-local-ci-version = pkgs.runCommand "flux-local-ci-version" { } ''
+    versions=$(sed -n 's|.*ghcr.io/allenporter/flux-local:v\([0-9.]*\).*|\1|p' ${../../.github/workflows/flux-diff.yaml} | sort -u)
+    test "$versions" = "${flux-local.version}"
+    touch "$out"
+  '';
+
+  orb-scripts = pkgs.runCommand "orb-script-syntax" { } ''
+    bash -n ${../../.agents/setup}
+    bash -n ${../../.agents/resume}
+    touch "$out"
+  '';
 
   formatting = pkgs.runCommand "nix-formatting" { nativeBuildInputs = [ pkgs.nixfmt ]; } ''
     find ${nixSource} -name '*.nix' -exec nixfmt --check {} +

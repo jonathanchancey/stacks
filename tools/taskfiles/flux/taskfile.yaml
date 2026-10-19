@@ -8,23 +8,23 @@ shopt: [globstar]
 tasks:
   diff-ks:
     desc: Flux diff kustomizations
-    cmd: "{{.VIRTUAL_ENV}}/bin/flux-local diff ks --path {{.KUBERNETES_DIR}}"
+    cmd: "flux-local diff ks --path {{.KUBERNETES_DIR}}"
 
   diff-hr:
     desc: Flux diff helmreleases
-    cmd: "{{.VIRTUAL_ENV}}/bin/flux-local diff hr --path {{.KUBERNETES_DIR}}"
+    cmd: "flux-local diff hr --path {{.KUBERNETES_DIR}}"
 
   test-all:
     desc: Flux test kustomizations and helmreleases
-    cmd: "{{.VIRTUAL_ENV}}/bin/flux-local test --enable-helm --all-namespaces --path {{.KUBERNETES_DIR}}"
+    cmd: "flux-local test --enable-helm --all-namespaces --path {{.KUBERNETES_DIR}}"
 
   test:
     desc: Flux test kustomizations and helmreleases in current namespace
-    cmd: "{{.VIRTUAL_ENV}}/bin/flux-local test --enable-helm --path {{.KUBERNETES_DIR}}"
+    cmd: "flux-local test --enable-helm --path {{.KUBERNETES_DIR}}"
 
   test-ns:
     desc: Flux test kustomizations and helmreleases in USER_WORKING_DIR or override with NAMESPACE
-    cmd: "{{.VIRTUAL_ENV}}/bin/flux-local test --enable-helm --namespace {{.NAMESPACE}} --path {{.KUBERNETES_DIR}}"
+    cmd: "flux-local test --enable-helm --namespace {{.NAMESPACE}} --path {{.KUBERNETES_DIR}}"
     vars:
       NAMESPACE: "{{.NAMESPACE | default .CWD_NAMESPACE}}"
     preconditions:

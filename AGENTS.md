@@ -22,6 +22,9 @@ you may edit readme files in subdirectories to prevent drift
 
 the repository uses [task](https://taskfile.dev/) as the primary task runner
 
+run tasks with `nix develop --command task ...` so the pinned toolchain is available.
+see [development environment](docs/development.md) for setup and offline validation.
+
 when creating/editing a task, do not embed long scripts and keep things taskfile-native
 
 ```bash
