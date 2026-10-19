@@ -24,9 +24,34 @@
     {
       packages = forAllSystems (
         { pkgs, ... }:
-        {
+        rec {
           git-of-theseus = pkgs.callPackage ./tools/nix/git-of-theseus.nix {
             python3Packages = pkgs.python312Packages;
+          };
+          flux-local = pkgs.callPackage ./tools/nix/flux-local.nix {
+            python3Packages = pkgs.python313Packages;
+          };
+          toolchain = pkgs.buildEnv {
+            name = "stacks-toolchain";
+            paths = [
+              git-of-theseus
+              flux-local
+            ]
+            ++ (with pkgs; [
+              age
+              cloudflared
+              fluxcd
+              git
+              go-task
+              kubeconform
+              kubectl
+              kubernetes-helm
+              kustomize
+              python313
+              sops
+              talosctl
+              yq-go
+            ]);
           };
         }
       );
@@ -35,11 +60,7 @@
         { system, pkgs }:
         {
           default = pkgs.mkShellNoCC {
-            packages = [
-              pkgs.git
-              pkgs.go-task
-              self.packages.${system}.git-of-theseus
-            ];
+            packages = [ self.packages.${system}.toolchain ];
           };
         }
       );
@@ -50,7 +71,7 @@
         { system, pkgs }:
         import ./tools/nix/checks.nix {
           inherit pkgs;
-          inherit (self.packages.${system}) git-of-theseus;
+          inherit (self.packages.${system}) git-of-theseus flux-local toolchain;
         }
       );
     };

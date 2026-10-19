@@ -12,9 +12,14 @@ fi
 : "${TUNNEL_SERVICE_TOKEN_ID:?set TUNNEL_SERVICE_TOKEN_ID in amp project secrets}"
 : "${TUNNEL_SERVICE_TOKEN_SECRET:?set TUNNEL_SERVICE_TOKEN_SECRET in amp project secrets}"
 
+tools_profile="$HOME/.local/state/stacks/orb-tools"
+for tool in python3 cloudflared; do
+  [[ -x "$tools_profile/bin/$tool" ]] || { echo "missing $tool; run .agents/setup" >&2; exit 1; }
+done
+
 umask 077
 export KUBECONFIG="$HOME/.kube/stacks-orb.json"
-python3 - "$repo_root" <<'PY'
+"$tools_profile/bin/python3" - "$repo_root" "$tools_profile" <<'PY'
 import base64
 import json
 import os
@@ -34,7 +39,8 @@ config = {
     }}],
     "users": [{"name": "amp", "user": {"exec": {
         "apiVersion": "client.authentication.k8s.io/v1",
-        "command": str(Path(sys.argv[1]) / ".agents/kube-token"),
+        "command": str(Path(sys.argv[2]) / "bin/python3"),
+        "args": [str(Path(sys.argv[1]) / ".agents/kube-token")],
         "interactiveMode": "Never",
     }}}],
     "contexts": [{"name": "bastille", "context": {
@@ -50,4 +56,20 @@ temporary.replace(path)
 PY
 
 amp orb service start bastille-api --port 6443 \
-  --command 'cloudflared access tcp --hostname kube-bastille.chancey.dev --url "127.0.0.1:$PORT"'
+  --command "\"$tools_profile/bin/cloudflared\" access tcp --hostname kube-bastille.chancey.dev --url \"127.0.0.1:\$PORT\""
+
+"$tools_profile/bin/python3" - <<'PY'
+import socket
+import time
+
+deadline = time.monotonic() + 5
+while time.monotonic() < deadline:
+    try:
+        with socket.create_connection(("127.0.0.1", 6443), timeout=0.5):
+            break
+    except OSError:
+        time.sleep(0.1)
+else:
+    raise SystemExit("bastille tunnel did not start; inspect amp orb service logs bastille-api")
+print("bastille tunnel listening")
+PY

@@ -15,7 +15,6 @@ step() {
 
 nix_profile="$HOME/.nix-profile"
 tools_profile="$HOME/.local/state/stacks/orb-tools"
-venv="$repo_root/tools/.venv"
 dev_env="$HOME/.local/state/stacks/dev-env.sh"
 
 write_block() {
@@ -45,33 +44,7 @@ build_dev_shell() {
 
 build_orb_tools() {
   mkdir -p "$(dirname "$tools_profile")"
-  nix build --impure --no-update-lock-file --profile "$tools_profile" --expr "
-    let
-      flake = builtins.getFlake \"git+file://$repo_root\";
-      pkgs = flake.inputs.nixpkgs.legacyPackages.\${builtins.currentSystem};
-    in
-    pkgs.buildEnv {
-      name = \"stacks-orb-tools\";
-      paths = with pkgs; [
-        age
-        cloudflared
-        fluxcd
-        kubeconform
-        kubectl
-        kubernetes-helm
-        kustomize
-        sops
-        talosctl
-        yq-go
-      ];
-    }"
-}
-
-install_flux_local() {
-  local version
-  version="$(sed -n 's|.*ghcr.io/allenporter/flux-local:v\([0-9.]*\).*|\1|p' .github/workflows/flux-diff.yaml | head -n1)"
-  [[ -x "$venv/bin/python" ]] || uv venv --quiet --python 3.13 "$venv"
-  uv pip install --quiet --python "$venv/bin/python" "flux-local==$version"
+  nix build --no-update-lock-file --profile "$tools_profile" "$repo_root#toolchain"
 }
 
 persist_environment() {
@@ -79,14 +52,19 @@ persist_environment() {
 if [[ -e \"$nix_profile/etc/profile.d/nix.sh\" ]]; then
   . \"$nix_profile/etc/profile.d/nix.sh\"
 fi
-if [[ -z \"\${IN_NIX_SHELL:-}\" && -r \"$dev_env\" && ( \"\$PWD\" == \"$repo_root\" || \"\$PWD\" == \"$repo_root\"/* ) ]]; then
-  __stacks_tmpdir=\"\${TMPDIR-}\"
-  . \"$dev_env\"
-  rm -rf -- \"\$NIX_BUILD_TOP\"
-  unset NIX_BUILD_TOP TMP TEMP TEMPDIR
-  if [[ -n \"\$__stacks_tmpdir\" ]]; then export TMPDIR=\"\$__stacks_tmpdir\"; else unset TMPDIR; fi
-  unset __stacks_tmpdir
-  export PATH=\"$tools_profile/bin:\$PATH\"
+if [[ \"\$PWD\" == \"$repo_root\" || \"\$PWD\" == \"$repo_root\"/* ]]; then
+  if [[ -z \"\${IN_NIX_SHELL:-}\" && -r \"$dev_env\" ]]; then
+    __stacks_tmpdir=\"\${TMPDIR-}\"
+    . \"$dev_env\"
+    rm -rf -- \"\$NIX_BUILD_TOP\"
+    unset NIX_BUILD_TOP TMP TEMP TEMPDIR
+    if [[ -n \"\$__stacks_tmpdir\" ]]; then export TMPDIR=\"\$__stacks_tmpdir\"; else unset TMPDIR; fi
+    unset __stacks_tmpdir
+  fi
+  case \":\$PATH:\" in
+    *:\"$tools_profile/bin\":*) ;;
+    *) export PATH=\"$tools_profile/bin:\$PATH\" ;;
+  esac
   if [[ -r \"\$HOME/.kube/stacks-orb.json\" ]]; then
     export KUBECONFIG=\"\$HOME/.kube/stacks-orb.json\"
   fi
@@ -97,9 +75,8 @@ write_agent_guidance() {
   write_block "$HOME/.config/amp/AGENTS.md" "<!-- stacks orb toolchain -->" "\
 # stacks orb toolchain
 
-- login shells in the repository load the nix dev shell and orb tools, including cloudflared and kubectl.
-- the dev shell environment is cached; rerun \`.agents/setup\` after editing \`flake.nix\` or \`flake.lock\`.
-- flux-local is installed in \`tools/.venv\`, matching the version in \`.github/workflows/flux-diff.yaml\`.
+- run repository commands explicitly with \`nix develop --command <command>\`; the flake includes flux-local and all deployment tools, without a virtualenv.
+- login shells in the repository also load the cached dev shell and toolchain profile. rerun \`.agents/setup\` after editing \`flake.nix\`, \`flake.lock\`, or \`tools/nix\`.
 - \`.agents/resume\` configures read-only bastille access through a private cloudflare tunnel when project credentials are present. kubectl refreshes thread-scoped workload identity tokens automatically; no talos api access is granted.
 - without project credentials, pass \`CLUSTER=bastille NAMESPACE=default\` to offline tasks."
 }
@@ -107,8 +84,7 @@ write_agent_guidance() {
 step "install nix" install_nix
 # shellcheck disable=SC1091
 source "$nix_profile/etc/profile.d/nix.sh"
-step "build dev shell" build_dev_shell
 step "build orb tools" build_orb_tools
-step "install flux-local" install_flux_local
+step "build dev shell" build_dev_shell
 step "persist environment" persist_environment
 step "write agent guidance" write_agent_guidance

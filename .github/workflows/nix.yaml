@@ -11,6 +11,8 @@ on:
       - "tools/nix/**"
       - "taskfile.yaml"
       - "tools/taskfiles/**"
+      - ".agents/**"
+      - ".github/workflows/flux-diff.yaml"
       - ".github/workflows/nix.yaml"
   push:
     branches: ["main"]
@@ -20,6 +22,8 @@ on:
       - "tools/nix/**"
       - "taskfile.yaml"
       - "tools/taskfiles/**"
+      - ".agents/**"
+      - ".github/workflows/flux-diff.yaml"
       - ".github/workflows/nix.yaml"
 
 concurrency:

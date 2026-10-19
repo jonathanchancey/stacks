@@ -17,7 +17,6 @@ vars:
 
 env:
   PRIVATE_DIR: "{{.ROOT_DIR}}/.private"
-  VIRTUAL_ENV: "{{.ROOT_DIR}}/tools/.venv"
   SOPS_AGE_KEY_FILE: "{{.PRIVATE_DIR}}/academy/academy.age"
 
 includes:
