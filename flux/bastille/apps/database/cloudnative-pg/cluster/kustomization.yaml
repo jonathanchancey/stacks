@@ -5,9 +5,7 @@ kind: Kustomization
 resources:
   - ./cluster.yaml
   - ./objectstore.yaml
-  - ./scheduledbackup.yaml
   - ./bastille-scheduledbackup.yaml
-  - ./backup.yaml
   - ./prometheusrule.yaml
   - ./immich-cluster.yaml
   - ./immich-scheduledbackup.yaml

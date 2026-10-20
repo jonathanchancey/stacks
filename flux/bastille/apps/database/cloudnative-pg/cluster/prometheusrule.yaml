@@ -90,11 +90,6 @@ spec:
           expr: vector(1)
           labels:
             namespace: database
-            cluster: postgres
-        - record: cnpg:expected_backup_cluster
-          expr: vector(1)
-          labels:
-            namespace: database
             cluster: immich-postgres
         # Actual plugin metrics identify the cluster using job="database/<name>".
         # Aggregate replicas and expose that verified identity as a cluster label.
@@ -103,7 +98,7 @@ spec:
             max by (namespace, cluster) (
               label_replace(
                 barman_cloud_cloudnative_pg_io_last_available_backup_timestamp{
-                  namespace="database",job=~"database/(bastille-pg|postgres|immich-postgres)"
+                  namespace="database",job=~"database/(bastille-pg|immich-postgres)"
                 },
                 "cluster", "$1", "job", "database/(.*)"
               )
@@ -113,7 +108,7 @@ spec:
             max by (namespace, cluster) (
               label_replace(
                 barman_cloud_cloudnative_pg_io_last_failed_backup_timestamp{
-                  namespace="database",job=~"database/(bastille-pg|postgres|immich-postgres)"
+                  namespace="database",job=~"database/(bastille-pg|immich-postgres)"
                 },
                 "cluster", "$1", "job", "database/(.*)"
               )
