@@ -17,6 +17,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
+      - name: check public ca trust
+        run: python3 tools/scripts/check-public-ca.py flux/bastille/components/public-ca/ca-bundle.crt
+
       - name: Setup Homebrew
         uses: Homebrew/actions/setup-homebrew@1e34f2e2acaa766b7efacb8c26352e6abbb023f9
 

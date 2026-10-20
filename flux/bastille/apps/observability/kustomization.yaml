@@ -6,6 +6,7 @@ namespace: observability
 components:
   - ../../components/privileged
 resources:
+  - ../../components/public-ca
   - ./kube-prometheus-stack/ks.yaml
   - ./grafana-operator/ks.yaml
   - ./grafana/ks.yaml

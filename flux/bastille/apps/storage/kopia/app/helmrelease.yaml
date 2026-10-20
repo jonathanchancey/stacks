@@ -39,6 +39,8 @@ spec:
               KOPIA_WEB_ENABLED: true
               KOPIA_WEB_PORT: &port 80
               TZ: America/Los_Angeles
+              SSL_CERT_FILE: /etc/ssl/certs/ca-certificates.crt
+              SSL_CERT_DIR: /etc/ssl/certs
             envFrom:
               - secretRef:
                   name: kopia-secret
@@ -86,6 +88,12 @@ spec:
             namespace: network
             sectionName: https
     persistence:
+      public-ca:
+        type: configMap
+        name: public-ca-bundle-20261020
+        globalMounts:
+          - path: /etc/ssl/certs
+            readOnly: true
       config-file:
         type: configMap
         name: kopia-repository-configmap

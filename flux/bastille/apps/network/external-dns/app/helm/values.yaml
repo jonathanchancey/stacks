@@ -8,6 +8,18 @@ env:
       secretKeyRef:
         name: &secret external-dns-token-secret
         key: *name
+  - name: SSL_CERT_FILE
+    value: /etc/ssl/certs/ca-certificates.crt
+  - name: SSL_CERT_DIR
+    value: /etc/ssl/certs
+extraVolumes:
+  - name: public-ca
+    configMap:
+      name: public-ca-bundle-20261020
+extraVolumeMounts:
+  - name: public-ca
+    mountPath: /etc/ssl/certs
+    readOnly: true
 extraArgs:
   - --cloudflare-dns-records-per-page=1000
   - --crd-source-apiversion=externaldns.k8s.io/v1alpha1

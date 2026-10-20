@@ -7,3 +7,9 @@ resources:
   - ./namespace.yaml
   - ./cloudnative-pg/ks.yaml
   - ../../components/common/sops
+secretGenerator:
+  - name: public-ca-bundle-20261020
+    files:
+      - ca.crt=../../components/public-ca/ca-bundle.crt
+generatorOptions:
+  disableNameSuffixHash: true

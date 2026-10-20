@@ -6,6 +6,7 @@ namespace: media
 components:
   - ../../components/common
 resources:
+  - ../../components/public-ca
   - ./miniflux/ks.yaml
   - ./homepage/ks.yaml
   - ./immich/ks.yaml

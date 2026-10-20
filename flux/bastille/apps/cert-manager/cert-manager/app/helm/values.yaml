@@ -4,6 +4,19 @@ crds:
 replicaCount: 1
 dns01RecursiveNameservers: https://1.1.1.1:443/dns-query,https://1.0.0.1:443/dns-query
 dns01RecursiveNameserversOnly: true
+extraEnv:
+  - name: SSL_CERT_FILE
+    value: /etc/ssl/certs/ca-certificates.crt
+  - name: SSL_CERT_DIR
+    value: /etc/ssl/certs
+volumes:
+  - name: public-ca
+    configMap:
+      name: public-ca-bundle-20261020
+volumeMounts:
+  - name: public-ca
+    mountPath: /etc/ssl/certs
+    readOnly: true
 prometheus:
   enabled: true
   servicemonitor:

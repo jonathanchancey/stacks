@@ -49,6 +49,8 @@ spec:
             env:
               BASE_URL: https://miniflux.chancey.dev
               CREATE_ADMIN: "1"
+              SSL_CERT_FILE: /etc/ssl/certs/ca-certificates.crt
+              SSL_CERT_DIR: /etc/ssl/certs
               LOG_DATE_TIME: "1"
               METRICS_ALLOWED_NETWORKS: 10.0.0.0/8
               METRICS_COLLECTOR: "1"
@@ -88,6 +90,13 @@ spec:
         runAsNonRoot: true
         runAsUser: 1000
         runAsGroup: 1000
+    persistence:
+      public-ca:
+        type: configMap
+        name: public-ca-bundle-20261020
+        globalMounts:
+          - path: /etc/ssl/certs
+            readOnly: true
     service:
       app:
         ports:
