@@ -23,6 +23,24 @@ no virtualenv or pip installation is needed. update its version and source hash 
 in [flux ci](../.github/workflows/flux-diff.yaml); flake checks enforce agreement.
 update `flake.lock` to change the nixpkgs-provided dependencies.
 
+## certificate trust
+
+the flake's `cacert` package pins the patched nss certificate source identified
+in the [emudhra advisory](https://emudhra.we-have-a-problem.com/). flux-local's
+certifi dependency uses the same bundle, including its environment-free fallback.
+the development shell and `toolchain` executables set
+`NIX_SSL_CERT_FILE`, `SSL_CERT_FILE`, `SSL_CERT_DIR`, and `REQUESTS_CA_BUNDLE`
+to the patched nix stores, replacing inherited host paths even for absolute
+profile invocations. legitimate chains under removed roots are also distrusted;
+explicit application-specific ca settings, such as kubeconfig ca data, still apply.
+host tools and independently created virtualenvs are outside this policy.
+
+after a nixpkgs update, keep the source override until `nix flake check` rejects all
+twelve advisory chains without it. the trust check fixes verification time at
+disclosure so expired fixtures cannot hide renewed trust. also check legitimate
+https with python and the affected clients before removing the override.
+go clients on macos use native system trust; keep macos security updates current.
+
 ## orbs
 
 `.agents/setup` installs nix, builds `toolchain` into

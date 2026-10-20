@@ -3,6 +3,7 @@
   fetchPypi,
   gitMinimal,
   python3Packages,
+  trustWrapperArgs,
 }:
 
 python3Packages.buildPythonApplication rec {
@@ -28,7 +29,7 @@ python3Packages.buildPythonApplication rec {
     wcmatch
   ];
 
-  makeWrapperArgs = [ "--prefix PATH : ${lib.makeBinPath [ gitMinimal ]}" ];
+  makeWrapperArgs = [ "--prefix PATH : ${lib.makeBinPath [ gitMinimal ]}" ] ++ trustWrapperArgs;
   pythonImportsCheck = [ "git_of_theseus" ];
 
   doInstallCheck = true;

@@ -6,6 +6,7 @@
   kubernetes-helm,
   kustomize,
   python3Packages,
+  trustWrapperArgs,
 }:
 
 python3Packages.buildPythonApplication rec {
@@ -42,7 +43,8 @@ python3Packages.buildPythonApplication rec {
         kustomize
       ]
     }"
-  ];
+  ]
+  ++ trustWrapperArgs;
   pythonImportsCheck = [ "flux_local" ];
 
   doInstallCheck = true;
