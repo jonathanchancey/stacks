@@ -6,6 +6,7 @@ namespace: storage
 components:
   - ../../components/privileged
 resources:
+  - ../../components/public-ca
   - ./openebs/ks.yaml
   - ./volsync/ks.yaml
   - ./kopia/ks.yaml

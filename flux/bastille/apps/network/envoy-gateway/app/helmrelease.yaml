@@ -28,7 +28,21 @@ spec:
   values:
     deployment:
       replicas: 2
+      pod:
+        extraVolumes:
+          - name: public-ca
+            configMap:
+              name: public-ca-bundle-20261020
+        extraVolumeMounts:
+          - name: public-ca
+            mountPath: /etc/ssl/certs
+            readOnly: true
       envoyGateway:
+        extraEnv:
+          - name: SSL_CERT_FILE
+            value: /etc/ssl/certs/ca-certificates.crt
+          - name: SSL_CERT_DIR
+            value: /etc/ssl/certs
         rbac:
           cluster: true
         gateway:

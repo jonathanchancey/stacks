@@ -11,7 +11,16 @@ spec:
     kubernetes:
       envoyDeployment:
         replicas: 3
+        container:
+          volumeMounts:
+            - name: public-ca
+              mountPath: /etc/ssl/certs
+              readOnly: true
         pod:
+          volumes:
+            - name: public-ca
+              configMap:
+                name: public-ca-bundle-20261020
           topologySpreadConstraints:
             - maxSkew: 1
               topologyKey: kubernetes.io/hostname

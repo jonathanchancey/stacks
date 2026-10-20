@@ -11,6 +11,17 @@ spec:
   interval: 1h
   values:
     allowCrossNamespaceRefs: true
+    extraEnv:
+      SSL_CERT_FILE: /etc/ssl/certs/ca-certificates.crt
+      SSL_CERT_DIR: /etc/ssl/certs
+    volumes:
+      - name: public-ca
+        configMap:
+          name: public-ca-bundle-20261020
+    volumeMounts:
+      - name: public-ca
+        mountPath: /etc/ssl/certs
+        readOnly: true
     awsPackage:
       install: false
     runner:

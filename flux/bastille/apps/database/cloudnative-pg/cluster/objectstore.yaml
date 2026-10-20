@@ -9,6 +9,9 @@ spec:
       compression: bzip2
     destinationPath: s3://bastille-pg-reclaim-rise-mower-operate/
     endpointURL: https://s3.us-east-005.backblazeb2.com
+    endpointCA:
+      name: public-ca-bundle-20261020
+      key: ca.crt
     s3Credentials:
       accessKeyId:
         name: cloudnative-pg-secret
@@ -31,6 +34,9 @@ spec:
       compression: bzip2
     destinationPath: s3://bastille-pg/
     endpointURL: https://s3.chancey.dev
+    endpointCA:
+      name: public-ca-bundle-20261020
+      key: ca.crt
     s3Credentials:
       accessKeyId:
         name: bastille-pg-s3-garage-keys

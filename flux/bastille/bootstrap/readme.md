@@ -7,6 +7,10 @@ after tofu apply task to:
 
 ```bash
 kubectl apply -f namespace.yaml
+kubectl create namespace cert-manager --dry-run=client -o yaml | kubectl apply -f -
+for namespace in cert-manager flux-system; do
+  kubectl kustomize ../components/public-ca | kubectl apply --namespace "$namespace" -f -
+done
 kubectl create secret generic sops-age --namespace flux-system --from-literal=age.agekey=(keepassxc-cli show $VAULT_DIR/Passwords.kdbx stacks-age-key -a Password)
 kubectl create secret generic github-token-auth-ro \
         --namespace flux-system \
@@ -24,6 +28,9 @@ kubectl apply --server-side -f https://github.com/prometheus-operator/prometheus
 kubectl label namespace rook-ceph pod-security.kubernetes.io/enforce=privileged
 kubectl label namespace kube-system pod-security.kubernetes.io/enforce=privileged
 ```
+
+seed the [public ca bundle](../../../docs/public-ca.md) before installing the
+cert-manager and flux helm releases; their pods require it to start.
 
 # cilium note
 

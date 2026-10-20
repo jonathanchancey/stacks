@@ -36,6 +36,16 @@ spec:
       GF_EXPLORE_ENABLED: true
       GF_SECURITY_ANGULAR_SUPPORT_ENABLED: true
       GF_SERVER_ROOT_URL: https://grafana.bastille.chancey.dev
+      SSL_CERT_FILE: /etc/ssl/certs/ca-certificates.crt
+      SSL_CERT_DIR: /etc/ssl/certs
+    extraVolumes:
+      - name: public-ca
+        configMap:
+          name: public-ca-bundle-20261020
+    extraVolumeMounts:
+      - name: public-ca
+        mountPath: /etc/ssl/certs
+        readOnly: true
     envValueFrom:
       GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET:
         secretKeyRef:

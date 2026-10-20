@@ -14,6 +14,16 @@ spec:
     kubernetes:
       envoyDeployment:
         replicas: 2
+        container:
+          volumeMounts:
+            - name: public-ca
+              mountPath: /etc/ssl/certs
+              readOnly: true
+        pod:
+          volumes:
+            - name: public-ca
+              configMap:
+                name: public-ca-bundle-20261020
       envoyService:
         name: envoy-external
         externalTrafficPolicy: Local
