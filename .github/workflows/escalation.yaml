@@ -1,0 +1,80 @@
+---
+name: escalation
+on:
+  pull_request:
+    paths:
+      - tools/apps/escalation/**
+      - .github/workflows/escalation.yaml
+  push:
+    branches: [main]
+    paths:
+      - tools/apps/escalation/**
+      - .github/workflows/escalation.yaml
+  workflow_dispatch:
+    inputs:
+      vulnerability-scan:
+        description: run govulncheck
+        type: boolean
+        default: false
+      expiry-test:
+        description: wait for native token expiry with the broker offline
+        type: boolean
+        default: false
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tools/apps/escalation
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: tools/apps/escalation/go.mod
+          cache-dependency-path: tools/apps/escalation/go.sum
+      - name: test and vet
+        run: |
+          test -z "$(gofmt -l *.go)"
+          go test -race ./...
+          go vet ./...
+          go build .
+      - name: vulnerability scan of imported packages
+        run: go run golang.org/x/vuln/cmd/govulncheck@v1.9.0 -scan=package ./...
+      - name: optional vulnerability scan
+        if: ${{ inputs.vulnerability-scan == true }}
+        run: go run golang.org/x/vuln/cmd/govulncheck@v1.9.0 ./...
+      - uses: azure/setup-helm@v4.3.1
+        with:
+          version: v3.17.3
+      - name: chart checks
+        run: |
+          helm lint chart
+          helm lint chart --namespace escalation --set enabled=true --set existingSecret=oidc
+          helm template escalation chart --namespace escalation --include-crds --set enabled=true --set existingSecret=oidc > /tmp/escalation.yaml
+          test -z "$(helm template escalation chart)"
+          if helm template escalation chart --namespace wrong --set enabled=true --set existingSecret=oidc; then exit 1; fi
+      - name: build image without publishing
+        run: docker build -t escalation:ci .
+  kubernetes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    defaults:
+      run:
+        working-directory: tools/apps/escalation
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: tools/apps/escalation/go.mod
+          cache-dependency-path: tools/apps/escalation/go.sum
+      - uses: azure/setup-helm@v4.3.1
+        with:
+          version: v3.17.3
+      - name: install disposable cluster tooling
+        run: go install sigs.k8s.io/kind@v0.29.0
+      - name: kubernetes rbac, admission, issuance and revocation
+        env:
+          ESCALATION_TEST_WAIT_EXPIRY: ${{ inputs.expiry-test == true && '1' || '0' }}
+        run: bash test/e2e.sh
