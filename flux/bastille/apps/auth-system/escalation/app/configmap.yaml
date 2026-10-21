@@ -26,6 +26,7 @@ data:
         role:
           kind: ClusterRole
           name: escalation-storage-observe
+        namespaces: []
         cluster: true
         requesterIssuers: [https://ampcode.com/api/workload-identity]
         approverGroups: [escalation_approvers]
