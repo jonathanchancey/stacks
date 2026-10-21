@@ -13,6 +13,8 @@ resources:
   - ./loki/ks.yaml
   - ./promtail/ks.yaml
   - ./gatus/ks.yaml
+  - ./victoriametrics/ks.yaml
+  - ./victorialogs/ks.yaml
 patches:
   - target:
       kind: Namespace

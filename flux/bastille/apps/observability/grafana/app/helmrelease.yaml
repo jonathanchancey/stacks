@@ -123,6 +123,20 @@ spec:
             url: http://loki-headless.observability.svc.cluster.local:3100
             jsonData:
               maxLines: 250
+          - name: victoriametrics - bastille
+            type: prometheus
+            uid: victoriametrics-bastille
+            access: proxy
+            url: http://victoriametrics.observability.svc.cluster.local:8428
+            isDefault: false
+            jsonData:
+              timeInterval: 1m
+          - name: victorialogs - bastille
+            type: victoriametrics-logs-datasource
+            uid: victorialogs-bastille
+            access: proxy
+            url: http://victorialogs.observability.svc.cluster.local:9428
+            isDefault: false
     sidecar:
       dashboards:
         enabled: false
@@ -133,6 +147,7 @@ spec:
     plugins:
       - grafana-clock-panel
       - vonage-status-panel
+      - victoriametrics-logs-datasource
     serviceMonitor:
       enabled: true
     resources:
