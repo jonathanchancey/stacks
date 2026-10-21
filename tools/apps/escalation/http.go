@@ -429,12 +429,16 @@ func (a *App) page(w http.ResponseWriter, r *http.Request, i Identity) {
 		return
 	}
 	canApprove := req != nil && req.Spec.Profile.approver(i) && !sameIdentity(i, req.Spec.Requester) && req.Status.Phase == "" && !req.terminal(a.now())
+	canRevoke := req != nil && req.Status.Deadline != nil && !req.terminal(a.now())
+	canWithdraw := req != nil && sameIdentity(i, req.Spec.Requester) && req.Status.Phase == "" && !req.terminal(a.now())
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	_ = pageTemplate.Execute(w, struct {
-		Request    *Request
-		Items      []*Request
-		CSRF       string
-		CanApprove bool
-		Next       string
-	}{req, rs, a.auth.CSRF(r), canApprove, next})
+		Request     *Request
+		Items       []*Request
+		CSRF        string
+		CanApprove  bool
+		CanRevoke   bool
+		CanWithdraw bool
+		Next        string
+	}{req, rs, a.auth.CSRF(r), canApprove, canRevoke, canWithdraw, next})
 }

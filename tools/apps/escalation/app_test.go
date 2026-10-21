@@ -201,7 +201,7 @@ func TestBrowserApprovalAndCSRF(t *testing.T) {
 	if w.Header().Get("Referrer-Policy") != "same-origin" {
 		t.Fatal("browser forms need a same-origin Origin header for csrf validation")
 	}
-	for _, want := range []string{"photos", "inspect database storage", "role permissions", "approve access", "1800 seconds"} {
+	for _, want := range []string{"photos", "inspect database storage", "role permissions", ">approve</button>", "1800 seconds"} {
 		if !strings.Contains(w.Body.String(), want) {
 			t.Fatalf("page missing %q", want)
 		}
@@ -220,8 +220,70 @@ func TestBrowserApprovalAndCSRF(t *testing.T) {
 	checkCode(t, post(form.Encode()), 303)
 	w = f.call(t, "GET", path, "", "human")
 	checkCode(t, w, 200)
-	if strings.Contains(w.Body.String(), "approve access") || !strings.Contains(w.Body.String(), "ready") {
+	if strings.Contains(w.Body.String(), ">approve</button>") || !strings.Contains(w.Body.String(), "ready") {
 		t.Fatal("approval page did not reflect decision")
+	}
+}
+
+func TestBrowserRequestActions(t *testing.T) {
+	for _, tc := range []struct {
+		name      string
+		phase     string
+		requester bool
+		expired   bool
+		want      []string
+	}{
+		{name: "pending approver", want: []string{"approve", "deny"}},
+		{name: "pending requester", requester: true, want: []string{"withdraw request"}},
+		{name: "approved", phase: "approved", want: []string{"revoke"}},
+		{name: "ready approver", phase: "ready", want: []string{"revoke"}},
+		{name: "ready requester", phase: "ready", requester: true, want: []string{"revoke"}},
+		{name: "denied", phase: "denied"},
+		{name: "revoked", phase: "revoked"},
+		{name: "expired", phase: "expired"},
+		{name: "failed", phase: "failed"},
+		{name: "pending at expiry", expired: true},
+		{name: "ready at expiry", phase: "ready", expired: true},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			f := newAppFixture(t)
+			r := f.request(t)
+			r.Status.Phase = tc.phase
+			if tc.phase != "" {
+				deadline := f.now.Add(time.Minute)
+				if tc.expired {
+					deadline = f.now
+				}
+				r.Status.Deadline = &deadline
+			} else if tc.expired {
+				r.Spec.PendingUntil = f.now
+			}
+			// The fake store permits setting the fixture's request state directly.
+			obj, err := encodeRequest(r)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if _, err := f.app.store.client.Update(context.Background(), obj, metav1.UpdateOptions{}); err != nil {
+				t.Fatal(err)
+			}
+			if tc.requester {
+				session := f.app.auth.sessions["reviewer-session"]
+				session.identity = r.Spec.Requester
+				session.identity.Human = true
+				f.app.auth.sessions["reviewer-session"] = session
+			}
+			w := f.call(t, "GET", "/requests/"+r.Name, "", "human")
+			checkCode(t, w, 200)
+			body := w.Body.String()
+			if got := strings.Count(body, `name="decision"`); got != len(tc.want) {
+				t.Fatalf("got %d actions, want %v: %s", got, tc.want, body)
+			}
+			for _, label := range tc.want {
+				if !strings.Contains(body, ">"+label+"</button>") {
+					t.Fatalf("missing action %q: %s", label, body)
+				}
+			}
+		})
 	}
 }
 

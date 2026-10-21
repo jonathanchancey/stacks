@@ -23,9 +23,13 @@
 <dt>grant account</dt><dd>grant-{{.Request.UID}}</dd>
 </dl></section>
 <section class="card"><h2>role permissions</h2><pre>{{json .Request.Spec.Rules}}</pre></section>
+{{if or .CanApprove .CanRevoke .CanWithdraw}}
 <form method="post"><input type="hidden" name="csrf" value="{{.CSRF}}"><input type="hidden" name="version" value="{{.Request.ResourceVersion}}"><input type="hidden" name="scopeHash" value="{{.Request.Spec.ScopeHash}}"><div class="actions">
-{{if .CanApprove}}<button class="primary" name="decision" value="approve">approve access</button><button name="decision" value="deny">deny</button>{{end}}
-<button name="decision" value="revoke">revoke / withdraw</button></div></form>
+{{if .CanApprove}}<button class="primary" name="decision" value="approve">approve</button><button name="decision" value="deny">deny</button>{{end}}
+{{if .CanRevoke}}<button name="decision" value="revoke">revoke</button>{{end}}
+{{if .CanWithdraw}}<button name="decision" value="revoke">withdraw request</button>{{end}}
+</div></form>
+{{end}}
 {{else}}
 <h1>access requests</h1>
 <section class="card">{{range .Items}}<a class="request-link" href="/requests/{{.Name}}">{{.Spec.Profile.Name}} <span class="status">{{if .Status.Phase}}{{.Status.Phase}}{{else}}pending{{end}}</span><small>{{.Spec.Requester.Subject}} · {{if .Spec.Profile.Cluster}}whole cluster{{else}}{{.Spec.Namespace}}{{end}}</small></a>{{else}}<p class="muted">no requests</p>{{end}}</section>
