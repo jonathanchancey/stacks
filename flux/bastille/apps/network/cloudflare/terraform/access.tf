@@ -11,6 +11,19 @@ resource "cloudflare_zero_trust_access_application" "kube_bastille" {
   ]
 }
 
+resource "cloudflare_zero_trust_access_application" "escalation_bastille" {
+  account_id           = var.cloudflare_account_id
+  name                 = "escalation-bastille"
+  type                 = "self_hosted"
+  domain               = "escalation-bastille.chancey.dev"
+  app_launcher_visible = false
+  session_duration     = "24h"
+
+  policies = [
+    { id = cloudflare_zero_trust_access_policy.amp_stacks.id, precedence = 1 },
+  ]
+}
+
 resource "cloudflare_zero_trust_access_service_token" "amp_stacks" {
   account_id = var.cloudflare_account_id
   name       = "amp-stacks"
