@@ -48,11 +48,35 @@ the separate grant namespace, and all target namespaces before installation.
 create an existing secret in the server namespace with key `client-secret`;
 the chart mounts it at `/run/oidc/client-secret` and never generates a secret.
 
-set `config.namespace` to the helm release namespace, `config.grantNamespace`
-to a separate dedicated namespace, and `image.repository`/`image.tag` to your
-own built image. configure trusted workload issuers and human oidc settings.
-review every profile's requester and approver restrictions, role, namespace
-allowlist, and duration. referenced roles must already exist; the sample uses an
+set `image.repository`/`image.tag` to your own built image. configuration separates
+three responsibilities:
+
+- `config.requesters`: trusted workload issuer urls, expected token audiences,
+  and required claims such as a project restriction. oidc endpoints and signing
+  keys are discovered from each issuer.
+- `config.approverLogin`: the human oidc provider url, client id, and optional
+  `clientSecretFile`. the callback is `config.baseURL` plus `/callback`.
+- `config.issuedCredentials`: the kubernetes token `audience` and the api `server`
+  address written into issued kubeconfigs. this is the recipient's connection,
+  not the broker's in-cluster connection. set `tlsName` when the tunnel address
+  differs from the api certificate's name. `caFile` can override the pod's api ca;
+  another ca requires an additional mount.
+
+routine settings can be omitted:
+
+| setting | default |
+| --- | --- |
+| `namespace` | `POD_NAMESPACE`, supplied by both deployments through the downward api |
+| `grantNamespace` | `escalation-grants`, separate from the server namespace |
+| `listen` | `:8080` |
+| `clockSkewSeconds` | `30` |
+| `issuedCredentials.caFile` | `/var/run/secrets/kubernetes.io/serviceaccount/ca.crt` |
+| requester and approver `groupsClaim` | `groups` |
+
+outside kubernetes, set `namespace` explicitly or provide `POD_NAMESPACE`.
+explicit values override defaults. trust, audiences, approvers, scope and grant
+duration are never inferred. review every profile's restrictions and duration.
+referenced roles must already exist; the sample uses an
 operator-created, reviewed `Role` named `escalation-observe` in `default`.
 aggregated cluster roles such as `view` are rejected by the server. use integer
 go durations such as `30m` or `1h30m`.
@@ -61,13 +85,10 @@ validation leeway plus `clockSkewSeconds` (30 by default). durations must fit th
 budget, the 600-second token minimum and one additional second; late pickup is
 rejected rather than extending the deadline. synchronized clocks are required.
 
-set `config.baseURL` to the externally served https origin. provide your own
+set `config.baseURL` to the browser/client-facing https origin. provide your own
 tls ingress or reverse proxy; the chart exposes only a cluster-internal service
-on port 8080. keep `config.listen` on that port. set `config.kubeServer` to an
-api address reachable by clients receiving credentials, not merely a pod-only
-address. `config.kubeCAFile` defaults to the pod's api ca; optional
-`config.kubeTLSName` controls tls server name verification. another ca requires
-an explicitly reviewed additional mount; the minimal chart does not add one.
+on port 8080. keep `config.listen` on that port. `issuedCredentials.server` must
+be reachable by clients receiving credentials, not merely from inside the cluster.
 
 ```sh
 helm upgrade --install escalation ./chart -n escalation \
@@ -76,7 +97,7 @@ helm upgrade --install escalation ./chart -n escalation \
 
 the server receives `--config /etc/escalation/config.yaml`. `/readyz` and `/healthz`
 drive probes; `/metrics` exposes reconciliation errors and overdue cleanup.
-expose only the approval and api routes publicly, not metrics or probes.
+route only approval and api traffic through the chosen gateway, not metrics or probes.
 
 ## use
 

@@ -76,7 +76,7 @@ func newAppFixture(t *testing.T) *appFixture {
 		t.Fatal(err)
 	}
 	p := Profile{Name: "observe-v1", Role: Role{Kind: "Role", Name: "observe"}, Namespaces: []string{"photos"}, RequesterIssuers: []string{f.issuer.server.URL}, ApproverGroups: []string{"operators"}, MaxDuration: "1h", PendingDuration: "15m"}
-	f.app = &App{config: Config{Namespace: "broker", GrantNamespace: "grants", BaseURL: "https://app.example", Audience: "kubernetes", KubeServer: "https://api.example", KubeCAFile: ca, ClockSkewSeconds: 30, Profiles: []Profile{p}}, auth: auth, kube: f.kube, store: newStore(d, "broker"), now: func() time.Time { return f.now }}
+	f.app = &App{config: Config{Namespace: "broker", GrantNamespace: "grants", BaseURL: "https://app.example", IssuedCredentials: IssuedCredentialsConfig{Audience: "kubernetes", Server: "https://api.example", CAFile: ca}, ClockSkewSeconds: 30, Profiles: []Profile{p}}, auth: auth, kube: f.kube, store: newStore(d, "broker"), now: func() time.Time { return f.now }}
 	f.handler = f.app.handler()
 	return f
 }

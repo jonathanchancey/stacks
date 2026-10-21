@@ -22,18 +22,22 @@ const ownership = group + "/request"
 const finalizer = group + "/cleanup"
 
 type Config struct {
-	Listen           string         `json:"listen"`
-	BaseURL          string         `json:"baseURL"`
-	Namespace        string         `json:"namespace"`
-	GrantNamespace   string         `json:"grantNamespace"`
-	Audience         string         `json:"audience"`
-	KubeServer       string         `json:"kubeServer"`
-	KubeCAFile       string         `json:"kubeCAFile"`
-	KubeTLSName      string         `json:"kubeTLSName,omitempty"`
-	ClockSkewSeconds int            `json:"clockSkewSeconds"`
-	Issuers          []IssuerConfig `json:"issuers"`
-	Human            HumanConfig    `json:"human"`
-	Profiles         []Profile      `json:"profiles"`
+	Listen            string                  `json:"listen"`
+	BaseURL           string                  `json:"baseURL"`
+	Namespace         string                  `json:"namespace"`
+	GrantNamespace    string                  `json:"grantNamespace"`
+	ClockSkewSeconds  int                     `json:"clockSkewSeconds"`
+	Requesters        []IssuerConfig          `json:"requesters"`
+	ApproverLogin     HumanConfig             `json:"approverLogin"`
+	IssuedCredentials IssuedCredentialsConfig `json:"issuedCredentials"`
+	Profiles          []Profile               `json:"profiles"`
+}
+
+type IssuedCredentialsConfig struct {
+	Audience string `json:"audience"`
+	Server   string `json:"server"`
+	TLSName  string `json:"tlsName,omitempty"`
+	CAFile   string `json:"caFile"`
 }
 
 type Role struct {
@@ -65,6 +69,26 @@ func loadConfig(path string) (Config, error) {
 	if c.Listen == "" {
 		c.Listen = ":8080"
 	}
+	if c.Namespace == "" {
+		c.Namespace = os.Getenv("POD_NAMESPACE")
+	}
+	if c.GrantNamespace == "" {
+		c.GrantNamespace = "escalation-grants"
+	}
+	if c.ClockSkewSeconds == 0 {
+		c.ClockSkewSeconds = 30
+	}
+	if c.IssuedCredentials.CAFile == "" {
+		c.IssuedCredentials.CAFile = "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
+	}
+	for i := range c.Requesters {
+		if c.Requesters[i].GroupsClaim == "" {
+			c.Requesters[i].GroupsClaim = "groups"
+		}
+	}
+	if c.ApproverLogin.GroupsClaim == "" {
+		c.ApproverLogin.GroupsClaim = "groups"
+	}
 	c.BaseURL = strings.TrimSuffix(c.BaseURL, "/")
 	if err = c.validate(); err != nil {
 		return c, err
@@ -77,7 +101,7 @@ func (c Config) budget() time.Duration { return time.Duration(60+c.ClockSkewSeco
 func (c Config) validate() error {
 	for _, ns := range []string{c.Namespace, c.GrantNamespace} {
 		if len(validation.IsDNS1123Label(ns)) != 0 {
-			return errors.New("invalid service or grant namespace")
+			return errors.New("invalid service or grant namespace; set namespace or POD_NAMESPACE for the server")
 		}
 	}
 	if c.Namespace == c.GrantNamespace {
@@ -86,20 +110,23 @@ func (c Config) validate() error {
 	if c.ClockSkewSeconds < 1 || c.ClockSkewSeconds > 300 {
 		return errors.New("clockSkewSeconds must be between 1 and 300")
 	}
-	for _, raw := range []string{c.BaseURL, c.KubeServer} {
+	for _, raw := range []string{c.BaseURL, c.IssuedCredentials.Server} {
 		u, err := url.Parse(raw)
 		if err != nil || u.Host == "" || u.User != nil || u.RawQuery != "" || u.Fragment != "" || (u.Scheme != "https" && !(u.Scheme == "http" && (u.Hostname() == "127.0.0.1" || u.Hostname() == "localhost"))) {
-			return errors.New("baseURL and kubeServer require https (http allowed only on loopback)")
+			return errors.New("baseURL and issuedCredentials.server require https (http allowed only on loopback)")
 		}
 	}
-	if c.Audience == "" || c.KubeCAFile == "" || len(c.Issuers) == 0 || len(c.Profiles) == 0 {
-		return errors.New("audience, kubeCAFile, issuers and profiles are required")
+	if c.IssuedCredentials.Audience == "" || len(c.Requesters) == 0 || len(c.Profiles) == 0 {
+		return errors.New("issuedCredentials.audience, requesters and profiles are required")
 	}
-	if c.Human.URL == "" || c.Human.ClientID == "" || c.Human.GroupsClaim == "" {
-		return errors.New("human issuer, clientID and groupsClaim are required")
+	if c.ApproverLogin.URL == "" || c.ApproverLogin.ClientID == "" {
+		return errors.New("approverLogin url and clientID are required")
 	}
 	issuers := map[string]bool{}
-	for _, i := range c.Issuers {
+	for _, i := range c.Requesters {
+		if !validAuthURL(i.URL) || i.Audience == "" {
+			return errors.New("each requester requires a trusted issuer url and explicit audience")
+		}
 		if issuers[i.URL] {
 			return errors.New("requester issuers must have unique urls")
 		}
@@ -126,7 +153,7 @@ func (c Config) validate() error {
 			}
 		}
 		for _, issuer := range p.RequesterIssuers {
-			if !slices.ContainsFunc(c.Issuers, func(i IssuerConfig) bool { return i.URL == issuer }) {
+			if !slices.ContainsFunc(c.Requesters, func(i IssuerConfig) bool { return i.URL == issuer }) {
 				return errors.New("profile references unknown requester issuer")
 			}
 		}

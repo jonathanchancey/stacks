@@ -1,8 +1,8 @@
 {{- if .Values.enabled }}
-{{- if ne .Values.config.namespace .Release.Namespace }}
+{{- if and .Values.config.namespace (ne .Values.config.namespace .Release.Namespace) }}
 {{- fail "config.namespace must equal the release namespace" }}
 {{- end }}
-{{- if eq .Values.config.grantNamespace .Release.Namespace }}
+{{- if eq (.Values.config.grantNamespace | default "escalation-grants") .Release.Namespace }}
 {{- fail "config.grantNamespace must be separate from the server namespace" }}
 {{- end }}
 {{- $secret := required "existingSecret is required when enabled" .Values.existingSecret }}
@@ -50,6 +50,11 @@ spec:
           image: {{ printf "%s:%s" .Values.image.repository .Values.image.tag | quote }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args: [--config, /etc/escalation/config.yaml]
+          env:
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
           ports:
             - name: http
               containerPort: 8080

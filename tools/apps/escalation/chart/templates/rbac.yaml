@@ -1,5 +1,6 @@
 {{- if .Values.enabled }}
 {{- $root := . }}
+{{- $grantNamespace := .Values.config.grantNamespace | default "escalation-grants" }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
@@ -28,7 +29,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: {{ .Release.Namespace }}-{{ .Release.Name }}-grants
-  namespace: {{ .Values.config.grantNamespace }}
+  namespace: {{ $grantNamespace }}
 rules:
   - apiGroups: [""]
     resources: [serviceaccounts]
@@ -41,7 +42,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: {{ .Release.Namespace }}-{{ .Release.Name }}-grants
-  namespace: {{ .Values.config.grantNamespace }}
+  namespace: {{ $grantNamespace }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -55,7 +56,7 @@ subjects:
 {{- if and .cluster (not $root.Values.clusterGrants) }}
 {{- fail "cluster profiles require clusterGrants=true" }}
 {{- end }}
-{{- $namespaces = concat $namespaces .namespaces }}
+{{- $namespaces = concat $namespaces (.namespaces | default list) }}
 {{- end }}
 {{- range $namespace := uniq $namespaces }}
 ---

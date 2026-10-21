@@ -6,33 +6,24 @@ image:
 existingSecret: ""
 clusterGrants: false
 config:
-  listen: ":8080"
   baseURL: https://escalation.example.org
-  namespace: escalation
-  grantNamespace: escalation-grants
-  audience: https://kubernetes.default.svc
-  kubeServer: https://kubernetes.default.svc
-  kubeCAFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-  clockSkewSeconds: 30
-  issuers:
+  requesters:
     - url: https://workloads.example.org
       audience: escalation
-      requiredClaims: {}
-      groupsClaim: groups
-  human:
+  approverLogin:
     url: https://login.example.org
-    groupsClaim: groups
     clientID: escalation
     clientSecretFile: /run/oidc/client-secret
+  issuedCredentials:
+    audience: https://kubernetes.default.svc
+    server: https://kubernetes.default.svc
   profiles:
     - name: observe-v1
       role:
         kind: Role
         name: escalation-observe
       namespaces: [default]
-      cluster: false
       requesterIssuers: [https://workloads.example.org]
-      requesterGroups: []
       approverGroups: [approvers]
       maxDuration: 30m
       pendingDuration: 15m

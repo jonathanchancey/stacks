@@ -54,7 +54,7 @@ jobs:
           helm lint chart --namespace escalation --set enabled=true --set existingSecret=oidc
           helm template escalation chart --namespace escalation --include-crds --set enabled=true --set existingSecret=oidc > /tmp/escalation.yaml
           test -z "$(helm template escalation chart)"
-          if helm template escalation chart --namespace wrong --set enabled=true --set existingSecret=oidc; then exit 1; fi
+          if helm template escalation chart --namespace wrong --set config.namespace=escalation --set enabled=true --set existingSecret=oidc; then exit 1; fi
       - name: build image without publishing
         run: docker build -t escalation:ci .
   kubernetes:

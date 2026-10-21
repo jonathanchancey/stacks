@@ -63,8 +63,8 @@ func TestKubernetesGrant(t *testing.T) {
 	a.now = time.Now
 	a.config.Namespace = "escalation"
 	a.config.GrantNamespace = "escalation-grants"
-	a.config.Audience = "https://kubernetes.default.svc"
-	a.config.KubeServer = admin.Host
+	a.config.IssuedCredentials.Audience = "https://kubernetes.default.svc"
+	a.config.IssuedCredentials.Server = admin.Host
 	p := &a.config.Profiles[0]
 	p.Role.Name = "escalation-observe"
 	p.Namespaces = []string{"default"}
@@ -113,7 +113,7 @@ func TestKubernetesGrant(t *testing.T) {
 		t.Fatalf("grant can change rbac: %v", err)
 	}
 	seconds := int64(600)
-	tokenRequest := &authv1.TokenRequest{Spec: authv1.TokenRequestSpec{Audiences: []string{a.config.Audience}, ExpirationSeconds: &seconds}}
+	tokenRequest := &authv1.TokenRequest{Spec: authv1.TokenRequestSpec{Audiences: []string{a.config.IssuedCredentials.Audience}, ExpirationSeconds: &seconds}}
 	if _, err = grant.CoreV1().ServiceAccounts("escalation-grants").CreateToken(ctx, r.grantName(), tokenRequest, metav1.CreateOptions{}); !apierrors.IsForbidden(err) {
 		t.Fatalf("grant can mint replacement credentials: %v", err)
 	}
