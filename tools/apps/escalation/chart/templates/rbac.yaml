@@ -1,0 +1,126 @@
+{{- if .Values.enabled }}
+{{- $root := . }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+rules:
+  - apiGroups: [escalation.stacks.dev]
+    resources: [accessrequests, accessrequests/status]
+    verbs: [get, list, watch, create, update, patch, delete]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ .Release.Name }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ .Release.Name }}
+    namespace: {{ .Release.Namespace }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ .Release.Namespace }}-{{ .Release.Name }}-grants
+  namespace: {{ .Values.config.grantNamespace }}
+rules:
+  - apiGroups: [""]
+    resources: [serviceaccounts]
+    verbs: [get, create, delete]
+  - apiGroups: [""]
+    resources: [serviceaccounts/token]
+    verbs: [create]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ .Release.Namespace }}-{{ .Release.Name }}-grants
+  namespace: {{ .Values.config.grantNamespace }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ .Release.Namespace }}-{{ .Release.Name }}-grants
+subjects:
+  - kind: ServiceAccount
+    name: {{ .Release.Name }}
+    namespace: {{ .Release.Namespace }}
+{{- $namespaces := list }}
+{{- range .Values.config.profiles }}
+{{- if and .cluster (not $root.Values.clusterGrants) }}
+{{- fail "cluster profiles require clusterGrants=true" }}
+{{- end }}
+{{- $namespaces = concat $namespaces .namespaces }}
+{{- end }}
+{{- range $namespace := uniq $namespaces }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ $root.Release.Namespace }}-{{ $root.Release.Name }}-bindings
+  namespace: {{ $namespace }}
+rules:
+  - apiGroups: [rbac.authorization.k8s.io]
+    resources: [rolebindings]
+    verbs: [get, create, delete]
+{{- range $root.Values.config.profiles }}
+{{- if and (eq .role.kind "Role") (has $namespace .namespaces) }}
+  - apiGroups: [rbac.authorization.k8s.io]
+    resources: [roles]
+    resourceNames: [{{ .role.name | quote }}]
+    verbs: [get, bind]
+{{- end }}
+{{- end }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ $root.Release.Namespace }}-{{ $root.Release.Name }}-bindings
+  namespace: {{ $namespace }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ $root.Release.Namespace }}-{{ $root.Release.Name }}-bindings
+subjects:
+  - kind: ServiceAccount
+    name: {{ $root.Release.Name }}
+    namespace: {{ $root.Release.Namespace }}
+{{- end }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ .Release.Namespace }}-{{ .Release.Name }}
+rules:
+{{- range .Values.config.profiles }}
+{{- if eq .role.kind "ClusterRole" }}
+  - apiGroups: [rbac.authorization.k8s.io]
+    resources: [clusterroles]
+    resourceNames: [{{ .role.name | quote }}]
+    verbs: [get, bind]
+{{- end }}
+{{- end }}
+{{- if .Values.clusterGrants }}
+  - apiGroups: [rbac.authorization.k8s.io]
+    resources: [clusterrolebindings]
+    verbs: [get, create, delete]
+{{- end }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ .Release.Namespace }}-{{ .Release.Name }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ .Release.Namespace }}-{{ .Release.Name }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ .Release.Name }}
+    namespace: {{ .Release.Namespace }}
+{{- end }}
