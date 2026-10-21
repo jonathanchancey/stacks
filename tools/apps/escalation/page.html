@@ -9,7 +9,7 @@
 <main>
 <header><a href="/">temporary access</a><form method="post" action="/logout"><input type="hidden" name="csrf" value="{{.CSRF}}"><button>sign out</button></form></header>
 {{if .Request}}
-<div class="eyebrow">review a request</div>
+<div class="eyebrow">access request</div>
 <h1>{{.Request.Spec.Profile.Name}}</h1>
 <span class="status">{{if .Request.Status.Phase}}{{.Request.Status.Phase}}{{else}}pending approval{{end}}</span>
 <p class="muted">{{.Request.Status.Message}}</p>
@@ -18,20 +18,20 @@
 <dt>scope</dt><dd>{{if .Request.Spec.Profile.Cluster}}whole cluster{{else}}{{.Request.Spec.Namespace}}{{end}}</dd>
 <dt>role</dt><dd>{{.Request.Spec.Profile.Role.Kind}} / {{.Request.Spec.Profile.Role.Name}}</dd>
 <dt>duration</dt><dd>{{.Request.Spec.DurationSeconds}} seconds from approval</dd>
-<dt>deadline</dt><dd>{{time .Request.Status.Deadline}}</dd>
+<dt>expires</dt><dd>{{time .Request.Status.Deadline}}</dd>
 <dt>reason</dt><dd>{{.Request.Spec.Reason}}</dd>
 <dt>grant account</dt><dd>grant-{{.Request.UID}}</dd>
 </dl></section>
-<section class="card"><h2>exact role permissions</h2><pre>{{json .Request.Spec.Rules}}</pre></section>
-<p class="notice">approval issues a separate credential. kubernetes enforces its expiry even if this service is offline. existing streams and prior changes may outlast the grant.</p>
+<section class="card"><h2>role permissions</h2><pre>{{json .Request.Spec.Rules}}</pre></section>
+<p class="notice">access expires automatically. expiry does not end existing connections or undo changes.</p>
 <form method="post"><input type="hidden" name="csrf" value="{{.CSRF}}"><input type="hidden" name="version" value="{{.Request.ResourceVersion}}"><input type="hidden" name="scopeHash" value="{{.Request.Spec.ScopeHash}}"><div class="actions">
 {{if .CanApprove}}<button class="primary" name="decision" value="approve">approve access</button><button name="decision" value="deny">deny</button>{{end}}
 <button name="decision" value="revoke">revoke / withdraw</button></div></form>
-<p><small>grant credentials are available only to the original requester, never on this page.</small></p>
+<p><small>only the requester can retrieve credentials.</small></p>
 {{else}}
-<div class="eyebrow">temporary kubernetes access</div><h1>requests to review</h1>
-<p class="muted">signed in as {{.Identity.Subject}}. review the scope before approving; approval grants access, not permission for destructive work.</p>
-<section class="card">{{range .Items}}<a class="request-link" href="/requests/{{.Name}}">{{.Spec.Profile.Name}} <span class="status">{{if .Status.Phase}}{{.Status.Phase}}{{else}}pending{{end}}</span><small>{{.Spec.Requester.Subject}} · {{if .Spec.Profile.Cluster}}whole cluster{{else}}{{.Spec.Namespace}}{{end}}</small></a>{{else}}<h2>nothing to review</h2><p class="muted">eligible requests will appear here. you can also open an approval link directly.</p>{{end}}</section>
+<h1>access requests</h1>
+<p class="muted">signed in as {{.Identity.Subject}}</p>
+<section class="card">{{range .Items}}<a class="request-link" href="/requests/{{.Name}}">{{.Spec.Profile.Name}} <span class="status">{{if .Status.Phase}}{{.Status.Phase}}{{else}}pending{{end}}</span><small>{{.Spec.Requester.Subject}} · {{if .Spec.Profile.Cluster}}whole cluster{{else}}{{.Spec.Namespace}}{{end}}</small></a>{{else}}<p class="muted">no requests</p>{{end}}</section>
 {{if .Next}}<a href="/?continue={{.Next}}">next page</a>{{end}}
 {{end}}
 </main>

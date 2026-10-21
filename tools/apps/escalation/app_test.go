@@ -201,7 +201,7 @@ func TestBrowserApprovalAndCSRF(t *testing.T) {
 	if w.Header().Get("Referrer-Policy") != "same-origin" {
 		t.Fatal("browser forms need a same-origin Origin header for csrf validation")
 	}
-	for _, want := range []string{"photos", "inspect database storage", "exact role permissions", "approve access", "1800 seconds"} {
+	for _, want := range []string{"photos", "inspect database storage", "role permissions", "approve access", "1800 seconds"} {
 		if !strings.Contains(w.Body.String(), want) {
 			t.Fatalf("page missing %q", want)
 		}
