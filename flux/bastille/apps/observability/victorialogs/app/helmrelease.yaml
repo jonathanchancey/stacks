@@ -31,14 +31,14 @@ spec:
       mode: statefulSet
       replicaCount: 1
       retentionPeriod: 90d
-      retentionMaxDiskUsagePercent: 75
+      retentionMaxDiskUsagePercent: 90
       extraArgs:
-        storage.minFreeDiskSpaceBytes: 40GiB
+        storage.minFreeDiskSpaceBytes: 1GiB
       persistentVolume:
         enabled: true
         storageClassName: ceph-block
         accessModes: [ReadWriteOnce]
-        size: 200Gi
+        size: 50Gi
       resources:
         requests:
           cpu: 100m

@@ -30,12 +30,12 @@ spec:
       replicaCount: 1
       retentionPeriod: 90d
       extraArgs:
-        storage.minFreeDiskSpaceBytes: 40GiB
+        storage.minFreeDiskSpaceBytes: 1GiB
       persistentVolume:
         enabled: true
         storageClassName: ceph-block
         accessModes: [ReadWriteOnce]
-        size: 200Gi
+        size: 100Gi
       resources:
         requests:
           cpu: 100m
