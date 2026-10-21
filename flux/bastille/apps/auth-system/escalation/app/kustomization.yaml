@@ -1,0 +1,24 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kustomize.config.k8s.io/kustomization_v1beta1.json
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+# no namespace transformer: grant rbac deliberately spans the server and grant namespaces.
+# rbac.yaml and policy.yaml are rendered from the service chart using configmap.yaml's config
+# and clusterGrants=true; regenerate both when profiles, grant namespace or audience change.
+resources:
+  - ../../../../../../tools/apps/escalation/chart/crds/accessrequests.yaml
+  - ./namespace.yaml
+  - ./helmrelease.yaml
+  - ./configmap.yaml
+  - ./rbac.yaml
+  - ./policy.yaml
+  - ./storage-observe.yaml
+patches:
+  - target:
+      kind: CustomResourceDefinition
+      name: accessrequests.escalation.stacks.dev
+    patch: |-
+      - op: add
+        path: /metadata/annotations
+        value:
+          kustomize.toolkit.fluxcd.io/prune: disabled

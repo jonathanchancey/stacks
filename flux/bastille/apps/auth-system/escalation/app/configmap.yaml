@@ -1,0 +1,42 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: escalation-config
+  namespace: auth-system
+data:
+  config.yaml: |
+    listen: ":8080"
+    baseURL: https://escalation.chancey.dev
+    namespace: auth-system
+    grantNamespace: escalation-grants
+    audience: https://kube.bastille.chancey.dev:6443
+    # issued kubeconfigs use the same private tunnel as .agents/resume.
+    kubeServer: https://127.0.0.1:6443
+    kubeTLSName: kube.bastille.chancey.dev
+    kubeCAFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+    clockSkewSeconds: 30
+    issuers:
+      - url: https://ampcode.com/api/workload-identity
+        audience: https://escalation.chancey.dev
+        requiredClaims:
+          project_id: e75b009b-c969-40a8-abfd-bf0eb70b3d7b
+          token_use: exchanged
+        groupsClaim: groups
+    human:
+      url: https://idm.chancey.dev/oauth2/openid/escalation
+      groupsClaim: groups
+      clientID: escalation
+      clientSecretFile: /run/oidc/client-secret
+    profiles:
+      - name: storage-observe-v1
+        role:
+          kind: ClusterRole
+          name: escalation-storage-observe
+        namespaces: []
+        cluster: true
+        requesterIssuers: [https://ampcode.com/api/workload-identity]
+        requesterGroups: []
+        approverGroups: [escalation_approvers]
+        maxDuration: 30m
+        pendingDuration: 15m

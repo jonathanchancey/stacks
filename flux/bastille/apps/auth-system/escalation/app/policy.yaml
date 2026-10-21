@@ -1,0 +1,73 @@
+---
+# Source: escalation/templates/policy.yaml
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: auth-system-escalation-grants
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+      - apiGroups: [""]
+        apiVersions: [v1]
+        operations: [CREATE, UPDATE, DELETE]
+        resources: [serviceaccounts]
+      - apiGroups: [rbac.authorization.k8s.io]
+        apiVersions: [v1]
+        operations: [CREATE, UPDATE, DELETE]
+        resources: [rolebindings, clusterrolebindings]
+  matchConditions:
+    - name: server-identity
+      expression: request.userInfo.username == "system:serviceaccount:auth-system:escalation"
+  variables:
+    - name: target
+      expression: "request.operation == 'DELETE' ? oldObject : object"
+  validations:
+    - expression: >-
+        (has(variables.target.metadata.labels) && 'escalation.stacks.dev/request' in variables.target.metadata.labels && variables.target.metadata.labels['escalation.stacks.dev/request'].matches('^[0-9a-f-]{36}$') && variables.target.metadata.name == 'grant-' + variables.target.metadata.labels['escalation.stacks.dev/request'])
+      message: grant objects require deterministic names and request ownership labels
+    - expression: >-
+        request.resource.resource != 'serviceaccounts' || (request.namespace == "escalation-grants" && has(variables.target.automountServiceAccountToken) && !variables.target.automountServiceAccountToken)
+      message: grant service accounts must disable token automount in the grant namespace
+    - expression: >-
+        request.resource.resource == 'serviceaccounts' || (has(variables.target.subjects) && size(variables.target.subjects) == 1 && variables.target.subjects[0].kind == 'ServiceAccount' && variables.target.subjects[0].namespace == "escalation-grants" && variables.target.subjects[0].name == variables.target.metadata.name && variables.target.roleRef.apiGroup == 'rbac.authorization.k8s.io' && ( false || (variables.target.roleRef.kind == "ClusterRole" && variables.target.roleRef.name == "escalation-storage-observe" && ((request.resource.resource == 'rolebindings' && request.namespace in []) || request.resource.resource == 'clusterrolebindings' )) ))
+      message: bindings must use a single matching grant subject and an allowlisted profile role and scope
+---
+# Source: escalation/templates/policy.yaml
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: auth-system-escalation-tokens
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+      - apiGroups: [""]
+        apiVersions: [v1]
+        operations: [CREATE]
+        resources: [serviceaccounts/token]
+  matchConditions:
+    - name: server-identity
+      expression: request.userInfo.username == "system:serviceaccount:auth-system:escalation"
+  validations:
+    - expression: >-
+        (request.namespace == "escalation-grants" && request.name.matches('^grant-[0-9a-f-]{36}$') && object.spec.audiences == ["https://kube.bastille.chancey.dev:6443"] && (!has(object.spec.boundObjectRef) || object.spec.boundObjectRef == null) && has(object.spec.expirationSeconds) && object.spec.expirationSeconds >= 600 && (false || object.spec.expirationSeconds <= duration("30m").getSeconds() ))
+      message: token requests must target grant accounts with the configured audience and bounded lifetime
+---
+# Source: escalation/templates/policy.yaml
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: auth-system-escalation-tokens
+spec:
+  policyName: auth-system-escalation-tokens
+  validationActions: [Deny]
+---
+# Source: escalation/templates/policy.yaml
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: auth-system-escalation-grants
+spec:
+  policyName: auth-system-escalation-grants
+  validationActions: [Deny]
