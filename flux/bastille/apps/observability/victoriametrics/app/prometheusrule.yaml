@@ -1,0 +1,26 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/monitoring.coreos.com/prometheusrule_v1.json
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: victoria-storage
+spec:
+  groups:
+    - name: victoria-storage
+      rules:
+        - alert: VictoriaStorageSpaceLow
+          expr: kubelet_volume_stats_available_bytes{namespace="observability",persistentvolumeclaim=~"server-volume-victoria(metrics|logs)-0"} / kubelet_volume_stats_capacity_bytes{namespace="observability",persistentvolumeclaim=~"server-volume-victoria(metrics|logs)-0"} < 0.1
+          for: 15m
+          labels:
+            severity: warning
+          annotations:
+            summary: 'victoria volume {{ $labels.persistentvolumeclaim }} has less than 10% free'
+            description: 'check ingestion growth and expand storage before the 1GiB write cutoff; logs may expire early above 90% disk usage. metrics retention is time-based only.'
+        - alert: VictoriaStorageWriteCutoff
+          expr: kubelet_volume_stats_available_bytes{namespace="observability",persistentvolumeclaim=~"server-volume-victoria(metrics|logs)-0"} < 1024 * 1024 * 1024
+          for: 1m
+          labels:
+            severity: critical
+          annotations:
+            summary: 'victoria volume {{ $labels.persistentvolumeclaim }} is below the write cutoff'
+            description: 'ingestion may be rejected; restore free space, check sender retry buffers, and verify ingestion resumes. do not delete live data files.'
