@@ -27,6 +27,8 @@ preUpgradeHook:
   enabled: false
 localpv-provisioner:
   enabled: true
+  analytics:
+    enabled: false
   helperPod:
     image:
       registry: quay.io
