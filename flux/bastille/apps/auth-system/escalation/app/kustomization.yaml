@@ -10,6 +10,7 @@ resources:
   - ./rbac.yaml
   - ./policy.yaml
   - ./storage-observe.yaml
+  - ./secrets.sops.yaml
 patches:
   - target:
       kind: CustomResourceDefinition
