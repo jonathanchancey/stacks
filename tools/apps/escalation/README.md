@@ -97,6 +97,8 @@ helm upgrade --install escalation ./chart -n escalation \
 
 the server receives `--config /etc/escalation/config.yaml`. `/readyz` and `/healthz`
 drive probes; `/metrics` exposes reconciliation errors and overdue cleanup.
+readiness requires a recent complete request scan; an individual request failure
+does not take the service offline. inspect error logs and metrics for those failures.
 route only approval and api traffic through the chosen gateway, not metrics or probes.
 
 ## use
@@ -133,8 +135,11 @@ use `--help` after each subcommand for flags. the json api is:
 
 api callers use bearer authentication; human writes require `X-CSRF-Token` or the
 embedded form token. retry creation with the same idempotency key and body. after
-`409`, reload state rather than repeating a stale decision. credential retries can
-mint another token for the same account, never extend the original deadline.
+`409`, reload state rather than repeating a stale decision. credential pickup
+returns `409` while awaiting approval or provisioning, and `410` when the request
+or pickup window has ended; create a new request instead of extending it. browser
+errors offer a reload link to check whether a decision was saved. credential retries
+can mint another token for the same account, never extend the original deadline.
 authenticated requests are limited to 60 per identity per minute with at most
 1024 active rate-limit entries. completed records are removed seven days after
 creation; preserve protected structured audit logs externally when needed longer.
@@ -183,4 +188,9 @@ cluster before exposing it to real users. maintain policy/rbac templates alongsi
 profile changes. the crd lives in `chart/crds/accessrequests.yaml`; keep its
 bounded structural spec schema in sync with `Spec`, `Profile`, and `Identity`
 in the go package. unknown spec fields are pruned and the complete stored spec
-is immutable. review schema limits before adding larger profiles or roles.
+is immutable. keep the flux copy in sync, including each field's immutable
+comparison. nullable fields need explicit presence checks: whole-object cel
+equality can reject unchanged legacy records. `__namespace__` is cel's escaped
+spelling for `namespace`. schema upgrades must preserve stored specs and hashes;
+apply the crd before the server upgrade so legacy status and cleanup can recover.
+review schema limits before adding larger profiles or roles.

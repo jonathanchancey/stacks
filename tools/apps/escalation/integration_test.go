@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"reflect"
 	"strings"
 	"testing"
 	"time"
@@ -15,6 +16,7 @@ import (
 	rbac "k8s.io/api/rbac/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
@@ -69,6 +71,158 @@ func TestKubernetesGrant(t *testing.T) {
 	p.Role.Name = "escalation-observe"
 	p.Namespaces = []string{"default"}
 	p.MaxDuration = "30m"
+	if os.Getenv("ESCALATION_TEST_SEED_LEGACY") == "1" {
+		p.Role = Role{Kind: "ClusterRole", Name: "escalation-observe"}
+		p.Cluster, p.Namespaces = true, nil
+		uid, rules, e := a.role(ctx, *p, "")
+		if e != nil {
+			t.Fatal(e)
+		}
+		r, e := a.store.create(ctx, &Request{TypeMeta: metav1.TypeMeta{APIVersion: group + "/v1alpha1", Kind: "AccessRequest"}, ObjectMeta: metav1.ObjectMeta{Name: "legacy-null", Namespace: "escalation"}, Spec: Spec{Requester: Identity{Issuer: "legacy", Subject: "thread"}, Profile: *p, DurationSeconds: 720, Reason: "legacy snapshot", PendingUntil: time.Now().Add(time.Hour), RoleUID: uid, Rules: rules, ScopeHash: "legacy-scope", IdempotencyHash: "legacy-key"}})
+		if e != nil {
+			t.Fatal(e)
+		}
+		r.Status.Phase = "pending"
+		if _, e = a.store.status(ctx, r); !apierrors.IsInvalid(e) {
+			t.Fatalf("old schema did not reproduce null status failure: %v", e)
+		}
+		r.Finalizers = []string{finalizer}
+		if _, e = a.store.update(ctx, r); !apierrors.IsInvalid(e) {
+			t.Fatalf("old schema did not reproduce null finalizer failure: %v", e)
+		}
+		r.Name, r.ResourceVersion, r.UID = "legacy-expired", "", ""
+		r.Status = Status{}
+		r.Spec.PendingUntil = time.Now().Add(-time.Hour)
+		if _, e = a.store.create(ctx, r); e != nil {
+			t.Fatal(e)
+		}
+		return
+	}
+	t.Run("legacy-expired-cleanup", func(t *testing.T) {
+		r, e := a.store.get(ctx, "legacy-expired")
+		if apierrors.IsNotFound(e) {
+			t.Skip("run test/e2e.sh to seed the old-schema snapshot")
+		}
+		if e != nil {
+			t.Fatal(e)
+		}
+		before := digest(r.Spec)
+		if e = a.reconcile(ctx, r); e != nil {
+			t.Fatal(e)
+		}
+		r, e = a.store.get(ctx, r.Name)
+		if e != nil {
+			t.Fatal(e)
+		}
+		if r.Status.Phase != "expired" || len(r.Finalizers) != 0 || digest(r.Spec) != before {
+			t.Fatalf("expired snapshot not recovered without mutation: %+v", r)
+		}
+		if e = a.store.client.Delete(ctx, r.Name, metav1.DeleteOptions{}); e != nil {
+			t.Fatal(e)
+		}
+	})
+	for _, tc := range []struct {
+		name       string
+		namespaces []string
+	}{{"omitted", nil}, {"empty", []string{}}, {"legacy", nil}} {
+		t.Run("cluster-"+tc.name, func(t *testing.T) {
+			profile := *p
+			defer func() { *p = profile }()
+			p.Role = Role{Kind: "ClusterRole", Name: "escalation-observe"}
+			p.Cluster, p.Namespaces = true, tc.namespaces
+			var r *Request
+			var e error
+			if tc.name == "legacy" {
+				r, e = a.store.get(ctx, "legacy-null")
+				if apierrors.IsNotFound(e) {
+					t.Skip("run test/e2e.sh to seed the old-schema snapshot")
+				}
+				if e == nil {
+					*p = r.Spec.Profile
+					p.Namespaces = []string{}
+				}
+			} else {
+				r, e = a.create(ctx, Identity{Issuer: f.issuer.server.URL, Subject: "cluster-thread"}, createInput{p.Name, "", "12m", "cluster scope test"}, tc.name+time.Now().Format(time.RFC3339Nano))
+			}
+			if e != nil {
+				t.Fatal(e)
+			}
+			t.Cleanup(func() {
+				_ = a.store.client.Delete(ctx, r.Name, metav1.DeleteOptions{})
+				if current, err := a.store.get(ctx, r.Name); err == nil {
+					_ = a.reconcile(ctx, current)
+				}
+			})
+			before, e := a.store.client.Get(ctx, r.Name, metav1.GetOptions{})
+			if e != nil {
+				t.Fatal(e)
+			}
+			assertImmutableSpec(t, ctx, a.store, before)
+			if tc.name == "empty" {
+				// raw snapshots retain optional empty arrays that go's omitempty drops.
+				for _, rules := range []any{nil, []any{}} {
+					fixture := before.DeepCopy()
+					fixture.SetName("")
+					fixture.SetGenerateName("immutable-presence-")
+					fixture.SetUID("")
+					fixture.SetResourceVersion("")
+					unstructured.RemoveNestedField(fixture.Object, "status")
+					_ = unstructured.SetNestedField(fixture.Object, []any{}, "spec", "profile", "requesterGroups")
+					_ = unstructured.SetNestedField(fixture.Object, rules, "spec", "rules")
+					fixture, e = a.store.client.Create(ctx, fixture, metav1.CreateOptions{})
+					if e != nil {
+						t.Fatal(e)
+					}
+					assertImmutableSpec(t, ctx, a.store, fixture)
+					if e = a.store.client.Delete(ctx, fixture.GetName(), metav1.DeleteOptions{}); e != nil {
+						t.Fatal(e)
+					}
+				}
+			}
+			r, e = a.decide(ctx, Identity{Issuer: "human", Subject: "reviewer", Groups: []string{"operators"}, Human: true}, r, decisionInput{r.ResourceVersion, r.Spec.ScopeHash, "approve"})
+			if e != nil {
+				t.Fatal(e)
+			}
+			if r.Status.Phase != "ready" {
+				t.Fatalf("grant not ready: %+v", r.Status)
+			}
+			credential, e := a.issue(ctx, r)
+			if e != nil {
+				t.Fatal(e)
+			}
+			grantConfig := &rest.Config{Host: admin.Host, BearerToken: credential.Token, TLSClientConfig: rest.TLSClientConfig{CAData: admin.CAData, CAFile: admin.CAFile, Insecure: admin.Insecure}, Timeout: 10 * time.Second}
+			grant, e := kubernetes.NewForConfig(grantConfig)
+			if e != nil {
+				t.Fatal(e)
+			}
+			if _, e = grant.CoreV1().Pods("").List(ctx, metav1.ListOptions{}); e != nil {
+				t.Fatalf("cluster read permission absent: %v", e)
+			}
+			if _, e = grant.CoreV1().Secrets("default").List(ctx, metav1.ListOptions{}); !apierrors.IsForbidden(e) {
+				t.Fatalf("cluster grant can read secrets: %v", e)
+			}
+			r, e = a.revoke(ctx, r.Spec.Requester, r)
+			if e != nil {
+				t.Fatal(e)
+			}
+			after, e := a.store.client.Get(ctx, r.Name, metav1.GetOptions{})
+			if e != nil {
+				t.Fatal(e)
+			}
+			if !reflect.DeepEqual(before.Object["spec"], after.Object["spec"]) {
+				t.Fatal("lifecycle rewrote immutable snapshot")
+			}
+			if len(after.GetFinalizers()) != 0 {
+				t.Fatal("finalizer not removed")
+			}
+			if _, e = client.RbacV1().ClusterRoleBindings().Get(ctx, r.grantName(), metav1.GetOptions{}); !apierrors.IsNotFound(e) {
+				t.Fatalf("binding cleanup incomplete: %v", e)
+			}
+			if _, e = client.CoreV1().ServiceAccounts("escalation-grants").Get(ctx, r.grantName(), metav1.GetOptions{}); !apierrors.IsNotFound(e) {
+				t.Fatalf("account cleanup incomplete: %v", e)
+			}
+		})
+	}
 	r, err := a.create(ctx, Identity{Issuer: f.issuer.server.URL, Subject: "integration-thread"}, createInput{p.Name, "default", "12m", "disposable permission and expiry test"}, time.Now().Format(time.RFC3339Nano))
 	if err != nil {
 		t.Fatal(err)
@@ -86,6 +240,11 @@ func TestKubernetesGrant(t *testing.T) {
 	if r.Status.Phase != "ready" {
 		t.Fatalf("grant not ready: %+v", r.Status)
 	}
+	uRequest, err := a.store.client.Get(ctx, r.Name, metav1.GetOptions{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	assertImmutableSpec(t, ctx, a.store, uRequest)
 	credential, err := a.issue(ctx, r)
 	if err != nil {
 		t.Fatal(err)
@@ -177,5 +336,66 @@ func TestKubernetesGrant(t *testing.T) {
 	req.Header.Set("Authorization", "Bearer "+credential.Token)
 	if _, err = a.auth.Authenticate(req); err == nil {
 		t.Fatal("grant token became requester identity")
+	}
+}
+
+// mutate each serialized field independently, without recomputing related hashes.
+// this catches a missing comparison even when another field normally changes too.
+func assertImmutableSpec(t *testing.T, ctx context.Context, store *Store, original *unstructured.Unstructured) {
+	t.Helper()
+	mutations := map[string]any{
+		"requester.issuer": "different", "requester.subject": "different", "requester.groups": []any{"different"},
+		"namespace": "different", "durationSeconds": int64(1), "reason": "different",
+		"pendingUntil": "2099-01-01T00:00:00Z", "roleUID": "different",
+		"rules": []any{}, "scopeHash": "different", "idempotencyHash": "different",
+		"profile.name": "different", "profile.role.name": "different",
+		"profile.cluster":          !original.Object["spec"].(map[string]any)["profile"].(map[string]any)["cluster"].(bool),
+		"profile.requesterIssuers": []any{"different"}, "profile.requesterGroups": []any{},
+		"profile.approverGroups": []any{"different"}, "profile.maxDuration": "1m", "profile.pendingDuration": "1m",
+	}
+	kind, _, _ := unstructured.NestedString(original.Object, "spec", "profile", "role", "kind")
+	if kind == "Role" {
+		mutations["profile.role.kind"] = "ClusterRole"
+	} else {
+		mutations["profile.role.kind"] = "Role"
+	}
+	rules, _, _ := unstructured.NestedSlice(original.Object, "spec", "rules")
+	if len(rules) == 0 {
+		if rules == nil {
+			mutations["rules"] = []any{}
+		} else {
+			mutations["rules"] = nil
+		}
+	}
+	_, present, _ := unstructured.NestedSlice(original.Object, "spec", "profile", "requesterGroups")
+	if present {
+		delete(mutations, "profile.requesterGroups")
+	}
+	ns, _, _ := unstructured.NestedSlice(original.Object, "spec", "profile", "namespaces")
+	if ns == nil {
+		mutations["profile.namespaces"] = []any{}
+	} else {
+		mutations["profile.namespaces"] = nil
+	}
+	for field, value := range mutations {
+		t.Run("immutable-"+field, func(t *testing.T) {
+			changed := original.DeepCopy()
+			path := append([]string{"spec"}, strings.Split(field, ".")...)
+			if err := unstructured.SetNestedField(changed.Object, value, path...); err != nil {
+				t.Fatal(err)
+			}
+			if _, err := store.client.Update(ctx, changed, metav1.UpdateOptions{}); !apierrors.IsInvalid(err) || !strings.Contains(err.Error(), "spec is immutable") {
+				t.Fatalf("mutation accepted: %v", err)
+			}
+		})
+	}
+	if present {
+		t.Run("immutable-requesterGroups-presence", func(t *testing.T) {
+			changed := original.DeepCopy()
+			unstructured.RemoveNestedField(changed.Object, "spec", "profile", "requesterGroups")
+			if _, err := store.client.Update(ctx, changed, metav1.UpdateOptions{}); !apierrors.IsInvalid(err) || !strings.Contains(err.Error(), "spec is immutable") {
+				t.Fatalf("optional presence mutation accepted: %v", err)
+			}
+		})
 	}
 }
