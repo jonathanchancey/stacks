@@ -55,15 +55,25 @@ func (a *App) role(ctx context.Context, p Profile, ns string) (types.UID, []rbac
 
 func (a *App) unchanged(ctx context.Context, r *Request) error {
 	index := slices.IndexFunc(a.config.Profiles, func(p Profile) bool { return p.Name == r.Spec.Profile.Name })
-	if index < 0 || digest(a.config.Profiles[index]) != digest(r.Spec.Profile) {
-		return errors.New("profile changed or removed")
+	if index < 0 {
+		return problem(409, "profile changed or removed; request access again")
+	}
+	stored := r.Spec.Profile
+	current := a.config.Profiles[index]
+	// older cluster profiles may store null rather than an empty namespace list.
+	// compare their equivalent scope without rewriting the immutable snapshot.
+	if len(stored.Namespaces) == 0 && len(current.Namespaces) == 0 {
+		stored.Namespaces = current.Namespaces
+	}
+	if digest(current) != digest(stored) {
+		return problem(409, "profile changed or removed; request access again")
 	}
 	uid, rules, err := a.role(ctx, r.Spec.Profile, r.Spec.Namespace)
 	if err != nil {
 		return err
 	}
 	if uid != r.Spec.RoleUID || digest(rules) != digest(r.Spec.Rules) {
-		return errors.New("role changed")
+		return problem(409, "role changed; request access again")
 	}
 	return nil
 }
@@ -312,19 +322,24 @@ func (a *App) run(ctx context.Context) {
 			rs, next, err := a.store.list(scanCtx, 100, cont)
 			if err != nil {
 				errs++
-				slog.Error("request scan failed")
+				slog.Error("request scan failed", "error", err)
 				break
 			}
 			for _, r := range rs {
 				if err = a.reconcile(scanCtx, r); err != nil {
 					errs++
-					slog.Error("grant reconciliation failed", "request", r.Name)
+					slog.Error("grant reconciliation failed", "request", r.Name, "error", err)
 				}
 				if r.Status.Deadline != nil && !a.now().Before(*r.Status.Deadline) && r.Status.Message != "cleanup complete" {
 					overdue++
 				}
 			}
 			if next == "" {
+				// readiness tracks a complete scan, not every grant's success. a bad
+				// record must not hide the endpoints needed to inspect or revoke it.
+				if scanCtx.Err() == nil {
+					a.lastReconcile = a.now()
+				}
 				break
 			}
 			cont = next
@@ -332,9 +347,6 @@ func (a *App) run(ctx context.Context) {
 		cancel()
 		a.reconcileErrors += errs
 		a.overdue = overdue
-		if errs == 0 {
-			a.lastReconcile = a.now()
-		}
 		a.mu.Unlock()
 		select {
 		case <-ctx.Done():
@@ -372,8 +384,11 @@ func tokenExpiry(token string) (time.Time, error) {
 
 func (a *App) issue(ctx context.Context, r *Request) (Credential, error) {
 	var out Credential
-	if r.Status.Deadline == nil || r.terminal(a.now()) {
-		return out, errors.New("grant not active")
+	if r.terminal(a.now()) {
+		return out, problem(410, "request is no longer active; request access again")
+	}
+	if r.Status.Deadline == nil {
+		return out, problem(409, "request is awaiting approval")
 	}
 	if err := a.unchanged(ctx, r); err != nil {
 		return out, err
@@ -381,11 +396,11 @@ func (a *App) issue(ctx context.Context, r *Request) (Credential, error) {
 	// Never re-create grant objects in credential pickup: a missing object may
 	// represent revocation outside this process.
 	if r.Status.Phase != "ready" || r.Status.AccountUID == "" || r.Status.BindingUID == "" {
-		return out, errors.New("grant not ready")
+		return out, problem(409, "grant is being prepared; retry shortly")
 	}
 	seconds := int64(r.Status.Deadline.Sub(a.now())-a.config.budget()) / int64(time.Second)
 	if seconds < 600 {
-		return out, errors.New("insufficient approved time remains for a token")
+		return out, problem(410, "credential pickup window has closed; request access again")
 	}
 	sa, e := a.kube.CoreV1().ServiceAccounts(a.config.GrantNamespace).Get(ctx, r.grantName(), metav1.GetOptions{})
 	if e != nil {

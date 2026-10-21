@@ -6,6 +6,7 @@ import (
 	"net/http/httptest"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 	"time"
 
@@ -61,5 +62,35 @@ func TestCredentialCLI(t *testing.T) {
 	}
 	if info, err = stdout.Stat(); err != nil || info.Size() != 0 {
 		t.Fatal("credential cli wrote to stdout")
+	}
+}
+
+func TestCLIErrorDetails(t *testing.T) {
+	for _, tc := range []struct {
+		name, body, want string
+		status           int
+	}{
+		{"pending", `{"error":"request is awaiting approval"}`, "409: request is awaiting approval", 409},
+		{"closed pickup", `{"error":"credential pickup window has closed; request access again"}`, "410: credential pickup window has closed", 410},
+		{"proxy error", `<html>upstream unavailable</html>`, "status 502; check request status", 502},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			server := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				w.WriteHeader(tc.status)
+				_, _ = w.Write([]byte(tc.body))
+			}))
+			defer server.Close()
+			previous := http.DefaultTransport
+			http.DefaultTransport = server.Client().Transport
+			defer func() { http.DefaultTransport = previous }()
+			tokenFile := filepath.Join(t.TempDir(), "requester")
+			if err := os.WriteFile(tokenFile, []byte("requester-secret"), 0600); err != nil {
+				t.Fatal(err)
+			}
+			err := run([]string{"credentials", "--url", server.URL, "--token-file", tokenFile, "--id", "request-test", "--output", filepath.Join(t.TempDir(), "grant.kubeconfig")})
+			if err == nil || !strings.Contains(err.Error(), tc.want) {
+				t.Fatalf("expected actionable error containing %q, got %v", tc.want, err)
+			}
+		})
 	}
 }

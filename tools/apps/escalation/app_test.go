@@ -29,6 +29,7 @@ import (
 type appFixture struct {
 	app          *App
 	kube         *kubefake.Clientset
+	requests     *dynamicfake.FakeDynamicClient
 	issuer       *authFixture
 	now          time.Time
 	handler      http.Handler
@@ -45,6 +46,7 @@ func newAppFixture(t *testing.T) *appFixture {
 	role := &rbac.Role{ObjectMeta: metav1.ObjectMeta{Name: "observe", Namespace: "photos", UID: "role-uid"}, Rules: []rbac.PolicyRule{{APIGroups: []string{""}, Resources: []string{"pods"}, Verbs: []string{"get", "list"}}}}
 	f.kube = kubefake.NewClientset(role)
 	d := dynamicfake.NewSimpleDynamicClientWithCustomListKinds(runtime.NewScheme(), map[schema.GroupVersionResource]string{requests: "AccessRequestList"})
+	f.requests = d
 	// Fake clients do not assign API metadata. The fixture supplies only that
 	// server behavior; authorization/admission is covered by the real API test.
 	serial := 0
@@ -141,7 +143,11 @@ func TestAccessLifecycle(t *testing.T) {
 	}
 	base := "/v1/requests/" + r.Name
 	checkCode(t, f.call(t, "GET", base, "", "thread-b"), 404)
-	checkCode(t, f.call(t, "POST", base+"/credentials", "", "thread-a"), 503)
+	pending := f.call(t, "POST", base+"/credentials", "", "thread-a")
+	checkCode(t, pending, 409)
+	if !strings.Contains(pending.Body.String(), "awaiting approval") {
+		t.Fatal("pending credential response must explain the next step")
+	}
 	body, _ := json.Marshal(decisionInput{r.ResourceVersion, r.Spec.ScopeHash, "approve"})
 	checkCode(t, f.call(t, "POST", base+"/decision", string(body), "thread-a"), 403)
 	r = f.approve(t, r)
@@ -180,7 +186,7 @@ func TestAccessLifecycle(t *testing.T) {
 	if _, err := f.kube.RbacV1().RoleBindings("photos").Get(context.Background(), r.grantName(), metav1.GetOptions{}); !apierrors.IsNotFound(err) {
 		t.Fatalf("grant binding remains: %v", err)
 	}
-	checkCode(t, f.call(t, "POST", base+"/credentials", "", "thread-a"), 503)
+	checkCode(t, f.call(t, "POST", base+"/credentials", "", "thread-a"), 410)
 	current, err := f.app.store.get(context.Background(), r.Name)
 	if err != nil {
 		t.Fatal(err)
@@ -218,6 +224,11 @@ func TestBrowserApprovalAndCSRF(t *testing.T) {
 	checkCode(t, post(strings.Replace(form.Encode(), "csrf-value", "wrong", 1)), 403)
 	checkCode(t, post(form.Encode()+"&csrf=csrf-value"), 403)
 	checkCode(t, post(form.Encode()), 303)
+	stale := post(form.Encode())
+	checkCode(t, stale, 409)
+	if !strings.HasPrefix(stale.Header().Get("Content-Type"), "text/html") || !strings.Contains(stale.Body.String(), `href="`+path+`">reload</a>`) || strings.Contains(stale.Body.String(), `name="decision"`) {
+		t.Fatal("stale browser action must render a reload link, not json or stale controls")
+	}
 	w = f.call(t, "GET", path, "", "human")
 	checkCode(t, w, 200)
 	if strings.Contains(w.Body.String(), ">approve</button>") || !strings.Contains(w.Body.String(), "ready") {
@@ -287,6 +298,29 @@ func TestBrowserRequestActions(t *testing.T) {
 	}
 }
 
+func TestBrowserPersistenceFailure(t *testing.T) {
+	f := newAppFixture(t)
+	r := f.request(t)
+	f.requests.PrependReactor("update", "accessrequests", func(ktesting.Action) (bool, runtime.Object, error) {
+		return true, nil, fmt.Errorf("internal persistence failure")
+	})
+	path := "/requests/" + r.Name
+	form := url.Values{"csrf": {"csrf-value"}, "version": {r.ResourceVersion}, "scopeHash": {r.Spec.ScopeHash}, "decision": {"approve"}}
+	req := httptest.NewRequest("POST", "https://app.example"+path, strings.NewReader(form.Encode()))
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	req.AddCookie(&http.Cookie{Name: sessionCookie, Value: "reviewer-session"})
+	w := httptest.NewRecorder()
+	f.handler.ServeHTTP(w, req)
+	checkCode(t, w, 503)
+	if !strings.HasPrefix(w.Header().Get("Content-Type"), "text/html") || !strings.Contains(w.Body.String(), `role="alert"`) || !strings.Contains(w.Body.String(), `href="`+path+`">reload</a>`) || strings.Contains(w.Body.String(), "internal persistence failure") {
+		t.Fatal("browser error must offer recovery without exposing internal errors")
+	}
+	current, err := f.app.store.get(context.Background(), r.Name)
+	if err != nil || current.Status.Phase != "" {
+		t.Fatalf("failed approval must remain pending: %v", err)
+	}
+}
+
 func TestDeletedGrantNeverReactivated(t *testing.T) {
 	for _, object := range []string{"account", "binding", "account-before-status", "binding-before-status"} {
 		t.Run(object, func(t *testing.T) {
@@ -329,13 +363,13 @@ func TestDeletedGrantNeverReactivated(t *testing.T) {
 			if _, err = f.kube.CoreV1().ServiceAccounts("grants").Get(ctx, r.grantName(), metav1.GetOptions{}); !apierrors.IsNotFound(err) {
 				t.Fatal("account resurrected")
 			}
-			checkCode(t, f.call(t, "POST", "/v1/requests/"+r.Name+"/credentials", "", "thread-a"), 503)
+			checkCode(t, f.call(t, "POST", "/v1/requests/"+r.Name+"/credentials", "", "thread-a"), 410)
 		})
 	}
 }
 
 func TestTokenBoundsAndPolicyDrift(t *testing.T) {
-	for _, scenario := range []string{"jwt-too-long", "status-too-long", "late-pickup", "role-drift", "namespace"} {
+	for _, scenario := range []string{"jwt-too-long", "status-too-long", "late-pickup", "role-drift", "profile-drift", "role-unavailable", "namespace"} {
 		t.Run(scenario, func(t *testing.T) {
 			f := newAppFixture(t)
 			if scenario == "namespace" {
@@ -355,9 +389,21 @@ func TestTokenBoundsAndPolicyDrift(t *testing.T) {
 				role, _ := f.kube.RbacV1().Roles("photos").Get(ctx, "observe", metav1.GetOptions{})
 				role.Rules[0].Verbs = append(role.Rules[0].Verbs, "watch")
 				_, _ = f.kube.RbacV1().Roles("photos").Update(ctx, role, metav1.UpdateOptions{})
+			case "profile-drift":
+				f.app.config.Profiles[0].MaxDuration = "29m"
+			case "role-unavailable":
+				f.kube.PrependReactor("get", "roles", func(ktesting.Action) (bool, runtime.Object, error) {
+					return true, nil, fmt.Errorf("kubernetes temporarily unavailable")
+				})
 			}
 			w := f.call(t, "POST", "/v1/requests/"+r.Name+"/credentials", "", "thread-a")
-			checkCode(t, w, 503)
+			want := 503
+			if scenario == "late-pickup" {
+				want = 410
+			} else if scenario == "role-drift" || scenario == "profile-drift" {
+				want = 409
+			}
+			checkCode(t, w, want)
 			if strings.Contains(w.Body.String(), "signature") {
 				t.Fatal("rejected token leaked")
 			}
@@ -392,5 +438,56 @@ func TestExpiryRecoveryAndCleanupFailure(t *testing.T) {
 	r, _ = f.app.store.get(ctx, r.Name)
 	if r.Status.Phase != "expired" || r.Status.Message != "cleanup complete" || len(r.Finalizers) != 0 {
 		t.Fatalf("recovery failed: %+v", r)
+	}
+}
+
+func TestReadinessIsolatesFailedRequests(t *testing.T) {
+	for _, scanFailure := range []bool{false, true} {
+		t.Run(fmt.Sprintf("scan failure %t", scanFailure), func(t *testing.T) {
+			f := newAppFixture(t)
+			broken := f.request(t)
+			f.now = f.now.Add(16 * time.Minute)
+			created := f.call(t, "POST", "/v1/requests", `{"profile":"observe-v1","namespace":"photos","duration":"30m","reason":"healthy request"}`, "thread-b")
+			checkCode(t, created, 202)
+			var healthy struct{ Request *Request }
+			if err := json.Unmarshal(created.Body.Bytes(), &healthy); err != nil {
+				t.Fatal(err)
+			}
+			f.app.lastReconcile = f.now.Add(-2 * time.Minute)
+			if scanFailure {
+				f.requests.PrependReactor("list", "accessrequests", func(ktesting.Action) (bool, runtime.Object, error) {
+					return true, nil, fmt.Errorf("request storage unavailable")
+				})
+			} else {
+				f.requests.PrependReactor("update", "accessrequests", func(action ktesting.Action) (bool, runtime.Object, error) {
+					if action.(ktesting.UpdateAction).GetObject().(metav1.Object).GetName() == broken.Name {
+						return true, nil, fmt.Errorf("broken request cannot be updated")
+					}
+					return false, nil, nil
+				})
+			}
+			ctx, cancel := context.WithCancel(context.Background())
+			done := make(chan struct{})
+			go func() { defer close(done); f.app.run(ctx) }()
+			t.Cleanup(func() { cancel(); <-done })
+			deadline := time.Now().Add(2 * time.Second)
+			for {
+				metrics := f.call(t, "GET", "/metrics", "", "")
+				if strings.Contains(metrics.Body.String(), "escalation_reconcile_errors_total 1\n") {
+					break
+				}
+				if time.Now().After(deadline) {
+					t.Fatal("reconciliation did not process the failing request")
+				}
+				time.Sleep(time.Millisecond)
+			}
+			want := 200
+			if scanFailure {
+				want = 503
+			} else {
+				checkCode(t, f.call(t, "GET", "/v1/requests/"+healthy.Request.Name, "", "thread-b"), 200)
+			}
+			checkCode(t, f.call(t, "GET", "/readyz", "", ""), want)
+		})
 	}
 }

@@ -7,8 +7,11 @@
 :root{color-scheme:light dark;--bg:#f5f6f8;--surface:#fff;--text:#19212c;--muted:#556273;--line:#dbe1e8;--accent:#244e99}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.55 system-ui,sans-serif}main{max-width:760px;margin:auto;padding:24px 18px 64px}header{display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:28px}a{color:var(--accent);text-underline-offset:3px}h1{font-size:28px;line-height:1.2;margin:8px 0 18px}h2{font-size:18px;margin:0 0 14px}.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}.muted,small{color:var(--muted)}.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;margin:16px 0}.status{display:inline-block;font-size:13px;border:1px solid var(--line);border-radius:30px;padding:3px 12px;background:var(--bg)}dl{display:grid;grid-template-columns:110px 1fr;gap:12px;margin:0}dt{color:var(--muted)}dd{margin:0;overflow-wrap:anywhere}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:var(--bg);padding:14px;border-radius:8px;font-size:13px}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}button{font:inherit;cursor:pointer;border:1px solid var(--line);border-radius:8px;min-height:46px;padding:8px 18px;background:var(--surface);color:var(--text)}button.primary{background:var(--accent);color:white;border-color:var(--accent)}button:focus-visible,a:focus-visible{outline:3px solid #799ee0;outline-offset:3px}.request-link{display:block;padding:14px 0;border-bottom:1px solid var(--line);overflow-wrap:anywhere}.request-link:last-child{border:0}.request-link small{display:block}@media(max-width:480px){dl{grid-template-columns:1fr;gap:3px}dd{margin-bottom:12px}.actions button{flex:1}header{align-items:flex-start}}@media(prefers-color-scheme:dark){:root{--bg:#121820;--surface:#1b2430;--text:#e6edf5;--muted:#a3b1c3;--line:#354255;--accent:#8eb7ff}button.primary{color:#121820}}
 </style>
 <main>
-<header><a href="/">escalation</a><form method="post" action="/logout"><input type="hidden" name="csrf" value="{{.CSRF}}"><button>sign out</button></form></header>
-{{if .Request}}
+<header><a href="/">escalation</a>{{if .CSRF}}<form method="post" action="/logout"><input type="hidden" name="csrf" value="{{.CSRF}}"><button>sign out</button></form>{{end}}</header>
+{{if .Error}}
+<h1>request error</h1>
+<section class="card" role="alert"><p>{{.Error}}</p><a href="{{.Reload}}">reload</a></section>
+{{else if .Request}}
 <div class="eyebrow">access request</div>
 <h1>{{.Request.Spec.Profile.Name}}</h1>
 {{if .Request.Status.Phase}}<span class="status">{{.Request.Status.Phase}}</span>{{end}}

@@ -181,6 +181,12 @@ func run(args []string) error {
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+		var detail struct {
+			Error string `json:"error"`
+		}
+		if json.NewDecoder(io.LimitReader(resp.Body, 4096)).Decode(&detail) == nil && detail.Error != "" {
+			return fmt.Errorf("service returned status %d: %s", resp.StatusCode, detail.Error)
+		}
 		return fmt.Errorf("service returned status %d; check request status before retrying", resp.StatusCode)
 	}
 	if cmd != "credentials" {

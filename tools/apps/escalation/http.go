@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"html/template"
 	"io"
+	"log/slog"
 	"net/http"
 	"os"
 	"slices"
@@ -41,6 +42,18 @@ type decisionInput struct {
 type responseError struct {
 	code    int
 	message string
+}
+
+type pageData struct {
+	Request     *Request
+	Items       []*Request
+	CSRF        string
+	CanApprove  bool
+	CanRevoke   bool
+	CanWithdraw bool
+	Next        string
+	Error       string
+	Reload      string
 }
 
 func (e responseError) Error() string { return e.message }
@@ -83,9 +96,9 @@ func reply(w http.ResponseWriter, code int, v any) {
 	w.WriteHeader(code)
 	_ = json.NewEncoder(w).Encode(v)
 }
-func fail(w http.ResponseWriter, err error) {
+func fail(w http.ResponseWriter, r *http.Request, err error) {
 	code := http.StatusServiceUnavailable
-	msg := "operation unavailable; retry or check status"
+	msg := "operation unavailable; reload to check whether it completed"
 	var e responseError
 	if errors.As(err, &e) {
 		code = e.code
@@ -97,7 +110,20 @@ func fail(w http.ResponseWriter, err error) {
 		code = 404
 		msg = "request not found"
 	}
-	reply(w, code, map[string]string{"error": msg})
+	if code >= 500 {
+		slog.Error("operation failed", "method", r.Method, "path", r.URL.Path, "error", err)
+	}
+	if strings.HasPrefix(r.URL.Path, "/v1/") {
+		reply(w, code, map[string]string{"error": msg})
+		return
+	}
+	reload := "/"
+	if strings.HasPrefix(r.URL.Path, "/requests/") {
+		reload = r.URL.Path
+	}
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.WriteHeader(code)
+	_ = pageTemplate.Execute(w, pageData{Error: msg, Reload: reload})
 }
 
 func parseJSON(r *http.Request, v any) error {
@@ -181,11 +207,12 @@ func (a *App) decide(ctx context.Context, i Identity, r *Request, in decisionInp
 		r.Status.Phase = "denied"
 	} else {
 		if e := a.unchanged(ctx, r); e != nil {
-			return nil, problem(409, "profile or role changed; request again")
+			return nil, e
 		}
 		deadline := a.now().Add(time.Duration(r.Spec.DurationSeconds) * time.Second)
 		r.Status.Deadline = &deadline
 		r.Status.Phase = "approved"
+		r.Status.Message = "approval saved; preparing access"
 	}
 	r, e := a.store.status(ctx, r)
 	if e != nil {
@@ -194,7 +221,9 @@ func (a *App) decide(ctx context.Context, i Identity, r *Request, in decisionInp
 	a.audit("access "+in.Decision, r, i)
 	// The persisted decision survives temporary provisioning failure; the loop
 	// retries it. Never report credential readiness before reconciliation confirms it.
-	_ = a.reconcile(ctx, r)
+	if err := a.reconcile(ctx, r); err != nil {
+		slog.Error("approved grant reconciliation failed", "request", r.Name, "error", err)
+	}
 	return a.store.get(ctx, r.Name)
 }
 
@@ -238,7 +267,7 @@ func (a *App) handler() http.Handler {
 	mux.HandleFunc("GET /callback", a.auth.Callback)
 	mux.HandleFunc("POST /logout", func(w http.ResponseWriter, r *http.Request) {
 		if !a.auth.CheckCSRF(r) {
-			fail(w, problem(403, "invalid csrf token"))
+			fail(w, r, problem(403, "invalid csrf token; reload and try again"))
 			return
 		}
 		a.auth.Logout(w, r)
@@ -249,23 +278,23 @@ func (a *App) handler() http.Handler {
 			if (r.URL.Path == "/" || strings.HasPrefix(r.URL.Path, "/requests/")) && r.Method == "GET" && len(r.Header.Values("Authorization")) == 0 {
 				http.Redirect(w, r, "/login", 303)
 			} else {
-				fail(w, problem(401, "authentication required"))
+				fail(w, r, problem(401, "authentication required"))
 			}
 			return
 		}
 		if r.Method != "GET" && r.Method != "POST" {
-			fail(w, problem(405, "method not allowed"))
+			fail(w, r, problem(405, "method not allowed"))
 			return
 		}
 		if r.Method == "POST" && i.Human && !a.auth.CheckCSRF(r) {
-			fail(w, problem(403, "invalid csrf token"))
+			fail(w, r, problem(403, "invalid csrf token; reload and try again"))
 			return
 		}
 		a.mu.Lock()
 		defer a.mu.Unlock()
 		if !a.allowRequest(i) {
 			w.Header().Set("Retry-After", "60")
-			fail(w, problem(429, "identity rate limit exceeded"))
+			fail(w, r, problem(429, "identity rate limit exceeded; retry in one minute"))
 			return
 		}
 		if strings.HasPrefix(r.URL.Path, "/v1/") {
@@ -302,12 +331,12 @@ func (a *App) api(w http.ResponseWriter, r *http.Request, i Identity) {
 		if r.Method == "POST" {
 			var in createInput
 			if e := parseJSON(r, &in); e != nil {
-				fail(w, e)
+				fail(w, r, e)
 				return
 			}
 			req, e := a.create(r.Context(), i, in, r.Header.Get("Idempotency-Key"))
 			if e != nil {
-				fail(w, e)
+				fail(w, r, e)
 				return
 			}
 			reply(w, 202, map[string]any{"request": req, "approvalURL": a.config.BaseURL + "/requests/" + req.Name})
@@ -315,7 +344,7 @@ func (a *App) api(w http.ResponseWriter, r *http.Request, i Identity) {
 		}
 		rs, next, e := a.store.list(r.Context(), 100, r.URL.Query().Get("continue"))
 		if e != nil {
-			fail(w, e)
+			fail(w, r, e)
 			return
 		}
 		out := []*Request{}
@@ -329,16 +358,16 @@ func (a *App) api(w http.ResponseWriter, r *http.Request, i Identity) {
 	}
 	parts := strings.Split(path, "/")
 	if len(parts) < 2 || len(parts) > 3 || parts[0] != "requests" {
-		fail(w, problem(404, "not found"))
+		fail(w, r, problem(404, "not found"))
 		return
 	}
 	req, e := a.store.get(r.Context(), parts[1])
 	if e != nil {
-		fail(w, e)
+		fail(w, r, e)
 		return
 	}
 	if !a.allowedRead(i, req) {
-		fail(w, problem(404, "request not found"))
+		fail(w, r, problem(404, "request not found"))
 		return
 	}
 	if len(parts) == 2 && r.Method == "GET" {
@@ -346,7 +375,7 @@ func (a *App) api(w http.ResponseWriter, r *http.Request, i Identity) {
 		return
 	}
 	if len(parts) != 3 || r.Method != "POST" {
-		fail(w, problem(405, "method not allowed"))
+		fail(w, r, problem(405, "method not allowed"))
 		return
 	}
 	switch parts[2] {
@@ -359,7 +388,7 @@ func (a *App) api(w http.ResponseWriter, r *http.Request, i Identity) {
 		req, e = a.revoke(r.Context(), i, req)
 	case "credentials":
 		if !sameIdentity(i, req.Spec.Requester) || i.Human {
-			fail(w, problem(403, "requester bearer authentication required"))
+			fail(w, r, problem(403, "requester bearer authentication required"))
 			return
 		}
 		var cred Credential
@@ -368,7 +397,7 @@ func (a *App) api(w http.ResponseWriter, r *http.Request, i Identity) {
 			cred.CAData, e = os.ReadFile(a.config.IssuedCredentials.CAFile)
 		}
 		if e != nil {
-			fail(w, e)
+			fail(w, r, e)
 			return
 		}
 		reply(w, 200, cred)
@@ -377,7 +406,7 @@ func (a *App) api(w http.ResponseWriter, r *http.Request, i Identity) {
 		e = problem(404, "not found")
 	}
 	if e != nil {
-		fail(w, e)
+		fail(w, r, e)
 		return
 	}
 	reply(w, 202, req)
@@ -385,7 +414,7 @@ func (a *App) api(w http.ResponseWriter, r *http.Request, i Identity) {
 
 func (a *App) page(w http.ResponseWriter, r *http.Request, i Identity) {
 	if !i.Human {
-		fail(w, problem(403, "human browser login required"))
+		fail(w, r, problem(403, "human browser login required"))
 		return
 	}
 	var req *Request
@@ -403,7 +432,7 @@ func (a *App) page(w http.ResponseWriter, r *http.Request, i Identity) {
 	} else if strings.HasPrefix(r.URL.Path, "/requests/") {
 		id := strings.TrimPrefix(r.URL.Path, "/requests/")
 		if strings.Contains(id, "/") {
-			fail(w, problem(404, "not found"))
+			fail(w, r, problem(404, "not found"))
 			return
 		}
 		req, err = a.store.get(r.Context(), id)
@@ -425,20 +454,12 @@ func (a *App) page(w http.ResponseWriter, r *http.Request, i Identity) {
 		err = problem(404, "not found")
 	}
 	if err != nil {
-		fail(w, err)
+		fail(w, r, err)
 		return
 	}
 	canApprove := req != nil && req.Spec.Profile.approver(i) && !sameIdentity(i, req.Spec.Requester) && req.Status.Phase == "" && !req.terminal(a.now())
 	canRevoke := req != nil && req.Status.Deadline != nil && !req.terminal(a.now())
 	canWithdraw := req != nil && sameIdentity(i, req.Spec.Requester) && req.Status.Phase == "" && !req.terminal(a.now())
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	_ = pageTemplate.Execute(w, struct {
-		Request     *Request
-		Items       []*Request
-		CSRF        string
-		CanApprove  bool
-		CanRevoke   bool
-		CanWithdraw bool
-		Next        string
-	}{req, rs, a.auth.CSRF(r), canApprove, canRevoke, canWithdraw, next})
+	_ = pageTemplate.Execute(w, pageData{Request: req, Items: rs, CSRF: a.auth.CSRF(r), CanApprove: canApprove, CanRevoke: canRevoke, CanWithdraw: canWithdraw, Next: next})
 }

@@ -103,7 +103,28 @@ spec:
                 scopeHash: {type: string, maxLength: 64}
                 idempotencyHash: {type: string, maxLength: 64}
               x-kubernetes-validations:
-                - rule: self == oldSelf
+                - rule: >-
+                    self.requester == oldSelf.requester &&
+                    self.profile.name == oldSelf.profile.name &&
+                    self.profile.role == oldSelf.profile.role &&
+                    has(self.profile.namespaces) == has(oldSelf.profile.namespaces) &&
+                    (!has(self.profile.namespaces) || self.profile.namespaces == oldSelf.profile.namespaces) &&
+                    self.profile.cluster == oldSelf.profile.cluster &&
+                    self.profile.requesterIssuers == oldSelf.profile.requesterIssuers &&
+                    has(self.profile.requesterGroups) == has(oldSelf.profile.requesterGroups) &&
+                    (!has(self.profile.requesterGroups) || self.profile.requesterGroups == oldSelf.profile.requesterGroups) &&
+                    self.profile.approverGroups == oldSelf.profile.approverGroups &&
+                    self.profile.maxDuration == oldSelf.profile.maxDuration &&
+                    self.profile.pendingDuration == oldSelf.profile.pendingDuration &&
+                    self.__namespace__ == oldSelf.__namespace__ &&
+                    self.durationSeconds == oldSelf.durationSeconds &&
+                    self.reason == oldSelf.reason &&
+                    self.pendingUntil == oldSelf.pendingUntil &&
+                    self.roleUID == oldSelf.roleUID &&
+                    has(self.rules) == has(oldSelf.rules) &&
+                    (!has(self.rules) || self.rules == oldSelf.rules) &&
+                    self.scopeHash == oldSelf.scopeHash &&
+                    self.idempotencyHash == oldSelf.idempotencyHash
                   message: spec is immutable
             status:
               type: object
