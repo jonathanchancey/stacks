@@ -40,7 +40,7 @@ spec:
           app:
             image:
               repository: ghcr.io/jonathanchancey/escalation
-              tag: unreleased
+              tag: sha-803649447ea33fc216ab4672fef93659b8c50263@sha256:02672558518137d803bf808e7f714274f79f6b5f7cff98bbf9ed6f5064a4de50
             args: [serve, --config, /etc/escalation/config.yaml]
             env:
               POD_NAMESPACE:

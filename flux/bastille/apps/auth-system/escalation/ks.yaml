@@ -6,7 +6,6 @@ metadata:
   name: escalation
   namespace: auth-system
 spec:
-  suspend: true
   commonMetadata:
     labels:
       app.kubernetes.io/name: escalation
