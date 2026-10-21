@@ -2,6 +2,8 @@
 ingress:
   - hostname: kube-bastille.chancey.dev
     service: tcp://kubernetes.default.svc.cluster.local:443
+  - hostname: escalation-bastille.chancey.dev
+    service: http://escalation.auth-system.svc.cluster.local:8080
   - hostname: "*.chancey.dev"
     service: https://envoy-external.network.svc.cluster.local
     originRequest:
