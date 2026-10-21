@@ -7,7 +7,7 @@ tmp=$(mktemp -d)
 export KUBECONFIG="$tmp/kubeconfig"
 trap 'kind delete cluster --name "$name"; rm -rf "$tmp"' EXIT
 kind create cluster --name "$name" --image kindest/node:v1.33.0 \
-  --kubeconfig "$KUBECONFIG" --wait 120s
+  --config test/kind.yaml --kubeconfig "$KUBECONFIG" --wait 120s
 
 kubectl create namespace escalation
 kubectl create namespace escalation-grants
