@@ -1,0 +1,76 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: auth-system-escalation
+rules:
+  - apiGroups: [rbac.authorization.k8s.io]
+    resources: [clusterroles]
+    resourceNames: ["escalation-storage-observe"]
+    verbs: [get, bind]
+  - apiGroups: [rbac.authorization.k8s.io]
+    resources: [clusterrolebindings]
+    verbs: [get, create, delete]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: auth-system-escalation
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: auth-system-escalation
+subjects:
+  - kind: ServiceAccount
+    name: escalation
+    namespace: auth-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: escalation
+  namespace: auth-system
+rules:
+  - apiGroups: [escalation.stacks.dev]
+    resources: [accessrequests, accessrequests/status]
+    verbs: [get, list, watch, create, update, patch, delete]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: auth-system-escalation-grants
+  namespace: escalation-grants
+rules:
+  - apiGroups: [""]
+    resources: [serviceaccounts]
+    verbs: [get, create, delete]
+  - apiGroups: [""]
+    resources: [serviceaccounts/token]
+    verbs: [create]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: escalation
+  namespace: auth-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: escalation
+subjects:
+  - kind: ServiceAccount
+    name: escalation
+    namespace: auth-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: auth-system-escalation-grants
+  namespace: escalation-grants
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: auth-system-escalation-grants
+subjects:
+  - kind: ServiceAccount
+    name: escalation
+    namespace: auth-system

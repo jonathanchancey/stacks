@@ -365,7 +365,7 @@ func (a *App) api(w http.ResponseWriter, r *http.Request, i Identity) {
 		var cred Credential
 		cred, e = a.issue(r.Context(), req)
 		if e == nil {
-			cred.CAData, e = os.ReadFile(a.config.KubeCAFile)
+			cred.CAData, e = os.ReadFile(a.config.IssuedCredentials.CAFile)
 		}
 		if e != nil {
 			fail(w, e)

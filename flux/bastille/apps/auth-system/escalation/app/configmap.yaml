@@ -1,0 +1,33 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: escalation-config
+  namespace: auth-system
+data:
+  config.yaml: |
+    baseURL: https://escalation.chancey.dev
+    requesters:
+      - url: https://ampcode.com/api/workload-identity
+        audience: https://escalation.chancey.dev
+        requiredClaims:
+          project_id: e75b009b-c969-40a8-abfd-bf0eb70b3d7b
+          token_use: exchanged
+    approverLogin:
+      url: https://idm.chancey.dev/oauth2/openid/escalation
+      clientID: escalation
+      clientSecretFile: /run/oidc/client-secret
+    issuedCredentials:
+      audience: https://kube.bastille.chancey.dev:6443
+      server: https://127.0.0.1:6443
+      tlsName: kube.bastille.chancey.dev
+    profiles:
+      - name: storage-observe-v1
+        role:
+          kind: ClusterRole
+          name: escalation-storage-observe
+        cluster: true
+        requesterIssuers: [https://ampcode.com/api/workload-identity]
+        approverGroups: [escalation_approvers]
+        maxDuration: 30m
+        pendingDuration: 15m

@@ -54,7 +54,7 @@ jobs:
           helm lint chart --namespace escalation --set enabled=true --set existingSecret=oidc
           helm template escalation chart --namespace escalation --include-crds --set enabled=true --set existingSecret=oidc > /tmp/escalation.yaml
           test -z "$(helm template escalation chart)"
-          if helm template escalation chart --namespace wrong --set enabled=true --set existingSecret=oidc; then exit 1; fi
+          if helm template escalation chart --namespace wrong --set config.namespace=escalation --set enabled=true --set existingSecret=oidc; then exit 1; fi
       - name: build image without publishing
         run: docker build -t escalation:ci .
   kubernetes:
@@ -78,3 +78,28 @@ jobs:
         env:
           ESCALATION_TEST_WAIT_EXPIRY: ${{ inputs.expiry-test == true && '1' || '0' }}
         run: bash test/e2e.sh
+  publish:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'jonathanchancey/stacks'
+    needs: [check, kubernetes]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    env:
+      IMAGE: ghcr.io/jonathanchancey/escalation
+    steps:
+      - uses: actions/checkout@v7
+      - name: build image
+        run: |
+          docker build tools/apps/escalation \
+            --label "org.opencontainers.image.source=https://github.com/${GITHUB_REPOSITORY}" \
+            --label "org.opencontainers.image.revision=${GITHUB_SHA}" \
+            --tag "${IMAGE}:sha-${GITHUB_SHA}"
+      - name: publish image
+        env:
+          GHCR_TOKEN: ${{ github.token }}
+        run: |
+          printf '%s' "$GHCR_TOKEN" | docker login ghcr.io --username "$GITHUB_ACTOR" --password-stdin
+          docker push "${IMAGE}:sha-${GITHUB_SHA}"
+          digest=$(docker inspect --format='{{index .RepoDigests 0}}' "${IMAGE}:sha-${GITHUB_SHA}")
+          printf 'published `%s`\n\nflux image pin: `%s`\n' "${IMAGE}:sha-${GITHUB_SHA}" "$digest" >> "$GITHUB_STEP_SUMMARY"

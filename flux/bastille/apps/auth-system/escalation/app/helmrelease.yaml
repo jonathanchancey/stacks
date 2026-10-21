@@ -1,0 +1,129 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/source.toolkit.fluxcd.io/ocirepository_v1.json
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: escalation
+  namespace: auth-system
+spec:
+  interval: 5m
+  layerSelector:
+    mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
+    operation: copy
+  ref:
+    tag: 5.0.1
+  url: oci://ghcr.io/bjw-s-labs/helm/app-template
+  verify:
+    provider: cosign
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app escalation
+  namespace: auth-system
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: escalation
+  values:
+    controllers:
+      main:
+        replicas: 1
+        strategy: Recreate
+        serviceAccount:
+          identifier: *app
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: ghcr.io/jonathanchancey/escalation
+              tag: unreleased
+            args: [serve, --config, /etc/escalation/config.yaml]
+            env:
+              POD_NAMESPACE:
+                valueFrom:
+                  fieldRef:
+                    fieldPath: metadata.namespace
+            probes:
+              liveness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /healthz
+                    port: &port 8080
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /readyz
+                    port: *port
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 10m
+                memory: 32Mi
+              limits:
+                memory: 128Mi
+    defaultPodOptions:
+      automountServiceAccountToken: true
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        fsGroup: 65532
+        seccompProfile:
+          type: RuntimeDefault
+    serviceAccount:
+      escalation:
+        forceRename: escalation
+    service:
+      app:
+        ports:
+          http:
+            port: *port
+    persistence:
+      config:
+        type: configMap
+        name: escalation-config
+        globalMounts:
+          - path: /etc/escalation
+            readOnly: true
+      oidc:
+        type: secret
+        name: escalation-oidc
+        defaultMode: 0440
+        globalMounts:
+          - path: /run/oidc
+            readOnly: true
+    serviceMonitor:
+      app:
+        endpoints:
+          - port: http
+            path: /metrics
+            interval: 1m
+    route:
+      app:
+        hostnames: [escalation.chancey.dev]
+        parentRefs:
+          - name: edge
+            namespace: network
+            sectionName: https
+        rules:
+          - matches:
+              - path: { type: Exact, value: / }
+              - path: { type: Exact, value: /login }
+              - path: { type: Exact, value: /callback }
+              - path: { type: Exact, value: /logout }
+              - path: { type: PathPrefix, value: /requests }
+              - path: { type: PathPrefix, value: /v1 }
+            backendRefs:
+              - identifier: app
+                port: *port

@@ -96,7 +96,7 @@ func run(args []string) error {
 		// an incoming request during startup.
 		client := &http.Client{Timeout: 10 * time.Second}
 		authCtx := context.WithValue(ctx, oauth2.HTTPClient, client)
-		auth, err := NewAuth(authCtx, cfg.Issuers, cfg.Human, cfg.BaseURL)
+		auth, err := NewAuth(authCtx, cfg.Requesters, cfg.ApproverLogin, cfg.BaseURL)
 		if err != nil {
 			return err
 		}

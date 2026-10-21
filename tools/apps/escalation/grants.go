@@ -422,7 +422,7 @@ func (a *App) issue(ctx context.Context, r *Request) (Credential, error) {
 	if binding.GetUID() != r.Status.BindingUID || binding.GetDeletionTimestamp() != nil || binding.GetLabels()[ownership] != string(r.UID) || digest(subjects) != digest(wantSubjects) || ref != wantRef {
 		return out, errors.New("grant binding changed")
 	}
-	t, e := a.kube.CoreV1().ServiceAccounts(a.config.GrantNamespace).CreateToken(ctx, r.grantName(), &authv1.TokenRequest{Spec: authv1.TokenRequestSpec{Audiences: []string{a.config.Audience}, ExpirationSeconds: &seconds}}, metav1.CreateOptions{})
+	t, e := a.kube.CoreV1().ServiceAccounts(a.config.GrantNamespace).CreateToken(ctx, r.grantName(), &authv1.TokenRequest{Spec: authv1.TokenRequestSpec{Audiences: []string{a.config.IssuedCredentials.Audience}, ExpirationSeconds: &seconds}}, metav1.CreateOptions{})
 	if e != nil {
 		return out, e
 	}
@@ -449,8 +449,8 @@ func (a *App) issue(ctx context.Context, r *Request) (Credential, error) {
 	slog.Info("grant credential issued", "request", r.Name, "account", r.grantName(), "expires", exp)
 	out.Token = t.Status.Token
 	out.Expiration = exp
-	out.Server = a.config.KubeServer
-	out.TLSName = a.config.KubeTLSName
+	out.Server = a.config.IssuedCredentials.Server
+	out.TLSName = a.config.IssuedCredentials.TLSName
 	return out, nil
 }
 
