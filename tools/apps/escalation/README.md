@@ -3,7 +3,7 @@
 an experimental, standalone broker for human-approved, time-limited kubernetes
 access. requests live in namespaced `AccessRequest` objects; approved grants use
 dedicated service accounts and bindings. this is a prototype, not a production
-security boundary or a signed upstream release. nothing here wires it into flux.
+security boundary or a signed upstream release.
 
 ## build and check
 
@@ -24,9 +24,13 @@ its own kubernetes 1.33 cluster, checking the chart's rbac/admission policies,
 immutable requests, token issuance and revocation. add
 `ESCALATION_TEST_WAIT_EXPIRY=1` to wait about twelve minutes and check that
 kubernetes rejects the token while the broker is offline and grant objects remain.
-the workflow runs the fast checks and disposable-cluster test without publishing
-or deploying to an existing cluster. manual runs can enable the expiry check and
-`govulncheck`.
+the workflow runs the fast checks and disposable-cluster test on pull requests.
+after both jobs pass on a push to `main`, it publishes
+`ghcr.io/jonathanchancey/escalation:sha-<full-commit>` using `GITHUB_TOKEN`.
+the image carries source and revision labels; the job summary records its digest
+for deployment pinning. the package must be public for anonymous cluster pulls.
+publishing does not deploy the image. manual runs can enable the expiry check
+and `govulncheck` without publishing.
 
 ## configure and install
 
