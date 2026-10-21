@@ -431,11 +431,10 @@ func (a *App) page(w http.ResponseWriter, r *http.Request, i Identity) {
 	canApprove := req != nil && req.Spec.Profile.approver(i) && !sameIdentity(i, req.Spec.Requester) && req.Status.Phase == "" && !req.terminal(a.now())
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	_ = pageTemplate.Execute(w, struct {
-		Identity   Identity
 		Request    *Request
 		Items      []*Request
 		CSRF       string
 		CanApprove bool
 		Next       string
-	}{i, req, rs, a.auth.CSRF(r), canApprove, next})
+	}{req, rs, a.auth.CSRF(r), canApprove, next})
 }
