@@ -66,6 +66,9 @@ spec:
               readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
     defaultPodOptions:
+      hostAliases:
+        - ip: 127.0.0.1
+          hostnames: [sentry.io]
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000

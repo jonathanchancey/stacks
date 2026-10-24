@@ -66,6 +66,7 @@ spec:
               - configMapRef:
                   name: immich-configmap
             env:
+              HF_HUB_DISABLE_TELEMETRY: "1"
               MPLCONFIGDIR: "/cache/matplotlib"
               TRANSFORMERS_CACHE: "/cache"
               IMMICH_MEDIA_LOCATION: *mediaLocation
