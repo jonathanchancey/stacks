@@ -94,6 +94,13 @@ spec:
           app:
             env:
               IMMICH_URL: http://immich-server:2283
+              CONFIG: |
+                {
+                  "ipp": {
+                    "allowDownload": 1,
+                    "downloadedFilename": 0
+                  }
+                }
             image:
               repository: alangrainger/immich-public-proxy
               tag: 4.1.2
