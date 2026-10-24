@@ -23,7 +23,8 @@ in
       {
         nativeBuildInputs = [ pkgs.openssl ];
         chains = pkgs.fetchzip {
-          url = "https://emudhra.we-have-a-problem.com/chains.zip";
+          # keep the original twelve-chain fixture independent of advisory updates.
+          url = "https://raw.githubusercontent.com/galadran/we-have-a-problem.com/87b66fe4d2378a4a6504a5d4d434b7aa49a8285e/chains.zip";
           hash = "sha256-zvAue50iyz1c/AVIeBrL9C5+MXQH02LsBzN5x3SHKhU=";
         };
         PYTHONPATH = pkgs.python313Packages.makePythonPath flux-local.propagatedBuildInputs;
