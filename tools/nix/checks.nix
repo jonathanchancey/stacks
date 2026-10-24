@@ -1,6 +1,7 @@
 {
   pkgs,
   cacert,
+  certifi,
   git-of-theseus,
   flux-local,
   toolchain,
@@ -16,20 +17,37 @@ let
   };
 in
 {
-  inherit git-of-theseus flux-local toolchain;
+  inherit git-of-theseus toolchain;
+
+  flux-local = pkgs.runCommand "flux-local-runtime" { } ''
+    bash ${./check-flux-local.sh} ${flux-local} ${lib.getExe pkgs.gitMinimal}
+    touch "$out"
+  '';
 
   trust =
     pkgs.runCommand "toolchain-trust"
       {
         nativeBuildInputs = [ pkgs.openssl ];
+        exportReferencesGraph = [
+          "flux-local-closure"
+          flux-local
+        ];
         chains = pkgs.fetchzip {
           # keep the original twelve-chain fixture independent of advisory updates.
           url = "https://raw.githubusercontent.com/galadran/we-have-a-problem.com/87b66fe4d2378a4a6504a5d4d434b7aa49a8285e/chains.zip";
           hash = "sha256-zvAue50iyz1c/AVIeBrL9C5+MXQH02LsBzN5x3SHKhU=";
         };
-        PYTHONPATH = pkgs.python313Packages.makePythonPath flux-local.propagatedBuildInputs;
+        PYTHONPATH = "${certifi}/${pkgs.python313.sitePackages}";
       }
       ''
+        if ! grep -Fxq '${certifi}' flux-local-closure; then
+          echo 'flux-local is missing the patched certifi' >&2
+          exit 1
+        fi
+        if grep -Fxq '${pkgs.python313Packages.certifi}' flux-local-closure; then
+          echo 'flux-local still references the unpatched certifi' >&2
+          exit 1
+        fi
         # simulate the host trust paths inherited by an absolute profile invocation.
         export NIX_SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
         export SSL_CERT_FILE="$NIX_SSL_CERT_FILE" SSL_CERT_DIR=/etc/ssl/certs

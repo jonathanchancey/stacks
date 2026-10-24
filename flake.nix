@@ -36,11 +36,6 @@
       packages = forAllSystems (
         { pkgs, ... }:
         let
-          python = pkgs.python313.override {
-            packageOverrides = final: prev: {
-              certifi = prev.certifi.override { inherit cacert; };
-            };
-          };
           # https://emudhra.we-have-a-problem.com/ (2026-10-20)
           cacert = pkgs.cacert.overrideAttrs (old: rec {
             version = "3.131.1";
@@ -59,14 +54,31 @@
         in
         rec {
           inherit cacert;
+          certifi = pkgs.python313Packages.certifi.override { inherit cacert; };
           git-of-theseus = pkgs.callPackage ./tools/nix/git-of-theseus.nix {
             python3Packages = pkgs.python312Packages;
             trustWrapperArgs = trustWrapperArgs pkgs cacert;
           };
-          flux-local = pkgs.callPackage ./tools/nix/flux-local.nix {
-            python3Packages = python.pkgs;
-            trustWrapperArgs = trustWrapperArgs pkgs cacert;
-          };
+          flux-local =
+            let
+              unpatched = pkgs.callPackage ./tools/nix/flux-local.nix {
+                python3Packages = pkgs.python313Packages;
+                trustWrapperArgs = trustWrapperArgs pkgs cacert;
+              };
+            in
+            (pkgs.replaceDependencies {
+              drv = unpatched;
+              replacements = [
+                {
+                  oldDependency = pkgs.python313Packages.certifi;
+                  newDependency = certifi;
+                }
+              ];
+            }).overrideAttrs
+              {
+                inherit (unpatched) meta;
+                passthru.version = unpatched.version;
+              };
           toolchain = pkgs.buildEnv {
             name = "stacks-toolchain";
             nativeBuildInputs = [ pkgs.makeWrapper ];
@@ -77,7 +89,6 @@
               done
             '';
             paths = [
-              git-of-theseus
               flux-local
             ]
             ++ (with pkgs; [
@@ -106,6 +117,13 @@
             env = trustEnvironment self.packages.${system}.cacert;
             packages = [ self.packages.${system}.toolchain ];
           };
+          theseus = pkgs.mkShellNoCC {
+            env = trustEnvironment self.packages.${system}.cacert;
+            packages = with self.packages.${system}; [
+              toolchain
+              git-of-theseus
+            ];
+          };
         }
       );
 
@@ -117,6 +135,7 @@
           inherit pkgs;
           inherit (self.packages.${system})
             cacert
+            certifi
             git-of-theseus
             flux-local
             toolchain
