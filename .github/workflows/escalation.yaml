@@ -47,7 +47,7 @@ jobs:
         run: go run golang.org/x/vuln/cmd/govulncheck@v1.9.0 ./...
       - uses: azure/setup-helm@v4.3.1
         with:
-          version: v3.22.1
+          version: v4.3.1
       - name: chart checks
         run: |
           helm lint chart
@@ -71,7 +71,7 @@ jobs:
           cache-dependency-path: tools/apps/escalation/go.sum
       - uses: azure/setup-helm@v4.3.1
         with:
-          version: v3.22.1
+          version: v4.3.1
       - name: install disposable cluster tooling
         run: go install sigs.k8s.io/kind@v0.29.0
       - name: kubernetes rbac, admission, issuance and revocation
