@@ -1,0 +1,118 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/source.toolkit.fluxcd.io/ocirepository_v1.json
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: grafana-mcp
+spec:
+  interval: 5m
+  layerSelector:
+    mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
+    operation: copy
+  ref:
+    tag: 5.0.1
+  url: oci://ghcr.io/bjw-s-labs/helm/app-template
+  verify:
+    provider: cosign
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: grafana-mcp
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: grafana-mcp
+  values:
+    controllers:
+      main:
+        replicas: 1
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: docker.io/grafana/mcp-grafana
+              tag: 2.1.1@sha256:71a3f4e6f412d253611314233df709ec2571fb50e39742d23fa2940f670646dc
+            args:
+              - --transport=streamable-http
+              - --address=0.0.0.0:8000
+              - --allowed-hosts=grafana-mcp.bastille.chancey.dev
+              - --healthz-address=0.0.0.0:8080
+              - --enabled-tools=search,datasource,dashboard,prometheus,loki,alerting
+              - --usage-stats=disabled
+            env:
+              GRAFANA_URL: http://grafana.observability.svc.cluster.local:80
+              GRAFANA_SERVICE_ACCOUNT_TOKEN:
+                valueFrom:
+                  secretKeyRef:
+                    name: grafana-mcp-grafana-token
+                    key: token
+              MCP_GRAFANA_SERVER_TOKEN:
+                valueFrom:
+                  secretKeyRef:
+                    name: grafana-mcp-secret
+                    key: token
+            probes:
+              liveness: &probe
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /healthz
+                    port: 8080
+                  periodSeconds: 10
+                  timeoutSeconds: 2
+                  failureThreshold: 3
+              readiness: *probe
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /healthz
+                    port: 8080
+                  periodSeconds: 2
+                  failureThreshold: 30
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 10m
+                memory: 64Mi
+              limits:
+                memory: 256Mi
+    defaultPodOptions:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+    service:
+      app:
+        ports:
+          http:
+            port: 8000
+    route:
+      app:
+        hostnames:
+          - grafana-mcp.bastille.chancey.dev
+        parentRefs:
+          - name: internal
+            kind: Gateway
+            namespace: kube-system
+            sectionName: https-bastille
+        rules:
+          - matches:
+              - path:
+                  type: Exact
+                  value: /mcp
+            backendRefs:
+              - identifier: app
+                port: http
