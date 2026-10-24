@@ -45,7 +45,7 @@ jobs:
       - name: optional vulnerability scan
         if: ${{ inputs.vulnerability-scan == true }}
         run: go run golang.org/x/vuln/cmd/govulncheck@v1.9.0 ./...
-      - uses: azure/setup-helm@v4.3.1
+      - uses: azure/setup-helm@v5.0.1
         with:
           version: v3.22.1
       - name: chart checks
@@ -69,7 +69,7 @@ jobs:
         with:
           go-version-file: tools/apps/escalation/go.mod
           cache-dependency-path: tools/apps/escalation/go.sum
-      - uses: azure/setup-helm@v4.3.1
+      - uses: azure/setup-helm@v5.0.1
         with:
           version: v3.22.1
       - name: install disposable cluster tooling
