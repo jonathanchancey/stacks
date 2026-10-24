@@ -3,7 +3,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - ./accessrequests.yaml
+  - https://raw.githubusercontent.com/jonathanchancey/escalation/69a315fef16411821be03bc2df1de5714d939cbb/chart/crds/accessrequests.yaml
   - ./namespace.yaml
   - ./helmrelease.yaml
   - ./configmap.yaml
