@@ -12,24 +12,6 @@ vars:
       ip: 10.131.128.12
 
 tasks:
-  talos-logs-test:
-    desc: test talos log compatibility with the chart's vector image
-    dir: "{{.ROOT_DIR}}/flux/bastille/apps/observability/talos-logs/app"
-    vars:
-      VECTOR_CHART:
-        sh: yq 'select(.kind == "OCIRepository") | .spec.url' helmrelease.yaml
-      VECTOR_CHART_VERSION:
-        sh: yq 'select(.kind == "OCIRepository") | .spec.ref.tag' helmrelease.yaml
-      VECTOR_VERSION:
-        sh: helm show chart {{.VECTOR_CHART}} --version {{.VECTOR_CHART_VERSION}} | yq .appVersion
-      VECTOR_IMAGE:
-        sh: yq 'select(.kind == "HelmRelease") | .spec.values.image | .repository + ":" + (.tag // "{{.VECTOR_VERSION}}")' helmrelease.yaml
-    cmd: >-
-      docker run --rm --env VECTOR_SELF_NODE_NAME=test-node
-      --volume "{{.ROOT_DIR}}/flux/bastille/apps/observability/talos-logs/app:/etc/vector:ro"
-      {{.VECTOR_IMAGE}}
-      test /etc/vector/vector.yaml /etc/vector/tests.yaml
-
   talos-reboot:
     desc: Reboot all Talos nodes sequentially
     cmds:

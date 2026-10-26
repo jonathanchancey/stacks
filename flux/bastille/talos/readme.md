@@ -105,14 +105,7 @@ boot or whole-cluster outage message. use `talosctl logs <service>` and
 the parser uses talos's [documented json fields](https://docs.siderolabs.com/talos/v1.13/configure-your-talos-cluster/logging-and-telemetry/logging),
 preserves additional fields, and accepts new service names. unexpected records
 remain readable as json with `unknown` labels and arrival-time timestamps when
-the original fields are missing or invalid. compatibility fixtures live beside
-`vector.yaml` in `tests.yaml`; they are excluded from the deployed configmap.
-ci tests them with the receiver image selected by the helm chart. run them from
-the repo root before changing the parser or upgrading the collector:
-
-```bash
-nix develop --command task bastille:talos-logs-test CLUSTER=bastille NAMESPACE=observability
-```
+the original fields are missing or invalid.
 
 ## teardown
 ```bash
