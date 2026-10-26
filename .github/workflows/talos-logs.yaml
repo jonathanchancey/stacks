@@ -1,0 +1,26 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: talos logs
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - flux/bastille/apps/observability/talos-logs/**
+      - flux/bastille/talos/patches/observability.yaml
+      - tools/taskfiles/bastille/taskfile.yaml
+      - .github/workflows/talos-logs.yaml
+
+permissions:
+  contents: read
+
+jobs:
+  compatibility:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v7
+      - name: install nix
+        uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24 # v31.11.1
+      - name: test log compatibility
+        run: nix develop --command task bastille:talos-logs-test CLUSTER=bastille NAMESPACE=observability
