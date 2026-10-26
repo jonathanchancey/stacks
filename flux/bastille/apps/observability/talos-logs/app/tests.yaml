@@ -1,0 +1,65 @@
+tests:
+  - name: service logs preserve nanosecond timestamps and extra fields
+    inputs:
+      - insert_at: talos_labels
+        type: log
+        log_fields:
+          msg: service started
+          talos-time: "2026-01-01T00:00:00.123456789Z"
+          talos-level: info
+          talos-service: etcd
+          future-field:
+            detail: preserved
+    outputs:
+      - extract_from: talos_labels
+        conditions:
+          - type: vrl
+            source: |
+              assert_eq!(.message, "service started")
+              assert_eq!(.timestamp, t'2026-01-01T00:00:00.123456789Z')
+              assert_eq!(.service, "etcd")
+              assert_eq!(.level, "info")
+              assert_eq!(."future-field".detail, "preserved")
+  - name: kernel logs work without a service field
+    inputs:
+      - insert_at: talos_labels
+        type: log
+        log_fields:
+          msg: kernel message
+          talos-time: "2026-01-01T00:00:00Z"
+          talos-level: warn
+          facility: kern
+          priority: warning
+    outputs:
+      - extract_from: talos_labels
+        conditions:
+          - type: vrl
+            source: |
+              assert_eq!(.service, "kernel")
+              assert_eq!(.level, "warn")
+              assert_eq!(.facility, "kern")
+  - name: unexpected records retain their payload and use arrival time
+    inputs:
+      - insert_at: talos_labels
+        type: log
+        log_fields:
+          future-field: preserved
+          talos-time: invalid
+    outputs:
+      - extract_from: recent_logs
+        conditions:
+          - type: vrl
+            source: |
+              payload = parse_json!(.message)
+              assert_eq!(payload."future-field", "preserved")
+              assert!(is_timestamp(.timestamp))
+              assert_eq!(.service, "unknown")
+              assert_eq!(.level, "unknown")
+  - name: old boot records cannot poison loki batches
+    inputs:
+      - insert_at: talos_labels
+        type: log
+        log_fields:
+          msg: old boot message
+          talos-time: "2000-01-01T00:00:00Z"
+    no_outputs_from: [recent_logs]

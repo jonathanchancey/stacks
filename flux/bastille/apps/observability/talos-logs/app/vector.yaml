@@ -15,11 +15,11 @@ transforms:
     type: remap
     inputs: [talos]
     source: |
-      .message = .msg
+      .message = string(.msg) ?? encode_json(.)
       .timestamp = parse_timestamp(."talos-time", format: "%+") ?? now()
-      .level = string(."talos-level") ?? "info"
-      .service = string(."talos-service") ?? "kernel"
-      .node = get_env_var!("VECTOR_SELF_NODE_NAME")
+      .level = string(."talos-level") ?? "unknown"
+      service_fallback = if exists(.facility) { "kernel" } else { "unknown" }
+      .service = string(."talos-service") ?? service_fallback
   recent_logs:
     type: filter
     inputs: [talos_labels]
@@ -34,7 +34,7 @@ sinks:
     labels:
       job: talos
       cluster: bastille
-      node: "{{ node }}"
+      node: "${VECTOR_SELF_NODE_NAME}"
       service: "{{ service }}"
       level: "{{ level }}"
     buffer:
