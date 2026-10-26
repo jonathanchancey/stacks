@@ -1,0 +1,47 @@
+data_dir: /vector-data-dir
+sources:
+  talos:
+    type: socket
+    mode: tcp
+    address: 127.0.0.1:6050
+    framing:
+      method: newline_delimited
+    decoding:
+      codec: json
+  internal_metrics:
+    type: internal_metrics
+transforms:
+  talos_labels:
+    type: remap
+    inputs: [talos]
+    source: |
+      .message = .msg
+      .timestamp = parse_timestamp(."talos-time", format: "%+") ?? now()
+      .level = string(."talos-level") ?? "info"
+      .service = string(."talos-service") ?? "kernel"
+      .node = get_env_var!("VECTOR_SELF_NODE_NAME")
+  recent_logs:
+    type: filter
+    inputs: [talos_labels]
+    condition: to_unix_timestamp(timestamp!(.timestamp)) >= to_unix_timestamp(now()) - 604800
+sinks:
+  loki:
+    type: loki
+    inputs: [recent_logs]
+    endpoint: http://loki.observability.svc.cluster.local:3100
+    encoding:
+      codec: json
+    labels:
+      job: talos
+      cluster: bastille
+      node: "{{ node }}"
+      service: "{{ service }}"
+      level: "{{ level }}"
+    buffer:
+      type: disk
+      max_size: 536870912
+      when_full: block
+  prometheus:
+    type: prometheus_exporter
+    inputs: [internal_metrics]
+    address: 0.0.0.0:9598
