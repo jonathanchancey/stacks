@@ -1,0 +1,14 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/core/persistentvolumeclaim_v1.json
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: albedo
+  annotations:
+    kustomize.toolkit.fluxcd.io/prune: disabled
+spec:
+  accessModes: [ReadWriteOncePod]
+  storageClassName: ceph-block
+  resources:
+    requests:
+      storage: 5Gi
