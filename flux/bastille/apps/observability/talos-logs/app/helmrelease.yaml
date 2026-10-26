@@ -1,0 +1,77 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/source.toolkit.fluxcd.io/ocirepository_v1.json
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: talos-logs
+spec:
+  interval: 5m
+  layerSelector:
+    mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
+    operation: copy
+  ref:
+    tag: 0.60.0
+  url: oci://ghcr.io/vectordotdev/helm-charts/vector
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: talos-logs
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: talos-logs
+  values:
+    fullnameOverride: talos-logs
+    image:
+      repository: ghcr.io/vectordotdev/vector
+    role: Agent
+    podHostNetwork: true
+    dnsPolicy: ClusterFirstWithHostNet
+    workloadResourceAnnotations:
+      reloader.stakater.com/auto: "true"
+    tolerations:
+      - operator: Exists
+    rbac:
+      create: false
+    serviceAccount:
+      automountToken: false
+    defaultVolumes: []
+    defaultVolumeMounts: []
+    persistence:
+      hostPath:
+        path: /var/lib/vector-talos
+    existingConfigMaps: [talos-logs-config]
+    dataDir: /vector-data-dir
+    containerPorts:
+      - name: talos
+        containerPort: 6050
+        protocol: TCP
+      - name: prom-exporter
+        containerPort: 9598
+        protocol: TCP
+    service:
+      enabled: false
+    serviceHeadless:
+      enabled: false
+    readinessProbe:
+      tcpSocket:
+        host: 127.0.0.1
+        port: 6050
+    livenessProbe:
+      tcpSocket:
+        host: 127.0.0.1
+        port: 6050
+    resources:
+      requests:
+        cpu: 25m
+        memory: 64Mi
+      limits:
+        memory: 256Mi
+    podMonitor:
+      enabled: true
+      relabelings:
+        - sourceLabels: [__meta_kubernetes_pod_node_name]
+          targetLabel: node
