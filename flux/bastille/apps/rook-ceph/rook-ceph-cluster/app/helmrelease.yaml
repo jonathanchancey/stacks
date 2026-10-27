@@ -36,6 +36,8 @@ spec:
     cephClusterSpec:
       security:
         cephx:
+          allowedCiphers:
+            - aes256k
           daemon:
             keyRotationPolicy: KeyGeneration
             keyGeneration: 2
