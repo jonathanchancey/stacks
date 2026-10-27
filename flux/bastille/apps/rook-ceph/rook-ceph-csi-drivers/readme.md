@@ -1,7 +1,8 @@
 # ceph csi drivers
 
 [`helmrelease.yaml`](app/helmrelease.yaml) manages the existing rbd driver through
-ceph-csi-operator. keep its driver name aligned with the provisioner in
+ceph-csi-operator. keep `releaseName: ceph-csi-drivers` to adopt the existing
+helm release. keep its driver name aligned with the provisioner in
 [`rook-ceph-cluster`](../rook-ceph-cluster/app/helmrelease.yaml); changing it
 prevents existing volumes from mounting. cephfs, nfs, and nvmeof are disabled.
 

@@ -26,6 +26,7 @@ metadata:
 spec:
   interval: 1h
   timeout: 10m
+  releaseName: ceph-csi-drivers
   chart:
     spec:
       chart: ./deploy/charts/ceph-csi-drivers
