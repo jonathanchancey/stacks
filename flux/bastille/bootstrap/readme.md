@@ -19,7 +19,7 @@ kubectl create secret generic github-token-auth-ro \
         --dry-run=client \
         -o yaml | kubectl apply -f -
 # renovate: datasource=github-releases depName=kubernetes-sigs/gateway-api
-kubectl apply --server-side -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.3.0/experimental-install.yaml
+kubectl apply --server-side -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.6.1/experimental-install.yaml
 
 # renovate: datasource=github-releases depName=prometheus-operator/prometheus-operator
 kubectl apply --server-side -f https://github.com/prometheus-operator/prometheus-operator/releases/download/v0.83.0/stripped-down-crds.yaml

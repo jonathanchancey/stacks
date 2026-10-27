@@ -6,6 +6,9 @@ metadata:
   name: &app envoy-gateway
   namespace: &namespace network
 spec:
+  dependsOn:
+    - name: gateway-api
+      namespace: network
   targetNamespace: *namespace
   commonMetadata:
     labels:
