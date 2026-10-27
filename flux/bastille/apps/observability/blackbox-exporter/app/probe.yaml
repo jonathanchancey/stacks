@@ -1,0 +1,38 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/monitoring.coreos.com/probe_v1.json
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  name: cloudflare-tunnel-immich
+spec:
+  jobName: cloudflare-tunnel-immich
+  interval: 1m
+  scrapeTimeout: 15s
+  module: immich_public_proxy
+  prober:
+    url: blackbox-exporter.observability.svc.cluster.local:9115
+  targets:
+    staticConfig:
+      static:
+        - https://pics.chancey.dev/share/healthcheck
+      labels:
+        gateway: envoy-external
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/monitoring.coreos.com/probe_v1.json
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  name: cloudflare-tunnel-flux-webhook
+spec:
+  jobName: cloudflare-tunnel-flux-webhook
+  interval: 1m
+  scrapeTimeout: 15s
+  module: flux_webhook
+  prober:
+    url: blackbox-exporter.observability.svc.cluster.local:9115
+  targets:
+    staticConfig:
+      static:
+        - https://flux-webhook.chancey.dev/hook/
+      labels:
+        gateway: envoy-external
