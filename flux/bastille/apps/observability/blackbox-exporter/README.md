@@ -14,7 +14,10 @@ route that also returns 404. no receiver token is needed.
 
 add public urls in the probes and expected responses in the modules. keep the
 `cloudflare-tunnel-` job prefix so the [alerts](app/prometheusrule.yaml) cover
-new endpoints. update these explicit targets when changing gateway httproutes.
+new endpoints. set `targets.staticConfig.labels.prober: blackbox-exporter` to
+include them in the `blackbox exporter` dashboard automatically. its job and
+endpoint filters are populated from scrape targets, including failed scrapes.
+update these explicit targets when changing gateway httproutes.
 
 inspect `probe_success`, `probe_http_status_code`, and `probe_duration_seconds`
 in prometheus with `{job=~"cloudflare-tunnel-.+"}`. failures lasting five minutes

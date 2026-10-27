@@ -20,3 +20,26 @@ spec:
   interval: 1h
   retryInterval: 2m
   timeout: 5m
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: blackbox-exporter-dashboards
+  namespace: observability
+spec:
+  targetNamespace: observability
+  dependsOn:
+    - name: grafana-dashboards
+      namespace: observability
+    - name: blackbox-exporter
+      namespace: observability
+  path: ./flux/bastille/apps/observability/blackbox-exporter/dashboards
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  interval: 1h
+  retryInterval: 2m
+  timeout: 5m
