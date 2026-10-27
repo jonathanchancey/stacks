@@ -13,3 +13,7 @@ sourced from its tagged git release because upstream publishes no oci chart.
 before migrating settings, save `drivers.csi.ceph.io` and
 `operatorconfigs.csi.ceph.io`, then compare their effective configuration with
 the rendered chart. verify existing volumes and a new pvc mount afterward.
+
+local helm validation needs a checkout of the same upstream tag. pass its path
+with `--sources flux-system=.,ceph-csi-drivers=/path/to/ceph-csi-operator` to
+`flux-local test --enable-helm --all-namespaces --path flux/bastille`.
