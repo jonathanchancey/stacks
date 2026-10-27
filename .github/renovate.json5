@@ -75,7 +75,6 @@
       matchPackageNames: [
         'quay.io/cilium/charts/cilium',
       ],
-      allowedVersions: '<1.20.0',
       separateMinorPatch: true,
       automerge: false,
     },

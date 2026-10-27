@@ -60,11 +60,16 @@ spec:
         connections:
           requireMsgr2: true
       storage:
-        useAllNodes: true
+        useAllNodes: false
         useAllDevices: false
         devicePathFilter: /dev/disk/by-id/nvme-KINGSTON_OM8.*
         config:
           osdsPerDevice: "1"
+        nodes:
+          - name: sentinel-00
+          - name: sentinel-01
+            devicePathFilter: ^/dev/disk/by-id/nvme-.*_CN093BH0213776(_[0-9]+)?$
+          - name: sentinel-02
     cephBlockPools:
       - name: ceph-blockpool
         spec:
