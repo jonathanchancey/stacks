@@ -38,7 +38,7 @@ spec:
         cephx:
           daemon:
             keyRotationPolicy: KeyGeneration
-            keyGeneration: 1
+            keyGeneration: 2
           csi:
             keyRotationPolicy: KeyGeneration
             keyGeneration: 1
