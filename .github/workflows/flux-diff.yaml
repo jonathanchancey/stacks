@@ -22,6 +22,23 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
+      - name: resolve ceph csi release
+        id: ceph-csi
+        run: |
+          tag=$(awk '/tag:/ {print $2; exit}' flux/bastille/apps/rook-ceph/rook-ceph-csi-drivers/app/helmrelease.yaml)
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+
+      - name: checkout ceph csi chart
+        uses: actions/checkout@v7
+        with:
+          repository: ceph/ceph-csi-operator
+          ref: ${{ steps.ceph-csi.outputs.tag }}
+          path: .flux-local/ceph-csi-operator
+          sparse-checkout: deploy/charts/ceph-csi-drivers
+
+      - name: expose git chart for flux-local
+        run: ln -s .flux-local/ceph-csi-operator/deploy deploy
+
       - name: Test Resources
         uses: docker://ghcr.io/allenporter/flux-local:v8.4.0
         with:
