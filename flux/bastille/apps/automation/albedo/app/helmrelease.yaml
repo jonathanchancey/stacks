@@ -82,6 +82,38 @@ spec:
                 memory: 512Mi
               limits:
                 memory: 2Gi
+          web:
+            image:
+              repository: docker.io/library/nginx
+              tag: 1.30.6-alpine@sha256:47928bf67eb62a1863cb08d9ecb52d3e704304ba614eaee17884204677702951
+            command: [/bin/sh, /config/start-web.sh]
+            probes:
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /
+                    port: 8080
+                    httpHeaders:
+                      - name: Host
+                        value: albedo.chancey.dev
+              liveness:
+                enabled: true
+                custom: true
+                spec:
+                  tcpSocket:
+                    port: 8080
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 10m
+                memory: 16Mi
+              limits:
+                memory: 64Mi
     defaultPodOptions:
       automountServiceAccountToken: true
       nodeSelector:
@@ -97,6 +129,26 @@ spec:
           type: RuntimeDefault
     serviceAccount:
       albedo: {}
+    service:
+      app:
+        controller: main
+        ports:
+          http:
+            port: 8080
+    route:
+      app:
+        hostnames: [albedo.chancey.dev]
+        parentRefs:
+          - name: edge
+            namespace: network
+            sectionName: https
+        rules:
+          - backendRefs:
+              - identifier: app
+                port: http
+            timeouts:
+              request: 0s
+              backendRequest: 0s
     persistence:
       public-ca:
         type: configMap
@@ -106,7 +158,27 @@ spec:
             readOnly: true
       home:
         existingClaim: albedo
-        globalMounts:
-          - path: /home/albedo
+        advancedMounts:
+          main:
+            app:
+              - path: /home/albedo
+            web:
+              - path: /albedo-home
+                readOnly: true
+      web-config:
+        type: configMap
+        name: albedo-web-config
+        advancedMounts:
+          main:
+            web:
+              - path: /config
+                readOnly: true
+      web-runtime:
+        type: emptyDir
+        medium: Memory
+        advancedMounts:
+          main:
+            web:
+              - path: /run/albedo-web
       tmp:
         type: emptyDir
