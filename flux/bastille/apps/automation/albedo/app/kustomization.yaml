@@ -14,3 +14,6 @@ configMapGenerator:
       - start-web.sh=resources/start-web.sh
     options:
       disableNameSuffixHash: true
+      annotations:
+        # leave shell expansions for the running container.
+        kustomize.toolkit.fluxcd.io/substitute: disabled
