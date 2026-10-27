@@ -20,6 +20,7 @@ transforms:
       .level = string(."talos-level") ?? "unknown"
       service_fallback = if exists(.facility) { "kernel" } else { "unknown" }
       .service = string(."talos-service") ?? service_fallback
+      .node = get_env_var("VECTOR_SELF_NODE_NAME") ?? "unknown"
   recent_logs:
     type: filter
     inputs: [talos_labels]
@@ -34,7 +35,7 @@ sinks:
     labels:
       job: talos
       cluster: bastille
-      node: "${VECTOR_SELF_NODE_NAME}"
+      node: "{{ node }}"
       service: "{{ service }}"
       level: "{{ level }}"
     buffer:

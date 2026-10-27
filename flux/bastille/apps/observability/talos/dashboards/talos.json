@@ -129,7 +129,7 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "up{namespace=\"observability\",pod=~\"talos-.+\"}",
+          "expr": "max by (node) (up{namespace=\"observability\",pod=~\"talos-.+\"})",
           "legendFormat": "{{node}}",
           "instant": true,
           "range": false,
