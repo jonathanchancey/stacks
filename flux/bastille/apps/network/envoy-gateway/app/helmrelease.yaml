@@ -23,8 +23,6 @@ spec:
   chartRef:
     kind: OCIRepository
     name: *app
-  dependsOn:
-    - name: envoy-gateway-crds
   driftDetection:
     mode: warn
   values:

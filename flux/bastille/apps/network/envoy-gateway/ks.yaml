@@ -7,6 +7,8 @@ metadata:
   namespace: &namespace network
 spec:
   dependsOn:
+    - name: envoy-gateway-crds
+      namespace: network
     - name: gateway-api
       namespace: network
   targetNamespace: *namespace
