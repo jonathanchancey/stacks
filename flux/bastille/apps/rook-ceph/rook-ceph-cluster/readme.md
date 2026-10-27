@@ -11,10 +11,17 @@ and [rook upgrade guide](https://rook.io/docs/rook/v1.20/Upgrade/ceph-upgrade/) 
 daemons can already record generation 1. leave the desired generation in git
 afterward. rook selects the supported daemon cipher automatically.
 
-csi uses `keyType: aes` until every host kernel supports `aes256k` (linux 7.0+;
-7.2+ with fips). `keepPriorKeyCountMax: 1` keeps existing mounts working while
-new mounts use rotated keys. retain prior keys until all affected volumes have
-been remounted and verified. review the [rotation procedure](https://rook.io/docs/rook/v1.20/Storage-Configuration/Advanced/cephx-key-rotation/)
+csi `aes256k` requires ceph-csi `3.17.1` or newer and kernel support on
+every host. talos `1.13.10` and `1.14.0` backported support to linux `6.18`;
+otherwise upstream requires linux `7.0` (`7.2` with fips). verify an isolated
+strong-key volume mount on every host before migrating.
+
+retain every potentially mounted credential generation with
+`keepPriorKeyCountMax` during rotation, including generations retained by
+previous rotations. fully detach and remount each affected volume before
+pruning prior keys. restrict `allowedCiphers` only after every authentication
+key reports `aes256k` and client access has been verified. review the
+[rotation procedure](https://rook.io/docs/rook/v1.20/Storage-Configuration/Advanced/cephx-key-rotation/)
 before changing ciphers or pruning keys.
 
 before upgrading, require healthy storage, current application backups, and
