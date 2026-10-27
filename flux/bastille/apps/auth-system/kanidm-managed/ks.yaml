@@ -6,7 +6,7 @@ metadata:
   name: &app kanidm-managed
   namespace: &namespace auth-system
 spec:
-  suspend: true
+  suspend: false
   targetNamespace: *namespace
   commonMetadata:
     labels:
@@ -36,7 +36,7 @@ metadata:
   name: kanidm-managed-backup
   namespace: &namespace auth-system
 spec:
-  suspend: true
+  suspend: false
   targetNamespace: *namespace
   components:
     - ../../../../components/volsync/backup

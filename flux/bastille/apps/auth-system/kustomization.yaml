@@ -8,6 +8,7 @@ components:
 resources:
   - ./escalation/ks.yaml
   - ./kanidm/ks.yaml
+  - ./kanidm-managed/ks.yaml
   - ./kaniop/ks.yaml
   - ./roles/ks.yaml
   - ./zitadel/ks.yaml

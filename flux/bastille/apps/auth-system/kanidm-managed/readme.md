@@ -1,8 +1,9 @@
 # kanidm managed
 
-this is the dormant kaniop target for [`kanidm`](../kanidm/app/readme.md).
-[`ks.yaml`](ks.yaml) is unreferenced by the namespace kustomization, and both flux
-kustomizations are suspended. activation requires a separate maintenance window.
+this is the kaniop-managed deployment of [`kanidm`](../kanidm/app/readme.md).
+[`ks.yaml`](ks.yaml) reconciles the server and its independent volume backups.
+the original helm release retains the shared route and certificate; keep its
+server scaled to zero while this deployment serves traffic.
 
 ## configuration
 
