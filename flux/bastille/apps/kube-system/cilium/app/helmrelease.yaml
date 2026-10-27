@@ -23,6 +23,9 @@ spec:
   chartRef:
     kind: OCIRepository
     name: cilium
+  dependsOn:
+    - name: cert-manager
+      namespace: cert-manager
   values:
     cluster:
       name: bastille
@@ -96,6 +99,14 @@ spec:
       enabled: true
 
     hubble:
+      tls:
+        auto:
+          method: certmanager
+          certValidityDuration: 90
+          certManagerIssuerRef:
+            group: cert-manager.io
+            kind: Issuer
+            name: hubble-ca
       ui:
         enabled: true
       relay:
