@@ -1,0 +1,119 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/source.toolkit.fluxcd.io/gitrepository_v1.json
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: ceph-csi-drivers
+spec:
+  interval: 1h
+  ref:
+    # renovate: datasource=github-releases depName=ceph/ceph-csi-operator
+    tag: v1.0.4
+  url: https://github.com/ceph/ceph-csi-operator
+  ignore: |
+    /*
+    !/deploy
+    /deploy/*
+    !/deploy/charts
+    /deploy/charts/*
+    !/deploy/charts/ceph-csi-drivers
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: rook-ceph-csi-drivers
+spec:
+  interval: 1h
+  timeout: 10m
+  chart:
+    spec:
+      chart: ./deploy/charts/ceph-csi-drivers
+      reconcileStrategy: Revision
+      sourceRef:
+        kind: GitRepository
+        name: ceph-csi-drivers
+  values:
+    operatorConfig:
+      namespace: rook-ceph
+      driverSpecDefaults:
+        clusterName: rook-ceph
+        imageSet:
+          name: rook-csi-operator-image-set-configmap
+        nodePlugin:
+          priorityClassName: system-node-critical
+          kubeletDirPath: /var/lib/kubelet
+          updateStrategy:
+            type: RollingUpdate
+        controllerPlugin:
+          priorityClassName: system-cluster-critical
+          replicas: 2
+          hostNetwork: true
+          deploymentStrategy:
+            type: Recreate
+    drivers:
+      rbd:
+        name: rook-ceph.rbd.csi.ceph.com
+        clusterName: rook-ceph
+        snapshotPolicy: volumeSnapshot
+        nodePlugin:
+          priorityClassName: system-node-critical
+          resources:
+            plugin:
+              limits:
+                memory: 1Gi
+              requests:
+                cpu: 250m
+                memory: 512Mi
+            registrar:
+              limits:
+                memory: 256Mi
+              requests:
+                cpu: 50m
+                memory: 128Mi
+        controllerPlugin:
+          priorityClassName: system-cluster-critical
+          replicas: 2
+          hostNetwork: true
+          resources:
+            attacher:
+              limits:
+                memory: 256Mi
+              requests:
+                cpu: 100m
+                memory: 128Mi
+            omapGenerator:
+              limits:
+                memory: 1Gi
+              requests:
+                cpu: 250m
+                memory: 512Mi
+            plugin:
+              limits:
+                memory: 1Gi
+              requests:
+                memory: 512Mi
+            provisioner:
+              limits:
+                memory: 256Mi
+              requests:
+                cpu: 100m
+                memory: 128Mi
+            resizer:
+              limits:
+                memory: 256Mi
+              requests:
+                cpu: 100m
+                memory: 128Mi
+            snapshotter:
+              limits:
+                memory: 256Mi
+              requests:
+                cpu: 100m
+                memory: 128Mi
+      cephfs:
+        enabled: false
+      nfs:
+        enabled: false
+      nvmeof:
+        enabled: false

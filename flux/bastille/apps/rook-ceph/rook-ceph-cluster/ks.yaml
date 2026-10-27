@@ -10,7 +10,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: rook-ceph-operator
+    - name: rook-ceph-csi-drivers
       namespace: *namespace
   components:
     - ../../../../components/gatus
