@@ -3,7 +3,7 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: OCIRepository
 metadata:
-  name: talos-logs
+  name: talos
 spec:
   interval: 5m
   layerSelector:
@@ -17,14 +17,14 @@ spec:
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: talos-logs
+  name: talos
 spec:
   interval: 1h
   chartRef:
     kind: OCIRepository
-    name: talos-logs
+    name: talos
   values:
-    fullnameOverride: talos-logs
+    fullnameOverride: talos
     image:
       repository: ghcr.io/vectordotdev/vector
     role: Agent
@@ -43,7 +43,7 @@ spec:
     persistence:
       hostPath:
         path: /var/lib/vector-talos
-    existingConfigMaps: [talos-logs-config]
+    existingConfigMaps: [talos-config]
     dataDir: /vector-data-dir
     containerPorts:
       - name: talos

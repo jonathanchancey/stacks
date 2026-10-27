@@ -13,7 +13,7 @@ resources:
   - ./grafana-mcp/ks.yaml
   - ./loki/ks.yaml
   - ./promtail/ks.yaml
-  - ./talos-logs/ks.yaml
+  - ./talos/ks.yaml
   - ./gatus/ks.yaml
   - ./victoriametrics/ks.yaml
   - ./victorialogs/ks.yaml
