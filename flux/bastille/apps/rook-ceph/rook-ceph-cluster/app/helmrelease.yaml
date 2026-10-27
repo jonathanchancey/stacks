@@ -34,6 +34,9 @@ spec:
     toolbox:
       enabled: true
     cephClusterSpec:
+      cephConfig:
+        mgr:
+          public_network: 10.244.0.0/16
       security:
         cephx:
           allowedCiphers:
@@ -62,6 +65,7 @@ spec:
         port: 8080
         prometheusEndpoint: http://prometheus-operated.observability.svc.cluster.local:9090
       mgr:
+        hostNetwork: false
         modules:
           - name: diskprediction_local
             enabled: true
