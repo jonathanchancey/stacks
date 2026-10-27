@@ -8,6 +8,12 @@ metadata:
 spec:
   domain: idm.chancey.dev
   origin: https://idm.chancey.dev
+  groupNamespaceSelector: &identityNamespaces
+    matchExpressions:
+      - key: kubernetes.io/metadata.name
+        operator: In
+        values: [auth-system, automation]
+  oauth2ClientNamespaceSelector: *identityNamespaces
   image: docker.io/kanidm/server:1.11.2@sha256:d87475bf9c9cfd24872d8b25957c9fc13fc090ace09ddc37c3b25fe394b397ac
   disableUpgradeChecks: false
   replicaGroups:

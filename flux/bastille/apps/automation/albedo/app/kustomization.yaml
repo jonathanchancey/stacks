@@ -7,3 +7,10 @@ resources:
   - ./pvc.yaml
   - ./rbac.yaml
   - ./networkpolicy.yaml
+configMapGenerator:
+  - name: albedo-web-config
+    files:
+      - nginx.conf=resources/nginx.conf
+      - start-web.sh=resources/start-web.sh
+    options:
+      disableNameSuffixHash: true
