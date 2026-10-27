@@ -36,6 +36,9 @@ jobs:
           path: .flux-local/ceph-csi-operator
           sparse-checkout: deploy/charts/ceph-csi-drivers
 
+      - name: expose git chart for flux-local
+        run: ln -s .flux-local/ceph-csi-operator/deploy deploy
+
       - name: Test Resources
         uses: docker://ghcr.io/allenporter/flux-local:v8.4.0
         with:
@@ -43,7 +46,6 @@ jobs:
             test
             --path /github/workspace/flux/bastille
             --enable-helm
-            --sources flux-system=.,ceph-csi-drivers=./.flux-local/ceph-csi-operator
             --all-namespaces
             --verbose
 
