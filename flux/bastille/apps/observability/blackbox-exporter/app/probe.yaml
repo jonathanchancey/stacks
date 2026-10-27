@@ -17,6 +17,7 @@ spec:
         - https://pics.chancey.dev/share/healthcheck
       labels:
         gateway: envoy-external
+        prober: blackbox-exporter
 ---
 # yaml-language-server: $schema=https://k8s-schemas.home-operations.com/monitoring.coreos.com/probe_v1.json
 apiVersion: monitoring.coreos.com/v1
@@ -36,3 +37,4 @@ spec:
         - https://flux-webhook.chancey.dev/hook/
       labels:
         gateway: envoy-external
+        prober: blackbox-exporter
