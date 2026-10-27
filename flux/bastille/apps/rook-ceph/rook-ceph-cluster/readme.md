@@ -38,3 +38,7 @@ keep `cephClusterSpec.cephConfig.mgr.public_network` aligned with the pod cidr,
 separate from the host networking used by the storage daemons.
 verify the [dashboard route](app/httproute.yaml) through every gateway node
 after manager or gateway networking changes.
+
+before switching existing managers to pod networking, set their startup range
+with `ceph config set mgr public_network <pod-cidr>`. rook applies `cephConfig`
+after manager startup, so the range must be available before the rollout.
