@@ -3,11 +3,12 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - ./helmrelease.yaml
-  - ./prometheusrule.yaml
+  - ./grafanadashboard.yaml
 configMapGenerator:
-  - name: talos-logs-config
+  - name: talos-dashboard
     files:
-      - vector.yaml=./vector.yaml
+      - talos.json
 generatorOptions:
   disableNameSuffixHash: true
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled

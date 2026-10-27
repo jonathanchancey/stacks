@@ -3,27 +3,27 @@
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
-  name: talos-logs
+  name: talos
 spec:
   groups:
-    - name: talos-logs
+    - name: talos
       rules:
         - alert: TalosLogDeliveryErrors
           expr: |
-            sum by (node) (increase(vector_component_errors_total{namespace="observability",pod=~"talos-logs-.+",component_id="loki"}[5m])) > 0
+            sum by (node) (increase(vector_component_errors_total{namespace="observability",pod=~"talos-.+",component_id="loki"}[5m])) > 0
             or
-            sum by (node) (increase(vector_component_discarded_events_total{namespace="observability",pod=~"talos-logs-.+",intentional="false"}[5m])) > 0
+            sum by (node) (increase(vector_component_discarded_events_total{namespace="observability",pod=~"talos-.+",intentional="false"}[5m])) > 0
           for: 5m
           labels:
             severity: warning
           annotations:
             summary: talos log delivery errors on {{ $labels.node }}
-            description: check the talos-logs pod and loki ingestion errors before the node-local buffer fills.
+            description: check the talos pod and loki ingestion errors before the node-local buffer fills.
         - alert: TalosLogBufferAlmostFull
           expr: |
-            sum by (node) (vector_buffer_size_bytes{namespace="observability",pod=~"talos-logs-.+",component_id="loki"})
+            sum by (node) (vector_buffer_size_bytes{namespace="observability",pod=~"talos-.+",component_id="loki"})
             /
-            sum by (node) (vector_buffer_max_size_bytes{namespace="observability",pod=~"talos-logs-.+",component_id="loki"}) > 0.8
+            sum by (node) (vector_buffer_max_size_bytes{namespace="observability",pod=~"talos-.+",component_id="loki"}) > 0.8
           for: 15m
           labels:
             severity: warning

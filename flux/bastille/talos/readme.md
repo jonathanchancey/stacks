@@ -68,11 +68,16 @@ talosctl --talosconfig=.private/talosconfig apply-config --nodes 10.131.128.12 -
 ## observability
 
 [the observability patch](patches/observability.yaml) forwards service and kernel
-logs to the node-local [talos log receiver](../apps/observability/talos-logs/app/).
+logs to the node-local [talos log receiver](../apps/observability/talos/app/).
 vector listens on loopback, preserves the original json fields and timestamps,
 and sends logs to loki with `job="talos"`, `cluster`, `node`, `service`, and
 `level` labels. kernel logs use `service="kernel"`. pod logs remain with promtail.
 query `{job="talos"}` in grafana explore; add `service="etcd"` for etcd logs.
+
+the [talos dashboard](../apps/observability/talos/dashboards/) shows node versions,
+control-plane scrape health, and log delivery metrics. it links to the existing
+etcd, scheduler, controller-manager, and node dashboards. a synchronized dashboard
+can still have no data: check scrape health before changing dashboard queries.
 
 reconcile the receiver through flux before enabling forwarding. from this
 directory, apply only the observability patch to one control-plane node at a time:
