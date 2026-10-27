@@ -6,9 +6,10 @@ matching digest. review the [ceph release notes](https://docs.ceph.com/en/latest
 and [rook upgrade guide](https://rook.io/docs/rook/v1.20/Upgrade/ceph-upgrade/) first.
 
 `cephClusterSpec.security.cephx` controls key rotation. increment
-`keyGeneration` above the corresponding `status.cephx` generation for a new
-rotation; leave the desired generation in git afterward. rook selects the
-supported daemon cipher automatically.
+`keyGeneration` above all recorded generations for a new rotation. check
+`status.cephx` and daemon pod-template `cephx-status` annotations; newly created
+daemons can already record generation 1. leave the desired generation in git
+afterward. rook selects the supported daemon cipher automatically.
 
 csi uses `keyType: aes` until every host kernel supports `aes256k` (linux 7.0+;
 7.2+ with fips). `keepPriorKeyCountMax: 1` keeps existing mounts working while
