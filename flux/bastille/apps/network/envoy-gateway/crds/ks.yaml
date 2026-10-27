@@ -1,0 +1,33 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/source.toolkit.fluxcd.io/ocirepository_v1.json
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: envoy-gateway-crds
+  namespace: network
+spec:
+  interval: 5m
+  layerSelector:
+    mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
+    operation: extract
+  ref:
+    tag: 1.8.3
+  url: oci://docker.io/envoyproxy/gateway-helm
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: envoy-gateway-crds
+  namespace: network
+spec:
+  interval: 1h
+  retryInterval: 2m
+  timeout: 5m
+  path: ./gateway-helm/charts/crds/crds/generated
+  prune: false
+  wait: true
+  sourceRef:
+    kind: OCIRepository
+    name: envoy-gateway-crds
+    namespace: network
