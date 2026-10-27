@@ -1,0 +1,73 @@
+---
+apiVersion: kaniop.rs/v1beta1
+kind: Kanidm
+metadata:
+  name: kanidm-managed
+  labels:
+    kustomize.toolkit.fluxcd.io/prune: disabled
+spec:
+  domain: idm.chancey.dev
+  origin: https://idm.chancey.dev
+  image: docker.io/kanidm/server:1.11.2@sha256:d87475bf9c9cfd24872d8b25957c9fc13fc090ace09ddc37c3b25fe394b397ac
+  disableUpgradeChecks: false
+  replicaGroups:
+    - name: default
+      replicas: 1
+      primaryNode: true
+      resources:
+        requests:
+          cpu: 10m
+        limits:
+          memory: 1Gi
+  tlsSecretName: kanidm-tls
+  ldapPortName: ldaps
+  logLevel: info
+  storage:
+    volumeClaimTemplate:
+      metadata:
+        labels:
+          kustomize.toolkit.fluxcd.io/prune: disabled
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 2Gi
+        storageClassName: ceph-block
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: Retain
+    whenScaled: Retain
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000
+    fsGroupChangePolicy: OnRootMismatch
+  containers:
+    - name: kanidm
+      securityContext:
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+        capabilities:
+          drop:
+            - ALL
+  env:
+    - name: TZ
+      value: America/Los_Angeles
+    - name: KANIDM_CONFIG
+      value: /etc/kanidm/server.toml
+    - name: KANIDM_ADMIN_BIND_PATH
+      value: /var/run/kanidmd.sock
+  volumes:
+    - name: config
+      configMap:
+        name: kanidm-managed-configmap
+    - name: run
+      emptyDir: {}
+  volumeMounts:
+    - name: config
+      mountPath: /etc/kanidm/server.toml
+      subPath: server.toml
+      readOnly: true
+    - name: run
+      mountPath: /var/run
