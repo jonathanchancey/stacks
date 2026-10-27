@@ -13,6 +13,8 @@ resources:
   - ./grafana-mcp/ks.yaml
   - ./loki/ks.yaml
   - ./promtail/ks.yaml
+  - ./talos/ks.yaml
+  - ./blackbox-exporter/ks.yaml
   - ./gatus/ks.yaml
   - ./victoriametrics/ks.yaml
   - ./victorialogs/ks.yaml

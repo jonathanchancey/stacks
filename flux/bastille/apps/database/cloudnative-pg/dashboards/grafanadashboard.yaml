@@ -11,9 +11,21 @@ spec:
       dashboards: grafana
   uid: cloudnative-pg
   resyncPeriod: 10m
-  configMapRef:
-    name: cnpg-grafana-dashboard
-    key: cnp.json
+  envs:
+    - name: dashboard
+      valueFrom:
+        configMapKeyRef:
+          name: cnpg-grafana-dashboard
+          key: cnp.json
+  # keep the chart dashboard while using plugin-managed backup timestamps.
+  jsonnet: |
+    local dashboard = std.extVar('dashboard');
+    local backups = std.strReplace(dashboard,
+      'cnpg_collector_last_available_backup_timestamp',
+      'barman_cloud_cloudnative_pg_io_last_available_backup_timestamp');
+    std.parseJson(std.strReplace(backups,
+      'cnpg_collector_first_recoverability_point',
+      'barman_cloud_cloudnative_pg_io_first_recoverability_point'))
   variables:
     - name: DS_PROMETHEUS
       value: prometheus

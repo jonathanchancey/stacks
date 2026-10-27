@@ -1,0 +1,33 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/monitoring.coreos.com/prometheusrule_v1.json
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: blackbox-exporter
+spec:
+  groups:
+    - name: cloudflare-tunnel
+      rules:
+        - alert: CloudflareTunnelEndpointDown
+          expr: probe_success{job=~"cloudflare-tunnel-.+"} == 0
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: cloudflare tunnel endpoint {{ $labels.instance }} is down
+            description: check public dns, cloudflare tunnel health, and the envoy-external route and backend.
+        - alert: CloudflareTunnelProbeScrapeFailed
+          expr: up{job=~"cloudflare-tunnel-.+"} == 0
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: cannot scrape the probe for {{ $labels.instance }}
+            description: check the blackbox-exporter pod, service, and module configuration.
+        - alert: CloudflareTunnelCertificateExpiring
+          expr: probe_ssl_earliest_cert_expiry{job=~"cloudflare-tunnel-.+"} - time() < 86400 * 14
+          for: 1h
+          labels:
+            severity: warning
+          annotations:
+            summary: public certificate for {{ $labels.instance }} expires within two weeks

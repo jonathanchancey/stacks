@@ -10,7 +10,7 @@ spec:
     mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
     operation: copy
   ref:
-    tag: v1.19.6
+    tag: v1.20.9
   url: oci://ghcr.io/rook/rook-ceph-cluster
 ---
 # yaml-language-server: $schema=https://k8s-schemas.home-operations.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
@@ -25,12 +25,31 @@ spec:
     kind: OCIRepository
     name: rook-ceph-cluster
   values:
+    cephImage:
+      repository: quay.io/ceph/ceph
+      tag: v19.2.7-20261009@sha256:3fc0a79f1c671f0e75be24ba77a4ab32227e5ea080e16dfc0840a1dc6c30bf7e
     monitoring:
       enabled: true
       createPrometheusRules: true
     toolbox:
       enabled: true
     cephClusterSpec:
+      security:
+        cephx:
+          allowedCiphers:
+            - aes256k
+          daemon:
+            keyRotationPolicy: KeyGeneration
+            keyGeneration: 2
+          csi:
+            keyRotationPolicy: KeyGeneration
+            keyGeneration: 2
+            keepPriorKeyCountMax: 0
+            keyType: aes256k
+          rbdMirrorPeer:
+            keyRotationPolicy: KeyGeneration
+            keyGeneration: 2
+            keyType: aes256k
       crashCollector:
         disable: false
       csi:
