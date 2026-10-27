@@ -14,6 +14,14 @@ spec:
   configMapRef:
     name: cnpg-grafana-dashboard
     key: cnp.json
+  # keep the chart dashboard while using plugin-managed backup timestamps.
+  patch:
+    scripts:
+      - |-
+        walk(if type == "string" then
+          gsub("cnpg_collector_last_available_backup_timestamp"; "barman_cloud_cloudnative_pg_io_last_available_backup_timestamp")
+          | gsub("cnpg_collector_first_recoverability_point"; "barman_cloud_cloudnative_pg_io_first_recoverability_point")
+        else . end)
   variables:
     - name: DS_PROMETHEUS
       value: prometheus
