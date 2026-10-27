@@ -27,13 +27,27 @@ spec:
   values:
     cephImage:
       repository: quay.io/ceph/ceph
-      tag: v19.2.3
+      tag: v19.2.7-20261009@sha256:3fc0a79f1c671f0e75be24ba77a4ab32227e5ea080e16dfc0840a1dc6c30bf7e
     monitoring:
       enabled: true
       createPrometheusRules: true
     toolbox:
       enabled: true
     cephClusterSpec:
+      security:
+        cephx:
+          daemon:
+            keyRotationPolicy: KeyGeneration
+            keyGeneration: 1
+          csi:
+            keyRotationPolicy: KeyGeneration
+            keyGeneration: 1
+            keepPriorKeyCountMax: 1
+            keyType: aes
+          rbdMirrorPeer:
+            keyRotationPolicy: KeyGeneration
+            keyGeneration: 1
+            keyType: aes
       crashCollector:
         disable: false
       csi:
