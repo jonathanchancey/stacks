@@ -78,7 +78,7 @@ data:
       - albedo:
           href: https://albedo.chancey.dev/
           icon: mdi-robot-outline-#A78BFA
-          description: bastille caretaker
+          description: ai assistant
       - Proxmox:
           href: https://proxmox.chancey.dev
           icon: proxmox.png
