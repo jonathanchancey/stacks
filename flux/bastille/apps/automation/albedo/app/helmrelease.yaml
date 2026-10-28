@@ -45,6 +45,9 @@ spec:
               SSL_CERT_FILE: /etc/ssl/certs/ca-certificates.crt
               SSL_CERT_DIR: /etc/ssl/certs
               REQUESTS_CA_BUNDLE: /etc/ssl/certs/ca-certificates.crt
+            envFrom:
+              - secretRef:
+                  name: albedo-secrets
             probes:
               startup:
                 enabled: true
@@ -150,6 +153,14 @@ spec:
               request: 0s
               backendRequest: 0s
     persistence:
+      secrets:
+        type: secret
+        name: albedo-secrets
+        advancedMounts:
+          main:
+            app:
+              - path: /var/run/secrets/albedo
+                readOnly: true
       public-ca:
         type: configMap
         name: public-ca-bundle-20261020
