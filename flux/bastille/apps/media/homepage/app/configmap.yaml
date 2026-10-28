@@ -75,6 +75,10 @@ data:
           icon: miniflux.png
           description: RSS Reader
     - Management:
+      - albedo:
+          href: https://albedo.chancey.dev/
+          icon: mdi-robot-outline-#A78BFA
+          description: bastille caretaker
       - Proxmox:
           href: https://proxmox.chancey.dev
           icon: proxmox.png
