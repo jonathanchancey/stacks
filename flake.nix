@@ -1,5 +1,5 @@
 {
-  description = "Stacks development tools";
+  description = "stacks development tools";
 
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
@@ -54,31 +54,13 @@
         in
         rec {
           inherit cacert;
-          certifi = pkgs.python313Packages.certifi.override { inherit cacert; };
           git-of-theseus = pkgs.callPackage ./tools/nix/git-of-theseus.nix {
             python3Packages = pkgs.python312Packages;
             trustWrapperArgs = trustWrapperArgs pkgs cacert;
           };
-          flux-local =
-            let
-              unpatched = pkgs.callPackage ./tools/nix/flux-local.nix {
-                python3Packages = pkgs.python313Packages;
-                trustWrapperArgs = trustWrapperArgs pkgs cacert;
-              };
-            in
-            (pkgs.replaceDependencies {
-              drv = unpatched;
-              replacements = [
-                {
-                  oldDependency = pkgs.python313Packages.certifi;
-                  newDependency = certifi;
-                }
-              ];
-            }).overrideAttrs
-              {
-                inherit (unpatched) meta;
-                passthru.version = unpatched.version;
-              };
+          flate = pkgs.callPackage ./tools/nix/flate.nix {
+            trustWrapperArgs = trustWrapperArgs pkgs cacert;
+          };
           toolchain = pkgs.buildEnv {
             name = "stacks-toolchain";
             nativeBuildInputs = [ pkgs.makeWrapper ];
@@ -89,14 +71,17 @@
               done
             '';
             paths = [
-              flux-local
+              flate
             ]
             ++ (with pkgs; [
+              actionlint
               age
               cloudflared
+              crane
               fluxcd
               git
               go-task
+              jq
               kubeconform
               kubectl
               kubernetes-helm
@@ -105,6 +90,7 @@
               sops
               talosctl
               yq-go
+              zizmor
             ]);
           };
         }
@@ -135,9 +121,8 @@
           inherit pkgs;
           inherit (self.packages.${system})
             cacert
-            certifi
             git-of-theseus
-            flux-local
+            flate
             toolchain
             ;
         }
