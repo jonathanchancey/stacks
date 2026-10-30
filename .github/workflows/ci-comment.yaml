@@ -2,7 +2,7 @@
 # yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
 name: ci comment
 
-# this trigger only publishes a link from api metadata; it never runs pull request code.
+# this trigger reads bounded artifact text; it never runs pull request code.
 on: # zizmor: ignore[dangerous-triggers]
   workflow_run:
     workflows: [ci]
@@ -16,17 +16,17 @@ permissions: {}
 
 jobs:
   comment:
-    name: publish diff link
+    name: publish diff preview
     if: ${{ github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     permissions:
       actions: read # locate the completed run's diff artifact
       contents: read
-      pull-requests: write # update the current pull request's sticky diff link
+      pull-requests: write # update the current pull request's sticky diff preview
     steps:
-      # no checkout or artifact contents enter this privileged job.
-      - name: publish rendered diff link
+      # no checkout: artifact bytes are read as data, never imported or executed.
+      - name: publish rendered diff preview
         uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
         with:
           script: |
@@ -42,13 +42,42 @@ jobs:
               ...repo, state: 'open', base: 'main',
               head: `${run.head_repository.owner.login}:${run.head_branch}`, per_page: 100,
             });
+            let preview;
             for (const candidate of pulls) {
               const { data: pull } = await github.rest.pulls.get({ ...repo, pull_number: candidate.number });
               if (pull.state !== 'open' || pull.head.sha !== run.head_sha ||
                   pull.head.repo?.full_name !== run.head_repository.full_name ||
                   pull.base.ref !== 'main' || pull.base.repo.full_name !== `${repo.owner}/${repo.repo}`) continue;
               const url = `${context.serverUrl}/${repo.owner}/${repo.repo}/actions/runs/${run.id}/artifacts/${artifact.id}`;
-              const body = `${marker}\nrendered flux diff for \`${run.head_sha.slice(0, 12)}\`: [download the full diff and changed images](${url}).\n\nall selected ci checks passed.`;
+              if (preview === undefined) {
+                // bound both the archive and decompressed text; never extract files.
+                if (artifact.size_in_bytes > 20 * 1024 * 1024) {
+                  preview = 'diff preview unavailable: artifact exceeds the preview size limit.';
+                } else {
+                  const { data } = await github.rest.actions.downloadArtifact({
+                    ...repo, artifact_id: artifact.id, archive_format: 'zip',
+                  });
+                  const archive = Buffer.from(data);
+                  if (archive.length > 20 * 1024 * 1024) throw new Error('diff archive too large');
+                  const { execFileSync } = require('node:child_process');
+                  const result = JSON.parse(execFileSync('python3', ['-c', [
+                    'import io, json, sys, zipfile',
+                    'with zipfile.ZipFile(io.BytesIO(sys.stdin.buffer.read())) as archive:',
+                    '    matches = [item for item in archive.infolist() if item.filename == "flux.diff"]',
+                    '    if len(matches) != 1: raise ValueError("expected one flux.diff")',
+                    '    with archive.open(matches[0]) as stream: data = stream.read(12001)',
+                    'print(json.dumps({"text": data[:12000].decode("utf-8", errors="replace"), "truncated": len(data) > 12000}))',
+                  ].join('\n')], { input: archive, maxBuffer: 128 * 1024, timeout: 10000 }));
+                  // a longer fence prevents manifest text from escaping the code block.
+                  const longest = Math.max(2, ...(result.text.match(/`+/g) || []).map(value => value.length));
+                  const fence = '`'.repeat(longest + 1);
+                  preview = result.text.trim()
+                    ? `<details open>\n<summary>rendered flux diff</summary>\n\n${fence}diff\n${result.text}\n${fence}\n\n</details>`
+                    : 'no rendered changes.';
+                  if (result.truncated) preview += '\n\npreview truncated; download the full diff below.';
+                }
+              }
+              const body = `${marker}\nrendered flux diff for \`${run.head_sha.slice(0, 12)}\`.\n\n${preview}\n\n[download the full diff and changed images](${url}).\n\nall selected ci checks passed.`;
               const comments = await github.paginate(github.rest.issues.listComments, {
                 ...repo, issue_number: pull.number, per_page: 100,
               });
