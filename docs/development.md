@@ -45,8 +45,9 @@ built-in schemas, then home-operations schemas. missing schemas are listed in th
 report and are not counted as validated resources.
 
 pull requests compare explicit revisions and attach the complete rendered diff.
-the separate comment workflow publishes the result without executing pull
-request code. image checks inspect registries without accessing the cluster.
+the separate comment workflow shows a collapsible inline preview, capped at
+12,000 bytes, with the complete artifact linked below. it reads only diff text
+without executing pull request code. image checks inspect registries without accessing the cluster.
 
 after the workflow is available on the default branch, import
 [the required-check ruleset](../.github/rulesets/ci.json) in the repository's
