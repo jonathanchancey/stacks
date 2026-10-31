@@ -81,7 +81,7 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/ahinko/valkey
+              repository: docker.io/valkey/valkey
               tag: 8.1.4
             resources:
               requests:

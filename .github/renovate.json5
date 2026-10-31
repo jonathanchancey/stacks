@@ -69,6 +69,14 @@
   packageRules: [
     {
       description: [
+        'skip wunbot images hosted on the internal registry',
+      ],
+      matchDatasources: ['docker'],
+      matchPackageNames: ['forge.chancey.dev/coruscar/wunbot'],
+      enabled: false,
+    },
+    {
+      description: [
         'review daily albedo images with digest pins',
       ],
       matchDatasources: ['docker'],
