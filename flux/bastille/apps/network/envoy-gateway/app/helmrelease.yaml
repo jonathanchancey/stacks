@@ -26,6 +26,8 @@ spec:
   driftDetection:
     mode: warn
   values:
+    crds:
+      enabled: false
     deployment:
       replicas: 2
       pod:

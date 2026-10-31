@@ -62,6 +62,35 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
+  name: cloudnative-pg-gatus
+  namespace: database
+spec:
+  dependsOn:
+    - name: cloudnative-pg-cluster
+      namespace: database
+  healthCheckExprs:
+    - apiVersion: postgresql.cnpg.io/v1
+      kind: DatabaseRole
+      current: has(status) && has(status.applied) && status.applied && has(status.observedGeneration) && status.observedGeneration == metadata.generation
+    - apiVersion: postgresql.cnpg.io/v1
+      kind: Database
+      current: has(status) && has(status.applied) && status.applied && has(status.observedGeneration) && status.observedGeneration == metadata.generation
+  interval: 1h
+  path: ./flux/bastille/apps/database/cloudnative-pg/gatus
+  prune: true
+  retryInterval: 2m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  targetNamespace: database
+  timeout: 5m
+  wait: true
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
   name: &app cloudnative-pg-barman
   namespace: &namespace database
 spec:

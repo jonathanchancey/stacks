@@ -31,15 +31,7 @@ spec:
         annotations:
           reloader.stakater.com/auto: "true"
         initContainers:
-          init-db:
-            image:
-              repository: ghcr.io/home-operations/postgres-init
-              tag: ${POSTGRESQL_MAJOR_VERSION}
-            envFrom:
-              - secretRef:
-                  name: gatus-secret
           init-config:
-            dependsOn: init-db
             image:
               repository: ghcr.io/home-operations/k8s-sidecar
               tag: 2.14.1@sha256:22eccb80b828a956eb31214ed5a0358c9efcbf575f196c2b859ac00bfd5dcef4
