@@ -1,0 +1,32 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/postgresql.cnpg.io/backup_v1.json
+apiVersion: postgresql.cnpg.io/v1
+kind: Backup
+metadata:
+  name: barman-upgrade-test-bastille-pg
+  namespace: database
+  labels:
+    app.kubernetes.io/part-of: barman-upgrade-test
+    stacks.chancey.dev/cleanup: required
+spec:
+  cluster:
+    name: bastille-pg
+  method: plugin
+  pluginConfiguration:
+    name: barman-cloud.cloudnative-pg.io
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/postgresql.cnpg.io/backup_v1.json
+apiVersion: postgresql.cnpg.io/v1
+kind: Backup
+metadata:
+  name: barman-upgrade-test-immich
+  namespace: database
+  labels:
+    app.kubernetes.io/part-of: barman-upgrade-test
+    stacks.chancey.dev/cleanup: required
+spec:
+  cluster:
+    name: immich-postgres
+  method: plugin
+  pluginConfiguration:
+    name: barman-cloud.cloudnative-pg.io

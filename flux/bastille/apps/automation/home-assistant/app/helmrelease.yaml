@@ -10,7 +10,7 @@ spec:
     mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
     operation: copy
   ref:
-    tag: 5.0.1
+    tag: 5.3.0
   url: oci://ghcr.io/bjw-s-labs/helm/app-template
 ---
 # yaml-language-server: $schema=https://k8s-schemas.home-operations.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
@@ -33,7 +33,7 @@ spec:
           app:
             image:
               repository: ghcr.io/home-operations/home-assistant
-              tag: 2026.7.4@sha256:17a97c2fc87b4311342c1a67b92ffa5d4b02cd64f514228d80385e96a888137e
+              tag: 2026.10.4@sha256:81271a8bbe2a6019659e9d5cde98b884dd0d67fad6819bb4ab177dceb0c1c5e1
             env:
               TZ: America/Los_Angeles
             securityContext:

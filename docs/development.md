@@ -44,7 +44,8 @@ helm output. rendered checks use chart-provided crd schemas, matching kubernetes
 built-in schemas, then home-operations schemas. missing schemas are listed in the
 report and are not counted as validated resources.
 
-pull requests compare explicit revisions and attach the complete rendered diff.
+pull requests render the full head and merge-base trees so shared chart sources
+remain available, then attach their resource diff and newly introduced images.
 the separate comment workflow shows a collapsible inline preview, capped at
 12,000 bytes, with the complete artifact linked below. it reads only diff text
 without executing pull request code. image checks inspect registries without accessing the cluster.

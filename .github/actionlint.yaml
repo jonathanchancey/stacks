@@ -1,0 +1,4 @@
+# actionlint's runner catalog predates this hosted image.
+self-hosted-runner:
+  labels:
+    - ubuntu-26.04
