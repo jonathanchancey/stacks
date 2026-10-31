@@ -9,4 +9,16 @@ spec:
     matchLabels:
       app.kubernetes.io/name: albedo
   policyTypes: [Ingress]
-  ingress: []
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: network
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: envoy
+              gateway.envoyproxy.io/owning-gateway-name: edge
+              gateway.envoyproxy.io/owning-gateway-namespace: network
+      ports:
+        - protocol: TCP
+          port: 8080

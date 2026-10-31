@@ -11,9 +11,67 @@ spec:
       dashboards: grafana
   uid: cloudnative-pg
   resyncPeriod: 10m
-  configMapRef:
-    name: cnpg-grafana-dashboard
-    key: cnp.json
+  envs:
+    - name: dashboard
+      valueFrom:
+        configMapKeyRef:
+          name: cnpg-grafana-dashboard
+          key: cnp.json
+  # adapt the chart dashboard to the metrics and topology available here.
+  jsonnet: |
+    local dashboard = std.extVar('dashboard');
+    local backups = std.strReplace(dashboard,
+      'cnpg_collector_last_available_backup_timestamp',
+      'barman_cloud_cloudnative_pg_io_last_available_backup_timestamp');
+    local model = std.parseJson(std.strReplace(backups,
+      'cnpg_collector_first_recoverability_point',
+      'barman_cloud_cloudnative_pg_io_first_recoverability_point'));
+    local selector = 'namespace=~"$namespace",pod=~"$instances"';
+    local operatorQuery = 'label_values(kube_pod_labels{label_app_kubernetes_io_name="cloudnative-pg"},namespace)';
+    local patchPanel(panel) = panel
+      + (if std.objectHas(panel, 'panels') then { panels: std.map(patchPanel, panel.panels) } else {})
+      + (if panel.id == 338 then {
+          title: 'last restart',
+          description: 'postgres process start time; a restart does not imply a failover.',
+        } else if panel.id == 47 then {
+          targets: [target { expr: target.expr + ' * 1024' } for target in panel.targets],
+        } else if panel.id == 590 then {
+          description: 'highest observed replication lag; absent standby metrics do not hide the instance lag.',
+          targets: [panel.targets[0] {
+            expr: 'max({__name__=~"cnpg_pg_replication_lag|cnpg_pg_stat_replication_(write|flush|replay)_lag_seconds",' + selector + '})',
+          }],
+        } else if panel.id == 384 then {
+          title: 'node',
+        } else if panel.id == 386 then {
+          description: 'kubernetes node hosting this database instance.',
+          options+: { reduceOptions+: { fields: '/^node$/' } },
+          targets: [panel.targets[0] { expr: 'kube_pod_info{' + selector + '}' }],
+        } else if panel.id == 655 then {
+          targets: [
+            if target.datasource.type == '__expr__' then target {
+              datasource: { type: '__expr__', uid: '__expr__' },
+            } else target
+            for target in panel.targets
+          ],
+        } else if std.member([467, 466, 468, 14, 59, 20], panel.id) then {
+          description: 'standby connection lag is available only when a replica is connected; single-instance clusters have no series.',
+        } else if std.member([356, 424, 426], panel.id) then {
+          description: 'wal shares the data volume unless a separate wal volume is configured; tablespace series require tablespace volumes.',
+        } else if panel.id == 564 then {
+          description: 'tablespace volume usage is available only when tablespace volumes are configured.',
+        } else {});
+    model {
+      panels: std.map(patchPanel, model.panels),
+      templating+: {
+        list: [
+          if variable.name == 'operatorNamespace' then variable {
+            definition: operatorQuery,
+            query+: { query: operatorQuery },
+          } else variable
+          for variable in model.templating.list
+        ],
+      },
+    }
   variables:
     - name: DS_PROMETHEUS
       value: prometheus
