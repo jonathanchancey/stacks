@@ -11,15 +11,9 @@ spec:
       dashboards: grafana
   uid: eM7_f4V7z
   resyncPeriod: 10m
-  grafanaCom:
-    id: 16714
-    revision: 1
-  variables:
-    - name: DS_PROMETHEUS
-      value: prometheus
-  datasources:
-    - inputName: DS_PROMETHEUS
-      datasourceName: prometheus
+  configMapRef:
+    name: flux-dashboards
+    key: flux-cluster.json
   folder: General
 ---
 # yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
@@ -34,13 +28,7 @@ spec:
       dashboards: grafana
   uid: flux-control-plane-cluster
   resyncPeriod: 10m
-  grafanaCom:
-    id: 21149
-    revision: 1
-  variables:
-    - name: DS_PROMETHEUS
-      value: prometheus
-  datasources:
-    - inputName: DS_PROMETHEUS
-      datasourceName: prometheus
+  configMapRef:
+    name: flux-dashboards
+    key: flux-control-plane.json
   folder: General
