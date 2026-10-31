@@ -6,7 +6,7 @@
 
 the app starts with admin login and no github connection. `app/secrets.sops.yaml` contains the admin password and a reserved github webhook secret. decrypt it with sops on a trusted machine to retrieve them; never commit plaintext credentials.
 
-1. register a github app using [upstream's permissions and events](https://kritika.home-operations.com/setup/#register-the-github-app). use `https://kritika.chancey.dev/hooks/github` as its webhook and restrict installations to the configured account. install it only on repositories that should receive reviews.
+1. register a github app using [upstream's permissions and events](https://kritika.home-operations.com/setup/#register-the-github-app). the dashboard uses the internal `network/edge` gateway; provide a separate github-reachable route for `/hooks/github` before enabling webhooks. restrict installations to the configured account and repositories that should receive reviews.
 2. add `KRITIKA_OPENROUTER_API_KEY`, `KRITIKA_GITHUB_CLIENT_ID`, and `KRITIKA_GITHUB_PRIVATE_KEY` to the encrypted app secret. set the github webhook secret to the existing `KRITIKA_GITHUB_WEBHOOK_SECRET` value.
 3. add the following under the helmrelease's `values.config`, merging `providers` and `review` with their existing entries. check database extensions and roles, bucket binding, and helmrelease readiness before testing a review.
 
