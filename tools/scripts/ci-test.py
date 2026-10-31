@@ -6,6 +6,7 @@ import importlib.util
 import io
 import json
 import os
+import shutil
 from pathlib import Path
 import subprocess
 import sys
@@ -96,7 +97,7 @@ class RenderedDiff(unittest.TestCase):
                 "metadata": {"name": "app", "namespace": "media", **metadata},
                 "spec": {"template": {"spec": {"containers": [{"name": "app", "image": image}]}}}}
 
-    def test_shared_source_and_image_change(self):
+    def test_resource_pairing_and_image_change(self):
         source = {"apiVersion": "source.toolkit.fluxcd.io/v1", "kind": "OCIRepository",
                   "metadata": {"name": "app-template", "namespace": "media"}, "spec": {"ref": {"tag": "5.3.0"}}}
         diff = rendered.rendered_diff([source, self.document()], [self.document("example.com/app:new"), source])
@@ -136,6 +137,79 @@ class RenderedDiff(unittest.TestCase):
                          ["example.com/app:new"])
         with self.assertRaises(ValueError):
             rendered.new_images([], {"image": "example.com/app:new"})
+
+
+class SharedChartRendering(unittest.TestCase):
+    @unittest.skipUnless(shutil.which("flate") and shutil.which("yq"), "requires the pinned development shell")
+    def test_full_revision_diff_keeps_unchanged_shared_source(self):
+        scripts = Path(__file__).resolve().parent
+        with tempfile.TemporaryDirectory(prefix="ci-shared-chart-") as directory:
+            root = Path(directory)
+
+            def write(path, value):
+                target = root / path
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_text(json.dumps(value), encoding="utf-8")
+
+            def git(*arguments):
+                return subprocess.check_output([
+                    "git", "-c", "user.name=ci", "-c", "user.email=ci@example.invalid", *arguments,
+                ], cwd=root, text=True).strip()
+
+            def kustomization(name):
+                return {"apiVersion": "kustomize.toolkit.fluxcd.io/v1", "kind": "Kustomization",
+                        "metadata": {"name": name, "namespace": "media"},
+                        "spec": {"interval": "1h", "targetNamespace": "media",
+                                 "path": f"./flux/bastille/apps/media/{name}/app",
+                                 "sourceRef": {"kind": "GitRepository", "name": "flux-system", "namespace": "flux-system"}}}
+
+            for name, manifest in (("shared", "source.yaml"), ("app", "release.yaml")):
+                prefix = f"flux/bastille/apps/media/{name}"
+                write(f"{prefix}/ks.yaml", kustomization(name))
+                write(f"{prefix}/app/kustomization.yaml", {
+                    "apiVersion": "kustomize.config.k8s.io/v1beta1", "kind": "Kustomization", "resources": [manifest],
+                })
+            write("flux/bastille/apps/media/shared/app/source.yaml", {
+                "apiVersion": "source.toolkit.fluxcd.io/v1", "kind": "GitRepository",
+                "metadata": {"name": "shared-chart"}, "spec": {
+                    "interval": "1h", "url": "https://example.invalid/shared-chart", "ref": {"branch": "main"},
+                },
+            })
+            release_path = "flux/bastille/apps/media/app/app/release.yaml"
+            release = {"apiVersion": "helm.toolkit.fluxcd.io/v2", "kind": "HelmRelease",
+                       "metadata": {"name": "app"}, "spec": {"interval": "1h",
+                       "chart": {"spec": {"chart": "./charts/app", "sourceRef": {"kind": "GitRepository", "name": "shared-chart"}}},
+                       "values": {"image": "example.com/app:v1"}}}
+            write(release_path, release)
+            write("charts/app/Chart.yaml", {"apiVersion": "v2", "name": "app", "version": "1.0.0"})
+            template = root / "charts/app/templates/pod.yaml"
+            template.parent.mkdir(parents=True)
+            template.write_text("apiVersion: v1\nkind: Pod\nmetadata:\n  name: app\nspec:\n  containers:\n    - name: app\n      image: {{ .Values.image }}\n", encoding="utf-8")
+            (root / "tools/scripts").mkdir(parents=True)
+            for name in ("ci-diff.sh", "flate.sh", "rendered-diff.py"):
+                shutil.copy2(scripts / name, root / "tools/scripts" / name)
+            shutil.copy2(scripts.parent / "flate.yaml", root / "tools/flate.yaml")
+            # registry behavior is covered separately; this fixture never uses the network.
+            (root / "tools/scripts/check-images.py").write_text("", encoding="utf-8")
+            git("init", "-qb", "main")
+            git("remote", "add", "origin", "https://example.invalid/shared-chart")
+            git("add", ".")
+            git("commit", "-qm", "test: shared chart baseline")
+            base = git("rev-parse", "HEAD")
+            release["spec"]["values"]["image"] = "example.com/app:v2"
+            write(release_path, release)
+            git("add", release_path)
+            git("commit", "-qm", "test: update consumer image")
+            output = root / "artifacts"
+            result = subprocess.run(["bash", "tools/scripts/ci-diff.sh"], cwd=root, text=True, capture_output=True,
+                                    env={**os.environ, "BASE_SHA": base, "HEAD_SHA": git("rev-parse", "HEAD"),
+                                         "DIFF_DIR": str(output), "KUBECONFIG": "/dev/null", "FLATE_RESTRICT_EGRESS": "true"})
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            diff = (output / "flux.diff").read_text(encoding="utf-8")
+            self.assertIn("Pod/media/app", diff)
+            self.assertIn('"image": "example.com/app:v2"', diff)
+            self.assertNotIn("GitRepository", diff)
+            self.assertEqual(json.loads((output / "images.json").read_text()), ["example.com/app:v2"])
 
 
 class ImageChecks(unittest.TestCase):

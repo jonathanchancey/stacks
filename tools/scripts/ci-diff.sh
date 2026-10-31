@@ -12,15 +12,13 @@ mkdir -p "$DIFF_DIR"
 printf 'base tip: %s\nhead: %s\nmerge base: %s\n' "$BASE_SHA" "$HEAD_SHA" "$merge_base" > "$DIFF_DIR/revisions.txt"
 
 # changed-only flate diffs omit chart sources owned by unchanged applications.
-# render both complete trees, keeping self-referential sources local in a worktree.
+# render both complete trees; a regular .git directory keeps self-sources local.
 unset FLATE_BASE FLATE_PATH_ORIG FLATE_NAMESPACE
 snapshot=$(mktemp -d)
-cleanup() {
-  git worktree remove --force "$snapshot/base" || true
-  rm -rf "$snapshot"
-}
-trap cleanup EXIT
-git -c core.hooksPath=/dev/null worktree add --detach "$snapshot/base" "$merge_base"
+trap 'rm -rf "$snapshot"' EXIT
+git -c core.hooksPath=/dev/null clone --shared --no-checkout . "$snapshot/base"
+git -C "$snapshot/base" remote set-url origin "$(git remote get-url origin)"
+git -C "$snapshot/base" -c core.hooksPath=/dev/null checkout --detach "$merge_base"
 for side in base head; do
   cluster_dir=flux/bastille
   if [[ $side == base ]]; then
