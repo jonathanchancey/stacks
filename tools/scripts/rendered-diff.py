@@ -56,11 +56,28 @@ def resources(documents):
             continue
         metadata = document["metadata"]
         key = (document["apiVersion"], document["kind"], metadata.get("namespace", ""), metadata["name"])
-        if key in result:
-            raise ValueError(f"duplicate resource: {key}")
-        result[key] = normalize(document)
+        normalized = normalize(document)
         if document["kind"] == "ConfigMap" and isinstance(document.get("binaryData"), dict):
-            result[key]["binaryData"] = {name: binary_summary(value) for name, value in document["binaryData"].items()}
+            normalized["binaryData"] = {name: binary_summary(value) for name, value in document["binaryData"].items()}
+        result.setdefault(key, []).append(normalized)
+    for key, documents in result.items():
+        if len(documents) > 1 and key[1] != "ServiceAccount":
+            raise ValueError(f"duplicate resource: {key}")
+        copies = {json.dumps(document, sort_keys=True): document for document in documents}
+        ordered = [copies[value] for value in sorted(copies)]
+        if len(ordered) == 1:
+            result[key] = ordered[0]
+            continue
+        # authored and chart-generated service accounts can share a body.
+        # retain both metadata variants so ownership and label changes stay visible.
+        shapes = []
+        for document in ordered:
+            shape = {**document, "metadata": {name: value for name, value in document["metadata"].items()
+                                               if name not in ("labels", "annotations")}}
+            shapes.append(shape)
+        if any(shape != shapes[0] for shape in shapes[1:]):
+            raise ValueError(f"duplicate resource with conflicting contents: {key}")
+        result[key] = ordered
     return result
 
 
