@@ -71,10 +71,10 @@ spec:
   healthCheckExprs:
     - apiVersion: postgresql.cnpg.io/v1
       kind: DatabaseRole
-      current: has(status) && has(status.applied) && status.applied && has(status.observedGeneration) && status.observedGeneration == metadata.generation
+      current: has(status.applied) && status.applied && has(status.observedGeneration) && status.observedGeneration == metadata.generation
     - apiVersion: postgresql.cnpg.io/v1
       kind: Database
-      current: has(status) && has(status.applied) && status.applied && has(status.observedGeneration) && status.observedGeneration == metadata.generation
+      current: has(status.applied) && status.applied && has(status.observedGeneration) && status.observedGeneration == metadata.generation
   interval: 1h
   path: ./flux/bastille/apps/database/cloudnative-pg/gatus
   prune: true
