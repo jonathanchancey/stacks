@@ -6,7 +6,6 @@
     ':dependencyDashboard',
     ':disableRateLimiting',
     ':semanticCommits',
-    ':automergeBranch',
   ],
   dependencyDashboard: true,
   dependencyDashboardTitle: 'Renovate Dashboard 🚰',
@@ -70,6 +69,18 @@
   packageRules: [
     {
       description: [
+        'review daily albedo images with digest pins',
+      ],
+      matchDatasources: ['docker'],
+      matchPackageNames: ['ghcr.io/jonathanchancey/albedo'],
+      // accept the original sha tag so the first daily image can replace it.
+      versioning: 'regex:^(?:(?<major>\\d{8})\\.(?<minor>\\d+)\\.(?<patch>\\d+)|[a-f0-9]{12}-(?<build>\\d+))$',
+      schedule: ['at any time'],
+      pinDigests: true,
+      automerge: false,
+    },
+    {
+      description: [
         'review cilium upgrades one minor at a time',
       ],
       matchPackageNames: [
@@ -80,14 +91,13 @@
     },
     {
       description: [
-        'Auto merge Github Actions',
+        'merge github actions updates after required checks',
       ],
       matchManagers: [
         'github-actions',
       ],
       automerge: true,
-      automergeType: 'branch',
-      ignoreTests: true,
+      automergeType: 'pr',
       matchUpdateTypes: [
         'minor',
         'patch',
@@ -95,13 +105,22 @@
     },
     {
       description: [
-        'Review Nix workflow dependencies',
+        'review nix installer updates',
       ],
       matchManagers: [
         'github-actions',
       ],
-      matchFileNames: [
-        '.github/workflows/nix.yaml',
+      matchPackageNames: [
+        'cachix/install-nix-action',
+      ],
+      automerge: false,
+    },
+    {
+      description: [
+        'review flate releases and refresh all platform hashes',
+      ],
+      matchPackageNames: [
+        'home-operations/flate',
       ],
       automerge: false,
     },
@@ -349,6 +368,22 @@
     },
   ],
   customManagers: [
+    {
+      customType: 'regex',
+      description: [
+        'track the shared flate package version',
+      ],
+      managerFilePatterns: [
+        '/^tools/nix/flate\\.nix$/',
+      ],
+      matchStrings: [
+        'version = "(?<currentValue>[0-9.]+)";',
+      ],
+      depNameTemplate: 'home-operations/flate',
+      datasourceTemplate: 'github-releases',
+      extractVersionTemplate: '^v(?<version>.+)$',
+      versioningTemplate: 'semver',
+    },
     {
       customType: 'regex',
       description: [
