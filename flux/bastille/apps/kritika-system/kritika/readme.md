@@ -10,7 +10,7 @@ the helmrelease references github app credentials and an openrouter key from `ap
 2. set `KRITIKA_GITHUB_CLIENT_ID`, `KRITIKA_GITHUB_PRIVATE_KEY`, and `KRITIKA_OPENROUTER_API_KEY` in the encrypted app secret. set the github webhook secret to its `KRITIKA_GITHUB_WEBHOOK_SECRET` value. keep the helmrelease's `config.apps.github.accounts` aligned with the installation accounts.
 3. install the app on the intended repositories, then enable them on the account's repositories page in kritika. check database extensions and roles, bucket binding, and helmrelease readiness before testing a review.
 
-indexing uses voyage embeddings through openrouter. model, dimensions, prompts, and similarity threshold live under `config.embedding` in the helmrelease. after changing the model, dimensions, or document prompt, reindex enabled repositories from the queue page. see [upstream's embedding configuration](https://kritika.home-operations.com/models/#the-embedder).
+indexing uses qwen3 embeddings through openrouter. model, dimensions, query prompt, and similarity threshold live under `config.embedding` in the helmrelease. after changing the model, dimensions, or document prompt, reindex enabled repositories from the queue page. see [upstream's embedding configuration](https://kritika.home-operations.com/models/#the-embedder).
 
 rook creates the cache credentials in the `kritika-cache` secret. the bucket has a three-day expiry and a size cap; it is disposable cache, not a database backup.
 

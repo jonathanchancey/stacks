@@ -45,10 +45,9 @@ spec:
         chatgpt: { type: chatgpt }
         openrouter: { type: openrouter, apiKey: { env: KRITIKA_OPENROUTER_API_KEY } }
       embedding:
-        model: openrouter/voyageai/voyage-code-4
+        model: openrouter/qwen/qwen3-embedding-8b
         dims: 1024
-        documentPrompt: "Represent the document for retrieval: "
-        queryPrompt: "Represent the query for retrieving supporting documents: "
+        queryPrompt: "Instruct: Given a code change, retrieve code that implements similar logic\nQuery:"
         similarFloor: 0.3
       egress:
         allow: ["*"]
