@@ -14,6 +14,11 @@ spec:
           expr: vector(1)
           labels:
             obj_namespace: automation
+            obj_name: albedo
+        - record: volsync:expected_backup_source
+          expr: vector(1)
+          labels:
+            obj_namespace: automation
             obj_name: home-assistant
         - record: volsync:expected_backup_source
           expr: vector(1)

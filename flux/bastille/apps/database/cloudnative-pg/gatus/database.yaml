@@ -1,0 +1,26 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/postgresql.cnpg.io/databaserole_v1.json
+apiVersion: postgresql.cnpg.io/v1
+kind: DatabaseRole
+metadata:
+  name: gatus
+spec:
+  cluster:
+    name: bastille-pg
+  name: gatus
+  login: true
+  superuser: false
+  databaseRoleReclaimPolicy: retain
+  # preserve the existing password; gatus-secret remains the credential source.
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/postgresql.cnpg.io/database_v1.json
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: gatus
+spec:
+  cluster:
+    name: bastille-pg
+  name: gatus
+  owner: gatus
+  databaseReclaimPolicy: retain
