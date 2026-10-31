@@ -140,7 +140,7 @@ class RenderedDiff(unittest.TestCase):
         chart = {**authored, "metadata": {"name": "shared", "labels": {"app.kubernetes.io/name": "shared",
                                                                       "app.kubernetes.io/managed-by": "Helm"}}}
         self.assertEqual(rendered.rendered_diff([authored, chart], [chart, authored]), "")
-        self.assertEqual(len(rendered.resources([authored, authored])), 1)
+        self.assertEqual(rendered.rendered_diff([authored, authored], [authored]), "")
         added = rendered.rendered_diff([], [authored, chart])
         self.assertIn('"owner"', added)
         self.assertIn('"Helm"', added)
