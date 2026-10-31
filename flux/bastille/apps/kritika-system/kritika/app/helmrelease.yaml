@@ -29,6 +29,12 @@ spec:
       secret.reloader.stakater.com/auto: "true"
     config:
       webUrl: https://kritika.chancey.dev
+      apps:
+        github:
+          accounts: [jonathanchancey]
+          clientId: { env: KRITIKA_GITHUB_CLIENT_ID }
+          privateKey: { env: KRITIKA_GITHUB_PRIVATE_KEY }
+          webhookSecret: { env: KRITIKA_GITHUB_WEBHOOK_SECRET }
       auth:
         admin:
           password: { env: KRITIKA_AUTH_ADMIN_PASSWORD }
