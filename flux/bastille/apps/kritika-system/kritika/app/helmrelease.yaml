@@ -92,7 +92,6 @@ spec:
         enabled: true
     networkPolicy:
       extraEgress:
-        # rgw maps service port 80 to pod port 8080.
         - to:
             - namespaceSelector:
                 matchLabels:
