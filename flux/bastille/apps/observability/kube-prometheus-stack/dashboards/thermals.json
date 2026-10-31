@@ -1,0 +1,1125 @@
+{
+  "uid": "bastille-thermals",
+  "title": "bastille thermals",
+  "description": "all exposed hardware sensor values from bastille talos nodes.",
+  "schemaVersion": 39,
+  "version": 1,
+  "editable": false,
+  "tags": [
+    "talos",
+    "hardware",
+    "thermals"
+  ],
+  "timezone": "browser",
+  "refresh": "1m",
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "links": [],
+  "templating": {
+    "list": [
+      {
+        "name": "node",
+        "label": "node",
+        "type": "query",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "query": "label_values(up{job=\"node-exporter\",kubernetes_node=~\"sentinel-0[0-2]\"}, kubernetes_node)",
+        "refresh": 1,
+        "sort": 1,
+        "multi": true,
+        "includeAll": true,
+        "allValue": "sentinel-0[0-2]",
+        "current": {
+          "text": "all",
+          "value": "$__all"
+        }
+      },
+      {
+        "name": "metric",
+        "label": "detail metric",
+        "type": "query",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "query": "label_values({job=\"node-exporter\",kubernetes_node=~\"sentinel-0[0-2]\",kubernetes_node=~\"${node:regex}\",__name__=~\"node_hwmon_.*|node_thermal_zone_.*|node_cooling_device_.*|node_cpu_(core|package)_throttles_total\"}, __name__)",
+        "refresh": 1,
+        "sort": 1,
+        "multi": false,
+        "includeAll": false,
+        "current": {
+          "text": "node_hwmon_temp_celsius",
+          "value": "node_hwmon_temp_celsius"
+        }
+      }
+    ]
+  },
+  "panels": [
+    {
+      "id": 1,
+      "title": "exporters",
+      "type": "stat",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 6,
+        "h": 4
+      },
+      "description": "",
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "up{job=\"node-exporter\",kubernetes_node=~\"sentinel-0[0-2]\",kubernetes_node=~\"${node:regex}\"}",
+          "legendFormat": "{{kubernetes_node}}",
+          "instant": true,
+          "range": false,
+          "format": "time_series"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "decimals": 0,
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "0": {
+                  "text": "down",
+                  "color": "red"
+                },
+                "1": {
+                  "text": "up",
+                  "color": "green"
+                }
+              }
+            }
+          ]
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none",
+        "textMode": "auto"
+      }
+    },
+    {
+      "id": 2,
+      "title": "sensor collectors",
+      "type": "stat",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "x": 6,
+        "y": 0,
+        "w": 6,
+        "h": 4
+      },
+      "description": "",
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "min by (kubernetes_node) (node_scrape_collector_success{job=\"node-exporter\",kubernetes_node=~\"sentinel-0[0-2]\",kubernetes_node=~\"${node:regex}\",collector=~\"hwmon|thermal_zone\"})",
+          "legendFormat": "{{kubernetes_node}}",
+          "instant": true,
+          "range": false,
+          "format": "time_series"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "decimals": 0,
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "0": {
+                  "text": "down",
+                  "color": "red"
+                },
+                "1": {
+                  "text": "up",
+                  "color": "green"
+                }
+              }
+            }
+          ]
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none",
+        "textMode": "auto"
+      }
+    },
+    {
+      "id": 3,
+      "title": "temperature readings",
+      "type": "stat",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 0,
+        "w": 6,
+        "h": 4
+      },
+      "description": "",
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "count by (kubernetes_node) (node_hwmon_temp_celsius{job=\"node-exporter\",kubernetes_node=~\"sentinel-0[0-2]\",kubernetes_node=~\"${node:regex}\"} or node_thermal_zone_temp{job=\"node-exporter\",kubernetes_node=~\"sentinel-0[0-2]\",kubernetes_node=~\"${node:regex}\"})",
+          "legendFormat": "{{kubernetes_node}}",
+          "instant": true,
+          "range": false,
+          "format": "time_series"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "decimals": 0,
+          "color": {
+            "mode": "palette-classic"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none",
+        "textMode": "auto"
+      }
+    },
+    {
+      "id": 4,
+      "title": "fan readings",
+      "type": "stat",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "x": 18,
+        "y": 0,
+        "w": 6,
+        "h": 4
+      },
+      "description": "",
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "count by (kubernetes_node) (node_hwmon_fan_rpm{job=\"node-exporter\",kubernetes_node=~\"sentinel-0[0-2]\",kubernetes_node=~\"${node:regex}\"})",
+          "legendFormat": "{{kubernetes_node}}",
+          "instant": true,
+          "range": false,
+          "format": "time_series"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "decimals": 0,
+          "color": {
+            "mode": "palette-classic"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none",
+        "textMode": "auto"
+      }
+    },
+    {
+      "id": 5,
+      "type": "text",
+      "title": "reading the sensors",
+      "gridPos": {
+        "x": 0,
+        "y": 4,
+        "w": 24,
+        "h": 3
+      },
+      "options": {
+        "mode": "markdown",
+        "content": "all exposed values are retained, including zero and negative readings. motherboard inputs can be unwired or uncalibrated; a reported value alone does not establish a real component temperature. thermal zones may duplicate cpu package sensors. hardware limits and alarm flags are reported as supplied by the driver. use the node selector to compare machines, and the metric selector for the detail chart."
+      }
+    },
+    {
+      "id": 6,
+      "title": "cpu temperatures",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 7,
+        "w": 12,
+        "h": 9
+      },
+      "description": "package and individual core sensors, with driver-provided labels.",
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "(node_hwmon_temp_celsius{job=\"node-exporter\",kubernetes_node=~\"sentinel-0[0-2]\",kubernetes_node=~\"${node:regex}\",chip=~\".*coretemp.*|.*k10temp.*|.*zenpower.*\"} * on(instance, chip, sensor) group_left(label) node_hwmon_sensor_label{job=\"node-exporter\",kubernetes_node=~\"sentinel-0[0-2]\",kubernetes_node=~\"${node:regex}\"}) or on(instance, chip, sensor) node_hwmon_temp_celsius{job=\"node-exporter\",kubernetes_node=~\"sentinel-0[0-2]\",kubernetes_node=~\"${node:regex}\",chip=~\".*coretemp.*|.*k10temp.*|.*zenpower.*\"}",
+          "legendFormat": "{{kubernetes_node}} / {{chip}} / {{sensor}} {{label}}",
+          "instant": false,
+          "range": true,
+          "format": "time_series"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "celsius",
+          "decimals": 1,
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "fillOpacity": 8,
+            "showPoints": "never",
+            "spanNulls": false,
+            "axisBorderShow": false
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      }
+    },
+    {
+      "id": 7,
+      "title": "nvme temperatures",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 7,
+        "w": 12,
+        "h": 9
+      },
+      "description": "every composite and controller sensor exposed through hwmon; nvme numbering can change after hardware changes.",
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "(node_hwmon_temp_celsius{job=\"node-exporter\",kubernetes_node=~\"sentinel-0[0-2]\",kubernetes_node=~\"${node:regex}\",chip=~\"nvme_.*\"} * on(instance, chip, sensor) group_left(label) node_hwmon_sensor_label{job=\"node-exporter\",kubernetes_node=~\"sentinel-0[0-2]\",kubernetes_node=~\"${node:regex}\"}) or on(instance, chip, sensor) node_hwmon_temp_celsius{job=\"node-exporter\",kubernetes_node=~\"sentinel-0[0-2]\",kubernetes_node=~\"${node:regex}\",chip=~\"nvme_.*\"}",
+          "legendFormat": "{{kubernetes_node}} / {{chip}} / {{sensor}} {{label}}",
+          "instant": false,
+          "range": true,
+          "format": "time_series"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "celsius",
+          "decimals": 1,
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "fillOpacity": 8,
+            "showPoints": "never",
+            "spanNulls": false,
+            "axisBorderShow": false
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      }
+    },
+    {
+      "id": 8,
+      "title": "motherboard and other temperatures",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 16,
+        "w": 12,
+        "h": 9
+      },
+      "description": "unfiltered motherboard and other hwmon readings, including unused inputs.",
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "(node_hwmon_temp_celsius{job=\"node-exporter\",kubernetes_node=~\"sentinel-0[0-2]\",kubernetes_node=~\"${node:regex}\",chip!~\".*coretemp.*|.*k10temp.*|.*zenpower.*|nvme_.*\"} * on(instance, chip, sensor) group_left(label) node_hwmon_sensor_label{job=\"node-exporter\",kubernetes_node=~\"sentinel-0[0-2]\",kubernetes_node=~\"${node:regex}\"}) or on(instance, chip, sensor) node_hwmon_temp_celsius{job=\"node-exporter\",kubernetes_node=~\"sentinel-0[0-2]\",kubernetes_node=~\"${node:regex}\",chip!~\".*coretemp.*|.*k10temp.*|.*zenpower.*|nvme_.*\"}",
+          "legendFormat": "{{kubernetes_node}} / {{chip}} / {{sensor}} {{label}}",
+          "instant": false,
+          "range": true,
+          "format": "time_series"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "celsius",
+          "decimals": 1,
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "fillOpacity": 8,
+            "showPoints": "never",
+            "spanNulls": false,
+            "axisBorderShow": false
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      }
+    },
+    {
+      "id": 9,
+      "title": "thermal zones",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 16,
+        "w": 12,
+        "h": 9
+      },
+      "description": "",
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "node_thermal_zone_temp{job=\"node-exporter\",kubernetes_node=~\"sentinel-0[0-2]\",kubernetes_node=~\"${node:regex}\"}",
+          "legendFormat": "{{kubernetes_node}} / {{type}} / zone {{zone}}",
+          "instant": false,
+          "range": true,
+          "format": "time_series"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "celsius",
+          "decimals": 1,
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "fillOpacity": 8,
+            "showPoints": "never",
+            "spanNulls": false,
+            "axisBorderShow": false
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      }
+    },
+    {
+      "id": 10,
+      "title": "fan speeds",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 25,
+        "w": 12,
+        "h": 9
+      },
+      "description": "all fan inputs, including stopped or disconnected fans reporting zero.",
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "(node_hwmon_fan_rpm{job=\"node-exporter\",kubernetes_node=~\"sentinel-0[0-2]\",kubernetes_node=~\"${node:regex}\"} * on(instance, chip, sensor) group_left(label) node_hwmon_sensor_label{job=\"node-exporter\",kubernetes_node=~\"sentinel-0[0-2]\",kubernetes_node=~\"${node:regex}\"}) or on(instance, chip, sensor) node_hwmon_fan_rpm{job=\"node-exporter\",kubernetes_node=~\"sentinel-0[0-2]\",kubernetes_node=~\"${node:regex}\"}",
+          "legendFormat": "{{kubernetes_node}} / {{chip}} / {{sensor}} {{label}}",
+          "instant": false,
+          "range": true,
+          "format": "time_series"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "rotrpm",
+          "decimals": 1,
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "fillOpacity": 8,
+            "showPoints": "never",
+            "spanNulls": false,
+            "axisBorderShow": false
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      }
+    },
+    {
+      "id": 11,
+      "title": "fan pwm duty",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 25,
+        "w": 12,
+        "h": 9
+      },
+      "description": "reported pwm duty scaled from 0\u2013255 to percent; the hardware operating mode determines whether this drives the fan.",
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "node_hwmon_pwm{job=\"node-exporter\",kubernetes_node=~\"sentinel-0[0-2]\",kubernetes_node=~\"${node:regex}\"} / 255 * 100",
+          "legendFormat": "{{kubernetes_node}} / {{chip}} / {{sensor}} {{label}}",
+          "instant": false,
+          "range": true,
+          "format": "time_series"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "decimals": 1,
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "fillOpacity": 8,
+            "showPoints": "never",
+            "spanNulls": false,
+            "axisBorderShow": false
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      }
+    },
+    {
+      "id": 12,
+      "title": "voltages",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 34,
+        "w": 12,
+        "h": 9
+      },
+      "description": "raw chip voltages; board-specific resistor scaling and rail names are not inferred.",
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "(node_hwmon_in_volts{job=\"node-exporter\",kubernetes_node=~\"sentinel-0[0-2]\",kubernetes_node=~\"${node:regex}\"} * on(instance, chip, sensor) group_left(label) node_hwmon_sensor_label{job=\"node-exporter\",kubernetes_node=~\"sentinel-0[0-2]\",kubernetes_node=~\"${node:regex}\"}) or on(instance, chip, sensor) node_hwmon_in_volts{job=\"node-exporter\",kubernetes_node=~\"sentinel-0[0-2]\",kubernetes_node=~\"${node:regex}\"}",
+          "legendFormat": "{{kubernetes_node}} / {{chip}} / {{sensor}} {{label}}",
+          "instant": false,
+          "range": true,
+          "format": "time_series"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "volt",
+          "decimals": 1,
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "fillOpacity": 8,
+            "showPoints": "never",
+            "spanNulls": false,
+            "axisBorderShow": false
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      }
+    },
+    {
+      "id": 13,
+      "title": "cooling device state",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 34,
+        "w": 12,
+        "h": 9
+      },
+      "description": "kernel cooling state indices, not fan rpm; maximum states are in the complete inventory.",
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "node_cooling_device_cur_state{job=\"node-exporter\",kubernetes_node=~\"sentinel-0[0-2]\",kubernetes_node=~\"${node:regex}\"}",
+          "legendFormat": "{{kubernetes_node}} / {{type}} / {{name}}",
+          "instant": false,
+          "range": true,
+          "format": "time_series"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "decimals": 1,
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "fillOpacity": 8,
+            "showPoints": "never",
+            "spanNulls": false,
+            "axisBorderShow": false
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      }
+    },
+    {
+      "id": 14,
+      "title": "cpu throttling events",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 43,
+        "w": 12,
+        "h": 9
+      },
+      "description": "per-core thermal throttle events per second; cumulative core and package counters are in the complete inventory.",
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "rate(node_cpu_core_throttles_total{job=\"node-exporter\",kubernetes_node=~\"sentinel-0[0-2]\",kubernetes_node=~\"${node:regex}\"}[$__rate_interval])",
+          "legendFormat": "{{kubernetes_node}} / package {{package}} / core {{core}}",
+          "instant": false,
+          "range": true,
+          "format": "time_series"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ops",
+          "decimals": 1,
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "fillOpacity": 8,
+            "showPoints": "never",
+            "spanNulls": false,
+            "axisBorderShow": false
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      }
+    },
+    {
+      "id": 15,
+      "title": "temperature limits",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 43,
+        "w": 12,
+        "h": 9
+      },
+      "description": "driver-reported limits, not observed peaks; zero or implausible limits are retained.",
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "(label_replace({job=\"node-exporter\",kubernetes_node=~\"sentinel-0[0-2]\",kubernetes_node=~\"${node:regex}\",__name__=~\"node_hwmon_temp_(crit|max|min|max_hyst)_celsius\"}, \"metric\", \"$1\", \"__name__\", \"(.+)\") * on(instance, chip, sensor) group_left(label) node_hwmon_sensor_label{job=\"node-exporter\",kubernetes_node=~\"sentinel-0[0-2]\",kubernetes_node=~\"${node:regex}\"}) or on(instance, chip, sensor, metric) label_replace({job=\"node-exporter\",kubernetes_node=~\"sentinel-0[0-2]\",kubernetes_node=~\"${node:regex}\",__name__=~\"node_hwmon_temp_(crit|max|min|max_hyst)_celsius\"}, \"metric\", \"$1\", \"__name__\", \"(.+)\")",
+          "legendFormat": "{{kubernetes_node}} / {{chip}} / {{sensor}} {{label}} / {{metric}}",
+          "instant": false,
+          "range": true,
+          "format": "time_series"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "celsius",
+          "decimals": 1,
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "fillOpacity": 8,
+            "showPoints": "never",
+            "spanNulls": false,
+            "axisBorderShow": false
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      }
+    },
+    {
+      "id": 16,
+      "title": "current hwmon temperatures",
+      "type": "table",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 52,
+        "w": 24,
+        "h": 12
+      },
+      "description": "every hwmon temperature with its node, chip, channel, and driver label. thermal-zone readings are included in the complete inventory below.",
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "(node_hwmon_temp_celsius{job=\"node-exporter\",kubernetes_node=~\"sentinel-0[0-2]\",kubernetes_node=~\"${node:regex}\"} * on(instance, chip, sensor) group_left(label) node_hwmon_sensor_label{job=\"node-exporter\",kubernetes_node=~\"sentinel-0[0-2]\",kubernetes_node=~\"${node:regex}\"}) or on(instance, chip, sensor) node_hwmon_temp_celsius{job=\"node-exporter\",kubernetes_node=~\"sentinel-0[0-2]\",kubernetes_node=~\"${node:regex}\"}",
+          "legendFormat": "{{kubernetes_node}} / {{chip}} / {{sensor}} {{label}}",
+          "instant": true,
+          "range": false,
+          "format": "table"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "celsius",
+          "decimals": 1,
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "filterable": true,
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "sortBy": [
+          {
+            "displayName": "node",
+            "desc": false
+          }
+        ],
+        "footer": {
+          "show": false
+        },
+        "enablePagination": true
+      },
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "container": true,
+              "endpoint": true,
+              "instance": true,
+              "job": true,
+              "namespace": true,
+              "pod": true,
+              "service": true
+            },
+            "indexByName": {
+              "kubernetes_node": 0,
+              "chip": 1,
+              "sensor": 2,
+              "label": 3,
+              "__name__": 4,
+              "Value": 5
+            },
+            "renameByName": {
+              "kubernetes_node": "node",
+              "__name__": "metric",
+              "label": "sensor label",
+              "Value": "value"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "title": "selected metric history",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 64,
+        "w": 24,
+        "h": 10
+      },
+      "description": "select a metric above to inspect its history. values use the units encoded in the metric name; remaining hwmon fields retain their raw driver units.",
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "{job=\"node-exporter\",kubernetes_node=~\"sentinel-0[0-2]\",kubernetes_node=~\"${node:regex}\",__name__=~\"${metric:regex}\"}",
+          "legendFormat": "{{kubernetes_node}} / {{__name__}} / {{chip}} / {{sensor}} {{type}} {{name}} {{core}}",
+          "instant": false,
+          "range": true,
+          "format": "time_series"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "decimals": 1,
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "fillOpacity": 8,
+            "showPoints": "never",
+            "spanNulls": false,
+            "axisBorderShow": false
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      }
+    },
+    {
+      "id": 18,
+      "title": "all exported sensor values",
+      "type": "table",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 74,
+        "w": 24,
+        "h": 16
+      },
+      "description": "complete current inventory, independent of the metric selector: temperatures, fans, voltages, pwm settings, labels, limits, alarms, cooling states, and throttle counters. filter any column. units follow the metric name; other fields retain exporter units. node_hwmon_temp_crit_alarm_celsius is an exporter-scaled alarm flag, not a temperature.",
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "{job=\"node-exporter\",kubernetes_node=~\"sentinel-0[0-2]\",kubernetes_node=~\"${node:regex}\",__name__=~\"node_hwmon_.*|node_thermal_zone_.*|node_cooling_device_.*|node_cpu_(core|package)_throttles_total\"}",
+          "legendFormat": "{{kubernetes_node}} / {{chip}} / {{sensor}} {{label}}",
+          "instant": true,
+          "range": false,
+          "format": "table"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "decimals": 1,
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "filterable": true,
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "sortBy": [
+          {
+            "displayName": "node",
+            "desc": false
+          }
+        ],
+        "footer": {
+          "show": false
+        },
+        "enablePagination": true
+      },
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "container": true,
+              "endpoint": true,
+              "instance": true,
+              "job": true,
+              "namespace": true,
+              "pod": true,
+              "service": true
+            },
+            "indexByName": {
+              "kubernetes_node": 0,
+              "chip": 1,
+              "sensor": 2,
+              "label": 3,
+              "__name__": 4,
+              "Value": 5
+            },
+            "renameByName": {
+              "kubernetes_node": "node",
+              "__name__": "metric",
+              "label": "sensor label",
+              "Value": "value"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

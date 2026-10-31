@@ -11,18 +11,50 @@ enter an interactive shell with `nix develop`, or run commands explicitly:
 
 ```bash
 nix develop --command task test-all CLUSTER=bastille NAMESPACE=default
-nix develop --command flux-local get ks --path flux/bastille --all-namespaces
+nix develop --command task flux:test-ns CLUSTER=bastille NAMESPACE=automation
 nix flake check --no-update-lock-file
 ```
 
 the cluster and namespace arguments allow offline validation without a
 kubeconfig. omit them to use the current kubectl context for tasks.
 
-flux-local includes its python dependencies and external commands through nix;
-no virtualenv or pip installation is needed. update its version and source hash in
-[`tools/nix/flux-local.nix`](../tools/nix/flux-local.nix) alongside the image tags
-in [flux ci](../.github/workflows/flux-diff.yaml); flake checks enforce agreement.
-update `flake.lock` to change the nixpkgs-provided dependencies.
+local tasks and ci use the same [flate package](../tools/nix/flate.nix).
+update its version and all platform hashes together; renovate opens reviewed
+version updates but does not refresh the hashes. update `flake.lock` for the
+nixpkgs-provided tools.
+
+[render settings](../tools/flate.yaml) select the kubernetes version, additional
+api capabilities, and image platforms. update these alongside cluster upgrades.
+flate renders without cluster access, but still downloads referenced charts and
+sources. encrypted values remain placeholders; rendering does not prove live
+credentials or health.
+
+flate `0.6.5` can add namespaces to cluster-scoped admission policies in rendered
+output. generated manifests are review artifacts; do not apply them.
+
+## continuous integration
+
+[ci](../.github/workflows/ci.yaml) checks the nix toolchain, workflows, flux
+rendering, schemas, and changed image platforms. the aggregate `ci` check runs
+for every pull request, including those whose expensive jobs are intentionally
+skipped. rendering failures and cancelled jobs fail the aggregate check.
+
+`task conform` checks authored manifests; `task conform-rendered` also checks
+helm output. rendered checks use chart-provided crd schemas, matching kubernetes
+built-in schemas, then home-operations schemas. missing schemas are listed in the
+report and are not counted as validated resources.
+
+pull requests compare explicit revisions and attach the complete rendered diff.
+the separate comment workflow shows a collapsible inline preview, capped at
+12,000 bytes, with the complete artifact linked below. it reads only diff text
+without executing pull request code. image checks inspect registries without accessing the cluster.
+
+after the workflow is available on the default branch, import
+[the required-check ruleset](../.github/rulesets/ci.json) in the repository's
+settings under rulesets. this adds the `ci` requirement alongside existing rules;
+committing the file alone does not enable it. keep the required context and the
+aggregate job's name identical. failed checks must remain blocking for renovate
+updates.
 
 ## history analysis
 
@@ -39,28 +71,19 @@ update their package in [`tools/nix/git-of-theseus.nix`](../tools/nix/git-of-the
 
 ## certificate trust
 
-the flake's `cacert` package pins the patched nss certificate source identified
-in the [emudhra advisory](https://emudhra.we-have-a-problem.com/). flux-local's
-certifi dependency uses the same bundle, including its environment-free fallback.
-
-`replaceDependencies` replaces certifi in the built flux-local dependency tree
-without recompiling its python dependents. keep the replacement's package name,
-version, and layout identical to upstream certifi. this uses import-from-derivation:
-evaluating flux-local can fetch or build packages and requires a native builder.
+the flake uses nixpkgs' `cacert` package. update `flake.lock` to refresh the
+certificate bundle along with the toolchain.
 
 the development shell and `toolchain` executables set
 `NIX_SSL_CERT_FILE`, `SSL_CERT_FILE`, `SSL_CERT_DIR`, and `REQUESTS_CA_BUNDLE`
-to the patched nix stores, replacing inherited host paths even for absolute
+to the nix stores, replacing inherited host paths even for absolute
 profile invocations. legitimate chains under removed roots are also distrusted;
 explicit application-specific ca settings, such as kubeconfig ca data, still apply.
 host tools and independently created virtualenvs are outside this policy.
 
-after a nixpkgs update, keep the source override until `nix flake check` rejects all
-twelve advisory chains without it; then remove the certifi replacement too.
-the trust check fixes verification time at disclosure so expired fixtures cannot
-hide renewed trust. also check legitimate
-https with python and the affected clients before removing the override.
-go clients on macos use native system trust; keep macos security updates current.
+`nix flake check` rejects twelve compromised chains from the
+[emudhra advisory](https://emudhra.we-have-a-problem.com/), with verification time
+fixed at disclosure so expired fixtures cannot hide renewed trust.
 
 ## orbs
 
