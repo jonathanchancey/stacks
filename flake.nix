@@ -36,21 +36,7 @@
       packages = forAllSystems (
         { pkgs, ... }:
         let
-          # https://emudhra.we-have-a-problem.com/ (2026-10-20)
-          cacert = pkgs.cacert.overrideAttrs (old: rec {
-            version = "3.131.1";
-            src = pkgs.fetchurl {
-              url = "https://raw.githubusercontent.com/nss-dev/nss/refs/tags/NSS_${
-                pkgs.lib.replaceStrings [ "." ] [ "_" ] version
-              }_RTM/lib/ckfw/builtins/certdata.txt";
-              hash = "sha256-PsK00kDcEsdH6vRQBh24SvdXxIO72jAvninOtdcL5RA=";
-            };
-            meta = old.meta // {
-              identifiers.cpeParts = old.meta.identifiers.cpeParts // {
-                inherit version;
-              };
-            };
-          });
+          inherit (pkgs) cacert;
         in
         rec {
           inherit cacert;

@@ -60,7 +60,7 @@ jobs:
         with:
           persist-credentials: false
       - name: install nix
-        uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24 # v31.11.1
+        uses: cachix/install-nix-action@75c75c31ebece974e48ebc36b4ad125bd97bd97b # v31.11.3
       - name: check flake
         run: nix flake check --no-update-lock-file --print-build-logs
 
@@ -76,7 +76,7 @@ jobs:
         with:
           persist-credentials: false
       - name: install nix
-        uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24 # v31.11.1
+        uses: cachix/install-nix-action@75c75c31ebece974e48ebc36b4ad125bd97bd97b # v31.11.3
       - name: check workflow syntax
         run: nix develop --no-update-lock-file --command actionlint
       - name: check workflow security
@@ -99,7 +99,7 @@ jobs:
         with:
           persist-credentials: false
       - name: install nix
-        uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24 # v31.11.1
+        uses: cachix/install-nix-action@75c75c31ebece974e48ebc36b4ad125bd97bd97b # v31.11.3
       - name: check public ca trust
         run: nix develop --no-update-lock-file --command python3 tools/scripts/check-public-ca.py flux/bastille/components/public-ca/ca-bundle.crt
       - name: test full flux tree and schemas
@@ -122,7 +122,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - name: install nix
-        uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24 # v31.11.1
+        uses: cachix/install-nix-action@75c75c31ebece974e48ebc36b4ad125bd97bd97b # v31.11.3
       - name: diff explicit base and head and check images
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
@@ -130,7 +130,7 @@ jobs:
           DIFF_DIR: ${{ runner.temp }}/flux-diff
         run: nix develop --no-update-lock-file --command bash tools/scripts/ci-diff.sh
       - name: upload rendered diff
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: flux-diff
           path: ${{ runner.temp }}/flux-diff
