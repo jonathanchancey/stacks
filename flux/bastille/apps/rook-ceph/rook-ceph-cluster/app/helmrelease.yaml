@@ -140,10 +140,8 @@ spec:
               bulk: "true"
           preservePoolsOnDelete: true
           hosting:
-            advertiseEndpoint:
-              dnsName: s3.bastille.chancey.dev
-              port: 443
-              useTls: true
+            dnsNames:
+              - s3.bastille.chancey.dev
           gateway:
             hostNetwork: false
             port: 80

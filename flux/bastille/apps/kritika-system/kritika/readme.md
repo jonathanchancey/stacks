@@ -4,38 +4,19 @@
 
 ## credentials and startup
 
-the app starts with admin login and no github connection. `app/secrets.sops.yaml` contains the admin password and a reserved github webhook secret. decrypt it with sops on a trusted machine to retrieve them; never commit plaintext credentials.
+the helmrelease references github app credentials and an openrouter key from `app/secrets.sops.yaml`. decrypt it with sops on a trusted machine to update them; never commit plaintext credentials.
 
-1. register a github app using [upstream's permissions and events](https://kritika.home-operations.com/setup/#register-the-github-app). use `https://kritika.chancey.dev/hooks/github` as its webhook and restrict installations to the configured account. install it only on repositories that should receive reviews.
-2. add `KRITIKA_OPENROUTER_API_KEY`, `KRITIKA_GITHUB_CLIENT_ID`, and `KRITIKA_GITHUB_PRIVATE_KEY` to the encrypted app secret. set the github webhook secret to the existing `KRITIKA_GITHUB_WEBHOOK_SECRET` value.
-3. add the following under the helmrelease's `values.config`, merging `providers` and `review` with their existing entries. check database extensions and roles, bucket binding, and helmrelease readiness before testing a review.
+1. register a github app using [upstream's permissions and events](https://kritika.home-operations.com/setup/#register-the-github-app). use `https://kritika-webhook.chancey.dev/hooks/github` for webhooks. its public route accepts only `POST /hooks/github`; the dashboard at `https://kritika.chancey.dev` uses internal `network/edge`.
+2. set `KRITIKA_GITHUB_CLIENT_ID`, `KRITIKA_GITHUB_PRIVATE_KEY`, and `KRITIKA_OPENROUTER_API_KEY` in the encrypted app secret. set the github webhook secret to its `KRITIKA_GITHUB_WEBHOOK_SECRET` value. keep the helmrelease's `config.apps.github.accounts` aligned with the installation accounts.
+3. install the app on the intended repositories, then enable them on the account's repositories page in kritika. check database extensions and roles, bucket binding, and helmrelease readiness before testing a review.
 
-```yaml
-apps:
-  github:
-    accounts: [jonathanchancey]
-    clientId: { env: KRITIKA_GITHUB_CLIENT_ID }
-    privateKey: { env: KRITIKA_GITHUB_PRIVATE_KEY }
-    webhookSecret: { env: KRITIKA_GITHUB_WEBHOOK_SECRET }
-providers:
-  openrouter: { type: openrouter, apiKey: { env: KRITIKA_OPENROUTER_API_KEY } }
-review:
-  fallback: openrouter/~openai/gpt-sol-latest
-confidence:
-  model: openrouter/deepseek/deepseek-v4.1-flash-1017
-embedding:
-  model: openrouter/voyageai/voyage-code-4
-  dims: 1024
-  documentPrompt: "Represent the document for retrieval: "
-  queryPrompt: "Represent the query for retrieving supporting documents: "
-  similarFloor: 0.3
-```
+indexing uses qwen3 embeddings through openrouter. model, dimensions, query prompt, and similarity threshold live under `config.embedding` in the helmrelease. after changing the model, dimensions, or document prompt, reindex enabled repositories from the queue page. see [upstream's embedding configuration](https://kritika.home-operations.com/models/#the-embedder).
 
 rook creates the cache credentials in the `kritika-cache` secret. the bucket has a three-day expiry and a size cap; it is disposable cache, not a database backup.
 
 ## chatgpt sign-in
 
-reviews use a chatgpt plus or pro plan. the optional openrouter configuration above adds paid fallback, deepseek confidence scoring, and embeddings. chatgpt cannot supply embeddings. automatic pr approval is disabled.
+reviews use a chatgpt plus or pro plan. indexing uses separately billed openrouter embeddings; chatgpt cannot supply embeddings. automatic pr approval is disabled.
 
 run these commands on the machine with your browser, using the same pod in both terminals:
 
