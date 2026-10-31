@@ -131,6 +131,22 @@ class RenderedDiff(unittest.TestCase):
         self.assertIn("-", rendered.rendered_diff([self.document()], []))
         with self.assertRaisesRegex(ValueError, "duplicate resource"):
             rendered.resources([self.document(), self.document()])
+        with self.assertRaisesRegex(ValueError, "duplicate resource"):
+            rendered.resources([self.document(), self.document("example.com/app:conflicting")])
+
+    def test_service_account_metadata_copies_remain_visible(self):
+        authored = {"apiVersion": "v1", "kind": "ServiceAccount",
+                    "metadata": {"name": "shared", "labels": {"app.kubernetes.io/name": "owner"}}}
+        chart = {**authored, "metadata": {"name": "shared", "labels": {"app.kubernetes.io/name": "shared",
+                                                                      "app.kubernetes.io/managed-by": "Helm"}}}
+        self.assertEqual(rendered.rendered_diff([authored, chart], [chart, authored]), "")
+        self.assertEqual(rendered.rendered_diff([authored, authored], [authored]), "")
+        added = rendered.rendered_diff([], [authored, chart])
+        self.assertIn('"owner"', added)
+        self.assertIn('"Helm"', added)
+        conflicting = {**chart, "automountServiceAccountToken": False}
+        with self.assertRaisesRegex(ValueError, "conflicting contents"):
+            rendered.resources([authored, conflicting])
 
     def test_new_images_only(self):
         self.assertEqual(rendered.new_images(["example.com/app:old"], ["example.com/app:new", "example.com/app:new"]),
