@@ -38,13 +38,16 @@ spec:
           app:
             image:
               repository: ghcr.io/jonathanchancey/albedo
-              tag: a65e5babc2b9-1
+              tag: a65e5babc2b9-1@sha256:43c84aeefe68179ec2aa3ec8b0bd8d3c1580e974b57e08119c489f8d053ab41a
             env:
               TZ: America/Los_Angeles
               ALBEDO_KERNEL_BUDGET_MB: "512"
               SSL_CERT_FILE: /etc/ssl/certs/ca-certificates.crt
               SSL_CERT_DIR: /etc/ssl/certs
               REQUESTS_CA_BUNDLE: /etc/ssl/certs/ca-certificates.crt
+            envFrom:
+              - secretRef:
+                  name: albedo-secrets
             probes:
               startup:
                 enabled: true
@@ -150,6 +153,14 @@ spec:
               request: 0s
               backendRequest: 0s
     persistence:
+      secrets:
+        type: secret
+        name: albedo-secrets
+        advancedMounts:
+          main:
+            app:
+              - path: /var/run/secrets/albedo
+                readOnly: true
       public-ca:
         type: configMap
         name: public-ca-bundle-20261020
