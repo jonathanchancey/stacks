@@ -110,6 +110,9 @@ class RenderedDiff(unittest.TestCase):
         secret = {"kind": "Secret", "data": {"password": "private"}}
         self.assertEqual(rendered.rendered_diff([before, secret], [after]), "")
 
+    def test_null_chart_metadata(self):
+        self.assertEqual(rendered.rendered_diff([self.document(labels=None)], [self.document()]), "")
+
     def test_additions_deletions_and_duplicates(self):
         self.assertIn("+", rendered.rendered_diff([], [self.document()]))
         self.assertIn("-", rendered.rendered_diff([self.document()], []))

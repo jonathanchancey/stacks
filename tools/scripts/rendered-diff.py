@@ -16,9 +16,13 @@ def normalize(value):
     if not isinstance(value, dict):
         return value
     value = {key: normalize(item) for key, item in value.items()}
-    metadata = value.get("metadata", {})
+    metadata = value.get("metadata")
+    if not isinstance(metadata, dict):
+        return value
     for field in ("annotations", "labels"):
-        if field in metadata:
+        if metadata.get(field) is None:
+            metadata.pop(field, None)
+        elif isinstance(metadata[field], dict):
             metadata[field] = {
                 key: item for key, item in metadata[field].items()
                 if key not in STRIP_ATTRIBUTES and not key.startswith("checksum/")
