@@ -76,7 +76,7 @@ instance:
         patch: |-
           - op: add
             path: /spec/template/spec/containers/0/args/-
-            value: --feature-gates=CancelHealthCheckOnNewRevision=true
+            value: --feature-gates=CancelHealthCheckOnNewRevision=true,StrictPostBuildSubstitutions=false
         target:
           kind: Deployment
           name: kustomize-controller
