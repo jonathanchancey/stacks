@@ -73,6 +73,8 @@ spec:
               memory: 2Gi
     httpRoute:
       enabled: true
+      annotations:
+        external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
       parentRefs:
         - name: envoy-external
           namespace: network
