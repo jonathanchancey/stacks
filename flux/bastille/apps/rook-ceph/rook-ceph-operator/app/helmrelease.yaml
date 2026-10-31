@@ -21,6 +21,8 @@ metadata:
 spec:
   interval: 1h
   timeout: 15m
+  driftDetection:
+    mode: enabled
   chartRef:
     kind: OCIRepository
     name: rook-ceph
@@ -28,6 +30,8 @@ spec:
     csi:
       serviceMonitor:
         enabled: true
+    # allow cache bucket quotas and expiry without policy or ownership overrides.
+    obcAllowAdditionalConfigFields: "maxObjects,maxSize,bucketMaxSize,bucketLifecycle"
     enableDiscoveryDaemon: true
     image:
       repository: ghcr.io/rook/ceph

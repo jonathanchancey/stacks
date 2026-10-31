@@ -19,3 +19,9 @@ local `flux-local test --enable-helm` resolves git chart paths from the working
 directory. link the tagged upstream checkout's `deploy` directory into the repo
 root before testing, then remove the link. [ci](../../../../../.github/workflows/flux-diff.yaml)
 performs this setup automatically.
+
+rook's operator chart manages the csi image set through its `csi` values.
+helm drift detection keeps that configmap aligned with the chart defaults.
+check the running driver images after upgrades; ceph-csi-operator `v1.0.4`
+does not watch image-set configmap changes, so restart its controller manager
+if the driver images remain stale after the configmap is corrected.

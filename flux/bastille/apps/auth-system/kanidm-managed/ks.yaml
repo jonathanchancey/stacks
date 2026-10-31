@@ -1,0 +1,61 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app kanidm-managed
+  namespace: &namespace auth-system
+spec:
+  suspend: false
+  targetNamespace: *namespace
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  dependsOn:
+    - name: kaniop
+      namespace: *namespace
+  interval: 1h
+  retryInterval: 2m
+  timeout: 15m
+  path: ./flux/bastille/apps/auth-system/kanidm-managed/app
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  healthChecks:
+    - apiVersion: apps/v1
+      kind: StatefulSet
+      name: kanidm-managed-default
+      namespace: *namespace
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: kanidm-managed-backup
+  namespace: &namespace auth-system
+spec:
+  suspend: false
+  targetNamespace: *namespace
+  components:
+    - ../../../../components/volsync/backup
+  dependsOn:
+    - name: kanidm-managed
+      namespace: *namespace
+    - name: volsync
+      namespace: storage
+  interval: 1h
+  retryInterval: 2m
+  timeout: 15m
+  path: ./flux/bastille/apps/auth-system/kanidm-managed/backup
+  postBuild:
+    substitute:
+      APP: kanidm-managed
+      VOLSYNC_SOURCE_PVC: kanidm-data-kanidm-managed-default-0
+      VOLSYNC_SCHEDULE: "35 * * * *"
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system

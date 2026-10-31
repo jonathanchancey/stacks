@@ -1,0 +1,112 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: blackbox-exporter
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  uid: blackbox-exporter
+  resyncPeriod: 10m
+  folder: General
+  jsonnet: |
+    local source = { type: 'prometheus', uid: 'prometheus' };
+    local selector = '{prober="blackbox-exporter",job=~"${job:regex}",instance=~"${endpoint:regex}"}';
+    local metric(name) = name + selector;
+    // A failed scrape must override a retained successful probe sample.
+    local healthy = '(' + metric('probe_success') + ' * on(job, instance) ' + metric('up')
+      + ') or on(job, instance) (0 * ' + metric('up') + ')';
+    local state = {
+      min: 0, max: 1, decimals: 0,
+      mappings: [{ type: 'value', options: {
+        '0': { text: 'down', color: 'red' },
+        '1': { text: 'up', color: 'green' },
+      } }],
+      color: { mode: 'thresholds' },
+      thresholds: { mode: 'absolute', steps: [
+        { color: 'red', value: null }, { color: 'green', value: 1 },
+      ] },
+    };
+    local panel(id, title, expr, unit, x, y, description='', legend='{{instance}}', w=12, h=8, stat=false) = {
+      id: id, title: title, description: description,
+      type: if stat then 'stat' else 'timeseries',
+      datasource: source,
+      gridPos: { x: x, y: y, w: w, h: h },
+      fieldConfig: { defaults: {
+        unit: unit, min: 0, noValue: 'no data',
+        color: { mode: 'palette-classic' },
+      } + (if stat then {} else {
+        custom: { drawStyle: 'line', lineWidth: 2, fillOpacity: 5, showPoints: 'never', spanNulls: false },
+      }), overrides: [] },
+      targets: [{ refId: 'A', expr: expr, legendFormat: legend, instant: stat, range: !stat }],
+      options: if stat then {
+        reduceOptions: { calcs: ['lastNotNull'], values: false },
+        colorMode: 'value', graphMode: 'none', textMode: 'value_and_name',
+      } else {
+        legend: { displayMode: 'list', placement: 'bottom' },
+        tooltip: { mode: 'multi', sort: 'desc' },
+      },
+    };
+    local variable(name, query) = {
+      name: name, label: name, type: 'query', datasource: source,
+      query: { query: query, refId: name }, definition: query,
+      refresh: 1, sort: 1, multi: true, includeAll: true, allValue: '.*',
+      current: { text: 'all', value: '$__all' }, options: [],
+    };
+    {
+      title: 'blackbox exporter', uid: 'blackbox-exporter',
+      description: 'public endpoint probes using public dns. a failed scrape counts as down; absent targets remain no data. the flux webhook expects 404 and does not verify signed delivery. checks originate inside the cluster.',
+      schemaVersion: 39, editable: false,
+      tags: ['blackbox', 'network'], timezone: 'browser', refresh: '1m',
+      time: { from: 'now-6h', to: 'now' },
+      templating: { list: [
+        variable('job', 'label_values(up{prober="blackbox-exporter"}, job)'),
+        variable('endpoint', 'label_values(up{prober="blackbox-exporter",job=~"${job:regex}"}, instance)'),
+      ] },
+      panels: [
+        panel(1, 'endpoint health', healthy, 'short', 0, 0, h=5, stat=true,
+              description='success requires a successful probe and scrape. down includes public dns, tls, unexpected responses, and exporter scrape failures.') {
+          fieldConfig+: { defaults+: state },
+        },
+        panel(2, 'probe scrape health', metric('up'), 'short', 12, 0, h=5, stat=true,
+              description='whether prometheus can scrape the exporter for each target. up does not mean the endpoint probe succeeded.') {
+          fieldConfig+: { defaults+: state },
+        },
+        panel(3, 'endpoint health history', healthy, 'short', 0, 5, w=24, h=7,
+              description='failed probes and scrapes show down. gaps mean missing samples, not success.') {
+          type: 'state-timeline',
+          fieldConfig+: { defaults+: state + { custom: { lineWidth: 0, fillOpacity: 80, spanNulls: false } } },
+          options: { mergeValues: true, showValue: 'auto', rowHeight: 0.8,
+                     legend: { displayMode: 'list', placement: 'bottom' }, tooltip: { mode: 'single' } },
+        },
+        panel(4, 'probe duration', metric('probe_duration_seconds'), 's', 0, 12),
+        panel(5, 'dns lookup duration', metric('probe_dns_lookup_time_seconds'), 's', 12, 12,
+              description='dns lookup time as observed by the exporter using its public resolvers.'),
+        panel(6, 'http request phases', metric('probe_http_duration_seconds'), 's', 0, 20,
+              legend='{{instance}} / {{phase}}'),
+        panel(7, 'http response status', metric('probe_http_status_code'), 'short', 12, 20,
+              description='404 is expected for the flux webhook. zero means no http response was received.') {
+          fieldConfig+: { defaults+: { decimals: 0, custom+: { lineInterpolation: 'stepAfter' } } },
+        },
+        panel(8, 'certificate time remaining', '(' + metric('probe_ssl_earliest_cert_expiry') + ' - time()) / 86400',
+              'd', 0, 28, h=5, stat=true,
+              description='earliest certificate expiry observed by the probe. non-tls targets have no value.') {
+          fieldConfig+: { defaults+: {
+            min: null, decimals: 1, color: { mode: 'thresholds' },
+            thresholds: { mode: 'absolute', steps: [
+              { color: 'red', value: null }, { color: 'orange', value: 14 }, { color: 'green', value: 30 },
+            ] },
+          } },
+        },
+        panel(9, 'sampled availability', '100 * avg_over_time((' + healthy + ')[$__range:1m])',
+              'percent', 12, 28, h=5, stat=true,
+              description='successful health samples at one-minute resolution over the selected range. includes scrape failures; periods without data are excluded. this is not an external uptime guarantee.') {
+          fieldConfig+: { defaults+: { max: 100, decimals: 2 } },
+        },
+      ],
+    }
