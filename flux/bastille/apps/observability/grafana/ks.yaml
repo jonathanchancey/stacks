@@ -23,6 +23,7 @@ spec:
       APP: *app
       VOLSYNC_SCHEDULE: "45 * * * *"
       GATUS_DOMAIN: bastille.chancey.dev
+      GATUS_PATH: /api/health
   sourceRef:
     kind: GitRepository
     name: flux-system

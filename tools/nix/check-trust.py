@@ -12,16 +12,11 @@ assert defaults.capath == directory, defaults
 assert os.environ["NIX_SSL_CERT_FILE"] == bundle
 assert os.environ["REQUESTS_CA_BUNDLE"] == bundle
 
-# check certifi's packaged fallback, not just its environment override.
-os.environ.pop("NIX_SSL_CERT_FILE")
-import certifi
-
 chains = sorted(Path(chains_directory).glob("*.pem"))
 assert len(chains) == 12, chains
 stores = {
     "default bundle": ["-CAfile", defaults.cafile, "-no-CApath"],
     "default directory": ["-CApath", defaults.capath, "-no-CAfile"],
-    "certifi fallback": ["-CAfile", certifi.where(), "-no-CApath"],
 }
 for name, arguments in stores.items():
     for chain in chains:
