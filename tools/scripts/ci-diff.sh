@@ -11,6 +11,23 @@ merge_base=$(git merge-base "$BASE_SHA" "$HEAD_SHA")
 mkdir -p "$DIFF_DIR"
 printf 'base tip: %s\nhead: %s\nmerge base: %s\n' "$BASE_SHA" "$HEAD_SHA" "$merge_base" > "$DIFF_DIR/revisions.txt"
 
-tools/scripts/flate.sh diff all --path flux/bastille --base "$merge_base" --output github > "$DIFF_DIR/flux.diff"
-tools/scripts/flate.sh diff images --path flux/bastille --base "$merge_base" --output json > "$DIFF_DIR/images.json"
+# changed-only flate diffs omit chart sources owned by unchanged applications.
+# render both complete trees, keeping self-referential sources local in a worktree.
+unset FLATE_BASE FLATE_PATH_ORIG FLATE_NAMESPACE
+snapshot=$(mktemp -d)
+cleanup() {
+  git worktree remove --force "$snapshot/base" || true
+  rm -rf "$snapshot"
+}
+trap cleanup EXIT
+git -c core.hooksPath=/dev/null worktree add --detach "$snapshot/base" "$merge_base"
+for side in base head; do
+  cluster_dir=flux/bastille
+  if [[ $side == base ]]; then
+    cluster_dir="$snapshot/base/flux/bastille"
+  fi
+  tools/scripts/flate.sh build all --path "$cluster_dir" --output json > "$snapshot/$side.json"
+  tools/scripts/flate.sh get images --path "$cluster_dir" --output json > "$snapshot/$side-images.json"
+done
+python3 tools/scripts/rendered-diff.py "$snapshot" "$DIFF_DIR"
 python3 tools/scripts/check-images.py "$DIFF_DIR/images.json"

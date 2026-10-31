@@ -25,6 +25,7 @@ def load(name):
 
 changes = load("ci-changes")
 images = load("check-images")
+rendered = load("rendered-diff")
 
 
 class ChangeSelection(unittest.TestCase):
@@ -87,6 +88,39 @@ class ChangeSelection(unittest.TestCase):
                     output.unlink()
             finally:
                 os.chdir(original_cwd)
+
+
+class RenderedDiff(unittest.TestCase):
+    def document(self, image="example.com/app:old", **metadata):
+        return {"apiVersion": "apps/v1", "kind": "Deployment",
+                "metadata": {"name": "app", "namespace": "media", **metadata},
+                "spec": {"template": {"spec": {"containers": [{"name": "app", "image": image}]}}}}
+
+    def test_shared_source_and_image_change(self):
+        source = {"apiVersion": "source.toolkit.fluxcd.io/v1", "kind": "OCIRepository",
+                  "metadata": {"name": "app-template", "namespace": "media"}, "spec": {"ref": {"tag": "5.3.0"}}}
+        diff = rendered.rendered_diff([source, self.document()], [self.document("example.com/app:new"), source])
+        self.assertIn('-            "image": "example.com/app:old"', diff)
+        self.assertIn('+            "image": "example.com/app:new"', diff)
+        self.assertNotIn("OCIRepository", diff)
+
+    def test_chart_noise_and_secret_are_excluded(self):
+        before = self.document(labels={"helm.sh/chart": "chart-1"})
+        after = self.document(labels={"helm.sh/chart": "chart-2"}, annotations={"checksum/config": "new"})
+        secret = {"kind": "Secret", "data": {"password": "private"}}
+        self.assertEqual(rendered.rendered_diff([before, secret], [after]), "")
+
+    def test_additions_deletions_and_duplicates(self):
+        self.assertIn("+", rendered.rendered_diff([], [self.document()]))
+        self.assertIn("-", rendered.rendered_diff([self.document()], []))
+        with self.assertRaisesRegex(ValueError, "duplicate resource"):
+            rendered.resources([self.document(), self.document()])
+
+    def test_new_images_only(self):
+        self.assertEqual(rendered.new_images(["example.com/app:old"], ["example.com/app:new", "example.com/app:new"]),
+                         ["example.com/app:new"])
+        with self.assertRaises(ValueError):
+            rendered.new_images([], {"image": "example.com/app:new"})
 
 
 class ImageChecks(unittest.TestCase):
