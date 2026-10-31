@@ -24,6 +24,8 @@ spec:
     kind: OCIRepository
     name: csi-driver-smb
   values:
+    windows:
+      enabled: false
     controller:
       replicas: 1
     node:
