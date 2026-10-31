@@ -7,28 +7,34 @@ shopt: [globstar]
 
 tasks:
   diff-ks:
-    desc: Flux diff kustomizations
-    cmd: "flux-local diff ks --path {{.KUBERNETES_DIR}}"
+    desc: diff flux kustomizations
+    cmd: 'tools/scripts/flate.sh diff ks --path "{{.KUBERNETES_DIR}}" {{.CLI_ARGS}}'
 
   diff-hr:
-    desc: Flux diff helmreleases
-    cmd: "flux-local diff hr --path {{.KUBERNETES_DIR}}"
+    desc: diff flux helmreleases
+    cmd: 'tools/scripts/flate.sh diff hr --path "{{.KUBERNETES_DIR}}" {{.CLI_ARGS}}'
 
   test-all:
-    desc: Flux test kustomizations and helmreleases
-    cmd: "flux-local test --enable-helm --all-namespaces --path {{.KUBERNETES_DIR}}"
+    desc: test all flux kustomizations, helmreleases, and sources
+    cmd: 'tools/scripts/flate-test.sh "{{.KUBERNETES_DIR}}"'
 
   test:
-    desc: Flux test kustomizations and helmreleases in current namespace
-    cmd: "flux-local test --enable-helm --path {{.KUBERNETES_DIR}}"
+    desc: test flux resources in the current namespace or NAMESPACE
+    cmd: 'tools/scripts/flate-test.sh "{{.KUBERNETES_DIR}}" "{{.NAMESPACE}}"'
+    vars:
+      NAMESPACE: "{{.NAMESPACE | default .CURRENT_NAMESPACE}}"
+    preconditions:
+      - sh: test -n "{{.NAMESPACE}}"
+        msg: set NAMESPACE or select a kubectl namespace
 
   test-ns:
-    desc: Flux test kustomizations and helmreleases in USER_WORKING_DIR or override with NAMESPACE
-    cmd: "flux-local test --enable-helm --namespace {{.NAMESPACE}} --path {{.KUBERNETES_DIR}}"
+    desc: test flux resources in the working directory namespace or NAMESPACE
+    cmd: 'tools/scripts/flate-test.sh "{{.KUBERNETES_DIR}}" "{{.NAMESPACE}}"'
     vars:
       NAMESPACE: "{{.NAMESPACE | default .CWD_NAMESPACE}}"
     preconditions:
-      - sh: test -n "{{.CWD_NAMESPACE}}"
+      - sh: test -n "{{.NAMESPACE}}"
+        msg: run from an apps namespace directory or set NAMESPACE
 
   ks-*:
     desc: Apply a Flux KS [PATH=required]
