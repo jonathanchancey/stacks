@@ -1,0 +1,20 @@
+cluster:
+  etcd:
+    extraArgs:
+      listen-metrics-urls: http://0.0.0.0:2381
+  controllerManager:
+    extraArgs:
+      bind-address: 0.0.0.0
+  scheduler:
+    extraArgs:
+      bind-address: 0.0.0.0
+machine:
+  logging:
+    destinations:
+      - endpoint: tcp://127.0.0.1:6050
+        format: json_lines
+---
+apiVersion: v1alpha1
+kind: KmsgLogConfig
+name: remote-log
+url: tcp://127.0.0.1:6050

@@ -8,8 +8,8 @@ shopt: [globstar]
 vars:
   CLUSTER:
     sh: kubectl config current-context
-  NAMESPACE:
-    sh: kubectl config view --minify --output 'jsonpath={..namespace}'
+  CURRENT_NAMESPACE:
+    sh: kubectl config view --minify --output 'jsonpath={..namespace}' 2>/dev/null || true
   CWD_NAMESPACE:
     sh: echo "{{.USER_WORKING_DIR}}" | sed -n 's|.*/apps/\([^/]*\).*|\1|p'
   KUBERNETES_DIR: "{{.ROOT_DIR}}/flux/{{.CLUSTER}}"
@@ -30,16 +30,21 @@ tasks:
   default: task --list
 
   conform:
-    desc: run kubeconform
+    desc: validate authored manifests with kubeconform
     vars:
       KUBECONFORM_DIR: "{{.KUBECONFORM_DIR | default .KUBERNETES_DIR}}"
     cmd: tools/scripts/kubeconform.sh "{{.KUBECONFORM_DIR}}"
+
+  conform-rendered:
+    desc: validate rendered flux and helm manifests with kubeconform
+    cmd: tools/scripts/kubeconform.sh "{{.KUBERNETES_DIR}}" --rendered
 
   test-all:
     desc: run testing suite
     deps:
       - flux:test-all
       - conform
+      - conform-rendered
 
   test:
     desc: run quick test

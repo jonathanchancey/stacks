@@ -1,0 +1,26 @@
+---
+modules:
+  immich_public_proxy:
+    prober: http
+    timeout: 10s
+    http:
+      preferred_ip_protocol: ip4
+      ip_protocol_fallback: false
+      follow_redirects: false
+      fail_if_not_ssl: true
+      fail_if_body_not_matches_regexp:
+        - '^ok$'
+      tls_config:
+        ca_file: /etc/ssl/certs/ca-certificates.crt
+  flux_webhook:
+    prober: http
+    timeout: 10s
+    http:
+      preferred_ip_protocol: ip4
+      ip_protocol_fallback: false
+      follow_redirects: false
+      fail_if_not_ssl: true
+      # an unsigned request without a receiver token is rejected.
+      valid_status_codes: [404]
+      tls_config:
+        ca_file: /etc/ssl/certs/ca-certificates.crt

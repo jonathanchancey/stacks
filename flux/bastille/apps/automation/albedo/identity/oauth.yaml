@@ -1,0 +1,19 @@
+---
+apiVersion: kaniop.rs/v1beta1
+kind: KanidmOAuth2Client
+metadata:
+  name: albedo
+spec:
+  kanidmRef:
+    name: kanidm-managed
+    namespace: auth-system
+  displayname: albedo
+  origin: https://albedo.chancey.dev
+  redirectUrl:
+    - https://albedo.chancey.dev/oauth2/callback
+  scopeMap:
+    - group: albedo-users
+      scopes: [openid, profile, email]
+  secretKeyAliases:
+    clientSecret: [client-secret]
+  strictRedirectUrl: true
