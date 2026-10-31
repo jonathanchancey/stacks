@@ -1,0 +1,20 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/gateway.envoyproxy.io/securitypolicy_v1alpha1.json
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: SecurityPolicy
+metadata:
+  name: albedo-oidc
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: albedo
+  oidc:
+    provider:
+      issuer: https://idm.chancey.dev/oauth2/openid/albedo
+    clientID: albedo
+    clientSecret:
+      name: albedo-kanidm-oauth2-credentials
+    redirectURL: https://albedo.chancey.dev/oauth2/callback
+    logoutPath: /logout
+    scopes: [openid, profile, email]

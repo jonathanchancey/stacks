@@ -27,6 +27,7 @@ spec:
     controllers:
       kanidm:
         type: statefulset
+        replicas: 0
         annotations:
           external-dns.alpha.kubernetes.io/hostname: idm.chancey.dev
           reloader.stakater.com/auto: "true"
@@ -88,8 +89,8 @@ spec:
             sectionName: https
         rules:
           - backendRefs:
-              - identifier: app
-                port: 443
+              - name: kanidm-managed
+                port: 8443
     persistence:
       data:
         existingClaim: "kanidm"

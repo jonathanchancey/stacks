@@ -6,6 +6,9 @@ metadata:
   name: &app cilium
   namespace: &namespace kube-system
 spec:
+  dependsOn:
+    - name: gateway-api
+      namespace: network
   targetNamespace: *namespace
   commonMetadata:
     labels:

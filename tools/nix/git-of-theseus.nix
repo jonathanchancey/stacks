@@ -29,7 +29,9 @@ python3Packages.buildPythonApplication rec {
     wcmatch
   ];
 
-  makeWrapperArgs = [ "--prefix PATH : ${lib.makeBinPath [ gitMinimal ]}" ] ++ trustWrapperArgs;
+  makeWrapperArgs = lib.concatStringsSep " " (
+    [ "--prefix PATH : ${lib.makeBinPath [ gitMinimal ]}" ] ++ trustWrapperArgs
+  );
   pythonImportsCheck = [ "git_of_theseus" ];
 
   doInstallCheck = true;
