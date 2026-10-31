@@ -163,11 +163,11 @@ class SharedChartRendering(unittest.TestCase):
                                  "path": f"./flux/bastille/apps/media/{name}/app",
                                  "sourceRef": {"kind": "GitRepository", "name": "flux-system", "namespace": "flux-system"}}}
 
-            for name, manifest in (("shared", "source.yaml"), ("app", "release.yaml")):
+            for name, manifests in (("shared", ["source.yaml", "chart.yaml"]), ("app", ["release.yaml"])):
                 prefix = f"flux/bastille/apps/media/{name}"
                 write(f"{prefix}/ks.yaml", kustomization(name))
                 write(f"{prefix}/app/kustomization.yaml", {
-                    "apiVersion": "kustomize.config.k8s.io/v1beta1", "kind": "Kustomization", "resources": [manifest],
+                    "apiVersion": "kustomize.config.k8s.io/v1beta1", "kind": "Kustomization", "resources": manifests,
                 })
             write("flux/bastille/apps/media/shared/app/source.yaml", {
                 "apiVersion": "source.toolkit.fluxcd.io/v1", "kind": "GitRepository",
@@ -175,10 +175,15 @@ class SharedChartRendering(unittest.TestCase):
                     "interval": "1h", "url": "https://example.invalid/shared-chart", "ref": {"branch": "main"},
                 },
             })
+            write("flux/bastille/apps/media/shared/app/chart.yaml", {
+                "apiVersion": "source.toolkit.fluxcd.io/v1", "kind": "HelmChart",
+                "metadata": {"name": "shared-chart"}, "spec": {"interval": "1h", "chart": "./charts/app",
+                "sourceRef": {"kind": "GitRepository", "name": "shared-chart"}},
+            })
             release_path = "flux/bastille/apps/media/app/app/release.yaml"
             release = {"apiVersion": "helm.toolkit.fluxcd.io/v2", "kind": "HelmRelease",
                        "metadata": {"name": "app"}, "spec": {"interval": "1h",
-                       "chart": {"spec": {"chart": "./charts/app", "sourceRef": {"kind": "GitRepository", "name": "shared-chart"}}},
+                       "chartRef": {"kind": "HelmChart", "name": "shared-chart"},
                        "values": {"image": "example.com/app:v1"}}}
             write(release_path, release)
             write("charts/app/Chart.yaml", {"apiVersion": "v2", "name": "app", "version": "1.0.0"})
