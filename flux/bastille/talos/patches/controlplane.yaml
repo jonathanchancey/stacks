@@ -3,7 +3,7 @@ cluster:
   apiServer:
     extraArgs:
       feature-gates: MutatingAdmissionPolicy=true
-      runtime-config: admissionregistration.k8s.io/v1alpha1=true
+      runtime-config: admissionregistration.k8s.io/v1alpha1=true,admissionregistration.k8s.io/v1beta1=true
       authentication-config: /var/lib/kubernetes/amp-authentication.yaml
     extraVolumes:
       - hostPath: /var/lib/kubernetes/amp-authentication.yaml
