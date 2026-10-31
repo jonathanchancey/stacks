@@ -1,0 +1,6 @@
+---
+kubeVersion: "1.36.5"
+apiVersions:
+  - gateway.networking.k8s.io/v1/HTTPRoute
+imagePlatforms:
+  - linux/amd64

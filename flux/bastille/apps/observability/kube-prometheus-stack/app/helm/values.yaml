@@ -33,6 +33,13 @@ prometheus:
       - new-service-discovery-manager
     retention: 120d
     retentionSize: 90GB
+    remoteWrite:
+      - name: victoriametrics
+        url: http://victoriametrics.observability.svc.cluster.local:8428/api/v1/write
+        writeRelabelConfigs:
+          - action: replace
+            targetLabel: cluster
+            replacement: bastille
     resources:
       requests:
         cpu: 100m
