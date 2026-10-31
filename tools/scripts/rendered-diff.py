@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 """compare complete flate renders and retain newly introduced image references."""
 
+import base64
+import binascii
 import difflib
+import hashlib
 import json
 from pathlib import Path
 import sys
@@ -32,6 +35,18 @@ def normalize(value):
     return value
 
 
+def binary_summary(value):
+    if not isinstance(value, str):
+        return "<redacted binary data>"
+    try:
+        data = base64.b64decode(value.strip().replace("\n", "").replace("\r", ""), validate=True)
+        length = f"{len(data)} bytes"
+    except (binascii.Error, ValueError):
+        data = value.encode("utf-8")
+        length = f"{len(value)} base64 chars"
+    return f"<redacted binary data: {length} sha256:{hashlib.sha256(data).hexdigest()[:16]}>"
+
+
 def resources(documents):
     if not isinstance(documents, list):
         raise ValueError("expected a json array of rendered resources")
@@ -44,6 +59,8 @@ def resources(documents):
         if key in result:
             raise ValueError(f"duplicate resource: {key}")
         result[key] = normalize(document)
+        if document["kind"] == "ConfigMap" and isinstance(document.get("binaryData"), dict):
+            result[key]["binaryData"] = {name: binary_summary(value) for name, value in document["binaryData"].items()}
     return result
 
 

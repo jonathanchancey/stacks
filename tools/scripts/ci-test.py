@@ -110,6 +110,18 @@ class RenderedDiff(unittest.TestCase):
         secret = {"kind": "Secret", "data": {"password": "private"}}
         self.assertEqual(rendered.rendered_diff([before, secret], [after]), "")
 
+    def test_binary_payload_keeps_only_content_summary(self):
+        document = {"apiVersion": "v1", "kind": "ConfigMap", "metadata": {"name": "crds"},
+                    "binaryData": {"bundle": "YWFh" * 1000}}
+        diff = rendered.rendered_diff([], [document])
+        self.assertIn("3000 bytes sha256:", diff)
+        self.assertNotIn(document["binaryData"]["bundle"], diff)
+        self.assertEqual(document["binaryData"]["bundle"], "YWFh" * 1000)
+        changed = {**document, "binaryData": {"bundle": "YmJi" * 1000}}
+        self.assertIn("sha256:", rendered.rendered_diff([document], [changed]))
+        self.assertNotEqual(rendered.binary_summary("invalid!"), rendered.binary_summary("invalid?"))
+        self.assertEqual(rendered.binary_summary("YWFh\n"), rendered.binary_summary("YWFh"))
+
     def test_null_chart_metadata(self):
         self.assertEqual(rendered.rendered_diff([self.document(labels=None)], [self.document()]), "")
 
