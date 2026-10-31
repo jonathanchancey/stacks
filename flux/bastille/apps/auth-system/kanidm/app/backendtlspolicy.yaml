@@ -6,7 +6,7 @@ metadata:
 spec:
   targetRefs:
     - kind: Service
-      name: kanidm
+      name: kanidm-managed
       group: ""
   validation:
     wellKnownCACertificates: System
