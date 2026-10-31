@@ -69,9 +69,12 @@ spec:
 
 rook creates a secret and configmap named after the claim in its namespace.
 the secret contains `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`; the configmap
-contains `BUCKET_HOST`, `BUCKET_PORT`, and `BUCKET_NAME`. configure the client
-explicitly for https. keep credentials out of git. application buckets belong
-with their consumers, not in the cluster chart.
+contains `BUCKET_HOST`, `BUCKET_PORT`, and `BUCKET_NAME` for the internal http
+service. external clients must explicitly use `https://s3.bastille.chancey.dev`.
+keep `hosting.dnsNames` for the external hostname without overriding the advertised
+endpoint: rook v1.20.9's bucket provisioner does not honor `advertiseEndpoint.useTls`
+when tls terminates at the gateway rather than rgw.
+keep credentials out of git and application buckets with their consumers.
 
 `Retain` preserves buckets after claim deletion; `preservePoolsOnDelete` preserves
 pools after store deletion. neither is a backup. keep claims and credential
