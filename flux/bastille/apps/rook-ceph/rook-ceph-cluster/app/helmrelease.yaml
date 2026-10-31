@@ -27,13 +27,32 @@ spec:
   values:
     cephImage:
       repository: quay.io/ceph/ceph
-      tag: v19.2.3
+      tag: v19.2.7-20261009@sha256:3fc0a79f1c671f0e75be24ba77a4ab32227e5ea080e16dfc0840a1dc6c30bf7e
     monitoring:
       enabled: true
       createPrometheusRules: true
     toolbox:
       enabled: true
     cephClusterSpec:
+      cephConfig:
+        mgr:
+          public_network: 10.244.0.0/16
+      security:
+        cephx:
+          allowedCiphers:
+            - aes256k
+          daemon:
+            keyRotationPolicy: KeyGeneration
+            keyGeneration: 2
+          csi:
+            keyRotationPolicy: KeyGeneration
+            keyGeneration: 2
+            keepPriorKeyCountMax: 0
+            keyType: aes256k
+          rbdMirrorPeer:
+            keyRotationPolicy: KeyGeneration
+            keyGeneration: 2
+            keyType: aes256k
       crashCollector:
         disable: false
       csi:
@@ -46,6 +65,7 @@ spec:
         port: 8080
         prometheusEndpoint: http://prometheus-operated.observability.svc.cluster.local:9090
       mgr:
+        hostNetwork: false
         modules:
           - name: diskprediction_local
             enabled: true
@@ -105,4 +125,46 @@ spec:
       isDefault: true
       deletionPolicy: Delete
     cephFileSystems: []
-    cephObjectStores: []
+    cephObjectStores:
+      - name: ceph-objectstore
+        spec:
+          metadataPool:
+            failureDomain: host
+            replicated:
+              size: 3
+          dataPool:
+            failureDomain: host
+            replicated:
+              size: 3
+            parameters:
+              bulk: "true"
+          preservePoolsOnDelete: true
+          hosting:
+            dnsNames:
+              - s3.bastille.chancey.dev
+          gateway:
+            hostNetwork: false
+            port: 80
+            instances: 2
+            placement:
+              podAntiAffinity:
+                requiredDuringSchedulingIgnoredDuringExecution:
+                  - labelSelector:
+                      matchLabels:
+                        app: rook-ceph-rgw
+                        rook_object_store: ceph-objectstore
+                    topologyKey: kubernetes.io/hostname
+            resources:
+              requests:
+                cpu: 1000m
+                memory: 1Gi
+              limits:
+                memory: 2Gi
+            priorityClassName: system-cluster-critical
+        storageClass:
+          enabled: true
+          name: ceph-bucket
+          reclaimPolicy: Retain
+          volumeBindingMode: Immediate
+          parameters:
+            region: us-east-1
