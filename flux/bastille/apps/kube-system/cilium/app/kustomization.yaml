@@ -8,3 +8,4 @@ resources:
   - ./gateway.yaml
   - ./httproute.yaml
   - ./certs/chancey-dev.yaml
+  - ./certs/hubble.yaml

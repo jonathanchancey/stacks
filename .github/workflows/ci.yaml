@@ -1,0 +1,171 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: ci
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  changes:
+    name: select checks
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      tooling: ${{ steps.changes.outputs.tooling }}
+      workflows: ${{ steps.changes.outputs.workflows }}
+      render: ${{ steps.changes.outputs.render }}
+    steps:
+      - name: checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: select checks
+        id: changes
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          EVENT_NAME: ${{ github.event_name }}
+        run: python3 tools/scripts/ci-changes.py
+
+  nix:
+    name: nix (${{ matrix.system }})
+    needs: changes
+    if: ${{ needs.changes.outputs.tooling == 'true' }}
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - system: aarch64-darwin
+            runner: macos-15
+          - system: aarch64-linux
+            runner: ubuntu-24.04-arm
+          - system: x86_64-linux
+            runner: ubuntu-24.04
+    steps:
+      - name: checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: install nix
+        uses: cachix/install-nix-action@75c75c31ebece974e48ebc36b4ad125bd97bd97b # v31.11.3
+      - name: check flake
+        run: nix flake check --no-update-lock-file --print-build-logs
+
+  workflows:
+    name: workflow checks
+    needs: changes
+    if: ${{ needs.changes.outputs.workflows == 'true' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: install nix
+        uses: cachix/install-nix-action@75c75c31ebece974e48ebc36b4ad125bd97bd97b # v31.11.3
+      - name: check workflow syntax
+        run: nix develop --no-update-lock-file --command actionlint
+      - name: check workflow security
+        run: nix develop --no-update-lock-file --command zizmor --offline --no-progress --strict-collection .github/workflows
+      - name: check ci helpers
+        run: nix develop --no-update-lock-file --command python3 tools/scripts/ci-test.py
+
+  render:
+    name: flux validation
+    needs: changes
+    if: ${{ needs.changes.outputs.render == 'true' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      KUBECONFIG: /dev/null
+      FLATE_RESTRICT_EGRESS: "true"
+    steps:
+      - name: checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: install nix
+        uses: cachix/install-nix-action@75c75c31ebece974e48ebc36b4ad125bd97bd97b # v31.11.3
+      - name: check public ca trust
+        run: nix develop --no-update-lock-file --command python3 tools/scripts/check-public-ca.py flux/bastille/components/public-ca/ca-bundle.crt
+      - name: test full flux tree and schemas
+        run: nix develop --no-update-lock-file --command task test-all CLUSTER=bastille
+
+  diff:
+    name: flux diff and images
+    needs: changes
+    if: ${{ github.event_name == 'pull_request' && needs.changes.outputs.render == 'true' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      KUBECONFIG: /dev/null
+      FLATE_RESTRICT_EGRESS: "true"
+    steps:
+      - name: checkout pull request head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: install nix
+        uses: cachix/install-nix-action@75c75c31ebece974e48ebc36b4ad125bd97bd97b # v31.11.3
+      - name: diff explicit base and head and check images
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          DIFF_DIR: ${{ runner.temp }}/flux-diff
+        run: nix develop --no-update-lock-file --command bash tools/scripts/ci-diff.sh
+      - name: upload rendered diff
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: flux-diff
+          path: ${{ runner.temp }}/flux-diff
+          if-no-files-found: error
+          retention-days: 14
+
+  status:
+    name: ci
+    needs: [changes, nix, workflows, render, diff]
+    if: ${{ always() }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions: {}
+    steps:
+      - name: require successful selected checks
+        env:
+          NEEDS: ${{ toJSON(needs) }}
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          needs = json.loads(os.environ["NEEDS"])
+          assert needs["changes"]["result"] == "success", "check selection failed"
+          selected = needs["changes"]["outputs"]
+          for flag in ("tooling", "workflows", "render"):
+              assert selected.get(flag) in ("true", "false"), f"invalid selection: {flag}"
+          expected = {
+              "nix": selected["tooling"] == "true",
+              "workflows": selected["workflows"] == "true",
+              "render": selected["render"] == "true",
+              "diff": selected["render"] == "true" and os.environ["EVENT_NAME"] == "pull_request",
+          }
+          for job, required in expected.items():
+              result = needs[job]["result"]
+              assert result == ("success" if required else "skipped"), f"{job}: {result}"
+          print("all selected checks passed")
+          PY
