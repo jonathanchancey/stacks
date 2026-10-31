@@ -13,6 +13,8 @@ spec:
   components:
     - ../../../../components/volsync/backup
   dependsOn:
+    - name: albedo-identity
+      namespace: *namespace
     - name: rook-ceph-cluster
       namespace: rook-ceph
     - name: volsync
@@ -26,6 +28,43 @@ spec:
       APP: *app
       VOLSYNC_SCHEDULE: "45 * * * *"
   prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: albedo-identity
+  namespace: automation
+spec:
+  targetNamespace: automation
+  dependsOn:
+    - name: kanidm-managed
+      namespace: auth-system
+  path: ./flux/bastille/apps/automation/albedo/identity
+  prune: true
+  interval: 1h
+  retryInterval: 2m
+  timeout: 5m
+  healthChecks:
+    - apiVersion: kaniop.rs/v1beta1
+      kind: KanidmGroup
+      name: albedo-users
+      namespace: automation
+    - apiVersion: kaniop.rs/v1beta1
+      kind: KanidmOAuth2Client
+      name: albedo
+      namespace: automation
+  healthCheckExprs:
+    - apiVersion: kaniop.rs/v1beta1
+      kind: KanidmGroup
+      current: status.ready
+    - apiVersion: kaniop.rs/v1beta1
+      kind: KanidmOAuth2Client
+      current: status.ready
   sourceRef:
     kind: GitRepository
     name: flux-system
