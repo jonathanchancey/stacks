@@ -1,0 +1,119 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/source.toolkit.fluxcd.io/ocirepository_v1.json
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: shlink
+spec:
+  interval: 5m
+  layerSelector:
+    mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
+    operation: copy
+  ref:
+    tag: 5.0.1
+  url: oci://ghcr.io/bjw-s-labs/helm/app-template
+  verify:
+    provider: cosign
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: shlink
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: shlink
+  values:
+    controllers:
+      shlink:
+        replicas: 1
+        strategy: Recreate
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: ghcr.io/shlinkio/shlink
+              tag: 5.1.7
+            env:
+              DEFAULT_DOMAIN: shlink.chancey.dev
+              IS_HTTPS_ENABLED: "true"
+              DB_DRIVER: postgres
+              DB_HOST: bastille-pg-rw.database.svc.cluster.local
+              DB_NAME: shlink
+              DB_USER: shlink
+              DB_PASSWORD:
+                valueFrom:
+                  secretKeyRef:
+                    name: shlink-secret
+                    key: DB_PASSWORD
+              INITIAL_API_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: shlink-secret
+                    key: INITIAL_API_KEY
+              WEB_WORKER_NUM: "2"
+              TASK_WORKER_NUM: "1"
+            probes:
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /rest/health
+                    port: &port 8080
+                  periodSeconds: 5
+                  timeoutSeconds: 2
+                  failureThreshold: 60
+              liveness:
+                enabled: true
+                type: TCP
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /rest/health
+                    port: *port
+                  periodSeconds: 10
+                  timeoutSeconds: 2
+                  failureThreshold: 3
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 10m
+              limits:
+                memory: 512Mi
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+        fsGroup: 1001
+    service:
+      app:
+        ports:
+          http:
+            port: *port
+    route:
+      main:
+        hostnames:
+          - shlink.chancey.dev
+        parentRefs:
+          - name: envoy-external
+            namespace: network
+            sectionName: https
+    persistence:
+      data:
+        type: emptyDir
+        globalMounts:
+          - path: /etc/shlink/data
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
