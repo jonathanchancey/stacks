@@ -40,5 +40,6 @@ gateway readiness. preserve old dns aliases through cached cname expiry.
 check authentication, websockets, object transfers, and cloudflared access after a
 replacement. to roll back, restore gateway definitions and route parents together,
 then reconcile their owning flux kustomizations and verify address ownership.
-cilium still supplies cluster networking, bgp, and load-balancer allocation; its
-gateway-api controller is disabled.
+cilium still supplies cluster networking, bgp, and load-balancer allocation. its
+gateway-api support remains enabled to preserve dataplane settings, but no cilium
+gateway class or gateway is configured.

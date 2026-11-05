@@ -113,7 +113,11 @@ spec:
         enabled: true
 
     gatewayAPI:
-      enabled: false
+      enabled: true
+      enableAlpn: true
+      enableAppProtocol: true
+      gatewayClass:
+        create: false
 
     operator:
       dashboards:
