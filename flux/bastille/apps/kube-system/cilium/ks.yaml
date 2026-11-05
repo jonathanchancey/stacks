@@ -13,16 +13,10 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  components:
-    - ../../../../components/gatus
   interval: 1h
   retryInterval: 2m
   timeout: 15m
   path: ./flux/bastille/apps/kube-system/cilium/app
-  postBuild:
-    substitute:
-      APP: *app
-      GATUS_SUBDOMAIN: hubble
   prune: true
   sourceRef:
     kind: GitRepository

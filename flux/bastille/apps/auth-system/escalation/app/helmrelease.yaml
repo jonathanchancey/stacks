@@ -111,6 +111,9 @@ spec:
             interval: 1m
     route:
       app:
+        annotations:
+          gatus.home-operations.com/endpoint: |-
+            path: /
         hostnames: [escalation.chancey.dev]
         parentRefs:
           - name: edge

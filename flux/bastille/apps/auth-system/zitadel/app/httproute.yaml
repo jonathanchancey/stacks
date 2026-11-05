@@ -5,6 +5,8 @@ kind: HTTPRoute
 metadata:
   name: zitadel
   annotations:
+    gatus.home-operations.com/endpoint: |-
+      path: /
     external-dns.alpha.kubernetes.io/hostname: auth.chancey.dev
 spec:
   hostnames:

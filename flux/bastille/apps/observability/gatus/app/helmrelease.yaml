@@ -31,17 +31,16 @@ spec:
         annotations:
           reloader.stakater.com/auto: "true"
         initContainers:
-          init-config:
+          gatus-sidecar:
             image:
-              repository: ghcr.io/home-operations/k8s-sidecar
-              tag: 2.14.1@sha256:22eccb80b828a956eb31214ed5a0358c9efcbf575f196c2b859ac00bfd5dcef4
-            env:
-              FOLDER: /config
-              LABEL: gatus.io/enabled
-              NAMESPACE: ALL
-              RESOURCE: configmap
-              UNIQUE_FILENAMES: true
-              METHOD: WATCH
+              repository: ghcr.io/home-operations/gatus-sidecar
+              tag: 0.6.1@sha256:c2b24374a8a4c5551c0122f3a7ae383ff65a0ea0bcd3b541530db84490fea2af
+            args:
+              - --auto-httproute
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
             resources: &resources
               requests:
                 cpu: 10m
@@ -101,6 +100,7 @@ spec:
     defaultPodOptions:
       automountServiceAccountToken: true
       securityContext:
+        fsGroup: 568
         runAsNonRoot: true
         runAsUser: 568
         runAsGroup: 568
@@ -116,6 +116,9 @@ spec:
             readOnly: true
     route:
       app:
+        annotations:
+          gatus.home-operations.com/endpoint: |-
+            path: /health
         hostnames:
           - status.bastille.chancey.dev
         parentRefs:

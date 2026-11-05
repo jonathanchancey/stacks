@@ -9,18 +9,11 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  components:
-    - ../../../../components/gatus
   dependsOn:
     - name: cloudnative-pg-gatus
       namespace: database
   interval: 1h
   path: ./flux/bastille/apps/observability/gatus/app
-  postBuild:
-    substitute:
-      APP: *app
-      GATUS_PATH: /health
-      GATUS_SUBDOMAIN: status.bastille
   prune: true
   retryInterval: 2m
   sourceRef:
