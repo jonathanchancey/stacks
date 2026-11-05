@@ -28,8 +28,6 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  components:
-    - ../../../../components/gatus
   dependsOn:
     - name: zitadel-repo
       namespace: auth-system
@@ -39,10 +37,6 @@ spec:
   retryInterval: 2m
   timeout: 15m
   path: ./flux/bastille/apps/auth-system/zitadel/app
-  postBuild:
-    substitute:
-      APP: *app
-      GATUS_SUBDOMAIN: auth
   prune: true
   sourceRef:
     kind: GitRepository

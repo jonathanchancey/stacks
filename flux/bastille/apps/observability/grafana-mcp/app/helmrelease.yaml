@@ -101,6 +101,9 @@ spec:
             port: 8000
     route:
       app:
+        annotations:
+          gatus.home-operations.com/endpoint: |-
+            conditions: ["[STATUS] == 401"]
         hostnames:
           - grafana-mcp.bastille.chancey.dev
         parentRefs:

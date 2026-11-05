@@ -14,6 +14,9 @@ prometheus:
   route:
     main:
       enabled: true
+      annotations:
+        gatus.home-operations.com/endpoint: |-
+          name: kube-prometheus-stack
       hostnames: ["prometheus.chancey.dev"]
       parentRefs:
         - name: envoy-internal

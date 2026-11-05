@@ -6,6 +6,7 @@ metadata:
   name: clef
   namespace: network
   annotations:
+    gatus.home-operations.com/enabled: "false"
     external-dns.alpha.kubernetes.io/hostname: clef.chancey.dev
 spec:
   hostnames:

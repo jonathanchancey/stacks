@@ -12,7 +12,6 @@ spec:
       app.kubernetes.io/name: *app
   components:
     - ../../../../components/volsync/backup
-    - ../../../../components/gatus
   dependsOn:
     - name: volsync
       namespace: storage

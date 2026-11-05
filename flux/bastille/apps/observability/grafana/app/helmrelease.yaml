@@ -159,6 +159,9 @@ spec:
     route:
       main:
         enabled: true
+        annotations:
+          gatus.home-operations.com/endpoint: |-
+            path: /api/health
         hostnames:
           - grafana.bastille.chancey.dev
         parentRefs:

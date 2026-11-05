@@ -10,16 +10,10 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  components:
-    - ../../../../components/gatus
   interval: 1h
   retryInterval: 2m
   timeout: 15m
   path: ./flux/bastille/apps/media/immich/app
-  postBuild:
-    substitute:
-      APP: *app
-      GATUS_SUBDOMAIN: photos
   prune: true
   sourceRef:
     kind: GitRepository

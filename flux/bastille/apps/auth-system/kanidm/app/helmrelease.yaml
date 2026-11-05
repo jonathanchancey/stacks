@@ -81,6 +81,9 @@ spec:
             targetPort: 3636
     route:
       app:
+        annotations:
+          gatus.home-operations.com/endpoint: |-
+            path: /status
         hostnames:
           - "idm.chancey.dev"
         parentRefs:

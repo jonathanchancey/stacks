@@ -113,6 +113,9 @@ spec:
     route:
       main:
         enabled: true
+        annotations:
+          gatus.home-operations.com/endpoint: |-
+            path: /healthcheck
         hostnames:
           - miniflux.chancey.dev
         parentRefs:

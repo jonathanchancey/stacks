@@ -149,6 +149,9 @@ spec:
 
     route:
       server:
+        annotations:
+          gatus.home-operations.com/endpoint: |-
+            name: immich
         hostnames: ["photos.chancey.dev"]
         parentRefs:
           - name: envoy-internal
@@ -161,6 +164,11 @@ spec:
       public-proxy:
         annotations:
           external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
+          gatus.home-operations.com/endpoint: |-
+            path: /share/healthcheck
+            conditions:
+              - "[STATUS] == 200"
+              - "[BODY] == ok"
         hostnames: ["pics.chancey.dev"]
         parentRefs:
           - name: envoy-external

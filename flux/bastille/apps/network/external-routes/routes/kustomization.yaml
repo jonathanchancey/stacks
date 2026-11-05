@@ -5,9 +5,6 @@ kind: Kustomization
 resources:
   - amp-orbs.yaml
   - clef.yaml
-  - sw-01.yaml
-  - sw-02.yaml
-  - sw-03.yaml
   - proxmox.yaml
   - intrepid.yaml
   - certificates/proxmox.yaml
