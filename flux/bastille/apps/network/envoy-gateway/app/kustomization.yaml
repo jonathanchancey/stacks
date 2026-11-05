@@ -8,4 +8,6 @@ resources:
   - ./gatewayclass.yaml
   - ./gateway.yaml
   - ./gateway-external.yaml
+  - ./traffic-policies.yaml
+  - ./https-redirect.yaml
   - ./certificate.yaml
