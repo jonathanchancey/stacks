@@ -14,3 +14,19 @@ spec:
   dnsNames:
     - "chancey.dev"
     - "*.chancey.dev"
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cert-manager.io/certificate_v1.json
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: bastille-chancey-dev
+  namespace: network
+spec:
+  secretName: bastille-chancey-dev-tls
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  commonName: "*.bastille.chancey.dev"
+  dnsNames:
+    - "bastille.chancey.dev"
+    - "*.bastille.chancey.dev"

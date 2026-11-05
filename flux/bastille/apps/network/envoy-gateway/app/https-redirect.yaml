@@ -8,6 +8,9 @@ metadata:
     external-dns.alpha.kubernetes.io/controller: none
 spec:
   parentRefs:
+    - name: envoy-internal
+      namespace: network
+      sectionName: http
     - name: envoy-external
       namespace: network
       sectionName: http

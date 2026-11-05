@@ -11,9 +11,9 @@ spec:
   hostnames:
     - sw-02.chancey.dev
   parentRefs:
-    - name: internal
+    - name: envoy-internal
       kind: Gateway
-      namespace: kube-system
+      namespace: network
       sectionName: https
   rules:
     - backendRefs:

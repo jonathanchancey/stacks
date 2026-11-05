@@ -104,9 +104,9 @@ spec:
         hostnames:
           - grafana-mcp.bastille.chancey.dev
         parentRefs:
-          - name: internal
+          - name: envoy-internal
             kind: Gateway
-            namespace: kube-system
+            namespace: network
             sectionName: https-bastille
         rules:
           - matches:

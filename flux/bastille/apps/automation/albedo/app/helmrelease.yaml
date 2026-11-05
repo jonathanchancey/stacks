@@ -142,7 +142,7 @@ spec:
       app:
         hostnames: [albedo.chancey.dev]
         parentRefs:
-          - name: edge
+          - name: envoy-internal
             namespace: network
             sectionName: https
         rules:

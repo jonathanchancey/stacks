@@ -16,7 +16,7 @@ prometheus:
       enabled: true
       hostnames: ["prometheus.chancey.dev"]
       parentRefs:
-        - name: edge
+        - name: envoy-internal
           namespace: network
           sectionName: https
   prometheusSpec:
