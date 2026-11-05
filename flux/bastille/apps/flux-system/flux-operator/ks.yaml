@@ -15,10 +15,6 @@ spec:
       kind: HelmRelease
       name: *app
       namespace: *namespace
-  postBuild:
-    substitute:
-      APP: *app
-      GATUS_SUBDOMAIN: flux
   interval: 1h
   retryInterval: 2m
   timeout: 15m

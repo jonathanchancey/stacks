@@ -10,8 +10,6 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  components:
-    - ../../../../components/gatus
   dependsOn:
     - name: volsync
       namespace: storage
@@ -24,9 +22,6 @@ spec:
   retryInterval: 2m
   timeout: 5m
   path: ./flux/bastille/apps/storage/kopia/app
-  postBuild:
-    substitute:
-      APP: *app
   prune: true
   sourceRef:
     kind: GitRepository

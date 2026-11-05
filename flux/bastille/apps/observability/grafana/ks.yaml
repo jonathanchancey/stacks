@@ -11,7 +11,6 @@ spec:
       app.kubernetes.io/name: *app
   components:
     - ../../../../components/volsync/backup
-    - ../../../../components/gatus
   dependsOn:
     - name: volsync
       namespace: storage
@@ -22,8 +21,6 @@ spec:
     substitute:
       APP: *app
       VOLSYNC_SCHEDULE: "45 * * * *"
-      GATUS_DOMAIN: bastille.chancey.dev
-      GATUS_PATH: /api/health
   sourceRef:
     kind: GitRepository
     name: flux-system

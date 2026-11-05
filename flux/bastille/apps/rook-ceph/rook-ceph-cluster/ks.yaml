@@ -12,8 +12,6 @@ spec:
   dependsOn:
     - name: rook-ceph-csi-drivers
       namespace: *namespace
-  components:
-    - ../../../../components/gatus
   interval: 1h
   # healthChecks:
   #   - apiVersion: helm.toolkit.fluxcd.io/v2
@@ -30,11 +28,6 @@ spec:
   #     failed: status.ceph.health == 'HEALTH_ERR'
   #     current: status.ceph.health in ['HEALTH_OK', 'HEALTH_WARN']
   path: ./flux/bastille/apps/rook-ceph/rook-ceph-cluster/app
-  postBuild:
-    substitute:
-      APP: *app
-      GATUS_SUBDOMAIN: ceph
-      GATUS_DOMAIN: bastille.chancey.dev
   prune: true
   retryInterval: 2m
   sourceRef:
