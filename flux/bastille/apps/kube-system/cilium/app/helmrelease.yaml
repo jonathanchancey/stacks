@@ -117,7 +117,7 @@ spec:
       enableAlpn: true
       enableAppProtocol: true
       gatewayClass:
-        create: auto
+        create: false
 
     operator:
       dashboards:

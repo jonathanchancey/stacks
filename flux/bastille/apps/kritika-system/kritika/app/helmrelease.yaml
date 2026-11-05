@@ -86,7 +86,7 @@ spec:
     httpRoute:
       enabled: true
       parentRefs:
-        - name: edge
+        - name: envoy-internal
           namespace: network
           sectionName: https
       hostnames:
