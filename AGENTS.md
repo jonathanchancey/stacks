@@ -40,6 +40,7 @@ task test-all
 - flux reconciles on main push
 - use `https://k8s-schemas.home-operations.com` for kubernetes and kustomize yaml schemas. upstream schemas remain appropriate for unpublished api versions, tool configuration, and chart values
 - always use ocirepository over helmrepository
+- avoid docker.io as a container registry
 
 ## file patterns
 
