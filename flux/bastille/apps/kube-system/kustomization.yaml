@@ -14,3 +14,4 @@ resources:
   - ./csi-driver-nfs/ks.yaml
   - ./csi-driver-smb/ks.yaml
   - ./metrics-server/ks.yaml
+  - ./intel-gpu-plugin/ks.yaml
