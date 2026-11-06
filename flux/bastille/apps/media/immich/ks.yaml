@@ -20,6 +20,8 @@ spec:
     name: flux-system
     namespace: flux-system
   dependsOn:
+    - name: intel-gpu-plugin
+      namespace: kube-system
     - name: csi-driver-smb
       namespace: kube-system
 ---

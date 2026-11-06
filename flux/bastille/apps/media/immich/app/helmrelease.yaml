@@ -59,7 +59,7 @@ spec:
           main:
             image:
               repository: ghcr.io/immich-app/immich-machine-learning
-              tag: v3.3.5@sha256:5b28c9352c8374b8a1ed96fbdd8d6755fea6e43510ec43fdf6538aa02ea40f56
+              tag: v3.3.5-openvino@sha256:1dbac7f811b51b80c55ee0cf678e0089d3532c798f14a65747d5d7b473a4f9d6
             envFrom:
               - secretRef:
                   name: immich-secret
@@ -73,9 +73,11 @@ spec:
             resources:
               requests:
                 cpu: 100m
-                memory: 256Mi
+                memory: 1Gi
+                gpu.intel.com/i915: 1
               limits:
-                memory: 2048Mi
+                memory: 4Gi
+                gpu.intel.com/i915: 1
 
       valkey:
         containers:
