@@ -26,7 +26,7 @@ let
 in
 stdenvNoCC.mkDerivation rec {
   pname = "flate";
-  version = "0.6.5";
+  version = "0.7.3";
 
   src = fetchurl {
     url = "https://github.com/home-operations/flate/releases/download/v${version}/flate_${version}_${platform.archive}.tar.gz";
