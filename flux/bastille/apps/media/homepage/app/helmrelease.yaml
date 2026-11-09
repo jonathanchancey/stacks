@@ -39,7 +39,7 @@ spec:
       internal:
         hostnames: [*host]
         parentRefs:
-          - name: edge
+          - name: envoy-internal
             namespace: network
             sectionName: https
     persistence:

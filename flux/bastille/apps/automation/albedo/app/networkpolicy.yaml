@@ -17,7 +17,7 @@ spec:
           podSelector:
             matchLabels:
               app.kubernetes.io/name: envoy
-              gateway.envoyproxy.io/owning-gateway-name: edge
+              gateway.envoyproxy.io/owning-gateway-name: envoy-internal
               gateway.envoyproxy.io/owning-gateway-namespace: network
       ports:
         - protocol: TCP

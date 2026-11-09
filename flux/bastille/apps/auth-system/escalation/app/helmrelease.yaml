@@ -116,7 +116,7 @@ spec:
             path: /
         hostnames: [escalation.chancey.dev]
         parentRefs:
-          - name: edge
+          - name: envoy-internal
             namespace: network
             sectionName: https
         rules:

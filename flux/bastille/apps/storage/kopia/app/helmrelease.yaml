@@ -84,7 +84,7 @@ spec:
       app:
         hostnames: ["kopia.chancey.dev"]
         parentRefs:
-          - name: edge
+          - name: envoy-internal
             namespace: network
             sectionName: https
     persistence:
