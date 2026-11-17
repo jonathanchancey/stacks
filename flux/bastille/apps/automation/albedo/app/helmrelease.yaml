@@ -38,7 +38,7 @@ spec:
           app:
             image:
               repository: ghcr.io/jonathanchancey/albedo
-              tag: a65e5babc2b9-1@sha256:43c84aeefe68179ec2aa3ec8b0bd8d3c1580e974b57e08119c489f8d053ab41a
+              tag: 20261117.22.1@sha256:41a908482cc73335e3d7dceea705e1195a3b2a400eea10aafee8901e6a7b0744
             env:
               TZ: America/Los_Angeles
               ALBEDO_KERNEL_BUDGET_MB: "512"
