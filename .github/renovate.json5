@@ -91,7 +91,8 @@
       matchDatasources: ['docker'],
       matchPackageNames: ['ghcr.io/jonathanchancey/albedo'],
       // accept the original sha tag so the first daily image can replace it.
-      versioning: 'regex:^(?:(?<major>\\d{8})\\.(?<minor>\\d+)\\.(?<patch>\\d+)|[a-f0-9]{12}-(?<build>\\d+))$',
+      // sort daily builds by date, run number, and attempt as patch updates.
+      versioning: 'regex:^(?:(?<patch>\\d{8})\\.(?<build>\\d+)\\.(?<revision>\\d+)|[a-f0-9]{12}-\\d+)$',
       schedule: ['at any time'],
       pinDigests: true,
       automerge: false,
