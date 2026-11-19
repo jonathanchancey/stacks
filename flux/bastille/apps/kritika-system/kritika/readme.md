@@ -16,7 +16,7 @@ rook creates the cache credentials in the `kritika-cache` secret. the bucket has
 
 ## chatgpt sign-in
 
-reviews use a chatgpt plus or pro plan. indexing uses separately billed openrouter embeddings; chatgpt cannot supply embeddings. automatic pr approval is disabled.
+reviews and [renovate confidence scores](app/helmrelease.yaml#L44) use a chatgpt plus or pro plan. scores are advisory: merge gating and automatic approvals are disabled. indexing uses separately billed openrouter embeddings; chatgpt cannot supply embeddings.
 
 run these commands on the machine with your browser, using the same pod in both terminals:
 
@@ -29,7 +29,7 @@ kubectl -n kritika-system port-forward pod/POD_NAME 1455:1455 --address 127.0.0.
 kubectl -n kritika-system exec -it POD_NAME -- /kritika chatgpt login chatgpt
 ```
 
-open the printed url and stop the forward after confirmation. tokens persist in postgres and refresh automatically; repeat sign-in if revoked. reviews share your plan's allowance; openrouter calls are billed separately. see [upstream's plan documentation](https://kritika.home-operations.com/models/#chatgpt-plans).
+open the printed url and stop the forward after confirmation. tokens persist in postgres and refresh automatically; repeat sign-in if revoked. reviews and scores share your plan's allowance. see [upstream's plan documentation](https://kritika.home-operations.com/models/#chatgpt-plans).
 
 ## database and isolation
 
