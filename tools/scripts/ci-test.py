@@ -209,7 +209,8 @@ class SharedChartRendering(unittest.TestCase):
             (root / "tools/scripts").mkdir(parents=True)
             for name in ("ci-diff.sh", "flate.sh", "rendered-diff.py"):
                 shutil.copy2(scripts / name, root / "tools/scripts" / name)
-            shutil.copy2(scripts.parent / "flate.yaml", root / "tools/flate.yaml")
+            for name in ("flate.yaml", "flate-supply.yaml"):
+                shutil.copy2(scripts.parent / name, root / "tools" / name)
             # registry behavior is covered separately; this fixture never uses the network.
             (root / "tools/scripts/check-images.py").write_text("", encoding="utf-8")
             git("init", "-qb", "main")
