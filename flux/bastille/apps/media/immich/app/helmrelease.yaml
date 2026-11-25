@@ -108,7 +108,7 @@ spec:
                 }
             image:
               repository: alangrainger/immich-public-proxy
-              tag: 4.1.2
+              tag: 4.2.0
             resources:
               requests:
                 cpu: 50m
