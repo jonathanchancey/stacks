@@ -25,10 +25,11 @@ part of the private validation before cutover.
 
 1. establish recovery access independent of kanidm. verify the pinned kaniop
    release and crds are ready, then block normal clients from the new target.
-   capture the existing domain display name and logo privately. kaniop 0.19.1
-   removes imported logos when `domainAppearance.image` is absent; configure
-   `spec.domainAppearance.displayName` and `image.url` for required branding before
-   operator reconciliation.
+   capture the existing domain display name and logo privately. kaniop 0.25.0
+   preserves an imported logo when both `spec.domainAppearance.image` and
+   `status.domainAppearanceImage` are absent. configure `spec.domainAppearance`
+   if gitops should manage branding. removing a previously operator-managed image
+   deletes it from kanidm.
 2. leave the app kustomization suspended. apply only [`app/pvc.yaml`](app/pvc.yaml)
    in `auth-system` and wait for the separate target claim to bind. never mount,
    rename, or transfer the production `kanidm` pvc to kaniop.
