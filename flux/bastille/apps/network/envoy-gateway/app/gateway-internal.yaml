@@ -3,7 +3,7 @@
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: EnvoyProxy
 metadata:
-  name: envoy-proxy-edge
+  name: envoy-proxy-internal
   namespace: network
 spec:
   provider:
@@ -27,30 +27,37 @@ spec:
               whenUnsatisfiable: DoNotSchedule
               labelSelector:
                 matchLabels:
-                  gateway.envoyproxy.io/owning-gateway-name: edge
+                  gateway.envoyproxy.io/owning-gateway-name: envoy-internal
                   gateway.envoyproxy.io/owning-gateway-namespace: network
       envoyService:
+        name: envoy-internal
         externalTrafficPolicy: Local
 ---
 # yaml-language-server: $schema=https://k8s-schemas.home-operations.com/gateway.networking.k8s.io/gateway_v1.json
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
-  name: edge
+  name: envoy-internal
   namespace: network
   annotations:
-    external-dns.alpha.kubernetes.io/target: &hostname edge.chancey.dev
-    io.cilium/lb-ipam-ips: 10.12.0.11
+    external-dns.alpha.kubernetes.io/target: internal.chancey.dev
 spec:
   gatewayClassName: envoy
   infrastructure:
     parametersRef:
       group: gateway.envoyproxy.io
       kind: EnvoyProxy
-      name: envoy-proxy-edge
+      name: envoy-proxy-internal
     annotations:
-      external-dns.alpha.kubernetes.io/hostname: *hostname
+      external-dns.alpha.kubernetes.io/hostname: internal.chancey.dev,edge.chancey.dev
+      lbipam.cilium.io/ips: 10.12.0.10,10.12.0.11
   listeners:
+    - name: http
+      protocol: HTTP
+      port: 80
+      allowedRoutes:
+        namespaces:
+          from: Same
     - name: https
       protocol: HTTPS
       port: 443
@@ -63,3 +70,15 @@ spec:
         certificateRefs:
           - kind: Secret
             name: chancey-dev-tls
+    - name: https-bastille
+      protocol: HTTPS
+      port: 443
+      hostname: "*.bastille.chancey.dev"
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - kind: Secret
+            name: bastille-chancey-dev-tls

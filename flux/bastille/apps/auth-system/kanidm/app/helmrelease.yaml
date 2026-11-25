@@ -87,7 +87,7 @@ spec:
         hostnames:
           - "idm.chancey.dev"
         parentRefs:
-          - name: edge
+          - name: envoy-internal
             namespace: network
             sectionName: https
         rules:

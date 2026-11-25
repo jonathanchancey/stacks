@@ -12,9 +12,9 @@ spec:
   hostnames:
     - *hostname
   parentRefs:
-    - name: internal
+    - name: envoy-internal
       kind: Gateway
-      namespace: kube-system
+      namespace: network
       sectionName: https-bastille
   rules:
     - backendRefs:
@@ -32,9 +32,9 @@ spec:
   hostnames:
     - *hostname
   parentRefs:
-    - name: internal
+    - name: envoy-internal
       kind: Gateway
-      namespace: kube-system
+      namespace: network
       sectionName: https-bastille
   rules:
     - backendRefs:

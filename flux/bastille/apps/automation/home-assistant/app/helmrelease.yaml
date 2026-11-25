@@ -72,10 +72,9 @@ spec:
         hostnames:
           - home-assistant.chancey.dev
           - hub.chancey.dev
-          - ha.fkn.chancey.dev
         parentRefs:
-          - name: internal
-            namespace: kube-system
+          - name: envoy-internal
+            namespace: network
             sectionName: https
     persistence:
       config:

@@ -6,6 +6,8 @@ resources:
   - ./helmrelease.yaml
   - ./o11y.yaml
   - ./gatewayclass.yaml
-  - ./gateway.yaml
+  - ./gateway-internal.yaml
   - ./gateway-external.yaml
+  - ./traffic-policies.yaml
+  - ./https-redirect.yaml
   - ./certificate.yaml

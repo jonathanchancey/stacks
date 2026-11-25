@@ -5,7 +5,5 @@ kind: Kustomization
 resources:
   - ./helmrelease.yaml
   - ./network.yaml
-  - ./gateway.yaml
   - ./httproute.yaml
-  - ./certs/chancey-dev.yaml
   - ./certs/hubble.yaml

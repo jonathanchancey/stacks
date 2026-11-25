@@ -93,12 +93,12 @@ spec:
       ],
       templating: { list: [
         {
-          name: 'gateway', label: 'Gateway', type: 'custom', query: 'edge,envoy-external',
-          multi: true, includeAll: true, allValue: '(edge|envoy-external)',
+          name: 'gateway', label: 'Gateway', type: 'custom', query: 'envoy-internal,envoy-external',
+          multi: true, includeAll: true, allValue: '(envoy-internal|envoy-external)',
           current: { text: 'All', value: '$__all' },
           options: [
             { text: 'All', value: '$__all', selected: true },
-            { text: 'edge', value: 'edge', selected: false },
+            { text: 'envoy-internal', value: 'envoy-internal', selected: false },
             { text: 'envoy-external', value: 'envoy-external', selected: false },
           ],
         },

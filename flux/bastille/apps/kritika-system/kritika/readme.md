@@ -6,7 +6,7 @@
 
 the helmrelease references github app credentials and an openrouter key from `app/secrets.sops.yaml`. decrypt it with sops on a trusted machine to update them; never commit plaintext credentials.
 
-1. register a github app using [upstream's permissions and events](https://kritika.home-operations.com/setup/#register-the-github-app). use `https://kritika-webhook.chancey.dev/hooks/github` for webhooks. its public route accepts only `POST /hooks/github`; the dashboard at `https://kritika.chancey.dev` uses internal `network/edge`.
+1. register a github app using [upstream's permissions and events](https://kritika.home-operations.com/setup/#register-the-github-app). use `https://kritika-webhook.chancey.dev/hooks/github` for webhooks. its public route accepts only `POST /hooks/github`; the dashboard at `https://kritika.chancey.dev` uses `network/envoy-internal`.
 2. set `KRITIKA_GITHUB_CLIENT_ID`, `KRITIKA_GITHUB_PRIVATE_KEY`, and `KRITIKA_OPENROUTER_API_KEY` in the encrypted app secret. set the github webhook secret to its `KRITIKA_GITHUB_WEBHOOK_SECRET` value. keep the helmrelease's `config.apps.github.accounts` aligned with the installation accounts.
 3. install the app on the intended repositories, then enable them on the account's repositories page in kritika. check database extensions and roles, bucket binding, and helmrelease readiness before testing a review.
 

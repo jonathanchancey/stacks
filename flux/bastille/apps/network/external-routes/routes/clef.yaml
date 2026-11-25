@@ -12,7 +12,7 @@ spec:
   hostnames:
     - clef.chancey.dev
   parentRefs:
-    - name: edge
+    - name: envoy-internal
       kind: Gateway
       namespace: network
       sectionName: https
