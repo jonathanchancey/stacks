@@ -41,7 +41,8 @@ spec:
               - --address=0.0.0.0:8000
               - --allowed-hosts=grafana-mcp.bastille.chancey.dev
               - --healthz-address=0.0.0.0:8080
-              - --enabled-tools=search,datasource,dashboard,prometheus,loki,alerting
+              - --enabled-tools=search,datasource,dashboard,prometheus,loki,alerting,rendering
+              - --config=/config/tools.yaml
               - --usage-stats=disabled
             env:
               GRAFANA_URL: http://grafana.observability.svc.cluster.local:80
@@ -99,6 +100,13 @@ spec:
         ports:
           http:
             port: 8000
+    persistence:
+      tools:
+        type: configMap
+        name: grafana-mcp-tools
+        globalMounts:
+          - path: /config
+            readOnly: true
     route:
       app:
         annotations:
