@@ -14,7 +14,7 @@ spec:
         operator: In
         values: [auth-system, automation]
   oauth2ClientNamespaceSelector: *identityNamespaces
-  image: docker.io/kanidm/server:1.11.2@sha256:d87475bf9c9cfd24872d8b25957c9fc13fc090ace09ddc37c3b25fe394b397ac
+  image: docker.io/kanidm/server:1.12.1@sha256:204f7b3969a2930532918c59f2e735043e79c55c0e684cb14b354f76e35c8688
   disableUpgradeChecks: false
   replicaGroups:
     - name: default
