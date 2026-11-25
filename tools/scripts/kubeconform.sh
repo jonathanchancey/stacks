@@ -19,7 +19,7 @@ case "$mode" in
     echo "validating rendered manifests in $manifest_dir"
     unset FLATE_BASE FLATE_PATH_ORIG FLATE_NAMESPACE
     # sops envelopes are source metadata; encrypted values remain placeholders.
-    "$script_dir/flate.sh" build all --path "$manifest_dir" --skip-crds=false |
+    "$script_dir/flate.sh" build all --path "$manifest_dir" --skip-kinds=Secret |
       yq 'del(.sops)' > "$work_dir/manifests.yaml"
     yq -o=json -I=0 'select(.kind == "CustomResourceDefinition")' "$work_dir/manifests.yaml" |
       python3 "$script_dir/flate-crd-schemas.py" "$work_dir/schemas"

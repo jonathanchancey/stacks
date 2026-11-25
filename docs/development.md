@@ -29,8 +29,7 @@ flate renders without cluster access, but still downloads referenced charts and
 sources. encrypted values remain placeholders; rendering does not prove live
 credentials or health.
 
-flate `0.6.5` can add namespaces to cluster-scoped admission policies in rendered
-output. generated manifests are review artifacts; do not apply them.
+generated manifests are review artifacts; do not apply them.
 
 ## continuous integration
 
