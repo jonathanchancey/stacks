@@ -1,0 +1,31 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/core/secret_v1.json
+# offline render fixtures for sops-backed inputs used by templates
+apiVersion: v1
+kind: Secret
+metadata:
+  name: zitadel-secret
+  namespace: auth-system
+stringData:
+  masterkey: offline-render-placeholder-00001
+  postgres-user-password: offline-render-placeholder
+  smtp-host: smtp.example.invalid:465
+  smtp-password: offline-render-placeholder
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/core/secret_v1.json
+apiVersion: v1
+kind: Secret
+metadata:
+  name: zitadel-init-db-secret
+  namespace: auth-system
+stringData:
+  INIT_POSTGRES_SUPER_PASS: offline-render-placeholder
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/core/secret_v1.json
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cloudflared-tunnel-secret
+  namespace: network
+stringData:
+  TUNNEL_ID: 00000000-0000-0000-0000-000000000000
