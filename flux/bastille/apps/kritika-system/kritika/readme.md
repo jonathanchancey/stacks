@@ -33,7 +33,7 @@ open the printed url and stop the forward after confirmation. tokens persist in 
 
 ## database and isolation
 
-the dedicated cnpg cluster uses postgres 18 and vectorchord, with separate owner, application, and runner credentials in `database/secrets.sops.yaml`. preserve those credentials and the database together. keep the vectorchord image version and `database/database.yaml` extension version aligned. image volumes require a compatible kubernetes/container runtime; see [upstream's database prerequisites](https://kritika.home-operations.com/database/).
+the dedicated cnpg cluster uses postgres 18 and vectorchord. preserve the owner and application credentials in `database/secrets.sops.yaml` with the database. runners report through the gateway. keep the vectorchord image version and `database/database.yaml` extension version aligned. image volumes require a compatible kubernetes/container runtime; see [upstream's database prerequisites](https://kritika.home-operations.com/database/).
 
 two postgres instances use separate ceph volumes. replication is not a backup: no backup schedule is configured for this cluster. establish backups before relying on its review history and saved chatgpt session. the cluster is protected from flux pruning; removing its manifests does not delete it.
 
