@@ -35,13 +35,14 @@ spec:
           app:
             image:
               repository: docker.io/grafana/mcp-grafana
-              tag: 2.1.1@sha256:71a3f4e6f412d253611314233df709ec2571fb50e39742d23fa2940f670646dc
+              tag: 2.4.0@sha256:63d4501d3166c2b9242d8a2b5b7df8892c59c6c477be3a2a61bcf8a252671f31
             args:
               - --transport=streamable-http
               - --address=0.0.0.0:8000
               - --allowed-hosts=grafana-mcp.bastille.chancey.dev
               - --healthz-address=0.0.0.0:8080
-              - --enabled-tools=search,datasource,dashboard,prometheus,loki,alerting
+              - --enabled-tools=search,datasource,dashboard,prometheus,loki,alerting,rendering
+              - --config=/config/tools.yaml
               - --usage-stats=disabled
             env:
               GRAFANA_URL: http://grafana.observability.svc.cluster.local:80
@@ -99,6 +100,13 @@ spec:
         ports:
           http:
             port: 8000
+    persistence:
+      tools:
+        type: configMap
+        name: grafana-mcp-tools
+        globalMounts:
+          - path: /config
+            readOnly: true
     route:
       app:
         annotations:

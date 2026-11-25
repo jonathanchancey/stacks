@@ -1,0 +1,11 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/v1/configmap.json
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-mcp-tools
+data:
+  tools.yaml: |
+    tools:
+      deny:
+        - get_panel_image
