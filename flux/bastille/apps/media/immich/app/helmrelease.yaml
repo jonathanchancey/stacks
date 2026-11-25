@@ -24,6 +24,8 @@ spec:
               repository: ghcr.io/immich-app/immich-server
               tag: v3.4.2@sha256:fc880c1bf665b4aab1e74c15e56ab871225989cd546536e6b77e771869af06bd
             env:
+              # the prometheus exporter builds an invalid url from the default ipv6 bind.
+              IMMICH_HOST: 0.0.0.0
               IMMICH_MEDIA_LOCATION: &mediaLocation /usr/src/app/upload
               IMMICH_TELEMETRY_INCLUDE: all
               DB_HOSTNAME: "immich-postgres-rw.database.svc.cluster.local"
