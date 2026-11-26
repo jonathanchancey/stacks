@@ -14,6 +14,13 @@ indexing uses qwen3 embeddings through openrouter. model, dimensions, query prom
 
 rook creates the cache credentials in the `kritika-cache` secret. the bucket has a three-day expiry and a size cap; it is disposable cache, not a database backup.
 
+preserve the [bound cache claim](app/objectbucketclaim.yaml) through app removal
+or reinstall. with rook 1.21.2 and later, a new claim has a different uid and the
+dynamic `ceph-bucket` class rejects the retained bucket owned by the old claim.
+if only the bucket remains, use an administrator-managed
+[existing-bucket storage class](https://rook.io/docs/rook/v1.21/Storage-Configuration/Object-Storage-RGW/ceph-object-bucket-claim/#storageclass)
+to keep it, or approve deletion of the disposable cache before recreating the claim.
+
 ## chatgpt sign-in
 
 reviews and [renovate confidence scores](app/helmrelease.yaml#L44) use a chatgpt plus or pro plan. scores are advisory: merge gating and automatic approvals are disabled. indexing uses separately billed openrouter embeddings; chatgpt cannot supply embeddings.
