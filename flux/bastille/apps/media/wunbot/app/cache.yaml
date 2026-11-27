@@ -1,0 +1,8 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: wunbot-secret
+  annotations:
+    kustomize.toolkit.fluxcd.io/ssa: IfNotPresent
+type: Opaque

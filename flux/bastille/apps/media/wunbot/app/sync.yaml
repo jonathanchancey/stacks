@@ -1,0 +1,75 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: wunbot-secret-sync
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: wunbot-secret-sync
+rules:
+  - apiGroups: [""]
+    resources: [secrets]
+    resourceNames: [wunbot-secret]
+    verbs: [patch]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: wunbot-secret-sync
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: wunbot-secret-sync
+subjects:
+  - kind: ServiceAccount
+    name: wunbot-secret-sync
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: wunbot-secret-sync
+spec:
+  schedule: "*/10 * * * *"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      activeDeadlineSeconds: 120
+      backoffLimit: 1
+      template:
+        spec:
+          serviceAccountName: wunbot-secret-sync
+          restartPolicy: Never
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+            - name: sync
+              image: mirror.gcr.io/library/python:3.14-alpine@sha256:5862d971d1f0ae26b258cefa4e893556b1d3aba81bd2ff30888704ad378bab67
+              command: [python3, -I, /script/sync.py]
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities:
+                  drop: [ALL]
+              volumeMounts:
+                - {name: script, mountPath: /script, readOnly: true}
+                - {name: ca, mountPath: /openbao, readOnly: true}
+                - {name: identity, mountPath: /identity, readOnly: true}
+          volumes:
+            - name: script
+              configMap:
+                name: wunbot-sync
+            - name: ca
+              configMap:
+                name: openbao-ca
+            - name: identity
+              projected:
+                sources:
+                  - serviceAccountToken:
+                      path: token
+                      audience: openbao
+                      expirationSeconds: 600
