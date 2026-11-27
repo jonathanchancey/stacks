@@ -7,8 +7,11 @@ resources:
   - ca.sops.yaml
   - certificate.yaml
   - rbac.yaml
+  - httproute.yaml
   - server.yaml
   - snapshot.yaml
+configurations:
+  - kustomizeconfig.yaml
 configMapGenerator:
   - name: openbao-config
     files: [server.hcl]

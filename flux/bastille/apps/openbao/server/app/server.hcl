@@ -1,3 +1,4 @@
+ui = true
 api_addr = "https://openbao.openbao.svc:8200"
 cluster_addr = "https://127.0.0.1:8201"
 
