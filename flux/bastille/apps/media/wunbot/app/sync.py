@@ -1,41 +1,47 @@
 import base64
 import json
 import ssl
+from contextlib import closing
+from http.client import HTTPSConnection
 from pathlib import Path
-from urllib.request import Request, urlopen
 
 
-def request(url, ca, headers, payload, method="POST"):
-    req = Request(url, json.dumps(payload).encode(), headers, method=method)
-    with urlopen(req, context=ssl.create_default_context(cafile=ca), timeout=15) as response:
+def request(connection, method, path, headers, payload=None):
+    body = json.dumps(payload).encode() if payload is not None else None
+    connection.request(method, path, body=body, headers=headers)
+    with connection.getresponse() as response:
+        if not 200 <= response.status < 300:
+            raise RuntimeError(f"{method} {path} returned {response.status}")
         return json.load(response)
 
 
-bao = "https://openbao.openbao.svc:8200/v1"
-ca = "/openbao/ca.crt"
-login = request(
-    f"{bao}/auth/kubernetes/login",
-    ca,
-    {"Content-Type": "application/json"},
-    {"role": "wunbot", "jwt": Path("/identity/token").read_text()},
-)
-read = Request(
-    f"{bao}/kv/data/media/wunbot",
-    headers={"X-Vault-Token": login["auth"]["client_token"]},
-)
-with urlopen(read, context=ssl.create_default_context(cafile=ca), timeout=15) as response:
-    token = json.load(response)["data"]["data"]["DISCORD_BOT_TOKEN"]
+with closing(HTTPSConnection(
+    "openbao.openbao.svc", 8200,
+    context=ssl.create_default_context(cafile="/openbao/ca.crt"), timeout=15,
+)) as bao:
+    login = request(
+        bao, "POST", "/v1/auth/kubernetes/login",
+        {"Content-Type": "application/json"},
+        {"role": "wunbot", "jwt": Path("/identity/token").read_text()},
+    )
+    secret = request(
+        bao, "GET", "/v1/kv/data/media/wunbot",
+        {"X-Vault-Token": login["auth"]["client_token"]},
+    )
+token = secret["data"]["data"]["DISCORD_BOT_TOKEN"]
 if not isinstance(token, str) or not token.strip():
     raise ValueError("missing discord token")
 
 account = Path("/var/run/secrets/kubernetes.io/serviceaccount")
-request(
-    "https://kubernetes.default.svc/api/v1/namespaces/media/secrets/wunbot-secret",
-    account / "ca.crt",
-    {
-        "Authorization": "Bearer " + (account / "token").read_text(),
-        "Content-Type": "application/merge-patch+json",
-    },
-    {"data": {"DISCORD_BOT_TOKEN": base64.b64encode(token.encode()).decode()}},
-    method="PATCH",
-)
+with closing(HTTPSConnection(
+    "kubernetes.default.svc",
+    context=ssl.create_default_context(cafile=account / "ca.crt"), timeout=15,
+)) as kube:
+    request(
+        kube, "PATCH", "/api/v1/namespaces/media/secrets/wunbot-secret",
+        {
+            "Authorization": "Bearer " + (account / "token").read_text(),
+            "Content-Type": "application/merge-patch+json",
+        },
+        {"data": {"DISCORD_BOT_TOKEN": base64.b64encode(token.encode()).decode()}},
+    )
