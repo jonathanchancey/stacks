@@ -8,7 +8,7 @@ spec:
   storageClassName: ceph-block
   resources:
     requests:
-      storage: 2Gi
+      storage: 5Gi
 ---
 apiVersion: batch/v1
 kind: CronJob
@@ -39,10 +39,14 @@ spec:
               args:
                 - |
                   umask 077
+                  mkdir -p /snapshots/.staging
+                  printf '/.staging/\n' > /snapshots/.kopiaignore
+                  trap 'rm -f /snapshots/.staging/pending' EXIT
                   BAO_TOKEN=$(bao write -field=token auth/kubernetes/login role=snapshot jwt=@/identity/token)
                   export BAO_TOKEN
-                  bao operator raft snapshot save /snapshots/pending
-                  mv /snapshots/pending /snapshots/openbao.snap
+                  bao operator raft snapshot save /snapshots/.staging/pending
+                  test -s /snapshots/.staging/pending
+                  mv /snapshots/.staging/pending /snapshots/openbao.snap
               env:
                 - name: BAO_ADDR
                   value: https://openbao.openbao.svc:8200
@@ -83,7 +87,12 @@ spec:
         - alert: OpenBaoSnapshotStale
           expr: |
             time() - kube_cronjob_status_last_successful_time{namespace="openbao",cronjob="openbao-snapshot"} > 7200
-            or absent(kube_cronjob_status_last_successful_time{namespace="openbao",cronjob="openbao-snapshot"})
+            or (
+              (time() - kube_cronjob_created{namespace="openbao",cronjob="openbao-snapshot"} > 7200)
+              unless on (namespace, cronjob)
+                kube_cronjob_status_last_successful_time{namespace="openbao",cronjob="openbao-snapshot"}
+            )
+            or absent(kube_cronjob_info{namespace="openbao",cronjob="openbao-snapshot"})
           for: 20m
           labels:
             severity: warning

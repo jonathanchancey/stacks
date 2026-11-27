@@ -17,3 +17,11 @@ images:
   - name: ghcr.io/openbao/openbao
     newTag: 2.7.3
     digest: sha256:ba4b133eb9586630024e71a617e66f37f29cc3534cdd46a6233e098ceded8dc9
+patches:
+  - target:
+      kind: ReplicationSource
+    patch: |-
+      - op: add
+        path: /spec/kopia/actions
+        value:
+          beforeSnapshot: 'test -s "$DATA_DIR/openbao.snap"'
