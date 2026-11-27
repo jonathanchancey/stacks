@@ -1,4 +1,3 @@
-disable_mlock = true
 api_addr = "https://openbao.openbao.svc:8200"
 cluster_addr = "https://127.0.0.1:8201"
 
@@ -18,12 +17,13 @@ seal "static" {
   current_key = "file:///seal/key"
 }
 
-initialize "bootstrap" {
-  request "audit" {
-    operation = "update"
-    path = "sys/audit/stdout"
-    data = { type = "file", options = { file_path = "stdout" } }
+audit "file" "stdout" {
+  options {
+    file_path = "stdout"
   }
+}
+
+initialize "bootstrap" {
   request "kv" {
     operation = "update"
     path = "sys/mounts/kv"

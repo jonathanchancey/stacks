@@ -2,10 +2,10 @@
 apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
-  name: openbao
+  name: openbao-listener-ca
 spec:
   ca:
-    secretName: openbao-ca-keypair
+    secretName: openbao-listener-ca-keypair
 ---
 apiVersion: cert-manager.io/v1
 kind: Certificate
@@ -14,7 +14,7 @@ metadata:
 spec:
   secretName: openbao-listener
   issuerRef:
-    name: openbao
+    name: openbao-listener-ca
     kind: Issuer
   dnsNames:
     - openbao.openbao.svc
