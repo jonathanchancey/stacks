@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: openbao-data
+  name: openbao-raft
   annotations:
     kustomize.toolkit.fluxcd.io/prune: disabled
 spec:
@@ -89,7 +89,7 @@ spec:
             name: openbao-config
         - name: data
           persistentVolumeClaim:
-            claimName: openbao-data
+            claimName: openbao-raft
         - name: seal
           secret:
             secretName: openbao-seal
