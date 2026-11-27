@@ -71,4 +71,21 @@ initialize "bootstrap" {
       token_explicit_max_ttl = "10m"
     }
   }
+  request "wunbot-policy" {
+    operation = "update"
+    path = "sys/policies/acl/wunbot"
+    data = { policy = "path \"kv/data/media/wunbot\" { capabilities = [\"read\"] }" }
+  }
+  request "wunbot-role" {
+    operation = "update"
+    path = "auth/kubernetes/role/wunbot"
+    data = {
+      bound_service_account_names = ["wunbot-secret-sync"]
+      bound_service_account_namespaces = ["media"]
+      audience = "openbao"
+      token_policies = ["wunbot"]
+      token_no_default_policy = true
+      token_explicit_max_ttl = "2m"
+    }
+  }
 }
