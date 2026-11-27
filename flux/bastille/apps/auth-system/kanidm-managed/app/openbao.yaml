@@ -1,0 +1,22 @@
+---
+apiVersion: kaniop.rs/v1beta1
+kind: KanidmOAuth2Client
+metadata:
+  name: openbao
+spec:
+  kanidmRef:
+    name: kanidm-managed
+  displayname: openbao
+  origin: https://openbao.chancey.dev
+  redirectUrl:
+    - https://openbao.chancey.dev/ui/vault/auth/oidc/oidc/callback
+  scopeMap:
+    - group: openbao-operators
+      scopes: [openid]
+  claimMap:
+    - name: openbao_access
+      joinStrategy: array
+      valuesMap:
+        - group: openbao-operators
+          values: [operator]
+  strictRedirectUrl: true

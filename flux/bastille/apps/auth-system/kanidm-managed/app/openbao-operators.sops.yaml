@@ -1,0 +1,24 @@
+apiVersion: kaniop.rs/v1beta1
+kind: KanidmGroup
+metadata:
+  name: openbao-operators
+spec:
+  kanidmRef:
+    name: kanidm-managed
+  members:
+    - ENC[AES256_GCM,data:YCUTw5KkFxM=,iv:/WCePR5LS7meNpBAZzhtbz8v4zHmAdDPWHsOLfTk9pM=,tag:brgS1mw6Ta+pzvbWC25wFQ==,type:str]
+sops:
+  age:
+    - enc: |
+        -----BEGIN AGE ENCRYPTED FILE-----
+        YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSAyL0RvSGczdlFpZG5XZEl1
+        RFhuZzc5NUR5NElURHVjNG9wMmE0UHZiWlhRCldZK1VpUm9lUVB4OU02VjVhQTNE
+        ZHUrd3kwYU93QUJKT1JOeGhSNDM1bWMKLS0tIGxkOFpsTmkxSVhxd0FWNWM2Z3FY
+        NUNGMzJhQTdPZ0Z3akNyc05Ud1UxdW8KCAPdQrBtE0/sxDRS9Mo0iJLm719fx96j
+        MiPG6cTv9N8oN4ObTMbtciF6h2RWtx3BADKrKLWz1LKMrpi+NTJfBA==
+        -----END AGE ENCRYPTED FILE-----
+      recipient: age1rl8s5e3al83x28ecwpn7ed3773uvyuhhvqujc47dz4chpw7xvc6qlzd8hq
+  encrypted_regex: ^(username|password|user|pass|secret|token|ca|data|stringData|members)$
+  lastmodified: "2026-11-27T23:14:11Z"
+  mac: ENC[AES256_GCM,data:kFFxPevq2MMg5vlQt4xZxODgUmmO7hsukHKusu0SSB64/aJqzrwcdWEUwcvqXlhxFepZUW0iRNdYmpbh7op1uXeJ2FFrKuMJYST1nvJ4neA4zHyUC6I58BXITcKhSB1DoiJ5r0/HVPe8KoIcx5BvAPhWJ8CPEhe9M+onnq7OIxo=,iv:uKE6bLScO7EjMFNy2FEITfy00MguG5TSOSET+Q4EeQc=,tag:so/5OkHMBB/BBN+DWITP8Q==,type:str]
+  version: 3.13.3
