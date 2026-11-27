@@ -29,11 +29,40 @@ spec:
         annotations:
           external-dns.alpha.kubernetes.io/hostname: zigbee.chancey.dev
           reloader.stakater.com/auto: "true"
-        containers:
-          app:
-            image:
+        initContainers:
+          backport-websocket-guard:
+            image: &zigbeeImage
               repository: ghcr.io/koenkk/zigbee2mqtt
               tag: 2.14.2@sha256:addbfb08fcef2e4477de1535636118241e10d13e898fbe4d9faba8a4d7396311
+            command: [node, -e]
+            args:
+              # backport koenkk/zigbee2mqtt#33275 while using the 2.14.2 transport.
+              # remove this init container and its mount when upgrading.
+              - |-
+                const { readFileSync, writeFileSync } = require("node:fs");
+                const source = readFileSync("/app/dist/extension/frontend.js", "utf8");
+                const handler = /^( +)(const \{ topic, payload \} = JSON\.parse\(message\);)\n\1(this\.mqtt\.onMessage\([^\n]+\);)$/gm;
+                if ([...source.matchAll(handler)].length !== 1) {
+                  throw new Error("expected one unguarded frontend websocket handler");
+                }
+                const patched = source.replace(handler, (_, indent, parse, forward) =>
+                  [
+                    "try {",
+                    "    " + parse,
+                    "    " + forward,
+                    "} catch {",
+                    '    logger_1.default.error("received invalid websocket message");',
+                    "}",
+                  ].map((line) => indent + line).join("\n"),
+                );
+                writeFileSync("/backport/frontend.js", patched);
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+        containers:
+          app:
+            image: *zigbeeImage
             env:
               TZ: America/Los_Angeles
               ZIGBEE2MQTT_DATA: /config
@@ -101,3 +130,17 @@ spec:
     persistence:
       config:
         existingClaim: "{{ .Release.Name }}"
+        advancedMounts:
+          zigbee:
+            app:
+              - path: /config
+      websocket-backport:
+        type: emptyDir
+        advancedMounts:
+          zigbee:
+            backport-websocket-guard:
+              - path: /backport
+            app:
+              - path: /app/dist/extension/frontend.js
+                subPath: frontend.js
+                readOnly: true
