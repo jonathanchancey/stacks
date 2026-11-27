@@ -1,0 +1,101 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: openbao-snapshots
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: ceph-block
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: openbao-snapshot
+spec:
+  schedule: "20 * * * *"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      activeDeadlineSeconds: 600
+      ttlSecondsAfterFinished: 86400
+      template:
+        spec:
+          restartPolicy: Never
+          serviceAccountName: openbao-snapshot
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 100
+            runAsGroup: 1000
+            fsGroup: 1000
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+            - name: snapshot
+              image: ghcr.io/openbao/openbao
+              command: [sh, -ec]
+              args:
+                - |
+                  umask 077
+                  mkdir -p /snapshots/.staging
+                  printf '/.staging/\n' > /snapshots/.kopiaignore
+                  trap 'rm -f /snapshots/.staging/pending' EXIT
+                  BAO_TOKEN=$(bao write -field=token auth/kubernetes/login role=snapshot jwt=@/identity/token)
+                  export BAO_TOKEN
+                  bao operator raft snapshot save /snapshots/.staging/pending
+                  test -s /snapshots/.staging/pending
+                  mv /snapshots/.staging/pending /snapshots/openbao.snap
+              env:
+                - name: BAO_ADDR
+                  value: https://openbao.openbao.svc:8200
+                - name: BAO_CACERT
+                  value: /ca/ca.crt
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities:
+                  drop: [ALL]
+              volumeMounts:
+                - {name: ca, mountPath: /ca, readOnly: true}
+                - {name: identity, mountPath: /identity, readOnly: true}
+                - {name: snapshots, mountPath: /snapshots}
+          volumes:
+            - name: ca
+              configMap:
+                name: openbao-ca
+            - name: identity
+              projected:
+                sources:
+                  - serviceAccountToken:
+                      path: token
+                      audience: openbao
+                      expirationSeconds: 600
+            - name: snapshots
+              persistentVolumeClaim:
+                claimName: openbao-snapshots
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: openbao-snapshots
+spec:
+  groups:
+    - name: openbao.snapshots
+      rules:
+        - alert: OpenBaoSnapshotStale
+          expr: |
+            time() - kube_cronjob_status_last_successful_time{namespace="openbao",cronjob="openbao-snapshot"} > 7200
+            or (
+              (time() - kube_cronjob_created{namespace="openbao",cronjob="openbao-snapshot"} > 7200)
+              unless on (namespace, cronjob)
+                kube_cronjob_status_last_successful_time{namespace="openbao",cronjob="openbao-snapshot"}
+            )
+            or absent(kube_cronjob_info{namespace="openbao",cronjob="openbao-snapshot"})
+          for: 20m
+          labels:
+            severity: warning
+          annotations:
+            summary: openbao raft snapshots are stale
+            description: inspect the snapshot job before relying on the latest kopia backup.

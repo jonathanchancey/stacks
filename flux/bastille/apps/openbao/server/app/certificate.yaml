@@ -1,0 +1,22 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: openbao
+spec:
+  ca:
+    secretName: openbao-ca-keypair
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: openbao
+spec:
+  secretName: openbao-listener
+  issuerRef:
+    name: openbao
+    kind: Issuer
+  dnsNames:
+    - openbao.openbao.svc
+  ipAddresses:
+    - 127.0.0.1

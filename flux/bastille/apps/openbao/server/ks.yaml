@@ -1,0 +1,35 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: openbao
+  namespace: flux-system
+spec:
+  targetNamespace: openbao
+  interval: 1h
+  retryInterval: 2m
+  timeout: 10m
+  path: ./flux/bastille/apps/openbao/server/app
+  components:
+    - ../../../../components/volsync/backup
+  postBuild:
+    substitute:
+      APP: openbao
+      VOLSYNC_SOURCE_PVC: openbao-snapshots
+      VOLSYNC_SCHEDULE: "38 * * * *"
+  dependsOn:
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
+    - name: volsync
+      namespace: storage
+    - name: cert-manager
+      namespace: cert-manager
+  prune: true
+  healthChecks:
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: openbao
+      namespace: openbao
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
