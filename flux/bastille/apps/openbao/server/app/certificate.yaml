@@ -5,7 +5,7 @@ metadata:
   name: openbao-listener-ca
 spec:
   ca:
-    secretName: openbao-ca-keypair
+    secretName: openbao-listener-ca-keypair
 ---
 apiVersion: cert-manager.io/v1
 kind: Certificate
