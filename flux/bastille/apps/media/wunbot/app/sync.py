@@ -1,5 +1,6 @@
 import base64
 import json
+import re
 import ssl
 from contextlib import closing
 from http.client import HTTPSConnection
@@ -29,8 +30,8 @@ with closing(HTTPSConnection(
         {"X-Vault-Token": login["auth"]["client_token"]},
     )
 token = secret["data"]["data"]["DISCORD_BOT_TOKEN"]
-if not isinstance(token, str) or not token.strip():
-    raise ValueError("missing discord token")
+if not isinstance(token, str) or not re.fullmatch(r"[!-~]+", token):
+    raise ValueError("invalid discord token")
 
 account = Path("/var/run/secrets/kubernetes.io/serviceaccount")
 with closing(HTTPSConnection(
