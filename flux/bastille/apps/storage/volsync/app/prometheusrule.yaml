@@ -40,6 +40,11 @@ spec:
           labels:
             obj_namespace: observability
             obj_name: grafana
+        - record: volsync:expected_backup_source
+          expr: vector(1)
+          labels:
+            obj_namespace: openbao
+            obj_name: openbao
     - name: volsync.rules
       rules:
         - alert: VolSyncMetricsUnavailable
